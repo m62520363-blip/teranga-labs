@@ -1,0 +1,96 @@
+import { NextRequest, NextResponse } from "next/server";
+import { briefSchema } from "@/lib/validations";
+import { createClient, getCurrentUser } from "@/lib/supabase/server";
+import { flushNotifications } from "@/lib/notifications/dispatch";
+
+export const runtime = "nodejs";
+
+/**
+ * Soumission serveur d'un brief : validation, publication via la RPC
+ * publish_brief (auteur connecté + 1 Token débité), puis déclenchement
+ * des notifications en tâche de fond.
+ * Les notifications NE bloquent jamais la réponse au client.
+ */
+export async function POST(request: NextRequest) {
+  let body: Record<string, unknown>;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Corps de requête invalide." }, { status: 400 });
+  }
+
+  // Honeypot anti-spam : on accuse réception sans rien créer.
+  if (body.website_confirm) {
+    return NextResponse.json({ accepted: true });
+  }
+
+  const parsed = briefSchema.safeParse({
+    client_name: body.client_name,
+    client_whatsapp: body.client_whatsapp,
+    client_city: body.client_city,
+    project_type: body.project_type,
+    budget: body.budget,
+    description: body.description,
+    features: Array.isArray(body.features) ? body.features : [],
+    deadline: typeof body.deadline === "string" ? body.deadline : "",
+  });
+
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: parsed.error.issues[0]?.message ?? "Formulaire invalide." },
+      { status: 422 }
+    );
+  }
+
+  const supabase = await createClient();
+  if (!supabase) {
+    return NextResponse.json(
+      { error: "Configuration Supabase manquante. Renseignez les variables d’environnement puis relancez." },
+      { status: 503 }
+    );
+  }
+
+  // La publication coûte 1 Token : l'auteur doit être connecté.
+  const user = await getCurrentUser();
+  if (!user) {
+    return NextResponse.json(
+      { error: "Connectez-vous pour publier un brief." },
+      { status: 401 }
+    );
+  }
+
+  const values = parsed.data;
+  const { data, error } = await supabase.rpc("publish_brief", {
+    p_client_name: values.client_name.trim(),
+    p_client_whatsapp: values.client_whatsapp.trim(),
+    p_client_city: values.client_city,
+    p_project_type: values.project_type,
+    p_budget: values.budget,
+    p_description: values.description.trim(),
+    p_features: values.features,
+    p_deadline: values.deadline || null,
+  });
+
+  if (error) {
+    // Codes connus (RPC security definer) : on expose le message afin que
+    // l'utilisateur sache pourquoi sa publication a été refusée.
+    if (error.code === "TLLOW" || error.code === "TLAUTH") {
+      return NextResponse.json({ error: error.message }, { status: 402 });
+    }
+    return NextResponse.json(
+      { error: "Impossible de publier le brief pour le moment. Réessayez dans quelques secondes." },
+      { status: 422 }
+    );
+  }
+
+  const result = data as { id?: string; management_key?: string } | null;
+  if (!result?.id || !result?.management_key) {
+    return NextResponse.json({ error: "Une erreur est survenue. Réessayez." }, { status: 422 });
+  }
+
+  void flushNotifications().catch(() => {
+    /* silencieux : la file conserve les jobs pending */
+  });
+
+  return NextResponse.json({ id: result.id, management_key: result.management_key });
+}

@@ -1,0 +1,101 @@
+import { NextResponse } from "next/server";
+import { createAdminClient, isServiceConfigured } from "@/lib/supabase/admin";
+import {
+  isCheckoutCompleted,
+  verifyWaveSignature,
+  amountMatches,
+  type WaveWebhookEvent,
+} from "@/lib/payments/wave";
+import { isWaveConfigured } from "@/lib/payments/config";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+/**
+ * POST /api/payments/webhook — endpoint IPN Wave.
+ *
+ * Sécurité :
+ *   1. Vérification HMAC-SHA256 (header `Wave-Signature`) sur le corps
+ *      BRUT + horodatage borné à 300s. Toute signature invalide → 401.
+ *   2. On ne traite QUE `checkout.session.completed`.
+ *   3. Le montant et la devise de l'événement doivent correspondre à
+ *      l'intention de paiement enregistrée côté serveur.
+ *   4. Le crédit passe par la RPC `credit_from_payment` (service_role
+ *      uniquement, idempotente) : un rejeu du webhook ne recrédite pas.
+ *   5. Répondre vite (timeout Wave 10s) : crédit synchrone + 200.
+ */
+export async function POST(request: Request) {
+  if (!isWaveConfigured() || !isServiceConfigured()) {
+    return NextResponse.json(
+      { error: "webhook_not_configured" },
+      { status: 503 }
+    );
+  }
+
+  const rawBody = await request.text();
+  const signature = request.headers.get("wave-signature");
+
+  if (!verifyWaveSignature(rawBody, signature)) {
+    return NextResponse.json({ error: "invalid_signature" }, { status: 401 });
+  }
+
+  let event: WaveWebhookEvent;
+  try {
+    event = JSON.parse(rawBody) as WaveWebhookEvent;
+  } catch {
+    return NextResponse.json({ error: "invalid_payload" }, { status: 400 });
+  }
+
+  if (!isCheckoutCompleted(event)) {
+    // Ack des autres événements (test ping, failures...) sans effet.
+    return NextResponse.json({ ok: true });
+  }
+
+  const data = event.data ?? {};
+  const clientReference = data.client_reference;
+  const eventAmount = data.amount;
+  const currency = data.currency;
+
+  if (typeof clientReference !== "string" || !clientReference) {
+    return NextResponse.json({ error: "missing_reference" }, { status: 400 });
+  }
+
+  const admin = createAdminClient();
+  if (!admin) {
+    return NextResponse.json({ error: "service_unavailable" }, { status: 503 });
+  }
+
+  // Vérifie l'intention enregistrée au moment du checkout.
+  const { data: intent, error: intentError } = await admin
+    .from("payment_intents")
+    .select("id, developer_id, tokens, amount_fcfa, currency, status")
+    .eq("id", clientReference)
+    .maybeSingle();
+
+  if (intentError || !intent) {
+    return NextResponse.json({ error: "intent_not_found" }, { status: 404 });
+  }
+
+  if (intent.status === "paid") {
+    return NextResponse.json({ ok: true, credited: false });
+  }
+
+  if (
+    currency !== "XOF" ||
+    !amountMatches(eventAmount, intent.amount_fcfa)
+  ) {
+    return NextResponse.json({ error: "amount_mismatch" }, { status: 400 });
+  }
+
+  const { data: creditResult, error: creditError } = await admin.rpc(
+    "credit_from_payment",
+    { p_intent_id: intent.id }
+  );
+
+  if (creditError) {
+    console.error("[payments] credit_from_payment failed:", creditError);
+    return NextResponse.json({ error: "credit_failed" }, { status: 500 });
+  }
+
+  return NextResponse.json({ ok: true, credited: true, result: creditResult });
+}

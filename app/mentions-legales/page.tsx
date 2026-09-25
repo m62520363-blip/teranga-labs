@@ -1,0 +1,135 @@
+import type { Metadata } from "next";
+import { LegalPage } from "@/components/legal-page";
+
+export const metadata: Metadata = {
+  title: "Mentions légales",
+  description: "Mentions légales de TERANGA LABS, le marketplace inversé du Sénégal.",
+};
+
+export default function MentionsLegalesPage() {
+  return (
+    <LegalPage
+      title="Mentions légales"
+      lead="Informations relatives à l’éditeur du service TERANGA LABS."
+      updated="24 septembre 2026"
+      sections={[
+        {
+          heading: "Éditeur du service",
+          body: (
+            <>
+              <p>
+                Le site TERANGA LABS est édité par <strong>TERANGA LABS</strong>,
+                une structure de services numériques basée à{" "}
+                <strong>Dakar, Sénégal</strong>.
+              </p>
+              <p>
+                Email de contact :{" "}
+                <a
+                  href="mailto:contact@terangalabs.sn"
+                  className="font-medium text-[#E86A2C] underline underline-offset-2"
+                >
+                  contact@terangalabs.sn
+                </a>
+              </p>
+            </>
+          ),
+        },
+        {
+          heading: "Directeur de la publication",
+          body: (
+            <p>
+              Le directeur de la publication est le représentant légal de
+              TERANGA LABS.
+            </p>
+          ),
+        },
+        {
+          heading: "Hébergement",
+          body: (
+            <p>
+              Le site est hébergé par un prestataire d’hébergement web. Les
+              coordonnées complètes de l’hébergeur sont disponibles sur simple
+              demande. Cette zone est à compléter avec les informations
+              contractuelles de l’hébergeur utilisé.
+            </p>
+          ),
+        },
+        {
+          heading: "Données personnelles et cookies",
+          body: (
+            <>
+              <p>
+                Les données personnelles (nom, WhatsApp, contenu des briefs)
+                sont traitées pour la seule mise en relation décrite dans la{" "}
+                <a
+                  href="/politique-de-confidentialite"
+                  className="font-medium text-[#E86A2C] underline underline-offset-2"
+                >
+                  politique de confidentialité
+                </a>
+                . Le détail des cookies est expliqué dans la{" "}
+                <a
+                  href="/cookies"
+                  className="font-medium text-[#E86A2C] underline underline-offset-2"
+                >
+                  politique de cookies
+                </a>
+                .
+              </p>
+            </>
+          ),
+        },
+        {
+          heading: "Responsabilités",
+          body: (
+            <p>
+              Les échanges entre clients et développeurs sont effectués sous
+              leur propre responsabilité. TERANGA LABS fournit la mise en
+              relation (Tokens, briefs, messagerie) et n’intervient pas dans la
+              conclusion des contrats ni dans les transactions financières
+              entre les parties. Des efforts raisonnables sont faits pour
+              prévenir les abus et la fraude, sans garantie de résultat.
+            </p>
+          ),
+        },
+        {
+          heading: "Droit applicable",
+          body: (
+            <p>
+              Les présentes mentions sont soumises au droit sénégalais. En cas
+              de litige, et à défaut de résolution amiable, les tribunaux de
+              Dakar sont compétents.
+            </p>
+          ),
+        },
+        {
+          heading: "Propriété intellectuelle",
+          body: (
+            <>
+              <p>
+                L’ensemble des éléments du site — textes, visuels, logo,
+                structure, mise en page — est la propriété exclusive de TERANGA
+                LABS ou de ses partenaires. Toute reproduction, représentation
+                ou diffusion sans autorisation préalable est interdite.
+              </p>
+              <p>
+                Les marques et noms cités à titre d’exemple (applications de
+                marketplace) appartiennent à leurs propriétaires respectifs.
+              </p>
+            </>
+          ),
+        },
+        {
+          heading: "Modification des mentions",
+          body: (
+            <p>
+              TERANGA LABS se réserve le droit de modifier les présentes
+              mentions à tout moment. Elles sont opposables dès leur mise en
+              ligne.
+            </p>
+          ),
+        },
+      ]}
+    />
+  );
+}

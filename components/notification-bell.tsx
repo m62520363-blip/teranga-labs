@@ -1,0 +1,296 @@
+"use client";
+
+import * as React from "react";
+import { useRouter } from "next/navigation";
+import {
+  BadgeCheck,
+  Bell,
+  BellRing,
+  Briefcase,
+  CheckCheck,
+  CheckCircle2,
+  Loader2,
+  MessageCircle,
+  Star,
+} from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
+import { formatRelativeTime } from "@/lib/formatting";
+import { cn } from "cn";
+
+export type InAppNotification = {
+  id: string;
+  type: string;
+  title: string;
+  body: string | null;
+  link: string | null;
+  entity_type: string | null;
+  entity_id: string | null;
+  read: boolean;
+  created_at: string;
+};
+
+function bellIcon(type: string) {
+  switch (type) {
+    case "new_message":
+      return MessageCircle;
+    case "offer_accepted":
+      return CheckCheck;
+    case "review_received":
+      return Star;
+    case "account_certified":
+      return BadgeCheck;
+    case "unlock_received":
+      return Briefcase;
+    default:
+      return Bell;
+  }
+}
+
+export function NotificationBell({ userId }: { userId: string }) {
+  const router = useRouter();
+  const [open, setOpen] = React.useState(false);
+  const [items, setItems] = React.useState<InAppNotification[]>([]);
+  const [unread, setUnread] = React.useState(0);
+  const [loading, setLoading] = React.useState(true);
+  const rootRef = React.useRef<HTMLDivElement>(null);
+
+  const refresh = React.useCallback(async () => {
+    const supabase = createClient();
+    const [listRes, countRes] = await Promise.all([
+      supabase.rpc("my_notifications", { p_limit: 25 }),
+      supabase.rpc("notifications_unread_count"),
+    ]);
+    if (Array.isArray(listRes.data)) {
+      setItems(listRes.data as InAppNotification[]);
+    }
+    if (typeof countRes.data === "number") setUnread(countRes.data);
+    setLoading(false);
+  }, []);
+
+  React.useEffect(() => {
+    const supabase = createClient();
+    let mounted = true;
+
+    (async () => {
+      const [listRes, countRes] = await Promise.all([
+        supabase.rpc("my_notifications", { p_limit: 25 }),
+        supabase.rpc("notifications_unread_count"),
+      ]);
+      if (!mounted) return;
+      if (Array.isArray(listRes.data)) setItems(listRes.data as InAppNotification[]);
+      if (typeof countRes.data === "number") setUnread(countRes.data);
+      setLoading(false);
+    })();
+
+    const channel = supabase
+      .channel(`notifications-${userId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "notifications",
+          filter: `user_id=eq.${userId}`,
+        },
+        (payload) => {
+          if (!mounted) return;
+          const row = payload.new as InAppNotification;
+          setItems((prev) => [row, ...prev].slice(0, 50));
+          setUnread((u) => u + 1);
+        }
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "notifications",
+          filter: `user_id=eq.${userId}`,
+        },
+        async () => {
+          if (!mounted) return;
+          await refresh();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      mounted = false;
+      supabase.removeChannel(channel);
+    };
+  }, [userId, refresh]);
+
+  React.useEffect(() => {
+    if (!open) return;
+    const onClick = (e: MouseEvent) => {
+      if (rootRef.current && !rootRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", onClick);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onClick);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  const markRead = async (ids: string[]) => {
+    if (ids.length === 0) return;
+    const supabase = createClient();
+    await supabase.rpc("mark_notifications_read", { p_ids: JSON.stringify(ids) });
+    setItems((prev) =>
+      prev.map((n) => (ids.includes(n.id) ? { ...n, read: true } : n))
+    );
+    setUnread((u) => Math.max(0, u - ids.length));
+  };
+
+  const openItem = (item: InAppNotification) => {
+    if (!item.read) void markRead([item.id]);
+    setOpen(false);
+    if (item.link) router.push(item.link);
+  };
+
+  const markAll = async () => {
+    const unreadItems = items.filter((n) => !n.read).map((n) => n.id);
+    if (unreadItems.length === 0) return;
+    const supabase = createClient();
+    await supabase.rpc("mark_all_notifications_read");
+    setItems((prev) => prev.map((n) => ({ ...n, read: true })));
+    setUnread(0);
+  };
+
+  return (
+    <div ref={rootRef} className="relative">
+      <button
+        type="button"
+        onClick={() => {
+          setOpen((v) => !v);
+          if (!open) void refresh();
+        }}
+        aria-label={
+          unread > 0
+            ? `Notifications, ${unread} non lues`
+            : "Notifications, aucune nouvelle"
+        }
+        aria-expanded={open}
+        className="relative inline-flex size-9 items-center justify-center rounded-lg text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+      >
+        {unread > 0 ? (
+          <BellRing className="size-5 text-[#E86A2C]" aria-hidden="true" />
+        ) : (
+          <Bell className="size-5" aria-hidden="true" />
+        )}
+        {unread > 0 ? (
+          <span className="absolute right-1 top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-[#E86A2C] px-1 text-[10px] font-semibold leading-none text-[#0D0D0D]">
+            {unread > 9 ? "9+" : unread}
+          </span>
+        ) : null}
+      </button>
+
+      {open ? (
+        <div className="absolute right-0 top-11 z-50 w-80 overflow-hidden rounded-2xl border border-[#2A2A2A] bg-[#111111] shadow-2xl shadow-black/60 sm:w-96">
+          <div className="flex items-center justify-between border-b border-[#2A2A2A] px-4 py-3">
+            <p className="text-sm font-semibold tracking-tight">
+              Notifications
+              {unread > 0 ? (
+                <span className="ml-2 rounded-full bg-[#2A1A10] px-2 py-0.5 text-[11px] font-medium text-[#F2A378]">
+                  {unread} nouvelle{unread > 1 ? "s" : ""}
+                </span>
+              ) : null}
+            </p>
+            {unread > 0 ? (
+              <button
+                type="button"
+                onClick={markAll}
+                className="inline-flex items-center gap-1 text-xs font-medium text-[#E86A2C] underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+              >
+                <CheckCircle2 className="size-3.5" aria-hidden="true" />
+                Tout marquer lu
+              </button>
+            ) : null}
+          </div>
+
+          <div className="max-h-[26rem] overflow-y-auto" role="menu">
+            {loading ? (
+              <div className="flex items-center justify-center gap-2 p-8 text-sm text-muted-foreground">
+                <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+                Chargement…
+              </div>
+            ) : items.length === 0 ? (
+              <div className="p-8 text-center">
+                <p className="text-sm text-muted-foreground">
+                  Aucune notification pour le moment.
+                </p>
+                <p className="mt-1 text-xs text-muted-foreground/70">
+                  Nouveaux messages, devis acceptés et briefs débloqués
+                  apparaîtront ici.
+                </p>
+              </div>
+            ) : (
+              <ul>
+                {items.map((item) => {
+                  const Icon = bellIcon(item.type);
+                  return (
+                    <li key={item.id}>
+                      <button
+                        type="button"
+                        onClick={() => openItem(item)}
+                        role="menuitem"
+                        className={cn(
+                          "flex w-full items-start gap-3 px-4 py-3 text-left outline-none transition-colors hover:bg-[#1E1E1E] focus-visible:bg-[#1E1E1E]",
+                          !item.read && "bg-[#171310]"
+                        )}
+                      >
+                        <span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#2A1A10]">
+                          <Icon className="size-4 text-[#E86A2C]" aria-hidden="true" />
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="flex items-center justify-between gap-2">
+                            <span className="truncate text-sm font-medium">
+                              {item.title}
+                            </span>
+                            {!item.read ? (
+                              <span
+                                className="size-2 shrink-0 rounded-full bg-[#E86A2C]"
+                                aria-label="Non lu"
+                              />
+                            ) : null}
+                          </span>
+                          {item.body ? (
+                            <span className="mt-0.5 line-clamp-2 block text-xs leading-relaxed text-muted-foreground">
+                              {item.body}
+                            </span>
+                          ) : null}
+                          <span className="mt-1 block text-[11px] text-muted-foreground/70">
+                            {formatRelativeTime(item.created_at)}
+                          </span>
+                        </span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+
+          <div className="border-t border-[#2A2A2A] p-2">
+            <button
+              type="button"
+              onClick={() => {
+                setOpen(false);
+                router.push("/notifications");
+              }}
+              className="w-full rounded-lg px-3 py-2 text-center text-sm font-medium text-[#F2F2F2] outline-none transition-colors hover:bg-[#1E1E1E] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+            >
+              Voir tout l&apos;historique
+            </button>
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}
