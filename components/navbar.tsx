@@ -227,7 +227,7 @@ export function Navbar({
         )}
       </header>
 
-      <MobileDock items={dockItems} pathname={pathname} />
+      {authed ? <MobileDock items={dockItems} pathname={pathname} /> : null}
     </>
   );
 }
