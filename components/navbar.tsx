@@ -73,7 +73,11 @@ export function Navbar({
       appLinks.push({ href: "/briefs", label: "Voir les briefs" });
     }
     if (role === "admin") {
-      appLinks.push({ href: "/admin", label: "Admin", adminOnly: true });
+      appLinks.push({
+        href: process.env.NEXT_PUBLIC_ADMIN_URL || "http://localhost:3001",
+        label: "Admin",
+        adminOnly: true,
+      });
     }
     appLinks.push({ href: "/parametres", label: "Paramètres" });
   }
