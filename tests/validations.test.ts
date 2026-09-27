@@ -33,7 +33,7 @@ describe("briefSchema", () => {
     expect(result.success).toBe(false);
   });
 
-  it("rejette une ville inconnue", () => {
+  it("rejette une région inconnue", () => {
     const result = briefSchema.safeParse({ ...validBrief, client_city: "Paris" });
     expect(result.success).toBe(false);
   });

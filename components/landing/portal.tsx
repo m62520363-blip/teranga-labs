@@ -18,7 +18,7 @@ const CLIENT_POINTS = [
 ];
 
 const DEV_POINTS = [
-  "Consultez les briefs réels avec budget, ville et cahier des charges",
+  "Consultez les briefs réels avec budget, région et cahier des charges",
   "Débloquez le contact du client avec 1 Token",
   "Envoyez une proposition chiffrée et discutez en direct",
   "Construisez votre réputation : avis, badge vérifié, carte de visite",
@@ -103,7 +103,7 @@ export function PortalSection() {
           </h3>
           <p className="mt-3 text-base leading-relaxed text-muted-foreground">
             Des briefs payants vérifiés, rapprochés de votre profil et de votre
-            ville.
+            région.
           </p>
 
           <ul className="mt-7 space-y-3">

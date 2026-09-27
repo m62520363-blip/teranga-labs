@@ -33,7 +33,7 @@ insert into public.requests (
 (
   'Menuiserie Touba',
   '+221771000104',
-  'Touba',
+  'Diourbel',
   'landing page',
   90000,
   'Atelier de menuiserie à Touba. Nous avons besoin d''une landing page percutante avec nos réalisations en photos, nos services et un bouton WhatsApp pour recevoir les commandes.'
@@ -41,7 +41,7 @@ insert into public.requests (
 (
   'Immo Saly',
   '+221771000105',
-  'Saly',
+  'Thiès',
   'vitrine',
   300000,
   'Agence immobilière à Saly. Nous vendons et louons des villas. Nous voulons un site vitrine premium avec galerie des biens, filtres ville/budget et formulaire de contact.'

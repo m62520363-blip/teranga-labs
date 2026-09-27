@@ -28,7 +28,7 @@ const groups = [
   {
     icon: Wallet,
     title: "Pour les développeurs",
-    text: "Chaque brief vous montre le budget et la ville. Vous investissez 1 Token pour débloquer le contact et ouvrir la discussion privée. Zéro commission sur le projet.",
+    text: "Chaque brief vous montre le budget et la région. Vous investissez 1 Token pour débloquer le contact et ouvrir la discussion privée. Zéro commission sur le projet.",
     href: "/briefs",
     cta: "Voir les briefs",
   },

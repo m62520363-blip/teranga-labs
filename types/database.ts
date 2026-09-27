@@ -106,6 +106,10 @@ export interface Database {
           experience_years: number;
           rating_avg: number;
           completed_projects_count: number;
+          reviews_count: number;
+          reputation_score: number;
+          reputation_level: string;
+          penalty: number;
           monthly_goal: number;
           status: DeveloperStatus;
           created_at: string;
@@ -125,6 +129,10 @@ export interface Database {
           experience_years?: number;
           rating_avg?: number;
           completed_projects_count?: number;
+          reviews_count?: number;
+          reputation_score?: number;
+          reputation_level?: string;
+          penalty?: number;
           monthly_goal?: number;
           status?: DeveloperStatus;
           created_at?: string;
@@ -359,6 +367,9 @@ export interface Database {
           reason: string;
           description: string | null;
           status: ReportStatus;
+          note: string | null;
+          penalty: number;
+          resolver_id: string | null;
           created_at: string;
           resolved_at: string | null;
         };
@@ -370,6 +381,9 @@ export interface Database {
           reason: string;
           description?: string | null;
           status?: ReportStatus;
+          note?: string | null;
+          penalty?: number;
+          resolver_id?: string | null;
           created_at?: string;
           resolved_at?: string | null;
         };
@@ -726,6 +740,16 @@ export interface Database {
         };
         Returns: Json;
       };
+      admin_resolve_report: {
+        Args: {
+          p_report_id: string;
+          p_status: string;
+          p_note?: string | null;
+          p_penalty?: number;
+          p_notify_target?: boolean;
+        };
+        Returns: Json;
+      };
       credit_from_payment: {
         Args: {
           p_intent_id: string;
@@ -781,8 +805,12 @@ export type PublicDeveloperProfile = {
   response_rate: number | null;
   portfolio_links: PortfolioLink[];
   projects_count: number;
+  completed_projects_count: number;
   review_count: number;
   review_average: number;
+  reputation_score: number;
+  reputation_level: string;
+  penalty: number;
   reviews: {
     id: string;
     rating: number;

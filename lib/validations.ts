@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { PROJECT_TYPES, SENEGAL_CITIES } from "@/lib/tokens";
+import { PROJECT_TYPES, SENEGAL_REGIONS } from "@/lib/tokens";
 
 export const briefSchema = z.object({
   client_name: z
@@ -12,8 +12,8 @@ export const briefSchema = z.object({
       /^\+?[0-9\s\-().]{9,20}$/,
       "Numéro WhatsApp invalide. Ex : +221771234567"
     ),
-  client_city: z.enum(SENEGAL_CITIES, {
-    message: "Choisissez une ville.",
+  client_city: z.enum(SENEGAL_REGIONS, {
+    message: "Choisissez une région.",
   }),
   project_type: z.enum(PROJECT_TYPES, {
     message: "Choisissez un type de projet.",
@@ -90,8 +90,8 @@ export const clientSignupSchema = z.object({
     .max(72, "Mot de passe trop long.")
     .regex(/[A-Za-z]/, "Au moins une lettre.")
     .regex(/\d/, "Au moins un chiffre."),
-  city: z.enum(SENEGAL_CITIES, {
-    message: "Choisissez une ville.",
+  city: z.enum(SENEGAL_REGIONS, {
+    message: "Choisissez une région.",
   }),
   whatsapp: z
     .string()

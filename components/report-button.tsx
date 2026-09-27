@@ -95,7 +95,7 @@ export function ReportButton({
             size="sm"
             className="h-8 px-2 text-xs text-muted-foreground hover:text-foreground"
             onClick={() => setOpen(true)}
-            aria-label="Signaler ce brief"
+            aria-label="Signaler ce contenu"
           >
             <Flag className="size-3.5" aria-hidden="true" />
             Signaler

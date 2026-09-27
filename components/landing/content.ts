@@ -1,4 +1,4 @@
-import {
+﻿import {
   Boxes,
   Code2,
   Globe,
@@ -104,7 +104,7 @@ export const STEPS = [
   {
     num: "01",
     title: "Décrivez votre besoin",
-    text: "Publiez votre brief en 2 minutes : type de site, budget, ville et votre WhatsApp restent privés. 1 Token, sans abonnement.",
+    text: "Publiez votre brief en 2 minutes : type de site, budget, région et votre WhatsApp restent privés. 1 Token, sans abonnement.",
     icon: "pen",
   },
   {
@@ -127,7 +127,7 @@ export const BUYER = {
   eyebrow: "POUR LES CLIENTS",
   title: "Vous cherchez un développeur ?",
   lead:
-    "Dites ce dont vous avez besoin : type de site, budget, ville. Les développeurs sérieux viennent à vous dans votre messagerie.",
+    "Dites ce dont vous avez besoin : type de site, budget, région. Les développeurs sérieux viennent à vous dans votre messagerie.",
   cta: { label: "Publier mon brief", href: "/poster" },
   caption: "1 brief publié. Plusieurs développeurs sérieux.",
   form: {
@@ -135,7 +135,7 @@ export const BUYER = {
     questionValue: "Ex. Site e-commerce",
     budgetLabel: "Votre budget",
     budgetValue: "Ex. 1 500 000 FCFA",
-    cityLabel: "Votre ville",
+    cityLabel: "Votre région",
     cityValue: "Ex. Dakar",
     contactLabel: "Votre WhatsApp (reste privé)",
     contactValue: "Ex. 77 123 45 67",
@@ -161,7 +161,7 @@ export const SELLERS = {
     title: "Brief intéressant",
     text: "Site e-commerce pour boutique — Thiès",
     budget: "Budget : 1 500 000 FCFA",
-    location: "Ville : Thiès · Discussion privée",
+    location: "Région : Thiès · Discussion privée",
     reply: "Démarrer la discussion — 1 Token",
   },
 };
@@ -232,7 +232,7 @@ export const BENEFITS = {
     },
     {
       title: "Pensé pour le Sénégal",
-      text: "Briefs en français, budgets en FCFA, messagerie interne sécurisée, villes partout au pays.",
+      text: "Briefs en français, budgets en FCFA, messagerie interne sécurisée, régions partout au pays.",
     },
   ],
 };
@@ -312,7 +312,7 @@ export const FAQS = [
   },
   {
     q: "Comment fonctionne le modèle ?",
-    a: "Le client poste son brief en 2 minutes : type de site, budget et ville. Le brief apparaît dans /briefs. Le développeur qui s’intéresse paie 1 Token pour ouvrir une discussion privée avec le client, puis l’échange se fait en direct sur la plateforme.",
+    a: "Le client poste son brief en 2 minutes : type de site, budget et région. Le brief apparaît dans /briefs. Le développeur qui s’intéresse paie 1 Token pour ouvrir une discussion privée avec le client, puis l’échange se fait en direct sur la plateforme.",
   },
   {
     q: "Combien coûte la publication d’un brief ?",
@@ -328,7 +328,7 @@ export const FAQS = [
   },
   {
     q: "TERANGA LABS est-il disponible au Sénégal ?",
-    a: "Oui. Tout est pensé pour le marché local : briefs en français, budgets en FCFA, villes partout au pays, et messagerie interne en temps réel.",
+    a: "Oui. Tout est pensé pour le marché local : briefs en français, budgets en FCFA, régions partout au pays, et messagerie interne en temps réel.",
   },
 ];
 

@@ -7,12 +7,14 @@ import {
   Globe,
   MapPin,
   MessagesSquare,
+  ShieldCheck,
   Star,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { waLink } from "@/lib/tokens";
 import { formatDate } from "@/lib/formatting";
 import { ShareProfileButton } from "@/components/dev/share-profile-button";
+import { ReportButton } from "@/components/report-button";
 import type { PublicDeveloperProfile } from "@/types/database";
 import { cn } from "cn";
 
@@ -168,10 +170,26 @@ export default async function DeveloperProfilePage({
                     </span>
                   </span>
                   <span className="inline-flex items-center gap-1.5 text-muted-foreground">
-                    <Briefcase className="size-4 text-[#E86A2C]" aria-hidden="true" />
-                    {profile.projects_count} projet{profile.projects_count > 1 ? "s" : ""} réalisé
-                    {profile.projects_count > 1 ? "s" : ""}
+                    <ShieldCheck className="size-4 text-[#4ADE80]" aria-hidden="true" />
+                    Réputation{" "}
+                    <span className="font-semibold text-[#E8E8E8]">
+                      {profile.reputation_score}/100
+                    </span>
+                    <span className="rounded-full border border-[#166534]/60 bg-[#0F2E18] px-2 py-0.5 text-[11px] font-medium text-[#4ADE80]">
+                      {profile.reputation_level}
+                    </span>
                   </span>
+                  <span className="inline-flex items-center gap-1.5 text-muted-foreground">
+                    <Briefcase className="size-4 text-[#E86A2C]" aria-hidden="true" />
+                    {profile.completed_projects_count} projet
+                    {profile.completed_projects_count > 1 ? "s terminés" : " terminé"}
+                  </span>
+                  {profile.penalty > 0 ? (
+                    <span className="inline-flex items-center gap-1.5 text-[#F87171]">
+                      <span className="size-1.5 rounded-full bg-[#F87171]" aria-hidden="true" />
+                      Pénalité de modération : -{profile.penalty} pts
+                    </span>
+                  ) : null}
                   {profile.created_at ? (
                     <span className="inline-flex items-center gap-1.5 text-muted-foreground">
                       Membre depuis le {formatDate(profile.created_at)}
@@ -194,6 +212,7 @@ export default async function DeveloperProfilePage({
                 </a>
               ) : null}
               <ShareProfileButton url={shareUrl} />
+              <ReportButton targetType="developer" targetId={profile.id} />
             </div>
           </header>
 

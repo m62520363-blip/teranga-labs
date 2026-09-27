@@ -36,6 +36,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { EmptyState } from "@/components/empty-state";
 import {
   Dialog,
@@ -48,7 +55,7 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { parseSkills } from "@/lib/validations";
 import { formatFCFA, formatDate } from "@/lib/formatting";
-import { waLink } from "@/lib/tokens";
+import { SENEGAL_REGIONS, waLink } from "@/lib/tokens";
 import type { ConversationListItem } from "@/lib/conversations";
 import type {
   TransactionRow,
@@ -1061,14 +1068,28 @@ export function DashboardContent({
                     </p>
                   </div>
                   <div className="flex flex-col gap-2">
-                    <Label htmlFor="dp-city">Ville</Label>
-                    <Input
-                      id="dp-city"
-                      value={p.city}
-                      onChange={(e) => setP({ ...p, city: e.target.value })}
-                      className="h-10 rounded-xl"
-                      placeholder="Dakar, Thiès, Saint-Louis…"
-                    />
+                    <Label htmlFor="dp-city">Région</Label>
+                    <Select
+                      value={p.city ?? ""}
+                      onValueChange={(v) => setP({ ...p, city: v ?? "" })}
+                      items={Object.fromEntries(
+                        SENEGAL_REGIONS.map((r) => [r, r])
+                      )}
+                    >
+                      <SelectTrigger
+                        id="dp-city"
+                        className="h-10 w-full rounded-xl"
+                      >
+                        <SelectValue placeholder="Sélectionnez votre région" />
+                      </SelectTrigger>
+                      <SelectContent align="start">
+                        {SENEGAL_REGIONS.map((region) => (
+                          <SelectItem key={region} value={region}>
+                            {region}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div className="flex flex-col gap-2">
                     <Label htmlFor="dp-experience">Années d’expérience</Label>
@@ -1130,7 +1151,7 @@ export function DashboardContent({
                         Recevoir les nouveaux briefs
                       </span>
                       <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">
-                        Alertes WhatsApp des projets correspondant à ma ville et
+                        Alertes WhatsApp des projets correspondant à ma région et
                         à mes compétences.
                       </span>
                     </span>
@@ -1243,8 +1264,35 @@ export function DashboardContent({
             >
               <h2 className="text-lg font-semibold tracking-tight">Réputation</h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Les avis laissés par les clients après vos projets.
+                Score pondéré : notes des clients, projets terminés et avis
+                reçus, moins les pénalités de modération.
               </p>
+
+              <div className="mt-6 flex items-center gap-3 rounded-xl bg-[#1E1E1E] p-4">
+                <span className="text-3xl font-semibold tracking-tight">
+                  {profile?.reputation_score ?? 0}
+                </span>
+                <div className="min-w-0">
+                  <p className="text-sm font-medium">
+                    sur 100 ·{" "}
+                    <span className="text-[#4ADE80]">
+                      {profile?.reputation_level ?? "Nouveau"}
+                    </span>
+                  </p>
+                  {profile && profile.penalty > 0 ? (
+                    <p className="mt-0.5 text-xs font-medium text-[#F87171]">
+                      Pénalité de modération appliquée : -{profile.penalty} pts
+                    </p>
+                  ) : (
+                    <p className="mt-0.5 text-xs text-muted-foreground">
+                      {profile?.reviews_count ?? 0} avis ·{" "}
+                      {profile?.completed_projects_count ?? 0} projet
+                      {(profile?.completed_projects_count ?? 0) > 1 ? "s" : ""} terminé
+                      {(profile?.completed_projects_count ?? 0) > 1 ? "s" : ""}
+                    </p>
+                  )}
+                </div>
+              </div>
 
               {!reviews || reviews.total === 0 ? (
                 <div className="mt-6">

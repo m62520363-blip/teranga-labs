@@ -8,6 +8,7 @@ import { BriefCard } from "@/components/brief-card";
 import { BriefGrid } from "@/components/brief-grid";
 import { EmptyState } from "@/components/empty-state";
 import { MarqueeStrip } from "@/components/marquee-strip";
+import { SENEGAL_REGIONS } from "@/lib/tokens";
 import { Hero } from "@/components/landing/hero";
 import { ProblemSection } from "@/components/landing/problem";
 import { ConceptSection } from "@/components/landing/concept";
@@ -117,14 +118,9 @@ export default async function HomePage() {
         <MarqueeStrip
           items={[
             ...CATEGORIES.map((c) => c.title),
-            "Dakar",
-            "Thiès",
-            "Saint-Louis",
-            "Touba",
-            "Ziguinchor",
-            "Saly",
+            ...SENEGAL_REGIONS,
           ]}
-          ariaLabel="Catégories et villes couvertes"
+          ariaLabel="Catégories et régions couvertes"
         />
         <ProblemSection />
         <ConceptSection />

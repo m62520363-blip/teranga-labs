@@ -20,7 +20,7 @@ export default function PolitiqueDeConfidentialitePage() {
             <>
               <p>Lors de l’utilisation du service, nous collectons :</p>
               <ul className="list-disc space-y-1 pl-5">
-                <li>les données de votre brief : nom, ville, type de projet, budget et description ;</li>
+                <li>les données de votre brief : nom, région, type de projet, budget et description ;</li>
                 <li>votre numéro de WhatsApp, utilisé pour le contact direct ;</li>
                 <li>les données de navigation strictement nécessaires au fonctionnement.</li>
               </ul>

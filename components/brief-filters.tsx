@@ -16,7 +16,7 @@ import { UnlockDialog } from "@/components/unlock-dialog";
 import { ReportButton } from "@/components/report-button";
 import { EmptyState } from "@/components/empty-state";
 import type { PublicRequest } from "@/types/database";
-import { PROJECT_TYPES, PROJECT_TYPE_LABELS, SENEGAL_CITIES } from "@/lib/tokens";
+import { PROJECT_TYPES, PROJECT_TYPE_LABELS, SENEGAL_REGIONS } from "@/lib/tokens";
 
 type UnlockInfo = Record<string, { conversation_id?: string; whatsapp?: string }>;
 
@@ -70,8 +70,8 @@ export function BriefFilters({
   }, [briefs, query, city, type, budgetBand]);
 
   const cityItems = React.useMemo(() => {
-    const items: Record<string, string> = { all: "Toutes les villes" };
-    for (const c of SENEGAL_CITIES) items[c] = c;
+    const items: Record<string, string> = { all: "Toutes les régions" };
+    for (const c of SENEGAL_REGIONS) items[c] = c;
     return items;
   }, []);
 
@@ -106,7 +106,7 @@ export function BriefFilters({
         </div>
         <div className="flex flex-wrap gap-3">
           <Select value={city} onValueChange={(v) => setCity(v ?? "all")} items={cityItems}>
-            <SelectTrigger size="default" className="w-full rounded-xl sm:w-auto" aria-label="Filtrer par ville">
+            <SelectTrigger size="default" className="w-full rounded-xl sm:w-auto" aria-label="Filtrer par région">
               <SelectValue />
             </SelectTrigger>
             <SelectContent align="start">

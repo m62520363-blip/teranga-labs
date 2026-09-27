@@ -19,7 +19,7 @@ import {
   Wallet,
 } from "lucide-react";
 import { briefSchema, type BriefFormValues } from "@/lib/validations";
-import { SENEGAL_CITIES } from "@/lib/tokens";
+import { SENEGAL_REGIONS } from "@/lib/tokens";
 import { useBalance } from "@/components/balance-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,7 +35,7 @@ import {
 import { cn } from "cn";
 
 const cityItems: Record<string, string> = Object.fromEntries(
-  SENEGAL_CITIES.map((c) => [c, c])
+  SENEGAL_REGIONS.map((c) => [c, c])
 );
 
 const TYPE_OPTIONS: {
@@ -468,17 +468,17 @@ export function PosterForm() {
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2">
-        <FieldGroup label="Ville" htmlFor="client_city">
+        <FieldGroup label="Région" htmlFor="client_city">
           <Select
             value={watch("client_city")}
             onValueChange={(v) => v && setValue("client_city", v as BriefFormValues["client_city"], { shouldValidate: true })}
             items={cityItems}
           >
-            <SelectTrigger className="h-10 w-full rounded-xl" aria-label="Ville">
+            <SelectTrigger className="h-10 w-full rounded-xl" aria-label="Région">
               <SelectValue />
             </SelectTrigger>
             <SelectContent align="start">
-              {SENEGAL_CITIES.map((city) => (
+              {SENEGAL_REGIONS.map((city) => (
                 <SelectItem key={city} value={city}>
                   {city}
                 </SelectItem>

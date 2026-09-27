@@ -43,7 +43,7 @@ export function StatsSection({ stats }: { stats: Stats | null }) {
                 <span className="font-display text-5xl">—</span>
               )
             }
-            label="Villes couvertes"
+            label="Régions couvertes"
             live={Boolean(stats)}
           />
           <Tile

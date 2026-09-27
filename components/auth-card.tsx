@@ -29,7 +29,7 @@ import {
   type LoginFormValues,
   type SignupFormValues,
 } from "@/lib/validations";
-import { SENEGAL_CITIES } from "@/lib/tokens";
+import { SENEGAL_REGIONS } from "@/lib/tokens";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -529,7 +529,7 @@ function SignupPane({
 
             {role === "client" && (
               <Field error={errors.city?.message}>
-                <Label htmlFor="signup-city">Ville</Label>
+                <Label htmlFor="signup-city">Région</Label>
                 <div className="relative">
                   <MapPin
                     className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
@@ -540,7 +540,7 @@ function SignupPane({
                     onValueChange={(v) =>
                       v && setValue("city", v as ClientSignupFormValues["city"], { shouldValidate: true })
                     }
-                    items={Object.fromEntries(SENEGAL_CITIES.map((c) => [c, c]))}
+                    items={Object.fromEntries(SENEGAL_REGIONS.map((c) => [c, c]))}
                   >
                     <SelectTrigger
                       id="signup-city"
@@ -549,7 +549,7 @@ function SignupPane({
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent align="start">
-                      {SENEGAL_CITIES.map((city) => (
+                      {SENEGAL_REGIONS.map((city) => (
                         <SelectItem key={city} value={city}>
                           {city}
                         </SelectItem>

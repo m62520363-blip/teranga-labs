@@ -297,7 +297,7 @@ export function SettingsContent({
                   value={isClient ? "Client" : isDev ? "Développeur" : "—"}
                 />
                 {company ? <InfoRow label="Structure" value={company} /> : null}
-                {city ? <InfoRow label="Ville" value={city} /> : null}
+                {city ? <InfoRow label="Région" value={city} /> : null}
                 {whatsapp ? <InfoRow label="WhatsApp" value={whatsapp} /> : null}
                 <InfoRow
                   label="Dernière connexion"

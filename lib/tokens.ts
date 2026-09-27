@@ -1,12 +1,18 @@
-export const SENEGAL_CITIES = [
+export const SENEGAL_REGIONS = [
   "Dakar",
-  "Thiès",
-  "Saint-Louis",
-  "Touba",
+  "Diourbel",
+  "Fatick",
+  "Kaffrine",
   "Kaolack",
+  "Kédougou",
+  "Kolda",
+  "Louga",
+  "Matam",
+  "Saint-Louis",
+  "Sédhiou",
+  "Tambacounda",
+  "Thiès",
   "Ziguinchor",
-  "Saly",
-  "Autre",
 ] as const;
 
 export const PROJECT_TYPES = [
@@ -89,6 +95,8 @@ export function decodeUnlockError(
       return "Pack de Tokens introuvable.";
     case "TLNOK":
       return "Lien de gestion invalide.";
+    case "TLSPM":
+      return "Un signalement est déjà en cours pour ce contenu.";
     default:
       return fallback;
   }
