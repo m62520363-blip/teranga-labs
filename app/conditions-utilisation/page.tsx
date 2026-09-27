@@ -60,11 +60,13 @@ export default function ConditionsUtilisationPage() {
           heading: "Contact direct",
           body: (
             <p>
-              Le contact direct (WhatsApp) est l’objet même du service. Les
-              développeurs et les clients sont responsables de leurs échanges
-              et de la conclusion de leur propre contrat. TERANGA LABS
-              n’intervient pas dans les transactions financières entre les
-              parties et ne prélève aucune commission.
+              Le contact direct avec le client est l’objet même du service : le
+              développeur qui débloque un brief avec 1 Token obtient le contact
+              et poursuit l’échange dans la messagerie interne, puis en direct
+              (WhatsApp) après accord. Les développeurs et les clients sont
+              responsables de leurs échanges et de la conclusion de leur propre
+              contrat. TERANGA LABS n’intervient pas dans les transactions
+              financières entre les parties et ne prélève aucune commission.
             </p>
           ),
         },

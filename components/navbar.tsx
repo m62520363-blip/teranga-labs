@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import {
   ArrowRight,
   Briefcase,
+  Coins,
   Compass,
   Home,
   LogIn,
@@ -79,6 +80,7 @@ export function Navbar({
         adminOnly: true,
       });
     }
+    appLinks.push({ href: "/tokens", label: "Acheter des Tokens" });
     appLinks.push({ href: "/parametres", label: "Paramètres" });
   }
 
@@ -87,6 +89,7 @@ export function Navbar({
       return [
         { href: "/client", label: "Accueil", icon: Home },
         { href: "/briefs", label: "Briefs", icon: Compass },
+        { href: "/tokens", label: "Tokens", icon: Coins },
         { href: "/conversations", label: "Messages", icon: MessageCircle },
         { href: "/poster", label: "Poster", icon: Plus },
         { href: "/parametres", label: "Compte", icon: Settings2 },
@@ -96,6 +99,7 @@ export function Navbar({
       return [
         { href: "/dashboard", label: "Accueil", icon: Home },
         { href: "/briefs", label: "Briefs", icon: Briefcase },
+        { href: "/tokens", label: "Tokens", icon: Coins },
         { href: "/conversations", label: "Messages", icon: MessageCircle },
         { href: "/dashboard?tab=profil", label: "Profil", icon: UserRound },
         { href: "/parametres", label: "Compte", icon: Settings2 },

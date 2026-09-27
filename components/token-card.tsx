@@ -9,7 +9,6 @@ import {
   ExternalLink,
   Loader2,
   ShieldCheck,
-  Wallet,
 } from "lucide-react";
 import type { TokenPackage } from "@/types/database";
 import { formatFCFA } from "@/lib/formatting";
@@ -36,7 +35,7 @@ type OrderResult = {
 
 function useBuyFlow(pkg: TokenPackage) {
   const [step, setStep] = React.useState<
-    "confirm" | "login" | "checkout-creating" | "provider-offline" | "placing" | "placed" | "error"
+    "confirm" | "login" | "placing" | "placed" | "error"
   >("confirm");
   const [order, setOrder] = React.useState<OrderResult | null>(null);
   const [errorMessage, setErrorMessage] = React.useState<string>("");
@@ -45,50 +44,6 @@ function useBuyFlow(pkg: TokenPackage) {
     setStep("confirm");
     setOrder(null);
     setErrorMessage("");
-  };
-
-  const startCheckout = async () => {
-    setErrorMessage("");
-    setStep("checkout-creating");
-    try {
-      const response = await fetch("/api/payments/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ packageId: pkg.id }),
-      });
-      const payload = (await response.json().catch(() => null)) as {
-        code?: string;
-        message?: string;
-        launchUrl?: string;
-      } | null;
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          setStep("login");
-          return;
-        }
-        if (payload?.code === "PAYMENT_NOT_CONFIGURED") {
-          setStep("provider-offline");
-          return;
-        }
-        setErrorMessage(
-          payload?.message ?? "Impossible d'initialiser le paiement en ligne."
-        );
-        setStep("error");
-        return;
-      }
-
-      if (payload?.launchUrl) {
-        // Redirection vers la page de paiement sécurisée Wave.
-        window.location.assign(payload.launchUrl);
-        return;
-      }
-      setErrorMessage("Réponse inattendue du serveur de paiement.");
-      setStep("error");
-    } catch {
-      setErrorMessage("Le réseau semble indisponible. Réessayez.");
-      setStep("error");
-    }
   };
 
   const createOrder = async () => {
@@ -127,13 +82,12 @@ function useBuyFlow(pkg: TokenPackage) {
     }
   };
 
-  return { step, order, errorMessage, startCheckout, createOrder, resetStep };
+  return { step, order, errorMessage, createOrder, resetStep };
 }
 
 export function TokenCard({ pkg }: { pkg: TokenPackage }) {
   const [open, setOpen] = React.useState(false);
-  const { step, order, errorMessage, startCheckout, createOrder, resetStep } =
-    useBuyFlow(pkg);
+  const { step, order, errorMessage, createOrder, resetStep } = useBuyFlow(pkg);
   const pricePerToken = pkg.tokens > 0 ? Math.round(pkg.price_fcfa / pkg.tokens) : 0;
 
   return (
@@ -208,87 +162,24 @@ export function TokenCard({ pkg }: { pkg: TokenPackage }) {
               <div className="flex flex-col gap-3 rounded-xl bg-[#1E1E1E] p-4">
                 <div className="flex items-center gap-2 text-sm font-medium">
                   <ShieldCheck className="size-4 text-[#E86A2C]" aria-hidden="true" />
-                  Paiement sécurisé en ligne
+                  Commande validée par notre équipe
                 </div>
                 <ol className="list-inside list-decimal space-y-1.5 text-sm leading-relaxed text-muted-foreground">
-                  <li>Vous êtes redirigé·e vers la page de paiement sécurisée.</li>
-                  <li>Vous payez par Wave ou Max It.</li>
-                  <li>Dès confirmation du paiement, vos Tokens sont crédités automatiquement.</li>
+                  <li>Vous créez une commande (numéro de suivi).</li>
+                  <li>Vous payez sur votre mobile money habituel (Wave, Orange Money, Max It).</li>
+                  <li>Notre équipe vérifie le paiement et crédite vos Tokens.</li>
                 </ol>
-                <div className="grid gap-2 border-t border-[#2A2A2A] pt-3">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                    Moyens de paiement
-                  </p>
-                  <div className="flex items-center justify-between rounded-lg bg-black/20 px-3 py-2 text-sm">
-                    <span className="flex items-center gap-2 font-medium">
-                      <span className="size-2 rounded-full bg-[#3DD68C]" aria-hidden="true" />
-                      Wave
-                    </span>
-                    <span className="text-xs text-muted-foreground">Disponible</span>
-                  </div>
-                  <div className="flex items-center justify-between rounded-lg bg-black/20 px-3 py-2 text-sm">
-                    <span className="flex items-center gap-2 font-medium">
-                      <span className="size-2 rounded-full bg-[#E86A2C]" aria-hidden="true" />
-                      Max It
-                    </span>
-                    <span className="text-xs font-medium uppercase tracking-wide text-[#E86A2C]">
-                      Hors service
-                    </span>
-                  </div>
-                </div>
+                <p className="border-t border-[#2A2A2A] pt-3 text-xs leading-relaxed text-muted-foreground">
+                  Le paiement en ligne automatique (Wave, Orange Money, Max It)
+                  arrive bientôt. En attendant, l’achat se fait à la commande,
+                  confirmée une fois l’encaissement vérifié.
+                </p>
               </div>
 
               <DialogFooter className="gap-2">
-                <Button
-                  variant="outline"
-                  type="button"
-                  className="h-9"
-                  onClick={createOrder}
-                >
+                <Button className="h-9 w-full" onClick={createOrder}>
                   <CreditCard className="size-4" aria-hidden="true" />
-                  Commande manuelle
-                </Button>
-                <Button className="h-9" onClick={startCheckout}>
-                  <Wallet className="size-4" aria-hidden="true" />
-                  Payer en ligne
-                </Button>
-              </DialogFooter>
-            </>
-          ) : null}
-
-          {step === "checkout-creating" ? (
-            <>
-              <DialogHeader>
-                <DialogTitle>Ouverture du paiement sécurisé…</DialogTitle>
-              </DialogHeader>
-              <div className="flex flex-col items-center gap-3 py-6 text-sm text-muted-foreground">
-                <Loader2 className="size-8 animate-spin text-[#E86A2C]" aria-hidden="true" />
-                <p>Redirection vers la page de paiement sécurisée.</p>
-              </div>
-            </>
-          ) : null}
-
-          {step === "provider-offline" ? (
-            <>
-              <DialogHeader>
-                <DialogTitle>Paiement en ligne pas encore actif</DialogTitle>
-                <DialogDescription>
-                  Ce serveur n’a pas encore de clés Wave configurées. Vous pouvez
-                  passer par une commande manuelle : notre équipe créditera vos
-                  Tokens après vérification du paiement.
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter className="gap-2">
-                <DialogClose
-                  render={
-                    <Button variant="outline" type="button" className="h-9">
-                      Annuler
-                    </Button>
-                  }
-                />
-                <Button className="h-9" onClick={createOrder}>
-                  <CreditCard className="size-4" aria-hidden="true" />
-                  Créer une commande manuelle
+                  Créer la commande
                 </Button>
               </DialogFooter>
             </>
@@ -364,7 +255,7 @@ export function TokenCard({ pkg }: { pkg: TokenPackage }) {
               <div className="flex flex-col gap-2 rounded-xl bg-[#1E1E1E] p-4 text-sm leading-relaxed text-muted-foreground">
                 <p>
                   Envoyez <strong className="font-semibold">{formatFCFA(order.price_fcfa)}</strong> sur
-                  votre moyen de paiement habituel (Wave ou Max It) en
+                  votre moyen de paiement habituel (Wave, Orange Money ou Max It) en
                   mentionnant votre numéro de commande <strong className="font-mono">#{order.id}</strong>.
                 </p>
                 <p>
@@ -411,7 +302,7 @@ export function TokenCard({ pkg }: { pkg: TokenPackage }) {
                 <Button
                   variant="outline"
                   className="h-9"
-                  onClick={startCheckout}
+                  onClick={createOrder}
                 >
                   Réessayer
                 </Button>

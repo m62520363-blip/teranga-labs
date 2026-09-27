@@ -16,6 +16,9 @@ export function AuthShell({
       <div className="container-tl relative">
         <div className="flex flex-col items-center gap-8 md:gap-10">
           <ImageLogoMark className="h-12 w-auto" />
+          <h1 className="sr-only">
+            {mode === "login" ? "Connexion" : "Créer un compte"}
+          </h1>
           <div className="w-full max-w-5xl">
             <AuthCard initialMode={mode} />
           </div>

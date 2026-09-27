@@ -186,15 +186,15 @@ function LoginPane({
       <div className="px-6 pt-8 md:hidden">
         <span className="chip gap-2 bg-[#141414]/80 border-[#2A2A2A] backdrop-blur">
           <span className="size-1.5 rounded-full bg-emerald-400" aria-hidden="true" />
-          VERSO
+          TERANGA LABS
         </span>
         <h2
           key={`mobile-login-${String(active)}`}
           className={cn("mt-3 text-3xl font-bold tracking-tight", active && "tl-blur-in")}
         >
-          Welcome
+          Bienvenue
           <br />
-          back.
+          à nouveau.
         </h2>
         <p className="mt-2 text-sm text-muted-foreground">
           Se connecter à votre espace TERANGA LABS.
@@ -307,7 +307,7 @@ function LoginPane({
                     onClick={onModeChange}
                     className="font-semibold text-[#E86A2C] underline-offset-4 outline-none hover:text-[#f59348] hover:underline focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
                   >
-                    Create an account
+                    Créer un compte
                   </button>
                 </p>
               </form>
@@ -429,15 +429,15 @@ function SignupPane({
       <div className="px-6 pt-8 md:hidden">
         <span className="chip gap-2 bg-[#141414]/80 border-[#2A2A2A] backdrop-blur">
           <span className="size-1.5 rounded-full bg-emerald-400" aria-hidden="true" />
-          VERSO
+          TERANGA LABS
         </span>
         <h2
           key={`mobile-signup-${String(active)}`}
           className={cn("mt-3 text-3xl font-bold tracking-tight", active && "tl-blur-in")}
         >
-          Start the
+          Bienvenue
           <br />
-          first page.
+          parmi nous.
         </h2>
         <p className="mt-2 text-sm text-muted-foreground">
           Créez votre compte client ou développeur.
@@ -456,7 +456,7 @@ function SignupPane({
           className={cn(active && "tl-slide-in-right")}
         >
           <div>
-            <h2 className="text-xl font-bold tracking-tight">Create account</h2>
+            <h2 className="text-xl font-bold tracking-tight">Créer un compte</h2>
             <p className="mt-1 text-sm text-muted-foreground">
               Choisissez votre rôle. Gratuit à la création.
             </p>
@@ -660,7 +660,7 @@ function SignupPane({
                   {...register("whatsapp")}
                   autoComplete="tel"
                   className="h-11 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 pl-10 transition-[border-color,box-shadow] duration-200 focus-visible:border-[#E86A2C]/60 focus-visible:shadow-[0_0_0_3px_rgba(232,106,44,0.14)]"
-                  placeholder="+221771234567"
+                  placeholder="+221 7X XX XX XX"
                   aria-invalid={Boolean(errors.whatsapp)}
                 />
               </div>
@@ -685,7 +685,7 @@ function SignupPane({
               {isSubmitting ? (
                 <Loader2 className="size-4 animate-spin" aria-hidden="true" />
               ) : null}
-              {isSubmitting ? "Création du compte…" : "Create account"}
+              {isSubmitting ? "Création du compte…" : "Créer mon compte"}
             </button>
 
             <p className="text-center text-sm text-muted-foreground">
@@ -695,7 +695,7 @@ function SignupPane({
                 onClick={onModeChange}
                 className="font-semibold text-[#E86A2C] underline-offset-4 outline-none hover:text-[#f59348] hover:underline focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
               >
-                Sign in
+                Se connecter
               </button>
             </p>
           </form>
@@ -806,7 +806,7 @@ function VisualPanel({ mode, active }: { mode: AuthMode; active: boolean }) {
       <div key={`visual-${mode}-${String(active)}`} className="relative">
         <span className="chip gap-2 border-emerald-300/15 bg-emerald-500/10 text-emerald-200">
           <span className="size-1.5 rounded-full bg-emerald-400" aria-hidden="true" />
-          VERSO
+          TERANGA LABS
         </span>
         <h2
           className={cn(
@@ -816,15 +816,15 @@ function VisualPanel({ mode, active }: { mode: AuthMode; active: boolean }) {
         >
           {isLogin ? (
             <>
-              Welcome
+              Bon
               <br />
-              back.
+              retour.
             </>
           ) : (
             <>
-              Start the
+              Bien
               <br />
-              first page.
+              arrivé.
             </>
           )}
         </h2>

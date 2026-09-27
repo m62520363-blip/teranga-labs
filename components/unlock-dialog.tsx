@@ -31,13 +31,14 @@ import { formatFCFA } from "@/lib/formatting";
 import { useBalance } from "@/components/balance-provider";
 import { cn } from "cn";
 
-type BriefPayload = {
+export type BriefPayload = {
   id: string;
   client_name: string;
   project_type: string;
   client_city: string;
   budget: number;
   description: string;
+  demo?: boolean;
   created_at: string;
 };
 
@@ -69,7 +70,7 @@ export function UnlockDialog({
 
   const start = () => {
     setOpen(true);
-    if ((balance ?? 0) < 1) setPhase({ kind: "no-tokens" });
+    if (!brief.demo && (balance ?? 0) < 1) setPhase({ kind: "no-tokens" });
     else setPhase({ kind: "confirm" });
   };
 
@@ -118,7 +119,8 @@ export function UnlockDialog({
         className="h-8"
         render={
           <Link href="/login">
-            Démarrer la discussion · 1 Token
+            Démarrer la discussion ·{" "}
+            {brief.demo ? "Gratuit" : "1 Token"}
           </Link>
         }
       />
@@ -143,7 +145,7 @@ export function UnlockDialog({
 
   return (
     <Dialog open={open} onOpenChange={(o) => setOpen(o)}>
-      <UnlockTriggerButton onClick={start} balance={balance} />
+      <UnlockTriggerButton onClick={start} balance={balance} demo={brief.demo} />
       <DialogContent className="max-w-sm">
         {phase.kind === "confirm" || phase.kind === "submitting" ? (
           <React.Fragment>
@@ -160,6 +162,12 @@ export function UnlockDialog({
                 {brief.client_city} · {formatFCFA(brief.budget)} ·{" "}
                 {brief.project_type}
               </p>
+              {brief.demo ? (
+                <p className="mt-2 inline-flex items-center gap-1 rounded-full border border-[#E86A2C]/40 bg-[#2A1A10] px-2.5 py-0.5 text-[11px] font-semibold text-[#E86A2C]">
+                  <Sparkles className="size-3" aria-hidden="true" />
+                  Brief d’exemple · déblocage gratuit
+                </p>
+              ) : null}
             </div>
 
             <div className="flex flex-col gap-3">
@@ -207,16 +215,33 @@ export function UnlockDialog({
               </div>
 
               <div className="flex items-center justify-between rounded-xl border border-[#2A2A2A] px-4 py-2.5">
-                <span className="flex items-center gap-1.5 text-sm font-semibold">
-                  <Coins className="size-4 text-[#E86A2C]" aria-hidden="true" />
-                  {balance ?? 0} token{(balance ?? 0) > 1 ? "s" : ""}
-                </span>
+                {brief.demo ? (
+                  <span className="flex items-center gap-1.5 text-sm font-semibold">
+                    <Sparkles className="size-4 text-[#E86A2C]" aria-hidden="true" />
+                    Déblocage gratuit
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-1.5 text-sm font-semibold">
+                    <Coins className="size-4 text-[#E86A2C]" aria-hidden="true" />
+                    {balance ?? 0} token{(balance ?? 0) > 1 ? "s" : ""}
+                  </span>
+                )}
               </div>
 
               <p className="flex items-start gap-2 text-xs leading-relaxed text-muted-foreground">
                 <Lock className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
-                1 Token sera débité : le client reçoit votre message dans sa
-                messagerie interne. Leur WhatsApp reste privé.
+                {brief.demo ? (
+                  <>
+                    C’est un exemple de démonstration : aucun Token ne sera
+                    débité. Le client reçoit votre message dans sa messagerie
+                    interne, leur WhatsApp reste privé.
+                  </>
+                ) : (
+                  <>
+                    1 Token sera débité : le client reçoit votre message dans sa
+                    messagerie interne. Leur WhatsApp reste privé.
+                  </>
+                )}
               </p>
             </div>
 
@@ -234,7 +259,9 @@ export function UnlockDialog({
                 )}
                 {phase.kind === "submitting"
                   ? "Envoi en cours…"
-                  : "Envoyer · 1 Token"}
+                  : brief.demo
+                    ? "Envoyer gratuitement"
+                    : "Envoyer · 1 Token"}
               </Button>
             </DialogFooter>
           </React.Fragment>
@@ -309,11 +336,13 @@ export function UnlockDialog({
 function UnlockTriggerButton({
   onClick,
   balance,
+  demo = false,
 }: {
   onClick: () => void;
   balance: number | null;
+  demo?: boolean;
 }) {
-  const insufficient = (balance ?? 0) < 1;
+  const insufficient = !demo && (balance ?? 0) < 1;
   return (
     <Button
       variant="default"
@@ -325,7 +354,7 @@ function UnlockTriggerButton({
         className={cn("size-3.5", insufficient && "opacity-70")}
         aria-hidden="true"
       />
-      Démarrer la discussion · 1 Token
+      Démarrer la discussion · {demo ? "Gratuit" : "1 Token"}
     </Button>
   );
 }

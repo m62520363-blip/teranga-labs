@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { BadgeCheck, MapPin, Sparkles, Timer } from "lucide-react";
 import type { PublicRequest } from "@/types/database";
 import { formatFCFA, formatRelativeTime, briefFreshness } from "@/lib/formatting";
@@ -34,6 +35,11 @@ export function BriefCard({
       </div>
 
       <div className="mt-3 flex flex-wrap items-center gap-1.5">
+        {brief.demo ? (
+          <span className="inline-flex h-5 items-center rounded-full border border-[#E86A2C]/40 bg-[#2A1A10] px-2.5 text-[11px] font-semibold text-[#E86A2C]">
+            Exemple
+          </span>
+        ) : null}
         {freshness === "h24" ? (
           <span className="inline-flex h-5 items-center gap-1 rounded-full bg-[#2A1A10] px-2.5 text-[11px] font-semibold text-[#E86A2C]">
             <Timer className="size-3" aria-hidden="true" />
@@ -55,7 +61,12 @@ export function BriefCard({
       </div>
 
       <h3 className="mt-3 text-lg font-semibold leading-snug tracking-tight">
-        {brief.client_name}
+        <Link
+          href={`/briefs/${brief.id}`}
+          className="outline-none underline-offset-4 hover:text-[#E86A2C] focus-visible:underline"
+        >
+          {brief.client_name}
+        </Link>
       </h3>
 
       <p className="mt-1.5 text-lg font-semibold tracking-tight">

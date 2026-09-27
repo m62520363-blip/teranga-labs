@@ -37,7 +37,7 @@ export default async function PosterPage() {
 
             <p className="mt-8 text-sm leading-relaxed text-muted-foreground">
               Pas encore de compte ?{" "}
-              <Link href="/signup" className="underline decoration-[#E86A2C]/60 underline-offset-4 hover:text-foreground">
+              <Link href="/login?mode=signup" className="underline decoration-[#E86A2C]/60 underline-offset-4 hover:text-foreground">
                 Inscrivez-vous gratuitement
               </Link>{" "}
               — l’inscription est gratuite, seule la publication consomme 1 Token.
@@ -66,7 +66,10 @@ export default async function PosterPage() {
             <PosterForm />
           </div>
 
-          <ul className="mt-8 grid gap-3 sm:grid-cols-3">
+          <h2 className="mt-8 text-sm font-semibold tracking-tight">
+            En quelques points
+          </h2>
+          <ul className="mt-3 grid gap-3 sm:grid-cols-3">
             {["1 Token par brief", "2 minutes", "Sans engagement"].map((item) => (
               <li
                 key={item}

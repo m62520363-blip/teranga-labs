@@ -521,7 +521,7 @@ export function PosterForm() {
           type="tel"
           {...register("client_whatsapp")}
           className="h-10 rounded-xl"
-          placeholder="+22177..."
+          placeholder="+221 7X XX XX XX"
           aria-invalid={Boolean(errors.client_whatsapp)}
         />
         {errors.client_whatsapp ? <FieldError>{errors.client_whatsapp.message}</FieldError> : null}

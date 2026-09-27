@@ -1,16 +1,26 @@
 import type { MetadataRoute } from "next";
-import { META } from "@/components/landing/content";
+import { absoluteUrl } from "@/lib/utils";
 
 export const dynamic = "force-static";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = META.url || "https://terangalabs.sn";
+  const baseUrl = absoluteUrl("/").origin;
 
   return {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/admin", "/dashboard", "/auth/"],
+      disallow: [
+        "/admin",
+        "/auth/",
+        "/client",
+        "/conversations",
+        "/dashboard",
+        "/login",
+        "/notifications",
+        "/parametres",
+        "/signup",
+      ],
     },
     sitemap: `${baseUrl}/sitemap.xml`,
   };

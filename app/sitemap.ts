@@ -1,10 +1,10 @@
 import type { MetadataRoute } from "next";
-import { META } from "@/components/landing/content";
+import { absoluteUrl } from "@/lib/utils";
 
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = META.url || "https://terangalabs.sn";
+  const baseUrl = absoluteUrl("/").origin;
 
   const routes = [
     "",
@@ -12,13 +12,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/briefs",
     "/conditions-utilisation",
     "/contact",
-    "/dashboard",
-    "/login",
+    "/cookies",
+    "/faq",
     "/mentions-legales",
     "/plan-du-site",
     "/politique-de-confidentialite",
     "/poster",
-    "/signup",
     "/tokens",
   ];
 

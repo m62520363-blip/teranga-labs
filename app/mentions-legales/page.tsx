@@ -44,14 +44,44 @@ export default function MentionsLegalesPage() {
           ),
         },
         {
-          heading: "Hébergement",
+          heading: "Identité légale",
           body: (
             <p>
-              Le site est hébergé par un prestataire d’hébergement web. Les
-              coordonnées complètes de l’hébergeur sont disponibles sur simple
-              demande. Cette zone est à compléter avec les informations
-              contractuelles de l’hébergeur utilisé.
+              Les numéros d’identification de la structure (NINEA et RCCM)
+              seront publiés dès que l’immatriculation administrative sera
+              finalisée. En attendant, pour toute demande, écrivez à{" "}
+              <a
+                href="mailto:contact@terangalabs.sn"
+                className="font-medium text-[#E86A2C] underline underline-offset-2"
+              >
+                contact@terangalabs.sn
+              </a>
+              .
             </p>
+          ),
+        },
+        {
+          heading: "Hébergement",
+          body: (
+            <>
+              <p>
+                Le site est hébergé par{" "}
+                <strong>Vercel Inc.</strong>, 340 S Lemon Ave #4133, Walnut, CA
+                91789, États-Unis —{" "}
+                <a
+                  href="https://vercel.com"
+                  className="font-medium text-[#E86A2C] underline underline-offset-2"
+                >
+                  vercel.com
+                </a>
+                .
+              </p>
+              <p>
+                La base de données du service est gérée par{" "}
+                <strong>Supabase Inc.</strong> via une infrastructure cloud
+                sécurisée, séparée de l’hébergement du site.
+              </p>
+            </>
           ),
         },
         {

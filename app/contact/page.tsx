@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Clock, HelpCircle, Mail, Send } from "lucide-react";
+import { Clock, HelpCircle, Send } from "lucide-react";
+import { ContactForm } from "@/components/contact-form";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -8,18 +9,8 @@ export const metadata: Metadata = {
     "Contactez l’équipe TERANGA LABS : question, signalement d’abus ou besoin d’acheter des Tokens.",
 };
 
-const channels = [
-  {
-    href: "mailto:contact@terangalabs.sn",
-    title: "contact@terangalabs.sn",
-    text: "Toute demande et achat de Tokens",
-    icon: Mail,
-    note: "Réponse sous 24 h ouvrées",
-  },
-];
-
 const topics = [
-  { title: "Acheter des Tokens", text: "Sur facture, transaction par l’équipe. Paiement en ligne bientôt." },
+  { title: "Acheter des Tokens", text: "Sur commande, transaction par l’équipe. Paiement en ligne bientôt." },
   { title: "Signaler un abus", text: "Faux profil, brief fictif, sollicitation hors sujet : on vérifie chaque signalement." },
   { title: "Problème technique", text: "Connexion, messagerie, compte : décrivez le problème, on corrige." },
 ];
@@ -42,32 +33,7 @@ export default function ContactPage() {
           </p>
 
           <div className="mt-10 space-y-4">
-            {channels.map((c) => (
-              <a
-                key={c.href}
-                href={c.href}
-                className="group flex items-center justify-between gap-4 rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 transition-colors outline-none hover:border-[#E86A2C]/40 focus-visible:ring-2 focus-visible:ring-[#E86A2C]/60"
-              >
-                <span className="flex items-center gap-4">
-                  <span className="flex size-11 items-center justify-center rounded-xl bg-[#2A1A10]">
-                    <c.icon className="size-5 text-[#E86A2C]" aria-hidden="true" />
-                  </span>
-                  <span>
-                    <span className="block text-sm font-semibold tracking-tight">
-                      {c.title}
-                    </span>
-                    <span className="block text-sm text-muted-foreground">{c.text}</span>
-                    <span className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-[var(--success-soft)] px-2 py-0.5 text-[11px] font-semibold text-[var(--success)]">
-                      {c.note}
-                    </span>
-                  </span>
-                </span>
-                <ArrowRight
-                  className="size-4 text-muted-foreground/40 transition-transform group-hover:translate-x-0.5"
-                  aria-hidden="true"
-                />
-              </a>
-            ))}
+            <ContactForm />
 
             <div className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6">
               <h2 className="text-sm font-semibold tracking-tight">À quoi sert le contact ?</h2>

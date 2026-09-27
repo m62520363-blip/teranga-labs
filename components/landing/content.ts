@@ -23,7 +23,7 @@ export const META = {
   title: "Des clients qui veulent des sites. Tous les jours au Sénégal. — TERANGA LABS",
   description:
     "TERANGA LABS, le marketplace inversé du Sénégal. Les clients publient le brief de leur site web pour 1 Token ; les développeurs sérieux débloquent le contact avec 1 Token (2 500 F) et écrivent directement. Sans commission.",
-  url: "", // à remplir dès que le domaine est connu (ex. https://terangalabs.sn)
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://teranga-labs.vercel.app",
   keywords:
     "marketplace Sénégal, développeurs Sénégal, freelance Sénégal, brief web, trouver des clients web, acheter des tokens, site e-commerce Dakar, développeur web Thiès, marketplace inversée",
 };
@@ -68,7 +68,7 @@ export const PROBLEM = {
     { stat: "1 besoin", label: "posté, pour des dizaines de contacts" },
     { stat: "50 devs", label: "qui se battent pour un petit budget" },
     { stat: "0 filtre", label: "le client est noyé sous les messages" },
-    { stat: "00%", label: "de temps réellement gagné" },
+    { stat: "0 %", label: "de temps réellement gagné" },
   ],
   transition: "On a inversé le modèle.",
   transitionSub:
@@ -137,8 +137,8 @@ export const BUYER = {
     budgetValue: "Ex. 1 500 000 FCFA",
     cityLabel: "Votre région",
     cityValue: "Ex. Dakar",
-    contactLabel: "Votre WhatsApp (reste privé)",
-    contactValue: "Ex. 77 123 45 67",
+contactLabel: "Votre WhatsApp (reste privé)",
+    contactValue: "Ex. +221 7X XX XX XX",
   },
 };
 

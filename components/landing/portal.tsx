@@ -28,12 +28,12 @@ const SENEGAL_POINTS = [
   {
     icon: Wallet,
     title: "Paiement en FCFA",
-    text: "Orange Money, Wave et Max It. Pas de carte bancaire ni de compte à l’étranger.",
+    text: "Commandes traitées par l’équipe, réglées sur Wave, Orange Money ou Max It. Paiement en ligne en préparation.",
   },
   {
     icon: MessageSquare,
     title: "Votre WhatsApp reste privé",
-    text: "La messagerie est intégrée à la plateforme : le contact ne s’ouvre qu’à l’accord.",
+    text: "La messagerie est intégrée à la plateforme : le contact ne s’ouvre qu’au développeur qui investit 1 Token.",
   },
   {
     icon: ShieldCheck,
@@ -83,7 +83,7 @@ export function PortalSection() {
               Publier mon brief
               <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
-            <Link href="/signup" className="btn btn-ghost">
+            <Link href="/login?mode=signup" className="btn btn-ghost">
               Créer un compte client
             </Link>
           </div>
@@ -120,7 +120,7 @@ export function PortalSection() {
               Voir les missions
               <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
-            <Link href="/signup" className="btn btn-ghost">
+            <Link href="/login?mode=signup" className="btn btn-ghost">
               Créer un compte développeur
             </Link>
           </div>

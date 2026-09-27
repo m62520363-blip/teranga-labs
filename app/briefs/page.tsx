@@ -27,7 +27,7 @@ export default async function BriefsPage() {
     const { data } = await supabase
       .from("requests")
       .select(
-        "id, client_name, client_city, project_type, budget, description, status, hidden, budget_verified, created_at"
+        "id, client_name, client_city, project_type, budget, description, status, hidden, budget_verified, demo, created_at"
       )
       .eq("status", "ouvert")
       .eq("hidden", false)
@@ -78,7 +78,7 @@ export default async function BriefsPage() {
           </div>
           {!user && (
             <Link
-              href="/signup"
+              href="/login?mode=signup"
               className="inline-flex h-10 shrink-0 items-center gap-2 rounded-xl bg-[#F2F2F2] px-5 text-sm font-medium text-[#0D0D0D] transition-colors outline-none hover:bg-[#EBEBEB] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
             >
               Créer un compte développeur
@@ -86,7 +86,10 @@ export default async function BriefsPage() {
           )}
         </div>
 
-        <div className="mt-10">
+        <h2 className="mt-10 text-sm font-semibold tracking-tight">
+            Parcourir les briefs
+          </h2>
+        <div className="mt-4">
           <BriefFilters
             briefs={briefs}
             user={user ? { id: user.id } : null}

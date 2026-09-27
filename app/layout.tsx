@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { DM_Sans, Geist_Mono, Outfit } from "next/font/google";
 import "./globals.css";
@@ -44,6 +44,11 @@ export const metadata: Metadata = {
     "freelance",
     "Tokens",
   ],
+  manifest: "/manifest.json",
+  icons: {
+    icon: "/icon.png",
+    apple: "/apple-icon.png",
+  },
   openGraph: {
     type: "website",
     locale: "fr_SN",
@@ -52,17 +57,30 @@ export const metadata: Metadata = {
     description:
       "Les clients publient leur besoin pour 1 Token. Les développeurs utilisent 1 Token pour débloquer leur contact.",
     siteName: "TERANGA LABS",
+    images: [
+      {
+        url: absoluteUrl("/og.png"),
+        width: 1200,
+        height: 630,
+        alt: "TERANGA LABS — Des clients qui veulent des sites, tous les jours au Sénégal.",
+      },
+    ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "TERANGA LABS — Des clients qui veulent un site",
     description:
       "Marketplace inversé de projets web au Sénégal.",
+    images: [absoluteUrl("/og.png")],
   },
   robots: {
     index: true,
     follow: true,
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0A0A0A",
 };
 
 export default async function RootLayout({

@@ -1,0 +1,31 @@
+{
+  "name": "TERANGA LABS — Marketplace inversé des développeurs du Sénégal",
+  "short_name": "Teranga Labs",
+  "description": "Les clients publient le brief de leur site web pour 1 Token. Les développeurs sérieux débloquent le contact avec 1 Token et écrivent directement. Sans commission.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0A0A0A",
+  "theme_color": "#0A0A0A",
+  "lang": "fr",
+  "icons": [
+    {
+      "src": "/pwa-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

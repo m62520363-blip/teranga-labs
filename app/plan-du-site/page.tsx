@@ -31,6 +31,7 @@ const groups = [
       },
       { label: "Pour les clients", href: "/poster", icon: ShoppingBag },
       { label: "Pour les développeurs", href: "/briefs", icon: UserPlus },
+      { label: "Acheter des Tokens", href: "/tokens", icon: ShoppingBag },
     ],
   },
   {

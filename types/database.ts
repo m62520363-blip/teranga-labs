@@ -66,6 +66,7 @@ export interface Database {
           selected_developer_id: string | null;
           features: string[];
           deadline: string | null;
+          demo: boolean;
           created_at: string;
         };
         Insert: {
@@ -85,6 +86,7 @@ export interface Database {
           selected_developer_id?: string | null;
           features?: string[];
           deadline?: string | null;
+          demo?: boolean;
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["requests"]["Insert"]>;
@@ -782,7 +784,7 @@ export interface Database {
 
 export type PublicRequest = Pick<
   Database["public"]["Tables"]["requests"]["Row"],
-  "id" | "client_name" | "client_city" | "project_type" | "budget" | "description" | "status" | "hidden" | "budget_verified" | "created_at"
+  "id" | "client_name" | "client_city" | "project_type" | "budget" | "description" | "status" | "hidden" | "budget_verified" | "demo" | "created_at"
 >;
 
 export type TokenPackage = Database["public"]["Tables"]["token_packages"]["Row"];

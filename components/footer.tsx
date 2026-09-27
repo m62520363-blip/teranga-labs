@@ -38,6 +38,7 @@ const columns = [
       { label: "Comment ça marche", href: "/#comment-ca-marche" },
       { label: "Pour les clients", href: "/poster" },
       { label: "Pour les développeurs", href: "/briefs" },
+      { label: "Acheter des Tokens", href: "/tokens" },
     ],
   },
   {
@@ -76,7 +77,7 @@ export function Footer() {
             />
           </span>
           <p className="mt-4 text-sm leading-relaxed text-white/60">
-            {BRAND}, le marketplace inversé du Sénégal.{" "}
+            Le marketplace inversé du Sénégal.{" "}
             <span className="text-white/90">« Vous cherchez. Le marché répond. »</span>
           </p>
           <ul className="mt-6 flex gap-2">
