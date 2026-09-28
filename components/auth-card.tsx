@@ -412,7 +412,7 @@ function SignupPane({
           whatsapp: isClient ? (values.whatsapp ?? "") : values.whatsapp,
           skills: isClient ? undefined : parseSkills(values.skills ?? ""),
         },
-        emailRedirectTo: `${window.location.origin}/auth/confirm?next=${isClient ? "/client" : "/briefs"}`,
+        emailRedirectTo: `${window.location.origin}/auth/confirm?next=${isClient ? "/client" : "/inscription-developpeur"}`,
       },
     });
     if (error) {
@@ -420,14 +420,14 @@ function SignupPane({
       return;
     }
     if (data.session) {
-      router.push(isClient ? "/client" : "/briefs");
+      router.push(isClient ? "/client" : "/inscription-developpeur");
       router.refresh();
       return;
     }
     setNotice(
       isClient
         ? "Compte client créé. Vérifiez votre boîte mail et confirmez votre adresse, puis connectez-vous pour publier votre projet."
-        : "Compte créé. Vérifiez votre boîte mail et confirmez votre adresse, puis connectez-vous."
+        : "Compte développeur créé. Vérifiez votre boîte mail et confirmez votre adresse, puis connectez-vous pour compléter votre inscription."
     );
   };
 

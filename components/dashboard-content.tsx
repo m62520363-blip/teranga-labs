@@ -137,6 +137,168 @@ function FilterChip({
 
 type TabKey = "crm" | "profil" | "activite" | "devis";
 
+function DevStatusBanner({ profile }: { profile: DeveloperProfile }) {
+  const status = profile.status;
+  const verified = Boolean(profile.is_verified) || status === "verified";
+
+  if (verified) {
+    return (
+      <div className="mt-6 flex items-start gap-3 rounded-2xl border border-[#166534]/60 bg-[#0F2E18] p-4 sm:p-5">
+        <BadgeCheck className="mt-0.5 size-5 shrink-0 text-[#4ADE80]" aria-hidden="true" />
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-semibold tracking-tight">Profil vérifié par TERANGA LABS</p>
+          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+            Votre badge Vérifié est affiché sur votre fiche publique. Merci pour votre confiance.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (status === "verification_pending") {
+    return (
+      <div className="mt-6 flex items-start gap-3 rounded-2xl border border-[#E86A2C]/30 bg-[#2A1A10] p-4 sm:p-5">
+        <Clock className="mt-0.5 size-5 shrink-0 text-[#E86A2C]" aria-hidden="true" />
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-semibold tracking-tight">Vérification en cours</p>
+          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+            Le paiement est confirmé et notre équipe examine votre dossier.
+            Une notification sera envoyée dès la fin de l’examen.
+          </p>
+        </div>
+        <Link
+          href="/verification"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-[#E86A2C]/40 bg-[#0F0F0F] px-3 py-2 text-xs font-medium text-foreground transition-colors outline-none hover:bg-[#1E1E1E] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+        >
+          Suivre l’état
+          <ArrowRight className="size-3.5" aria-hidden="true" />
+        </Link>
+      </div>
+    );
+  }
+
+  if (status === "active") {
+    return (
+      <div className="mt-6 flex items-start gap-3 rounded-2xl border border-[#2A2A2A] bg-[#0F1B2E] p-4 sm:p-5">
+        <BadgeCheck className="mt-0.5 size-5 shrink-0 text-[#E86A2C]" aria-hidden="true" />
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-semibold tracking-tight">Donnez confiance avec le badge Vérifié</p>
+          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+            Une seule vérification payante distingue votre profil dans les résultats
+            et rassure les clients pendant vos candidatures.
+          </p>
+        </div>
+        <Link
+          href="/verification"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-[#E86A2C] px-3 py-2 text-xs font-semibold text-[#0D0D0D] transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+        >
+          Faire vérifier mon profil
+          <ArrowRight className="size-3.5" aria-hidden="true" />
+        </Link>
+      </div>
+    );
+  }
+
+  if (status === "suspended") {
+    return (
+      <DevStatusBannerShell
+        tone="error"
+        title="Compte suspendu"
+        message="Votre compte a été suspendu. Nos conditions d’utilisation ont peut-être été enfreintes. Contactez notre équipe pour toute précision."
+      />
+    );
+  }
+
+  if (status === "rejected") {
+    return (
+      <DevStatusBannerShell
+        tone="error"
+        title="Inscription refusée"
+        message={
+          profile.rejection_reason
+            ? `Motif : ${profile.rejection_reason}`
+            : "Votre dossier n’a pas été retenu pour le moment. Vous pouvez soumettre une nouvelle demande."
+        }
+        cta={{ href: "/inscription-developpeur", label: "Relancer mon inscription" }}
+      />
+    );
+  }
+
+  if (status === "changes_requested") {
+    return (
+      <DevStatusBannerShell
+        tone="warn"
+        title="Modifications demandées"
+        message={
+          profile.rejection_reason
+            ? `Motif : ${profile.rejection_reason}`
+            : "Notre équipe a demandé des corrections sur votre dossier."
+        }
+        cta={{ href: "/inscription-developpeur", label: "Compléter mon dossier" }}
+        hint="Toute nouvelle soumission repasse en attente d’approbation."
+      />
+    );
+  }
+
+  return (
+    <DevStatusBannerShell
+      tone="warn"
+      title="En attente de validation"
+      message="Votre profil développeur sera examiné par notre équipe. Tant que le compte n’est pas validé, le déblocage des briefs est suspendu."
+      cta={{ href: "/inscription-developpeur", label: "Voir mon dossier" }}
+    />
+  );
+}
+
+function DevStatusBannerShell({
+  tone,
+  title,
+  message,
+  hint,
+  cta,
+}: {
+  tone: "warn" | "error";
+  title: string;
+  message: string;
+  hint?: string;
+  cta?: { href: string; label: string };
+}) {
+  return (
+    <div
+      className={cn(
+        "mt-6 flex items-start gap-3 rounded-2xl border p-4 sm:p-5",
+        tone === "error"
+          ? "border-[var(--error)]/30 bg-[var(--error-soft)]"
+          : "border-[#E86A2C]/30 bg-[#2A1A10]"
+      )}
+    >
+      <AlertTriangle
+        className={cn(
+          "mt-0.5 size-5 shrink-0",
+          tone === "error" ? "text-[var(--error)]" : "text-[#E86A2C]"
+        )}
+        aria-hidden="true"
+      />
+      <div className="min-w-0 flex-1">
+        <p className={cn("text-sm font-semibold tracking-tight", tone === "error" && "text-[var(--error)]")}>
+          {title}
+        </p>
+        <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{message}</p>
+        {hint ? <p className="mt-1 text-xs text-muted-foreground">{hint}</p> : null}
+      </div>
+      {cta ? (
+        <Link
+          href={cta.href}
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-[#E86A2C] px-3 py-2 text-xs font-semibold text-[#0D0D0D] transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+        >
+          {cta.label}
+          <ArrowRight className="size-3.5" aria-hidden="true" />
+        </Link>
+      ) : null}
+    </div>
+  );
+}
+
 export function DashboardContent({
   userId,
   profile,
@@ -473,21 +635,7 @@ export function DashboardContent({
           </div>
         </div>
 
-        {profile?.status === "pending" ? (
-          <div className="mt-6 flex items-start gap-3 rounded-2xl border border-[#E86A2C]/30 bg-[#2A1A10] p-4 sm:p-5">
-            <Clock className="mt-0.5 size-5 shrink-0 text-[#E86A2C]" aria-hidden="true" />
-            <div>
-              <p className="text-sm font-semibold tracking-tight">
-                Compte en attente de validation
-              </p>
-              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                Votre profil développeur sera examiné par notre équipe. Tant
-                que le compte n’est pas validé, le déblocage des briefs est
-                suspendu.
-              </p>
-            </div>
-          </div>
-        ) : null}
+        {profile ? <DevStatusBanner profile={profile} /> : null}
 
         <div className="mt-10">
           <DashboardStats

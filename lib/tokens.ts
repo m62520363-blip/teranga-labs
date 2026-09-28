@@ -53,11 +53,52 @@ export const REQUEST_STATUS_LABELS: Record<string, string> = {
 };
 
 export const DEVELOPER_STATUS_LABELS: Record<string, string> = {
-  pending: "En attente",
+  pending: "En attente d’approbation",
   active: "Validé",
+  verification_pending: "Vérification en cours",
+  verified: "Vérifié",
   rejected: "Rejeté",
+  changes_requested: "Modifications demandées",
   suspended: "Suspendu",
 };
+
+export const DEVELOPER_SERVICES = [
+  "Site vitrine",
+  "Boutique en ligne",
+  "Application web sur mesure",
+  "Application mobile",
+  "Landing page",
+  "Refonte de site",
+  "Maintenance & support",
+  "UI / UX Design",
+  "Branding & identité visuelle",
+  "Rédaction & SEO",
+] as const;
+
+export const EXPERIENCE_LEVELS = [
+  { value: "debutant", label: "Débutant (0–1 an)" },
+  { value: "intermediaire", label: "Intermédiaire (1–3 ans)" },
+  { value: "avance", label: "Avancé (3–6 ans)" },
+  { value: "expert", label: "Expert (6+ ans)" },
+] as const;
+
+export const AVAILABILITY_OPTIONS = [
+  { value: "available_now", label: "Disponible immédiatement" },
+  { value: "available_soon", label: "Disponible sous peu" },
+  { value: "on_mission", label: "En mission" },
+] as const;
+
+export const DOCUMENT_KINDS = [
+  { value: "cv", label: "CV" },
+  { value: "professional", label: "Document professionnel" },
+  { value: "other", label: "Autre" },
+] as const;
+
+export const LINK_KINDS = [
+  { value: "github", label: "GitHub" },
+  { value: "linkedin", label: "LinkedIn" },
+  { value: "other", label: "Autre lien" },
+] as const;
 
 export const REPORT_REASONS = [
   "Fausse demande",

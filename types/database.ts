@@ -10,7 +10,14 @@ export type ProjectType = "vitrine" | "e-commerce" | "landing page" | "app web" 
 
 export type RequestStatus = "ouvert" | "attribué" | "terminé" | "fermé";
 
-export type DeveloperStatus = "pending" | "active" | "rejected" | "suspended";
+export type DeveloperStatus =
+  | "pending"
+  | "active"
+  | "verified"
+  | "verification_pending"
+  | "changes_requested"
+  | "rejected"
+  | "suspended";
 
 export type UserRole = "admin" | "developer" | "moderator" | "client";
 
@@ -96,9 +103,14 @@ export interface Database {
         Row: {
           id: string;
           full_name: string | null;
+          first_name?: string | null;
+          last_name?: string | null;
           whatsapp: string | null;
+          phone?: string | null;
           skills: string[] | null;
           city: string | null;
+          country?: string | null;
+          address?: string | null;
           notifications_enabled: boolean;
           username: string | null;
           bio: string | null;
@@ -114,14 +126,20 @@ export interface Database {
           penalty: number;
           monthly_goal: number;
           status: DeveloperStatus;
+          rejection_reason?: string | null;
           created_at: string;
         };
         Insert: {
           id: string;
           full_name?: string | null;
+          first_name?: string | null;
+          last_name?: string | null;
           whatsapp?: string | null;
+          phone?: string | null;
           skills?: string[] | null;
           city?: string | null;
+          country?: string | null;
+          address?: string | null;
           notifications_enabled?: boolean;
           username?: string | null;
           bio?: string | null;
@@ -137,6 +155,7 @@ export interface Database {
           penalty?: number;
           monthly_goal?: number;
           status?: DeveloperStatus;
+          rejection_reason?: string | null;
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["developers"]["Insert"]>;
@@ -450,6 +469,74 @@ export interface Database {
           credited_at?: string | null;
         };
         Update: Partial<Database["public"]["Tables"]["payment_intents"]["Insert"]>;
+        Relationships: [];
+      };
+      payments: {
+        Row: {
+          id: string;
+          developer_id: string;
+          kind: string;
+          method: string;
+          amount_fcfa: number;
+          currency: string;
+          status: string;
+          provider: string | null;
+          provider_session_id: string | null;
+          entity_type: string | null;
+          entity_id: string | null;
+          confirmed_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          developer_id: string;
+          kind?: string;
+          method: string;
+          amount_fcfa: number;
+          currency?: string;
+          status?: string;
+          provider?: string | null;
+          provider_session_id?: string | null;
+          entity_type?: string | null;
+          entity_id?: string | null;
+          confirmed_at?: string | null;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["payments"]["Insert"]>;
+        Relationships: [];
+      };
+      verification_requests: {
+        Row: {
+          id: string;
+          developer_id: string;
+          amount_fcfa: number;
+          method: string;
+          provider: string | null;
+          provider_session_id: string | null;
+          payment_status: string;
+          verification_status: string;
+          paid_at: string | null;
+          reviewed_by: string | null;
+          reviewed_at: string | null;
+          rejection_reason: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          developer_id: string;
+          amount_fcfa: number;
+          method: string;
+          provider?: string | null;
+          provider_session_id?: string | null;
+          payment_status?: string;
+          verification_status?: string;
+          paid_at?: string | null;
+          reviewed_by?: string | null;
+          reviewed_at?: string | null;
+          rejection_reason?: string | null;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["verification_requests"]["Insert"]>;
         Relationships: [];
       };
       notification_jobs: {
@@ -770,6 +857,88 @@ export interface Database {
           p_request_id: string;
           p_verified: boolean;
         };
+        Returns: Json;
+      };
+      is_username_taken: {
+        Args: {
+          p_username: string;
+        };
+        Returns: boolean;
+      };
+      get_verification_price: {
+        Args: Record<string, never>;
+        Returns: number;
+      };
+      get_my_developer_application: {
+        Args: Record<string, never>;
+        Returns: Json;
+      };
+      get_my_verification_status: {
+        Args: Record<string, never>;
+        Returns: Json;
+      };
+      submit_developer_application: {
+        Args: {
+          p_payload: unknown;
+        };
+        Returns: Json;
+      };
+      submit_verification_request: {
+        Args: {
+          p_method?: string;
+        };
+        Returns: Json;
+      };
+      admin_list_developer_applications: {
+        Args: Record<string, never>;
+        Returns: Json;
+      };
+      admin_get_developer_application: {
+        Args: {
+          p_developer: string;
+        };
+        Returns: Json;
+      };
+      admin_review_developer: {
+        Args: {
+          p_developer: string;
+          p_action: string;
+          p_message?: string | null;
+        };
+        Returns: Json;
+      };
+      admin_confirm_verification_payment: {
+        Args: {
+          p_verification: string;
+        };
+        Returns: Json;
+      };
+      admin_review_verification: {
+        Args: {
+          p_verification: string;
+          p_approve: boolean;
+          p_message?: string | null;
+        };
+        Returns: Json;
+      };
+      admin_set_verification_price: {
+        Args: {
+          p_price_fcfa: number;
+        };
+        Returns: Json;
+      };
+      admin_list_verifications: {
+        Args: Record<string, never>;
+        Returns: Json;
+      };
+      admin_list_admin_actions: {
+        Args: {
+          p_limit?: number;
+        };
+        Returns: Json;
+      };
+      admin_alerts: {
+        Args: Record<string, never>;
         Returns: Json;
       };
     };

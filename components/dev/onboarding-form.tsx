@@ -1,0 +1,1464 @@
+"use client";
+
+import * as React from "react";
+import Link from "next/link";
+import { useForm, useFieldArray, type Resolver } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Briefcase,
+  Check,
+  CheckCircle2,
+  FileText,
+  Loader2,
+  Mail,
+  MapPin,
+  Phone,
+  Plus,
+  Send,
+  Trash2,
+  UserRound,
+  X,
+} from "lucide-react";
+import {
+  developerApplicationSchema,
+  developerIdentitySchema,
+  type DeveloperApplicationFormValues,
+  type DeveloperIdentityFormValues,
+} from "@/lib/validations";
+import {
+  AVAILABILITY_OPTIONS,
+  DEVELOPER_SERVICES,
+  DOCUMENT_KINDS,
+  EXPERIENCE_LEVELS,
+  LINK_KINDS,
+  PROJECT_TYPES,
+  SENEGAL_REGIONS,
+} from "@/lib/tokens";
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { cn } from "cn";
+
+export type OnboardingData = {
+  first_name?: string | null;
+  last_name?: string | null;
+  username?: string | null;
+  address?: string | null;
+  city?: string | null;
+  country?: string | null;
+  phone?: string | null;
+  whatsapp?: string | null;
+  avatar_url?: string | null;
+  bio?: string | null;
+  skills?: string[] | null;
+  experience_years?: number | null;
+  status?: string | null;
+  is_verified?: boolean | null;
+  rejection_reason?: string | null;
+  professional_title?: string | null;
+  main_specialty?: string | null;
+  availability?: string | null;
+  rate_min_fcfa?: number | null;
+  rate_max_fcfa?: number | null;
+  projects_estimate?: number | null;
+  experience_level?: string | null;
+  services?: string[] | null;
+  projects?: {
+    id?: string;
+    name?: string | null;
+    description?: string | null;
+    project_type?: string | null;
+    technologies?: string[] | null;
+    url?: string | null;
+    screenshots?: string[] | null;
+  }[];
+  documents?: {
+    id?: string;
+    kind?: string | null;
+    name?: string | null;
+    url?: string | null;
+  }[];
+  links?: {
+    id?: string;
+    kind?: string | null;
+    label?: string | null;
+    url?: string | null;
+  }[];
+  application?: {
+    id?: string;
+    status?: string | null;
+    admin_message?: string | null;
+    reviewed_at?: string | null;
+    submitted_at?: string | null;
+  } | null;
+};
+
+const SPECIALTY_SUGGESTIONS = [
+  "Développeur web",
+  "Full-stack",
+  "Développeur mobile",
+  "Intégrateur web",
+  "Designer UI/UX",
+  "E-commerce / Shopify / WooCommerce",
+  "WordPress",
+  "Chef de projet digital",
+  "Rédacteur web & SEO",
+];
+
+const CITY_ITEMS = Object.fromEntries(SENEGAL_REGIONS.map((c) => [c, c]));
+
+export function OnboardingForm({
+  initial,
+  email,
+  userId,
+}: {
+  initial: OnboardingData | null;
+  email: string;
+  userId: string;
+}) {
+  const [step, setStep] = React.useState<1 | 2>(1);
+  const [submitted, setSubmitted] = React.useState(false);
+
+  if (submitted) {
+    return <SuccessPanel />;
+  }
+
+  return (
+    <div className="mx-auto w-full max-w-3xl">
+      <Stepper step={step} />
+
+      {initial?.status === "changes_requested" || initial?.status === "rejected" ? (
+        <div className="mt-6 flex items-start gap-3 rounded-2xl border border-[#E8A33D]/30 bg-[#2A1A10] p-5">
+          <span className="mt-1 size-2 shrink-0 rounded-full bg-[#E8A33D]" aria-hidden="true" />
+          <div className="min-w-0 text-sm leading-relaxed">
+            <p className="font-semibold">
+              {initial.status === "changes_requested"
+                ? "Notre équipe demande des modifications sur votre dossier"
+                : "Votre inscription a été refusée"}
+            </p>
+            {initial.rejection_reason ? (
+              <p className="mt-1 text-muted-foreground">{initial.rejection_reason}</p>
+            ) : (
+              <p className="mt-1 text-muted-foreground">
+                Merci de corriger les informations ci-dessous puis de soumettre à nouveau.
+              </p>
+            )}
+            <p className="mt-1 text-xs text-muted-foreground">
+              Toute nouvelle soumission repasse en attente d’approbation.
+            </p>
+          </div>
+        </div>
+      ) : null}
+
+      <div className="mt-6">
+        {step === 1 ? (
+          <IdentityStep
+            initial={initial}
+            email={email}
+            userId={userId}
+            onContinue={() => setStep(2)}
+          />
+        ) : (
+          <ProfessionalStep
+            initial={initial}
+            onBack={() => setStep(1)}
+            onDone={() => setSubmitted(true)}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
+function Stepper({ step }: { step: 1 | 2 }) {
+  const steps = [
+    { n: 1, label: "Identité & coordonnées" },
+    { n: 2, label: "Profil professionnel" },
+  ];
+  return (
+    <ol className="flex items-center gap-3" aria-label="Avancement de l’inscription">
+      {steps.map((s, i) => (
+        <React.Fragment key={s.n}>
+          <li className="flex items-center gap-2.5">
+            <span
+              className={cn(
+                "flex size-8 items-center justify-center rounded-full border text-sm font-semibold transition-colors",
+                step >= s.n
+                  ? "border-[#E86A2C] bg-[#E86A2C] text-[#0D0D0D]"
+                  : "border-[#2A2A2A] bg-[#141414] text-muted-foreground"
+              )}
+              aria-current={step === s.n ? "step" : undefined}
+            >
+              {step > s.n ? (
+                <Check className="size-4" aria-hidden="true" />
+              ) : (
+                s.n
+              )}
+            </span>
+            <span
+              className={cn(
+                "hidden text-sm font-medium sm:block",
+                step >= s.n ? "text-foreground" : "text-muted-foreground"
+              )}
+            >
+              {s.label}
+            </span>
+          </li>
+          {i < steps.length - 1 ? (
+            <span
+              className={cn(
+                "h-px flex-1",
+                step > s.n ? "bg-[#E86A2C]" : "bg-[#2A2A2A]"
+              )}
+              aria-hidden="true"
+            />
+          ) : null}
+        </React.Fragment>
+      ))}
+    </ol>
+  );
+}
+
+/* ------------------------------- ETAPE 1 ------------------------------ */
+
+function IdentityStep({
+  initial,
+  email,
+  userId,
+  onContinue,
+}: {
+  initial: OnboardingData | null;
+  email: string;
+  userId: string;
+  onContinue: () => void;
+}) {
+  const [formError, setFormError] = React.useState<string | null>(null);
+  const [checkingUsername, setCheckingUsername] = React.useState(false);
+
+  const form = useForm<DeveloperIdentityFormValues>({
+    resolver: zodResolver(developerIdentitySchema) as Resolver<DeveloperIdentityFormValues>,
+    mode: "onChange",
+    defaultValues: {
+      first_name: initial?.first_name ?? "",
+      last_name: initial?.last_name ?? "",
+      username: (initial?.username ?? "").toLowerCase(),
+      phone: initial?.phone ?? "",
+      whatsapp: initial?.whatsapp ?? "",
+      address: initial?.address ?? "",
+      country: initial?.country ?? "Sénégal",
+      city: (initial?.city as DeveloperIdentityFormValues["city"]) ?? "Dakar",
+    },
+  });
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    getValues,
+    formState: { errors, isSubmitting },
+  } = form;
+
+  const onSubmit = async (values: DeveloperIdentityFormValues) => {
+    if (!isSupabaseConfigured()) {
+      setFormError("Configuration Supabase manquante.");
+      return;
+    }
+    setFormError(null);
+    const supabase = createClient();
+
+    const { data: taken } = await supabase.rpc("is_username_taken", {
+      p_username: values.username,
+    });
+    if (taken) {
+      setFormError("Ce pseudo est déjà utilisé par un autre profil. Choisissez-en un autre.");
+      return;
+    }
+
+    const { error } = await supabase
+      .from("developers")
+      .update({
+        first_name: values.first_name.trim(),
+        last_name: values.last_name.trim(),
+        username: values.username.trim().toLowerCase(),
+        phone: values.phone.trim() || null,
+        whatsapp: values.whatsapp.trim(),
+        address: values.address.trim() || null,
+        country: values.country.trim(),
+        city: values.city,
+      })
+      .eq("id", userId);
+
+    if (error) {
+      if (error.message?.includes("developers_username_uidx")) {
+        setFormError("Ce pseudo est déjà utilisé par un autre profil. Choisissez-en un autre.");
+      } else {
+        setFormError("Impossible d’enregistrer vos informations. Réessayez.");
+      }
+      return;
+    }
+    onContinue();
+  };
+
+  const availableSoon = async () => {
+    setCheckingUsername(true);
+    setFormError(null);
+    const supabase = createClient();
+    const username = (getValues("username") ?? "").trim().toLowerCase();
+    if (!username || !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(username)) {
+      setCheckingUsername(false);
+      setFormError("Renseignez d’abord un pseudo valide (minuscules, chiffres, tirets).");
+      return;
+    }
+    const { data: taken } = await supabase.rpc("is_username_taken", {
+      p_username: username,
+    });
+    setCheckingUsername(false);
+    if (taken) {
+      setFormError("Ce pseudo est déjà utilisé par un autre profil. Choisissez-en un autre.");
+    } else {
+      toast.success("Ce pseudo est disponible.");
+    }
+  };
+
+  return (
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 shadow-sm sm:p-8"
+      noValidate
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h2 className="text-lg font-semibold tracking-tight">Qui êtes-vous ?</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Ces informations restent privées ; seul votre pseudo apparaît sur votre fiche publique.
+          </p>
+        </div>
+        <span className="chip shrink-0 gap-1.5 border-[#2A2A2A] bg-[#0F0F0F]">
+          <Mail className="size-3.5 text-muted-foreground" aria-hidden="true" />
+          {email}
+        </span>
+      </div>
+
+      <div className="mt-6 grid gap-5 sm:grid-cols-2">
+        <Field label="Prénom" error={errors.first_name?.message} htmlFor="oi-first">
+          <div className="relative">
+            <UserRound
+              className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+              aria-hidden="true"
+            />
+            <Input
+              id="oi-first"
+              autoComplete="given-name"
+              {...register("first_name")}
+              className="h-11 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 pl-10"
+              placeholder="Awa"
+              aria-invalid={Boolean(errors.first_name)}
+            />
+          </div>
+        </Field>
+
+        <Field label="Nom" error={errors.last_name?.message} htmlFor="oi-last">
+          <div className="relative">
+            <UserRound
+              className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+              aria-hidden="true"
+            />
+            <Input
+              id="oi-last"
+              autoComplete="family-name"
+              {...register("last_name")}
+              className="h-11 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 pl-10"
+              placeholder="Diop"
+              aria-invalid={Boolean(errors.last_name)}
+            />
+          </div>
+        </Field>
+
+        <Field
+          label="Pseudo public"
+          error={errors.username?.message}
+          htmlFor="oi-username"
+          hint="Ex : awa-diop. Visible sur /dev/awa-diop."
+        >
+          <div className="relative">
+            <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
+              @
+            </span>
+            <Input
+              id="oi-username"
+              autoComplete="off"
+              spellCheck={false}
+              {...register("username")}
+              className="h-11 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 pl-3"
+              placeholder="awa-diop"
+              aria-invalid={Boolean(errors.username)}
+            />
+          </div>
+          <button
+            type="button"
+            onClick={availableSoon}
+            disabled={checkingUsername}
+            className="text-xs font-medium text-[#E86A2C] underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+          >
+            {checkingUsername ? "Vérification…" : "Vérifier la disponibilité"}
+          </button>
+        </Field>
+
+        <Field label="Téléphone" error={errors.phone?.message} htmlFor="oi-phone">
+          <div className="relative">
+            <Phone
+              className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+              aria-hidden="true"
+            />
+            <Input
+              id="oi-phone"
+              type="tel"
+              autoComplete="tel"
+              {...register("phone")}
+              className="h-11 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 pl-10"
+              placeholder="+221 77 123 45 67"
+              aria-invalid={Boolean(errors.phone)}
+            />
+          </div>
+        </Field>
+
+        <Field label="WhatsApp" error={errors.whatsapp?.message} htmlFor="oi-whatsapp">
+          <div className="relative">
+            <Phone
+              className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+              aria-hidden="true"
+            />
+            <Input
+              id="oi-whatsapp"
+              type="tel"
+              autoComplete="tel"
+              {...register("whatsapp")}
+              className="h-11 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 pl-10"
+              placeholder="+221 77 123 45 67"
+              aria-invalid={Boolean(errors.whatsapp)}
+            />
+          </div>
+        </Field>
+
+        <Field label="Région" error={errors.city?.message} htmlFor="oi-city">
+          <div className="relative">
+            <MapPin
+              className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+              aria-hidden="true"
+            />
+            <Select
+              value={(watch("city") as string) ?? ""}
+              onValueChange={(v) =>
+                v && setValue("city", v as DeveloperIdentityFormValues["city"], { shouldValidate: true })
+              }
+            >
+              <SelectTrigger
+                id="oi-city"
+                className="h-11 w-full rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 pl-10 data-[size=default]:h-11"
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent align="start">
+                {SENEGAL_REGIONS.map((c) => (
+                  <SelectItem key={c} value={c}>
+                    {CITY_ITEMS[c]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </Field>
+
+        <Field label="Adresse" error={errors.address?.message} htmlFor="oi-address">
+          <div className="relative">
+            <MapPin
+              className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+              aria-hidden="true"
+            />
+            <Input
+              id="oi-address"
+              autoComplete="street-address"
+              {...register("address")}
+              className="h-11 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 pl-10"
+              placeholder="Scat Urbam, Parcelles Assainies…(optionnel)"
+              aria-invalid={Boolean(errors.address)}
+            />
+          </div>
+        </Field>
+
+        <Field label="Pays" error={errors.country?.message} htmlFor="oi-country">
+          <div className="relative">
+            <MapPin
+              className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+              aria-hidden="true"
+            />
+            <Input
+              id="oi-country"
+              autoComplete="country-name"
+              {...register("country")}
+              className="h-11 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 pl-10"
+              placeholder="Sénégal"
+              aria-invalid={Boolean(errors.country)}
+            />
+          </div>
+        </Field>
+      </div>
+
+      {formError ? (
+        <p role="alert" className="mt-5 flex items-start gap-2 rounded-xl border border-[var(--error)]/30 bg-[var(--error-soft)] px-4 py-3 text-sm leading-relaxed text-[var(--error)]">
+          <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-[var(--error)]" aria-hidden="true" />
+          {formError}
+        </p>
+      ) : null}
+
+      <div className="mt-7 flex items-center justify-between gap-3">
+        <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50">
+          <ArrowLeft className="size-4" aria-hidden="true" />
+          Plus tard
+        </Link>
+        <button type="submit" disabled={isSubmitting} className="btn btn-primary">
+          {isSubmitting ? (
+            <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+          ) : (
+            <ArrowRight className="size-4" aria-hidden="true" />
+          )}
+          Continuer
+        </button>
+      </div>
+    </form>
+  );
+}
+
+/* ------------------------------- ETAPE 2 ------------------------------ */
+
+function ProfessionalStep({
+  initial,
+  onBack,
+  onDone,
+}: {
+  initial: OnboardingData | null;
+  onBack: () => void;
+  onDone: () => void;
+}) {
+  const [formError, setFormError] = React.useState<string | null>(null);
+  const [skillInput, setSkillInput] = React.useState("");
+
+  const defaultProjects =
+    initial?.projects?.map((p) => ({
+      name: p.name ?? "",
+      description: p.description ?? "",
+      project_type: p.project_type ?? "",
+      technologies: p.technologies ?? [],
+      url: p.url ?? "",
+      screenshots: p.screenshots ?? [],
+    })) ?? [];
+  const defaultDocuments =
+    initial?.documents
+      ?.map((d) => ({
+        kind: ((d.kind as "cv" | "professional" | "other") ??
+          "other") as DeveloperApplicationFormValues["documents"][number]["kind"],
+        name: d.name ?? "",
+        url: d.url ?? "",
+      }))
+      .filter((d) => d.url.trim().length > 0) ?? [];
+  const defaultLinks =
+    initial?.links
+      ?.map((l) => ({
+        kind: ((l.kind as "github" | "linkedin" | "other") ??
+          "other") as DeveloperApplicationFormValues["links"][number]["kind"],
+        label: l.label ?? "",
+        url: l.url ?? "",
+      }))
+      .filter((l) => l.url.trim().length > 0) ?? [];
+
+  const form = useForm<DeveloperApplicationFormValues>({
+    resolver: zodResolver(developerApplicationSchema) as Resolver<DeveloperApplicationFormValues>,
+    mode: "onChange",
+    defaultValues: {
+      professional_title: initial?.professional_title ?? "",
+      main_specialty: initial?.main_specialty ?? "",
+      experience_level: (initial?.experience_level as DeveloperApplicationFormValues["experience_level"]) ?? "intermediaire",
+      experience_years: initial?.experience_years ?? 0,
+      projects_estimate: initial?.projects_estimate ?? 0,
+      availability: (initial?.availability as DeveloperApplicationFormValues["availability"]) ?? "available_now",
+      rate_min_fcfa: initial?.rate_min_fcfa ?? 0,
+      rate_max_fcfa: initial?.rate_max_fcfa ?? 0,
+      bio: initial?.bio ?? "",
+      avatar_url: initial?.avatar_url ?? "",
+      services: (initial?.services ?? DEVELOPER_SERVICES.slice(0, 2).map((s) => s)) as string[],
+      skills: initial?.skills ?? [],
+      projects: defaultProjects,
+      documents: defaultDocuments,
+      links: defaultLinks,
+      terms_accepted: false as unknown as true,
+    },
+  });
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    getValues,
+    control,
+    formState: { errors, isSubmitting },
+  } = form;
+
+  const { fields: projectFields, ...projectArray } = useFieldArray({
+    control,
+    name: "projects",
+  });
+  const { fields: documentFields, ...documentArray } = useFieldArray({
+    control,
+    name: "documents",
+  });
+  const { fields: linkFields, ...linkArray } = useFieldArray({
+    control,
+    name: "links",
+  });
+
+  const skills = watch("skills");
+  const services = watch("services");
+
+  const toggleService = (label: string) => {
+    const next = services.includes(label)
+      ? services.filter((s) => s !== label)
+      : [...services, label];
+    setValue("services", next, { shouldValidate: true });
+  };
+
+  const addSkill = () => {
+    const raw = skillInput.trim();
+    if (!raw) return;
+    const parts = raw
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .filter((s) => !skills.includes(s))
+      .slice(0, 24);
+    if (parts.length === 0) return;
+    setValue("skills", [...skills, ...parts], { shouldValidate: true });
+    setSkillInput("");
+  };
+
+  const removeSkill = (skill: string) => {
+    setValue(
+      "skills",
+      skills.filter((s) => s !== skill),
+      { shouldValidate: true }
+    );
+  };
+
+  const onSubmit = async (values: DeveloperApplicationFormValues) => {
+    if (!isSupabaseConfigured()) {
+      setFormError("Configuration Supabase manquante.");
+      return;
+    }
+    setFormError(null);
+    const supabase = createClient();
+    const payload = {
+      professional_title: values.professional_title,
+      main_specialty: values.main_specialty,
+      bio: values.bio || null,
+      avatar_url: values.avatar_url || null,
+      experience_level: values.experience_level,
+      experience_years: values.experience_years,
+      projects_estimate: values.projects_estimate,
+      availability: values.availability,
+      rate_min_fcfa: values.rate_min_fcfa,
+      rate_max_fcfa: values.rate_max_fcfa,
+      terms_accepted: true,
+      services: values.services,
+      skills: values.skills,
+      projects: values.projects
+        .filter((p) => p.name.trim())
+        .map((p) => ({
+          name: p.name,
+          description: p.description || null,
+          project_type: p.project_type || null,
+          technologies: p.technologies,
+          url: p.url || null,
+          screenshots: p.screenshots,
+        })),
+      documents: values.documents.filter((d) => d.url.trim()),
+      links: values.links.filter((l) => l.url.trim()),
+    };
+
+    const { data, error } = await supabase.rpc("submit_developer_application", {
+      p_payload: payload,
+    });
+
+    if (error) {
+      setFormError(translateSubmitError(error.code ?? "", error.message));
+      return;
+    }
+    if (!data || data.ok !== true) {
+      setFormError("L’envoi a échoué. Réessayez dans un instant.");
+      return;
+    }
+    toast.success("Inscription envoyée !");
+    onDone();
+  };
+
+  const rateMin = watch("rate_min_fcfa");
+  const rateMax = watch("rate_max_fcfa");
+  const hasRate = Number(rateMin) > 0 || Number(rateMax) > 0;
+
+  return (
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col gap-6"
+      noValidate
+    >
+      {/* Socle professionnel */}
+      <section className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 shadow-sm sm:p-8">
+        <h2 className="text-lg font-semibold tracking-tight">Votre profil professionnel</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Ce que les clients voient lorsqu’ils reçoivent vos candidatures.
+        </p>
+
+        <div className="mt-6 grid gap-5 sm:grid-cols-2">
+          <div className="sm:col-span-2">
+            <Field label="Titre professionnel" error={errors.professional_title?.message} htmlFor="oi-title">
+              <Input
+                id="oi-title"
+                {...register("professional_title")}
+                className="h-11 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70"
+                placeholder="Développeur full-stack, spécialiste Next.js"
+                aria-invalid={Boolean(errors.professional_title)}
+              />
+            </Field>
+          </div>
+
+          <div className="sm:col-span-2">
+            <Field label="Spécialité principale" error={errors.main_specialty?.message} htmlFor="oi-specialty">
+              <Input
+                id="oi-specialty"
+                list="oi-specialty-suggestions"
+                {...register("main_specialty")}
+                className="h-11 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70"
+                placeholder="Développeur web"
+                aria-invalid={Boolean(errors.main_specialty)}
+              />
+              <datalist id="oi-specialty-suggestions">
+                {SPECIALTY_SUGGESTIONS.map((s) => (
+                  <option key={s} value={s} />
+                ))}
+              </datalist>
+            </Field>
+          </div>
+
+          <Field label="Niveau d’expérience" error={errors.experience_level?.message} htmlFor="oi-experience">
+            <Select
+              value={(watch("experience_level") as string) ?? ""}
+              onValueChange={(v) =>
+                v && setValue("experience_level", v as DeveloperApplicationFormValues["experience_level"], { shouldValidate: true })
+              }
+            >
+              <SelectTrigger
+                id="oi-experience"
+                className="h-11 w-full rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 data-[size=default]:h-11"
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent align="start">
+                {EXPERIENCE_LEVELS.map((l) => (
+                  <SelectItem key={l.value} value={l.value}>
+                    {l.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </Field>
+
+          <Field label="Années d’expérience" error={errors.experience_years?.message} htmlFor="oi-years">
+            <Input
+              id="oi-years"
+              type="number"
+              min={0}
+              step={1}
+              {...register("experience_years")}
+              className="h-11 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70"
+              aria-invalid={Boolean(errors.experience_years)}
+            />
+          </Field>
+
+          <Field label="Projets réalisés" error={errors.projects_estimate?.message} htmlFor="oi-projects">
+            <Input
+              id="oi-projects"
+              type="number"
+              min={0}
+              step={1}
+              {...register("projects_estimate")}
+              className="h-11 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70"
+              aria-invalid={Boolean(errors.projects_estimate)}
+            />
+          </Field>
+
+          <Field label="Disponibilité" error={errors.availability?.message} htmlFor="oi-availability">
+            <Select
+              value={(watch("availability") as string) ?? ""}
+              onValueChange={(v) =>
+                v && setValue("availability", v as DeveloperApplicationFormValues["availability"], { shouldValidate: true })
+              }
+            >
+              <SelectTrigger
+                id="oi-availability"
+                className="h-11 w-full rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 data-[size=default]:h-11"
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent align="start">
+                {AVAILABILITY_OPTIONS.map((a) => (
+                  <SelectItem key={a.value} value={a.value}>
+                    {a.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </Field>
+
+          <Field label="Tarif minimum (FCFA)" error={errors.rate_min_fcfa?.message} htmlFor="oi-rate-min">
+            <Input
+              id="oi-rate-min"
+              type="number"
+              min={0}
+              step={1000}
+              {...register("rate_min_fcfa")}
+              className="h-11 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70"
+              placeholder="100000"
+              aria-invalid={Boolean(errors.rate_min_fcfa)}
+            />
+          </Field>
+
+          <Field label="Tarif maximum (FCFA)" error={errors.rate_max_fcfa?.message} htmlFor="oi-rate-max">
+            <Input
+              id="oi-rate-max"
+              type="number"
+              min={0}
+              step={1000}
+              {...register("rate_max_fcfa")}
+              className="h-11 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70"
+              placeholder="350000"
+              aria-invalid={Boolean(errors.rate_max_fcfa)}
+            />
+          </Field>
+
+          <div className="sm:col-span-2">
+            <Field label="Présentation" error={errors.bio?.message} htmlFor="oi-bio">
+              <Textarea
+                id="oi-bio"
+                rows={5}
+                {...register("bio")}
+                className="rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 p-3 text-sm"
+                placeholder="Parlez de votre parcours, vos technologies de prédilection, votre façon de travailler…"
+                aria-invalid={Boolean(errors.bio)}
+              />
+            </Field>
+          </div>
+
+          <div className="sm:col-span-2">
+            <Field label="Photo de profil (URL)" error={errors.avatar_url?.message} htmlFor="oi-avatar">
+              <Input
+                id="oi-avatar"
+                type="url"
+                {...register("avatar_url")}
+                className="h-11 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70"
+                placeholder="https://…/ma-photo.jpg (optionnel)"
+                aria-invalid={Boolean(errors.avatar_url)}
+              />
+            </Field>
+          </div>
+        </div>
+
+        {hasRate ? (
+          <p className="mt-4 text-xs text-muted-foreground">
+            Fourchette affichée : {rateMin.toLocaleString("fr-FR")} – {rateMax.toLocaleString("fr-FR")} FCFA (
+            {(Number(rateMax) - Number(rateMin)).toLocaleString("fr-FR")} FCFA d’écart).
+          </p>
+        ) : null}
+      </section>
+
+      {/* Services */}
+      <section className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 shadow-sm sm:p-8">
+        <div className="flex items-center gap-2">
+          <Briefcase className="size-5 text-[#E86A2C]" aria-hidden="true" />
+          <h2 className="text-lg font-semibold tracking-tight">Services proposés</h2>
+        </div>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Sélectionnez au moins un service que vous proposez aux clients.
+        </p>
+        <div className="mt-5 flex flex-wrap gap-2" role="group" aria-label="Services proposés">
+          {DEVELOPER_SERVICES.map((s) => {
+            const active = services.includes(s);
+            return (
+              <button
+                key={s}
+                type="button"
+                aria-pressed={active}
+                onClick={() => toggleService(s)}
+                className={cn(
+                  "inline-flex items-center gap-1.5 rounded-full border px-3.5 py-2 text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50",
+                  active
+                    ? "border-[#E86A2C]/60 bg-[#2A1A10] text-[#F2A378]"
+                    : "border-[#2A2A2A] bg-[#0F0F0F] text-muted-foreground hover:bg-[#1E1E1E]"
+                )}
+              >
+                {active ? <Check className="size-3.5" aria-hidden="true" /> : null}
+                {s}
+              </button>
+            );
+          })}
+        </div>
+        {errors.services ? (
+          <p role="alert" className="mt-3 text-xs text-destructive">
+            {errors.services.message}
+          </p>
+        ) : null}
+      </section>
+
+      {/* Compétences */}
+      <section className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 shadow-sm sm:p-8">
+        <h2 className="text-lg font-semibold tracking-tight">Compétences techniques</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Technologies et outils maîtrisés, séparés par des virgules.
+        </p>
+        <div className="mt-4 flex flex-col gap-3">
+          <div className="flex gap-2">
+            <Input
+              value={skillInput}
+              onChange={(e) => setSkillInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === ",") {
+                  e.preventDefault();
+                  addSkill();
+                }
+              }}
+              className="h-11 flex-1 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70"
+              placeholder="Next.js, React, PostgreSQL, Figma…"
+              aria-label="Ajouter une compétence"
+            />
+            <button
+              type="button"
+              onClick={addSkill}
+              className="inline-flex h-11 shrink-0 items-center gap-1.5 rounded-xl border border-[#2A2A2A] bg-[#0F0F0F] px-4 text-sm font-medium text-muted-foreground transition-colors outline-none hover:bg-[#1E1E1E] hover:text-foreground focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+            >
+              <Plus className="size-4" aria-hidden="true" />
+              Ajouter
+            </button>
+          </div>
+          {skills.length > 0 ? (
+            <div className="flex flex-wrap gap-2">
+              {skills.map((skill) => (
+                <span
+                  key={skill}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-[#E86A2C]/40 bg-[#2A1A10] px-3 py-1.5 text-sm text-[#F2A378]"
+                >
+                  {skill}
+                  <button
+                    type="button"
+                    onClick={() => removeSkill(skill)}
+                    className="text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+                    aria-label={`Retirer ${skill}`}
+                  >
+                    <X className="size-3.5" aria-hidden="true" />
+                  </button>
+                </span>
+              ))}
+            </div>
+          ) : null}
+          {errors.skills ? (
+            <p role="alert" className="text-xs text-destructive">
+              {errors.skills.message}
+            </p>
+          ) : null}
+        </div>
+      </section>
+
+      {/* Portfolio */}
+      <section className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 shadow-sm sm:p-8">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <h2 className="text-lg font-semibold tracking-tight">Portfolio</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Vos réalisations récentes (optionnel mais recommandé).
+            </p>
+          </div>
+          {errors.projects ? (
+            <p role="alert" className="text-xs text-destructive">
+              {errors.projects.message}
+            </p>
+          ) : null}
+        </div>
+
+        <div className="mt-5 flex flex-col gap-5">
+          {projectFields.map((field, i) => (
+            <div
+              key={field.id}
+              className="rounded-2xl border border-[#2A2A2A] bg-[#0F0F0F] p-5"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <p className="text-sm font-semibold text-muted-foreground">
+                  Projet {i + 1}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => projectArray.remove(i)}
+                  className="inline-flex h-8 items-center gap-1 rounded-lg px-2 text-xs text-muted-foreground transition-colors outline-none hover:text-[var(--error)] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+                  aria-label={`Supprimer le projet ${i + 1}`}
+                >
+                  <Trash2 className="size-3.5" aria-hidden="true" />
+                  Retirer
+                </button>
+              </div>
+              <div className="mt-3 grid gap-4 sm:grid-cols-2">
+                <Field label="Nom du projet" error={errors.projects?.[i]?.name?.message} htmlFor={`prj-name-${i}`}>
+                  <Input
+                    id={`prj-name-${i}`}
+                    {...register(`projects.${i}.name`)}
+                    className="h-10 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70"
+                    placeholder="Boutique de prêt-à-porter"
+                    aria-invalid={Boolean(errors.projects?.[i]?.name)}
+                  />
+                </Field>
+                <Field label="Type de projet" error={errors.projects?.[i]?.project_type?.message} htmlFor={`prj-type-${i}`}>
+                  <Select
+                    value={(getValues(`projects.${i}.project_type`) as string) ?? ""}
+                    onValueChange={(v) =>
+                      v &&
+                      setValue(`projects.${i}.project_type`, v, { shouldValidate: true })
+                    }
+                  >
+                    <SelectTrigger
+                      id={`prj-type-${i}`}
+                      className="h-10 w-full rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 data-[size=default]:h-10"
+                    >
+                      <SelectValue placeholder="Choisir…" />
+                    </SelectTrigger>
+                    <SelectContent align="start">
+                      {PROJECT_TYPES.map((t) => (
+                        <SelectItem key={t} value={t}>
+                          {t}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </Field>
+                <div className="sm:col-span-2">
+                  <Field label="Description" error={errors.projects?.[i]?.description?.message} htmlFor={`prj-desc-${i}`}>
+                    <Textarea
+                      id={`prj-desc-${i}`}
+                      rows={3}
+                      {...register(`projects.${i}.description`)}
+                      className="rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 p-3 text-sm"
+                      placeholder="Ce que le projet accomplissait, vos apports…"
+                    />
+                  </Field>
+                </div>
+                <div className="sm:col-span-2">
+                  <Field
+                    label="Technologies"
+                    error={undefined}
+                    hint="Séparées par des virgules"
+                  >
+                    <TagListInput
+                      values={getValues(`projects.${i}.technologies`) ?? []}
+                      onChange={(next) => setValue(`projects.${i}.technologies`, next, { shouldValidate: true })}
+                      placeholder="Next.js, Supabase, Vercel"
+                      max={20}
+                    />
+                  </Field>
+                </div>
+                <div className="sm:col-span-2">
+                  <Field
+                    label="Lien du projet"
+                    error={errors.projects?.[i]?.url?.message}
+                    htmlFor={`prj-url-${i}`}
+                  >
+                    <Input
+                      id={`prj-url-${i}`}
+                      type="url"
+                      {...register(`projects.${i}.url`)}
+                      className="h-10 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70"
+                      placeholder="https://… (optionnel)"
+                      aria-invalid={Boolean(errors.projects?.[i]?.url)}
+                    />
+                  </Field>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <button
+          type="button"
+          onClick={() =>
+            projectArray.append({
+              name: "",
+              description: "",
+              project_type: "",
+              technologies: [],
+              url: "",
+              screenshots: [],
+            })
+          }
+          className="mt-4 inline-flex h-10 items-center gap-2 rounded-xl border border-[#2A2A2A] bg-[#0F0F0F] px-4 text-sm font-medium text-muted-foreground transition-colors outline-none hover:bg-[#1E1E1E] hover:text-foreground focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+        >
+          <Plus className="size-4" aria-hidden="true" />
+          Ajouter un projet
+        </button>
+      </section>
+
+      {/* Documents */}
+      <section className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 shadow-sm sm:p-8">
+        <div className="flex items-center gap-2">
+          <FileText className="size-5 text-[#E86A2C]" aria-hidden="true" />
+          <div>
+            <h2 className="text-lg font-semibold tracking-tight">Documents</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              CV ou pièces justificatives (PDF, lien Drive…).
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-5 flex flex-col gap-4">
+          {documentFields.map((field, i) => (
+            <div key={field.id} className="grid items-end gap-4 sm:grid-cols-[180px_1fr_1fr_auto]">
+              <Field label="Type" error={undefined}>
+                <Select
+                  value={(getValues(`documents.${i}.kind`) as string) ?? "other"}
+                  onValueChange={(v) =>
+                    v &&
+                    setValue(
+                      `documents.${i}.kind`,
+                      v as DeveloperApplicationFormValues["documents"][number]["kind"],
+                      { shouldValidate: true }
+                    )
+                  }
+                >
+                  <SelectTrigger className="h-10 w-full rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 data-[size=default]:h-10">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent align="start">
+                    {DOCUMENT_KINDS.map((k) => (
+                      <SelectItem key={k.value} value={k.value}>
+                        {k.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </Field>
+              <Field label="Nom" error={undefined}>
+                <Input
+                  {...register(`documents.${i}.name`)}
+                  className="h-10 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70"
+                  placeholder="CV Awa Diop"
+                />
+              </Field>
+              <Field label="Lien" error={errors.documents?.[i]?.url?.message}>
+                <Input
+                  type="url"
+                  {...register(`documents.${i}.url`)}
+                  className="h-10 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70"
+                  placeholder="https://drive.google.com/…"
+                  aria-invalid={Boolean(errors.documents?.[i]?.url)}
+                />
+              </Field>
+              <button
+                type="button"
+                onClick={() => documentArray.remove(i)}
+                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#2A2A2A] bg-[#0F0F0F] text-muted-foreground transition-colors outline-none hover:text-[var(--error)] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+                aria-label="Supprimer le document"
+              >
+                <Trash2 className="size-4" aria-hidden="true" />
+              </button>
+            </div>
+          ))}
+        </div>
+
+        <button
+          type="button"
+          onClick={() => documentArray.append({ kind: "cv", name: "", url: "" })}
+          className="mt-4 inline-flex h-10 items-center gap-2 rounded-xl border border-[#2A2A2A] bg-[#0F0F0F] px-4 text-sm font-medium text-muted-foreground transition-colors outline-none hover:bg-[#1E1E1E] hover:text-foreground focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+        >
+          <Plus className="size-4" aria-hidden="true" />
+          Ajouter un document
+        </button>
+      </section>
+
+      {/* Liens */}
+      <section className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 shadow-sm sm:p-8">
+        <h2 className="text-lg font-semibold tracking-tight">Liens professionnels</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          GitHub, LinkedIn, portfolio ou autre présence en ligne.
+        </p>
+
+        <div className="mt-5 flex flex-col gap-4">
+          {linkFields.map((field, i) => (
+            <div key={field.id} className="grid items-end gap-4 sm:grid-cols-[180px_1fr_1fr_auto]">
+              <Field label="Type" error={undefined}>
+                <Select
+                  value={(getValues(`links.${i}.kind`) as string) ?? "other"}
+                  onValueChange={(v) =>
+                    v &&
+                    setValue(
+                      `links.${i}.kind`,
+                      v as DeveloperApplicationFormValues["links"][number]["kind"],
+                      { shouldValidate: true }
+                    )
+                  }
+                >
+                  <SelectTrigger className="h-10 w-full rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 data-[size=default]:h-10">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent align="start">
+                    {LINK_KINDS.map((k) => (
+                      <SelectItem key={k.value} value={k.value}>
+                        {k.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </Field>
+              <Field label="Libellé" error={undefined}>
+                <Input
+                  {...register(`links.${i}.label`)}
+                  className="h-10 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70"
+                  placeholder="Mon GitHub"
+                />
+              </Field>
+              <Field label="Lien" error={errors.links?.[i]?.url?.message}>
+                <Input
+                  type="url"
+                  {...register(`links.${i}.url`)}
+                  className="h-10 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70"
+                  placeholder="https://github.com/…"
+                  aria-invalid={Boolean(errors.links?.[i]?.url)}
+                />
+              </Field>
+              <button
+                type="button"
+                onClick={() => linkArray.remove(i)}
+                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#2A2A2A] bg-[#0F0F0F] text-muted-foreground transition-colors outline-none hover:text-[var(--error)] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+                aria-label="Supprimer le lien"
+              >
+                <Trash2 className="size-4" aria-hidden="true" />
+              </button>
+            </div>
+          ))}
+        </div>
+
+        <button
+          type="button"
+          onClick={() => linkArray.append({ kind: "github", label: "", url: "" })}
+          className="mt-4 inline-flex h-10 items-center gap-2 rounded-xl border border-[#2A2A2A] bg-[#0F0F0F] px-4 text-sm font-medium text-muted-foreground transition-colors outline-none hover:bg-[#1E1E1E] hover:text-foreground focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+        >
+          <Plus className="size-4" aria-hidden="true" />
+          Ajouter un lien
+        </button>
+      </section>
+
+      {/* Accord */}
+      <section className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 shadow-sm sm:p-8">
+        <label className="flex cursor-pointer items-start gap-3">
+          <input
+            type="checkbox"
+            checked={Boolean(watch("terms_accepted"))}
+            onChange={(e) => setValue("terms_accepted", e.target.checked as unknown as true, { shouldValidate: true })}
+            className="mt-0.5 size-4 shrink-0 accent-[#E86A2C]"
+          />
+          <span className="text-sm leading-relaxed text-muted-foreground">
+            Je certifie l’exactitude des informations fournies et j’accepte les{" "}
+            <Link href="/conditions-utilisation" className="font-medium text-[#E86A2C] underline-offset-4 hover:underline">
+              conditions d’utilisation
+            </Link>{" "}
+            de TERANGA LABS. Mon dossier sera examiné par notre équipe avant activation.
+          </span>
+        </label>
+        {errors.terms_accepted ? (
+          <p role="alert" className="mt-2 text-xs text-destructive">
+            {errors.terms_accepted.message}
+          </p>
+        ) : null}
+      </section>
+
+      {formError ? (
+        <p role="alert" className="flex items-start gap-2 rounded-xl border border-[var(--error)]/30 bg-[var(--error-soft)] px-4 py-3 text-sm leading-relaxed text-[var(--error)]">
+          <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-[var(--error)]" aria-hidden="true" />
+          {formError}
+        </p>
+      ) : null}
+
+      <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <button
+          type="button"
+          onClick={onBack}
+          className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-[#2A2A2A] bg-[#0F0F0F] px-5 py-2.5 text-sm font-medium text-muted-foreground transition-colors outline-none hover:bg-[#1E1E1E] hover:text-foreground focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+        >
+          <ArrowLeft className="size-4" aria-hidden="true" />
+          Étape 1
+        </button>
+        <button type="submit" disabled={isSubmitting} className="btn btn-primary btn-lg">
+          {isSubmitting ? (
+            <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+          ) : (
+            <Send className="size-4" aria-hidden="true" />
+          )}
+          {isSubmitting ? "Envoi de l’inscription…" : "Envoyer ma candidature"}
+        </button>
+      </div>
+    </form>
+  );
+}
+
+function SuccessPanel() {
+  return (
+    <div className="mx-auto max-w-lg">
+      <div className="rounded-2xl border border-[#166534]/60 bg-[#0F2E18] p-8 text-center shadow-sm">
+        <span className="mx-auto inline-flex size-14 items-center justify-center rounded-full bg-emerald-500/15">
+          <CheckCircle2 className="size-7 text-[#4ADE80]" aria-hidden="true" />
+        </span>
+        <h2 className="mt-5 text-xl font-bold tracking-tight">Inscription envoyée !</h2>
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+          Notre équipe examine votre dossier. Vous recevrez une notification
+          dès qu’il sera <span className="font-medium text-foreground">approuvé</span>.
+          En attendant, votre compte est déjà actif pour parcourir la plateforme.
+        </p>
+        <div className="mt-6 flex flex-col gap-3">
+          <Link href="/briefs" className="btn btn-primary w-full">
+            Parcourir les briefs
+            <ArrowRight className="size-4" aria-hidden="true" />
+          </Link>
+          <Link href="/dashboard" className="btn btn-secondary w-full">
+            Aller au dashboard
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TagListInput({
+  values,
+  onChange,
+  placeholder,
+  max = 20,
+}: {
+  values: string[];
+  onChange: (next: string[]) => void;
+  placeholder: string;
+  max?: number;
+}) {
+  const [input, setInput] = React.useState("");
+  const add = () => {
+    const parts = input
+      .split(",")
+      .map((v) => v.trim())
+      .filter(Boolean)
+      .filter((v) => !values.includes(v));
+    if (parts.length === 0) return;
+    onChange([...values, ...parts].slice(0, max));
+    setInput("");
+  };
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="flex gap-2">
+        <Input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === ",") {
+              e.preventDefault();
+              add();
+            }
+          }}
+          className="h-10 flex-1 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70"
+          placeholder={placeholder}
+        />
+        <button
+          type="button"
+          onClick={add}
+          className="inline-flex h-10 shrink-0 items-center gap-1 rounded-xl border border-[#2A2A2A] bg-[#0F0F0F] px-3 text-sm text-muted-foreground transition-colors outline-none hover:bg-[#1E1E1E] hover:text-foreground focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+        >
+          <Plus className="size-4" aria-hidden="true" />
+        </button>
+      </div>
+      {values.length > 0 ? (
+        <div className="flex flex-wrap gap-1.5">
+          {values.map((v) => (
+            <span
+              key={v}
+              className="inline-flex items-center gap-1 rounded-full border border-[#2A2A2A] bg-[#1E1E1E] px-2.5 py-1 text-xs text-foreground"
+            >
+              {v}
+              <button
+                type="button"
+                onClick={() => onChange(values.filter((x) => x !== v))}
+                className="text-muted-foreground transition-colors outline-none hover:text-foreground"
+                aria-label={`Retirer ${v}`}
+              >
+                <X className="size-3" aria-hidden="true" />
+              </button>
+            </span>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function Field({
+  label,
+  error,
+  hint,
+  htmlFor,
+  children,
+}: {
+  label: string;
+  error?: string | null;
+  hint?: string;
+  htmlFor?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-col gap-2">
+      {label ? <Label htmlFor={htmlFor}>{label}</Label> : null}
+      {children}
+      {hint ? <p className="text-xs text-muted-foreground">{hint}</p> : null}
+      {error ? (
+        <p role="alert" className="text-xs text-destructive">
+          {error}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+function translateSubmitError(code: string, message: string): string {
+  switch (code) {
+    case "TLNAU":
+      return "Vous devez être connecté pour envoyer votre inscription.";
+    case "TLNOD":
+      return "Profil développeur introuvable. Reconnectez-vous puis réessayez.";
+    case "TLRJC":
+      return "Votre compte est déjà actif, vérifié ou en cours de vérification.";
+    case "TLDUP":
+      return "Votre inscription est déjà en cours d’examen par notre équipe.";
+    case "TLBAD":
+      return message || "Certaines informations sont invalides. Vérifiez le formulaire.";
+    default:
+      return message || "L’envoi a échoué. Réessayez dans un instant.";
+  }
+}

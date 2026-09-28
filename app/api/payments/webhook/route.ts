@@ -65,37 +65,71 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "service_unavailable" }, { status: 503 });
   }
 
-  // Vérifie l'intention enregistrée au moment du checkout.
+  // Vérifie si la référence correspond à une intention de paiement Tokens
+  // ou à une demande de vérification de profil.
   const { data: intent, error: intentError } = await admin
     .from("payment_intents")
     .select("id, developer_id, tokens, amount_fcfa, currency, status")
     .eq("id", clientReference)
     .maybeSingle();
 
-  if (intentError || !intent) {
+  if (!intentError && intent) {
+    if (intent.status === "paid") {
+      return NextResponse.json({ ok: true, credited: false });
+    }
+
+    if (
+      currency !== "XOF" ||
+      !amountMatches(eventAmount, intent.amount_fcfa)
+    ) {
+      return NextResponse.json({ error: "amount_mismatch" }, { status: 400 });
+    }
+
+    const { data: creditResult, error: creditError } = await admin.rpc(
+      "credit_from_payment",
+      { p_intent_id: intent.id }
+    );
+
+    if (creditError) {
+      console.error("[payments] credit_from_payment failed:", creditError);
+      return NextResponse.json({ error: "credit_failed" }, { status: 500 });
+    }
+
+    return NextResponse.json({ ok: true, credited: true, result: creditResult });
+  }
+
+  // Référence d'une demande de vérification : confirme le paiement via
+  // admin_confirm_verification_payment (idempotent, service_role).
+  const { data: verification, error: verificationError } = await admin
+    .from("verification_requests")
+    .select("id, developer_id, amount_fcfa, payment_status")
+    .eq("id", clientReference)
+    .maybeSingle();
+
+  if (verificationError || !verification) {
     return NextResponse.json({ error: "intent_not_found" }, { status: 404 });
   }
 
-  if (intent.status === "paid") {
-    return NextResponse.json({ ok: true, credited: false });
+  if (verification.payment_status === "confirmed") {
+    return NextResponse.json({ ok: true, confirmed: false });
   }
 
   if (
     currency !== "XOF" ||
-    !amountMatches(eventAmount, intent.amount_fcfa)
+    !amountMatches(eventAmount, verification.amount_fcfa)
   ) {
     return NextResponse.json({ error: "amount_mismatch" }, { status: 400 });
   }
 
-  const { data: creditResult, error: creditError } = await admin.rpc(
-    "credit_from_payment",
-    { p_intent_id: intent.id }
+  const { data: confirmResult, error: confirmError } = await admin.rpc(
+    "admin_confirm_verification_payment",
+    { p_verification: verification.id }
   );
 
-  if (creditError) {
-    console.error("[payments] credit_from_payment failed:", creditError);
-    return NextResponse.json({ error: "credit_failed" }, { status: 500 });
+  if (confirmError) {
+    console.error("[payments] admin_confirm_verification_payment failed:", confirmError);
+    return NextResponse.json({ error: "confirm_failed" }, { status: 500 });
   }
 
-  return NextResponse.json({ ok: true, credited: true, result: creditResult });
+  return NextResponse.json({ ok: true, confirmed: true, result: confirmResult });
 }

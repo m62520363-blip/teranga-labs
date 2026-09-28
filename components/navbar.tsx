@@ -70,6 +70,7 @@ export function Navbar({
     } else if (isDev) {
       appLinks.push({ href: "/briefs", label: "Voir les briefs" });
       appLinks.push({ href: "/dashboard?tab=profil", label: "Mon profil" });
+      appLinks.push({ href: "/verification", label: "Vérifier mon profil" });
     } else {
       appLinks.push({ href: "/briefs", label: "Voir les briefs" });
     }
