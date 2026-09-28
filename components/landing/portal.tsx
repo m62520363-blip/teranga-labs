@@ -28,7 +28,7 @@ const SENEGAL_POINTS = [
   {
     icon: Wallet,
     title: "Paiement en FCFA",
-    text: "Commandes traitées par l’équipe, réglées sur Wave, Orange Money ou Max It. Paiement en ligne en préparation.",
+    text: "Commandes traitées par l’équipe, réglées sur Wave ou Max It. Paiement en ligne en préparation.",
   },
   {
     icon: MessageSquare,

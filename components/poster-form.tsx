@@ -55,7 +55,7 @@ const TYPE_OPTIONS: {
   {
     value: "e-commerce",
     label: "Boutique e-commerce",
-    hint: "Vendre en ligne avec paiement Orange Money, Wave ou Max It.",
+    hint: "Vendre en ligne avec paiement Wave ou Max It.",
     icon: "🛒",
     suggested: [200000, 400000, 800000],
   },
@@ -84,7 +84,7 @@ const TYPE_OPTIONS: {
 
 const FEATURE_OPTIONS = [
   "Galerie photos / vidéos",
-  "Paiement mobile (Orange Money, Wave, Max It)",
+  "Paiement mobile (Wave, Max It)",
   "Réservation / prise de rendez-vous",
   "Formulaire de contact",
   "Bouton WhatsApp",

@@ -59,13 +59,9 @@ export default async function TokensPage() {
               mobile money habituel, notre équipe confirme et crédite vos
               Tokens. Le paiement en ligne automatique est en préparation.
             </p>
-            <div className="mt-3 grid gap-2 sm:grid-cols-3">
+            <div className="mt-3 grid gap-2 sm:grid-cols-2">
               <div className="flex items-center justify-between rounded-xl bg-[#1E1E1E] px-4 py-3 text-sm">
                 <span className="font-medium">Wave</span>
-                <span className="text-xs text-muted-foreground">Bientôt</span>
-              </div>
-              <div className="flex items-center justify-between rounded-xl bg-[#1E1E1E] px-4 py-3 text-sm">
-                <span className="font-medium">Orange Money</span>
                 <span className="text-xs text-muted-foreground">Bientôt</span>
               </div>
               <div className="flex items-center justify-between rounded-xl bg-[#1E1E1E] px-4 py-3 text-sm">

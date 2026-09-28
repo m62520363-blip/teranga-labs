@@ -386,7 +386,7 @@ $$;
 
 -- ------------------------------------------------------------
 -- ADMIN : crÃ©diter des Tokens aprÃ¨s confirmation serveur d'un
--- paiement rÃ©ellement validÃ© (Wave / Orange Money / PayDunya).
+-- paiement rÃ©ellement validÃ© (Wave / PayDunya).
 -- Un clic client ne crÃ©dite JAMAIS tout seul.
 -- ------------------------------------------------------------
 create or replace function public.credit_tokens(

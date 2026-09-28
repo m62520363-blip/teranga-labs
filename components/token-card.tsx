@@ -166,11 +166,11 @@ export function TokenCard({ pkg }: { pkg: TokenPackage }) {
                 </div>
                 <ol className="list-inside list-decimal space-y-1.5 text-sm leading-relaxed text-muted-foreground">
                   <li>Vous créez une commande (numéro de suivi).</li>
-                  <li>Vous payez sur votre mobile money habituel (Wave, Orange Money, Max It).</li>
+                  <li>Vous payez sur votre mobile money habituel (Wave ou Max It).</li>
                   <li>Notre équipe vérifie le paiement et crédite vos Tokens.</li>
                 </ol>
                 <p className="border-t border-[#2A2A2A] pt-3 text-xs leading-relaxed text-muted-foreground">
-                  Le paiement en ligne automatique (Wave, Orange Money, Max It)
+                  Le paiement en ligne automatique (Wave ou Max It)
                   arrive bientôt. En attendant, l’achat se fait à la commande,
                   confirmée une fois l’encaissement vérifié.
                 </p>
@@ -255,7 +255,7 @@ export function TokenCard({ pkg }: { pkg: TokenPackage }) {
               <div className="flex flex-col gap-2 rounded-xl bg-[#1E1E1E] p-4 text-sm leading-relaxed text-muted-foreground">
                 <p>
                   Envoyez <strong className="font-semibold">{formatFCFA(order.price_fcfa)}</strong> sur
-                  votre moyen de paiement habituel (Wave, Orange Money ou Max It) en
+                  votre moyen de paiement habituel (Wave ou Max It) en
                   mentionnant votre numéro de commande <strong className="font-mono">#{order.id}</strong>.
                 </p>
                 <p>
