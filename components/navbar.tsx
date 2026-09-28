@@ -7,7 +7,7 @@ import {
   ArrowRight,
   Briefcase,
   Coins,
-  Compass,
+  UsersRound,
   Home,
   LogIn,
   Menu,
@@ -62,6 +62,7 @@ export function Navbar({
     user?.name?.trim() || (authed ? (isClient ? "Mon espace" : "Mon compte") : null);
 
   const appLinks: { href: string; label: string; adminOnly?: boolean }[] = [];
+  appLinks.push({ href: "/dev", label: "Trouver un développeur" });
   if (authed) {
     appLinks.push({ href: homeHref, label: "Accueil" });
     appLinks.push({ href: "/conversations", label: "Messages" });
@@ -89,7 +90,7 @@ export function Navbar({
     if (isClient) {
       return [
         { href: "/client", label: "Accueil", icon: Home },
-        { href: "/briefs", label: "Briefs", icon: Compass },
+        { href: "/dev", label: "Dévs", icon: UsersRound },
         { href: "/tokens", label: "Tokens", icon: Coins },
         { href: "/conversations", label: "Messages", icon: MessageCircle },
         { href: "/poster", label: "Poster", icon: Plus },
@@ -212,6 +213,7 @@ export function Navbar({
               ) : (
                 <>
                   <MobileNavLink href="/">Accueil</MobileNavLink>
+                  <MobileNavLink href="/dev">Trouver un développeur</MobileNavLink>
                   <MobileNavLink href="/#comment-ca-marche">Comment ça marche</MobileNavLink>
                   <MobileNavLink href="/poster">Pour les clients</MobileNavLink>
                   <MobileNavLink href="/briefs">Pour les développeurs</MobileNavLink>
@@ -292,6 +294,7 @@ function DesktopNavLinks({
     ? appLinks
     : [
         { href: "/", label: "Accueil" },
+        { href: "/dev", label: "Trouver un dev" },
         { href: "/#comment-ca-marche", label: "Comment ça marche" },
         { href: "/poster", label: "Pour les clients" },
         { href: "/briefs", label: "Pour les développeurs" },

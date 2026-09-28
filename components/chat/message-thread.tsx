@@ -50,6 +50,7 @@ type Props = {
   requestStatus: string;
   initialMessages: ThreadMessage[];
   initialOffers: ThreadOffer[];
+  hasRequest?: boolean;
 };
 
 export function MessageThread({
@@ -61,6 +62,7 @@ export function MessageThread({
   requestStatus,
   initialMessages,
   initialOffers,
+  hasRequest = true,
 }: Props) {
   const [messages, setMessages] = React.useState<ThreadMessage[]>(initialMessages);
   const [offers, setOffers] = React.useState<ThreadOffer[]>(initialOffers);
@@ -381,7 +383,7 @@ export function MessageThread({
           </p>
         ) : (
           <div className="flex flex-col gap-3">
-            {!isClient ? (
+            {!isClient && hasRequest ? (
               <Button
                 variant="secondary"
                 size="sm"

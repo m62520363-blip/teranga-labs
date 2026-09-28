@@ -57,7 +57,7 @@ export default async function DashboardPage({
       supabase.rpc("get_my_unlocks"),
       supabase
         .from("token_transactions")
-        .select("id, developer_id, amount, amount_fcfa, type, request_id, created_at")
+        .select("id, developer_id, amount, amount_fcfa, type, request_id, target_developer_id, created_at")
         .eq("developer_id", user.id)
         .order("created_at", { ascending: false })
         .limit(200),

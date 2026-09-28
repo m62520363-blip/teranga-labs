@@ -22,7 +22,7 @@ export function ConversationsList({
     const q = query.trim().toLowerCase();
     if (!q) return true;
     const haystack =
-      `${c.otherName} ${c.request.client_name} ${c.request.client_city} ${c.request.project_type} ${formatFCFA(c.request.budget)} ${c.lastMessage?.content ?? ""}`.toLowerCase();
+      `${c.otherName} ${c.subtitle} ${c.request.client_name} ${c.request.client_city} ${c.request.project_type} ${formatFCFA(c.request.budget)} ${c.lastMessage?.content ?? ""}`.toLowerCase();
     return haystack.includes(q);
   });
 
@@ -100,8 +100,7 @@ export function ConversationsList({
                     </p>
                   </div>
                   <p className="mt-0.5 truncate text-xs text-muted-foreground">
-                    {c.request.client_name} · {c.request.client_city} ·{" "}
-                    {formatFCFA(c.request.budget)}
+                    {c.subtitle}
                   </p>
                   <div className="mt-1.5 flex items-center gap-2">
                     {c.pendingOffers > 0 ? (

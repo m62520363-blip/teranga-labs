@@ -52,7 +52,7 @@ export default async function BriefsPage() {
         .select("id, request_id")
         .eq("developer_id", user.id);
       for (const conv of conversations ?? []) {
-        if (unlocks[conv.request_id]) {
+        if (conv.request_id && unlocks[conv.request_id]) {
           unlocks[conv.request_id] = {
             ...unlocks[conv.request_id],
             conversation_id: conv.id,

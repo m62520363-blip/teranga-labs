@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import {
   Check,
   ClipboardPen,
+  Coins,
   FileSearch,
   Inbox,
   MessageCircle,
@@ -12,7 +13,8 @@ import {
 } from "lucide-react";
 import { createClient, getCurrentUser } from "@/lib/supabase/server";
 import { getConversations } from "@/lib/conversations";
-import { formatFCFA } from "@/lib/formatting";
+import { formatFCFA, formatRelativeTime } from "@/lib/formatting";
+import type { TokenHistoryItem } from "@/types/database";
 import { EmptyState } from "@/components/empty-state";
 import {
   ClientProjects,
@@ -65,10 +67,17 @@ export default async function ClientPage() {
   const roleRes = await supabase.rpc("get_my_role");
   if (roleRes.data !== "client") redirect("/dashboard");
 
-  const [requestsRes, conversations] = await Promise.all([
+  const [requestsRes, conversations, tokenBalanceRes, tokenHistoryRes] = await Promise.all([
     supabase.rpc("get_my_requests" as never),
     getConversations(supabase, user.id),
+    supabase.rpc("get_token_balance"),
+    supabase.rpc("get_my_token_history", { p_limit: 5 }),
   ]);
+
+  const tokenBalance = typeof tokenBalanceRes.data === "number" ? tokenBalanceRes.data : 0;
+  const tokenHistory = ((tokenHistoryRes.data ?? []) as TokenHistoryItem[]).filter(
+    (t) => Boolean(t?.id)
+  );
 
   const requests = (
     (requestsRes.data ?? []) as MyRequest[]
@@ -227,6 +236,74 @@ export default async function ClientPage() {
             </div>
           </div>
         ) : null}
+
+        <section className="mt-8 rounded-2xl border border-[#2A2A2A] bg-[#141414] p-5 sm:p-6" aria-label="Mes Tokens">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-4">
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-[#2A1A10] text-[#E86A2C]">
+                <Coins className="size-5" aria-hidden="true" />
+              </span>
+              <div>
+                <p className="text-sm text-muted-foreground">Mes Tokens</p>
+                <p className="text-2xl font-semibold tracking-tight">
+                  {tokenBalance}{" "}
+                  <span className="text-sm font-medium text-muted-foreground">
+                    Token{tokenBalance > 1 ? "s" : ""}
+                  </span>
+                </p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  1 brief publie / 1 contact direct = 1 Token.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Link
+                href="/tokens"
+                className="inline-flex h-10 items-center justify-center rounded-xl border border-[#2A2A2A] px-5 text-sm font-medium transition-colors outline-none hover:border-[#E86A2C]/40 hover:text-[#F2F2F2] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+              >
+                Recharger
+              </Link>
+              <Link
+                href="/dev"
+                className="inline-flex h-10 items-center justify-center rounded-xl bg-[#E86A2C] px-5 text-sm font-medium text-[#0D0D0D] transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+              >
+                Trouver un développeur
+              </Link>
+            </div>
+          </div>
+
+          {tokenHistory.length > 0 ? (
+            <ul className="mt-5 flex flex-col">
+              {tokenHistory.map((t) => (
+                <li
+                  key={t.id}
+                  className="flex items-center justify-between gap-3 border-t border-[#2A2A2A] py-2.5 first:border-t-0"
+                >
+                  <div className="min-w-0">
+                    <p className="truncate text-sm">{t.label}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {formatRelativeTime(t.created_at)} · solde {t.balance_before} →{" "}
+                      {t.balance_after} Token
+                    </p>
+                  </div>
+                  <span
+                    className={cn(
+                      "shrink-0 text-sm font-semibold",
+                      (t.amount ?? 0) > 0 ? "text-[#4ADE80]" : "text-[#F87171]"
+                    )}
+                  >
+                    {(t.amount ?? 0) > 0 ? "+" : ""}
+                    {t.amount}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-5 border-t border-[#2A2A2A] pt-4 text-sm text-muted-foreground">
+              Aucun mouvement pour le moment.
+            </p>
+          )}
+        </section>
 
         <section className="mt-10">
           <div className="flex items-center gap-2">

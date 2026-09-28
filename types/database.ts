@@ -185,8 +185,9 @@ export interface Database {
           developer_id: string;
           amount: number;
           amount_fcfa: number | null;
-          type: "purchase" | "unlock" | "bonus" | "publish";
+          type: "purchase" | "unlock" | "bonus" | "publish" | "contact" | "adjust";
           request_id: string | null;
+          target_developer_id: string | null;
           created_at: string;
         };
         Insert: {
@@ -194,8 +195,9 @@ export interface Database {
           developer_id: string;
           amount: number;
           amount_fcfa?: number | null;
-          type: "purchase" | "unlock" | "bonus";
+          type: "purchase" | "unlock" | "bonus" | "publish" | "contact" | "adjust";
           request_id?: string | null;
+          target_developer_id?: string | null;
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["token_transactions"]["Insert"]>;
@@ -310,7 +312,7 @@ export interface Database {
       conversations: {
         Row: {
           id: string;
-          request_id: string;
+          request_id: string | null;
           developer_id: string | null;
           client_id: string | null;
           status: ConversationStatus;
@@ -319,7 +321,7 @@ export interface Database {
         };
         Insert: {
           id?: string;
-          request_id: string;
+          request_id?: string | null;
           developer_id?: string | null;
           client_id?: string | null;
           status?: ConversationStatus;
@@ -603,6 +605,92 @@ export interface Database {
       get_my_role: {
         Args: Record<string, never>;
         Returns: string;
+      };
+      get_contact_cost: {
+        Args: Record<string, never>;
+        Returns: number;
+      };
+      get_my_token_history: {
+        Args: {
+          p_limit?: number;
+        };
+        Returns: Json;
+      };
+      get_peer_display_name: {
+        Args: {
+          p_user_id: string;
+        };
+        Returns: Json;
+      };
+      list_approved_developers: {
+        Args: {
+          p_query?: string;
+          p_specialty?: string;
+          p_technologies?: string[];
+          p_services?: string[];
+          p_city?: string;
+          p_min_experience?: number;
+          p_availability?: string;
+          p_min_rating?: number;
+          p_verified_only?: boolean;
+          p_project_type?: string;
+          p_sort?: string;
+          p_limit?: number;
+          p_offset?: number;
+        };
+        Returns: Json;
+      };
+      get_directory_filters: {
+        Args: Record<string, never>;
+        Returns: Json;
+      };
+      contact_developer: {
+        Args: {
+          p_developer_id: string;
+          p_initial_message?: string;
+        };
+        Returns: Json;
+      };
+      admin_list_packages: {
+        Args: Record<string, never>;
+        Returns: Json;
+      };
+      admin_update_package: {
+        Args: {
+          p_id: string;
+          p_name: string;
+          p_tokens: number;
+          p_price_fcfa: number;
+          p_popular?: boolean;
+        };
+        Returns: Json;
+      };
+      admin_list_balances: {
+        Args: {
+          p_query?: string;
+          p_limit?: number;
+        };
+        Returns: Json;
+      };
+      admin_adjust_tokens: {
+        Args: {
+          p_developer: string;
+          p_amount: number;
+          p_reason?: string;
+        };
+        Returns: Json;
+      };
+      admin_set_contact_cost: {
+        Args: {
+          p_tokens: number;
+        };
+        Returns: Json;
+      };
+      admin_list_contacts: {
+        Args: {
+          p_limit?: number;
+        };
+        Returns: Json;
       };
       get_my_unlocks: {
         Args: Record<string, never>;
@@ -967,7 +1055,16 @@ export type PublicDeveloperProfile = {
   bio: string | null;
   avatar_url: string | null;
   city: string | null;
+  country: string | null;
   whatsapp: string | null;
+  phone_masked: string | null;
+  email_masked: string | null;
+  professional_title: string | null;
+  main_specialty: string | null;
+  experience_level: string | null;
+  availability: string | null;
+  rate_min_fcfa: number | null;
+  rate_max_fcfa: number | null;
   skills: string[] | null;
   experience_years: number;
   is_verified: boolean;
@@ -992,6 +1089,60 @@ export type PublicDeveloperProfile = {
 };
 
 export type PublicReview = PublicDeveloperProfile["reviews"][number];
+
+export type ApprovedDeveloper = {
+  id: string;
+  username: string | null;
+  full_name: string | null;
+  professional_title: string | null;
+  main_specialty: string | null;
+  avatar_url: string | null;
+  city: string | null;
+  country: string | null;
+  bio: string | null;
+  skills: string[] | null;
+  services: string[] | null;
+  experience_years: number | null;
+  experience_level: string | null;
+  availability: string | null;
+  rate_min_fcfa: number | null;
+  rate_max_fcfa: number | null;
+  rating_avg: number | null;
+  review_count: number | null;
+  completed_projects_count: number | null;
+  projects_count: number | null;
+  is_verified: boolean;
+  reputation_score: number | null;
+  response_rate: number | null;
+  satisfaction_pct: number | null;
+  phone_masked: string | null;
+  email_masked: string | null;
+};
+
+export type TokenHistoryItem = {
+  id: string;
+  amount: number;
+  amount_fcfa: number | null;
+  type: string;
+  label: string;
+  balance_before: number;
+  balance_after: number;
+  created_at: string;
+};
+
+export type DirectoryFilters = {
+  specialties: string[];
+  cities: string[];
+  services: string[];
+  project_types: string[];
+};
+
+export type MailContactResult = {
+  conversation_id: string;
+  first_contact: boolean;
+  cost: number;
+  balance: number;
+};
 
 export type TransactionRow = Database["public"]["Tables"]["token_transactions"]["Row"];
 

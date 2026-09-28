@@ -9,7 +9,6 @@ import {
   type ThreadMessage,
   type ThreadOffer,
 } from "@/components/chat/message-thread";
-import { formatFCFA } from "@/lib/formatting";
 
 export const metadata: Metadata = {
   title: "Discussion",
@@ -52,14 +51,7 @@ export default async function ConversationThreadPage({
               {thread.otherName}
               {thread.otherUsername ? ` · @${thread.otherUsername}` : ""}
             </h1>
-            {request ? (
-              <p className="mt-1.5 text-sm text-muted-foreground">
-                {request.client_name} · {request.client_city} ·{" "}
-                {request.project_type} · {formatFCFA(request.budget)}
-              </p>
-            ) : (
-              <p className="mt-1.5 text-sm text-muted-foreground">Brief</p>
-            )}
+            <p className="mt-1.5 text-sm text-muted-foreground">{thread.subtitle}</p>
           </div>
 
           {conversation.status === "awarded" ? (
@@ -79,6 +71,7 @@ export default async function ConversationThreadPage({
           requestStatus={request?.status ?? ""}
           initialMessages={thread.messages as unknown as ThreadMessage[]}
           initialOffers={thread.offers as unknown as ThreadOffer[]}
+          hasRequest={thread.hasRequest}
         />
       </div>
     </div>

@@ -6,15 +6,15 @@ import {
   ExternalLink,
   Globe,
   MapPin,
-  MessagesSquare,
   ShieldCheck,
   Star,
 } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
-import { waLink } from "@/lib/tokens";
+import { createClient, getCurrentRole, getCurrentUser } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/formatting";
 import { ShareProfileButton } from "@/components/dev/share-profile-button";
 import { ReportButton } from "@/components/report-button";
+import { ContactButton } from "@/components/dev/contact-dialog";
+import { availabilityInfo, experienceLabel } from "@/lib/dev-labels";
 import type { PublicDeveloperProfile } from "@/types/database";
 import { cn } from "cn";
 
@@ -72,14 +72,29 @@ export default async function DeveloperProfilePage({
   const profile = await getProfile(username);
   if (!profile) notFound();
 
+  const supabase = await createClient();
+
+  const [currentUser, role, costRes] = await Promise.all([
+    getCurrentUser(),
+    getCurrentRole(),
+    supabase
+      ? supabase.rpc("get_contact_cost")
+      : Promise.resolve({ data: null }),
+  ]);
+
+  const contactCost =
+    typeof costRes?.data === "number" && costRes.data > 0 ? costRes.data : 1;
+
   const name = profile.full_name ?? "Développeur Teranga Labs";
   const roundAverage = Math.round(profile.review_average);
   const shareUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/dev/${profile.username ?? username}`;
-  const waHref = profile.whatsapp
-    ? `${waLink(profile.whatsapp)}?text=${encodeURIComponent(
-        "Bonjour, je vous contacte depuis votre profil Teranga Labs."
-      )}`
-    : null;
+  const availability = availabilityInfo(profile.availability);
+  const rate =
+    profile.rate_min_fcfa != null && profile.rate_max_fcfa != null
+      ? `${profile.rate_min_fcfa.toLocaleString("fr-FR")} – ${profile.rate_max_fcfa.toLocaleString("fr-FR")} FCFA`
+      : profile.rate_min_fcfa != null
+        ? `À partir de ${profile.rate_min_fcfa.toLocaleString("fr-FR")} FCFA`
+        : null;
 
   return (
     <div className="bg-[#0A0A0A] py-14 md:py-20">
@@ -123,10 +138,18 @@ export default async function DeveloperProfilePage({
                   ) : null}
                 </div>
                 <p className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
+                  {profile.professional_title || profile.main_specialty ? (
+                    <span className="inline-flex items-center gap-1.5">
+                      <Briefcase className="size-4 text-[#E86A2C]" aria-hidden="true" />
+                      {profile.professional_title ??
+                        experienceLabel(profile.main_specialty)}
+                    </span>
+                  ) : null}
                   {profile.city ? (
                     <span className="inline-flex items-center gap-1.5">
                       <MapPin className="size-4 text-[#E86A2C]" aria-hidden="true" />
-                      {profile.city}, Sénégal
+                      {profile.city}
+                      {profile.country ? `, ${profile.country}` : ""}
                     </span>
                   ) : null}
                   {profile.experience_years > 0 ? (
@@ -135,6 +158,7 @@ export default async function DeveloperProfilePage({
                       {profile.experience_years} an{profile.experience_years > 1 ? "s" : ""} d’expérience
                     </span>
                   ) : null}
+                  <span className={availability.badge}>{availability.label}</span>
                 </p>
 
                 <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-sm">
@@ -200,21 +224,56 @@ export default async function DeveloperProfilePage({
             </div>
 
             <div className="flex shrink-0 flex-col gap-2.5 sm:flex-row md:flex-col lg:flex-row">
-              {waHref ? (
-                <a
-                  href={waHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-[#E86A2C] px-5 text-sm font-medium text-[#0D0D0D] transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
-                >
-                  <MessagesSquare className="size-4" aria-hidden="true" />
-                  Contacter sur WhatsApp
-                </a>
-              ) : null}
+              <ContactButton
+                developer={{
+                  id: profile.id,
+                  username: profile.username,
+                  full_name: profile.full_name,
+                  professional_title: profile.professional_title ?? profile.main_specialty,
+                  main_specialty: profile.main_specialty,
+                  city: profile.city,
+                }}
+                contactCost={contactCost}
+                role={role}
+                authed={Boolean(currentUser)}
+                className="h-10 px-5"
+              />
               <ShareProfileButton url={shareUrl} />
               <ReportButton targetType="developer" targetId={profile.id} />
             </div>
           </header>
+
+          <section className="mt-8 border-t border-[#2A2A2A] pt-8" aria-label="Contact">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+              Contact
+            </h2>
+            <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <div className="max-w-md rounded-2xl border border-[#2A2A2A] bg-[#141414] p-4 text-sm">
+                <p className="text-muted-foreground">
+                  Coordonnées masquées — elles ne sont révélées qu’après attribution
+                  d’un projet. Ouvrez un contact direct (
+                  <span className="font-semibold text-[#E86A2C]">{contactCost} Token</span>
+                  ) pour discuter en sécurité.
+                </p>
+                {profile.phone_masked || profile.email_masked ? (
+                  <ul className="mt-3 flex flex-col gap-1.5 text-xs text-muted-foreground">
+                    {profile.phone_masked ? (
+                      <li>{"\u2022"} {profile.phone_masked}</li>
+                    ) : null}
+                    {profile.email_masked ? (
+                      <li>{"\u2022"} {profile.email_masked}</li>
+                    ) : null}
+                  </ul>
+                ) : null}
+              </div>
+              {rate ? (
+                <div className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-4 text-sm">
+                  <p className="text-muted-foreground">Tarifs indicatifs</p>
+                  <p className="mt-1 font-semibold">{rate}</p>
+                </div>
+              ) : null}
+            </div>
+          </section>
 
           {profile.bio ? (
             <section className="mt-8 border-t border-[#2A2A2A] pt-8" aria-label="Présentation">
