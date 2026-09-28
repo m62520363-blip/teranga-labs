@@ -60,6 +60,9 @@ function translateAuthError(message: string): string {
   if (m.includes("user already registered")) {
     return "Un compte existe déjà avec cet email.";
   }
+  if (m.includes("tlwa") || m.includes("duplicate key value violates unique constraint")) {
+    return "Ce numéro WhatsApp est déjà associé à un autre compte. Chaque compte possède un email et un numéro uniques.";
+  }
   if (m.includes("password")) return "Le mot de passe est invalide.";
   return message;
 }
@@ -385,6 +388,18 @@ function SignupPane({
     setNotice(null);
     const supabase = createClient();
     const isClient = role === "client";
+    const whatsappValue = (values.whatsapp ?? "").trim();
+    if (whatsappValue) {
+      const { data: taken } = await supabase.rpc("is_phone_taken", {
+        p_phone: whatsappValue,
+      });
+      if (taken) {
+        setFormError(
+          "Ce numéro WhatsApp est déjà associé à un autre compte. Chaque compte possède un email et un numéro uniques."
+        );
+        return;
+      }
+    }
     const { data, error } = await supabase.auth.signUp({
       email: values.email,
       password: values.password,

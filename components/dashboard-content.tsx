@@ -241,6 +241,10 @@ export function DashboardContent({
     if (error) {
       if (error.message?.includes("developers_username_uidx")) {
         toast.error("Cet identifiant est déjà pris. Choisissez-en un autre.");
+      } else if (error.message?.includes("TLWA")) {
+        toast.error(
+          "Ce numéro WhatsApp est déjà associé à un autre compte."
+        );
       } else {
         toast.error("Impossible de mettre à jour le profil.");
       }
