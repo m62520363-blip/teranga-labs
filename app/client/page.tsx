@@ -179,7 +179,7 @@ export default async function ClientPage() {
           </div>
           <Link
             href="/poster"
-            className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-[#0D0D0D] transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
+            className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
           >
             <Plus className="size-4" aria-hidden="true" />
             Publier un nouveau brief
@@ -188,7 +188,7 @@ export default async function ClientPage() {
 
         {(company || clientName) && (
           <div className="mt-6 flex flex-wrap items-center gap-3 rounded-2xl border border-hairline bg-[#141414] p-4">
-            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary font-display text-lg font-bold text-[#0D0D0D]">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary font-display text-lg font-bold text-ink">
               {(company || clientName).charAt(0).toUpperCase()}
             </span>
             <div className="min-w-0">
@@ -273,13 +273,13 @@ export default async function ClientPage() {
             <div className="flex items-center gap-2">
               <Link
                 href="/tokens"
-                className="inline-flex h-10 items-center justify-center rounded-xl border border-hairline px-5 text-sm font-medium transition-colors outline-none hover:border-primary/40 hover:text-[#F2F2F2] focus-visible:ring-2 focus-visible:ring-primary/50"
+                className="inline-flex h-10 items-center justify-center rounded-xl border border-hairline px-5 text-sm font-medium transition-colors outline-none hover:border-primary/40 hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
               >
                 Recharger
               </Link>
               <Link
                 href="/dev"
-                className="inline-flex h-10 items-center justify-center rounded-xl bg-primary px-5 text-sm font-medium text-[#0D0D0D] transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
+                className="inline-flex h-10 items-center justify-center rounded-xl bg-primary px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
               >
                 Trouver un développeur
               </Link>
@@ -373,10 +373,10 @@ export default async function ClientPage() {
                       className={cn(
                         "flex size-11 shrink-0 items-center justify-center rounded-xl",
                         c.unreadCount > 0
-                          ? "bg-primary text-[#0D0D0D]"
+                          ? "bg-primary text-ink"
                           : c.status === "awarded"
-                            ? "bg-[#4ADE80] text-[#0D0D0D]"
-                            : "bg-hairline text-[#F2F2F2]"
+                            ? "bg-[#4ADE80] text-ink"
+                            : "bg-hairline text-foreground"
                       )}
                       aria-hidden="true"
                     >
@@ -417,7 +417,7 @@ export default async function ClientPage() {
                       </p>
                     </div>
                     {c.unreadCount > 0 ? (
-                      <span className="ml-2 flex size-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-[#0D0D0D]">
+                      <span className="ml-2 flex size-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-ink">
                         {c.unreadCount}
                       </span>
                     ) : null}
@@ -460,7 +460,7 @@ export default async function ClientPage() {
                   </div>
                   <Link
                     href={`/conversations/${c.id}`}
-                    className="inline-flex h-9 shrink-0 items-center gap-2 rounded-xl bg-[#F2F2F2] px-4 text-sm font-medium text-[#0D0D0D] transition-colors outline-none hover:bg-[#EBEBEB] focus-visible:ring-2 focus-visible:ring-primary/50"
+                    className="inline-flex h-9 shrink-0 items-center gap-2 rounded-xl bg-foreground px-4 text-sm font-medium text-ink transition-colors outline-none hover:bg-[#EBEBEB] focus-visible:ring-2 focus-visible:ring-primary/50"
                   >
                     Examiner les devis
                     <FileSearch className="size-4" aria-hidden="true" />
@@ -492,7 +492,7 @@ function StatCard({
         <span
           className={cn(
             "flex size-8 items-center justify-center rounded-lg",
-            accent ? "bg-primary text-[#0D0D0D]" : "bg-hairline text-[#F2F2F2]"
+            accent ? "bg-primary text-ink" : "bg-hairline text-foreground"
           )}
         >
           {icon}

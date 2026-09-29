@@ -81,6 +81,36 @@ npm run dev                  # http://localhost:3000
 Ces règles sont **testées**, pas seulement documentées : voir
 `supabase/tests/permissions.sql`.
 
+## Design system
+
+Toutes les couleurs passent par les tokens de `app/globals.css` — plus aucune
+valeur hexadécimale en dur dans les composants.
+
+| Token | Valeur | Rôle |
+| --- | --- | --- |
+| `--primary` | `#e86a2c` | orange TERANGA (boutons, liens, accents) |
+| `--primary-foreground` | `--ink` `#0d0d0d` | texte **sur** un aplat orange |
+| `--ink` | `#0d0d0d` | texte sur fond clair (secondaires inversés) |
+| `--hairline` | `#2a2a2a` | filet de séparation des cartes |
+| `--border` | `#262626` | bordure de champ et de carte |
+| `--surface` / `--surface-secondary` | `#0f0f0f` / `#141414` | fond de section et de carte |
+
+Les teintes translucides (`--accent-glow`, `--*-soft`) sont exprimées en
+`color-mix()` sur ces tokens : plus de `rgba()` à dupliquer.
+
+> **Contraste** : le texte posé sur un aplat de marque est le noir, pas le
+> blanc. `#0d0d0d` sur `#e86a2c` = **6.04:1** (WCAG AA) alors que `#ffffff`
+> sur la même couleur plafonne à **3.22:1** et échoue. Toute la surface —
+> `.btn-primary`, `<Button>`, `<Badge>`, boutons de formulaire, badges —
+> passe par `--primary-foreground`, donc le choix correct est appliqué une
+> seule fois. Le reste de la palette est vérifié : texte principal 17.7:1,
+> texte secondaire 7.9:1, succès 10.3:1, warning 11.9:1, erreur 5.1:1.
+
+> Ajouter une couleur = ajouter un token dans `:root` **et** son alias
+> `--color-*` dans `@theme inline`, puis n'utiliser que l'utilitaire
+> (`bg-primary`, `text-ink`, `border-hairline`). Ne jamais réintroduire de
+> hexadécimal dans un composant.
+
 ## Économie des Tokens
 
 - `token_transactions` : `amount` (positif = crédit, négatif = débit),

@@ -189,7 +189,7 @@ export function NotificationBell({ userId }: { userId: string }) {
           <Bell className="size-5" aria-hidden="true" />
         )}
         {unread > 0 ? (
-          <span className="absolute right-1 top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold leading-none text-[#0D0D0D]">
+          <span className="absolute right-1 top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold leading-none text-ink">
             {unread > 9 ? "9+" : unread}
           </span>
         ) : null}
@@ -288,7 +288,7 @@ export function NotificationBell({ userId }: { userId: string }) {
                 setOpen(false);
                 router.push("/notifications");
               }}
-              className="w-full rounded-lg px-3 py-2 text-center text-sm font-medium text-[#F2F2F2] outline-none transition-colors hover:bg-[#1E1E1E] focus-visible:ring-2 focus-visible:ring-primary/50"
+              className="w-full rounded-lg px-3 py-2 text-center text-sm font-medium text-foreground outline-none transition-colors hover:bg-[#1E1E1E] focus-visible:ring-2 focus-visible:ring-primary/50"
             >
               Voir tout l&apos;historique
             </button>

@@ -129,7 +129,7 @@ function HeroVisual() {
         Brief publié · 1 Token
       </div>
       <div
-        className="tl-float absolute -bottom-5 -left-4 rounded-full bg-[#F2F2F2] px-4 py-2.5 text-xs font-semibold text-[#0D0D0D] shadow-xl shadow-black/40"
+        className="tl-float absolute -bottom-5 -left-4 rounded-full bg-foreground px-4 py-2.5 text-xs font-semibold text-ink shadow-xl shadow-black/40"
         style={{ animationDelay: "1.4s" }}
       >
         1 Token = 2 500 F · 1 contact

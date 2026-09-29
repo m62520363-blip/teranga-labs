@@ -889,7 +889,7 @@ function RoleCard({
       <span
         className={cn(
           "flex size-8 items-center justify-center rounded-lg",
-          selected ? "bg-primary text-[#0D0D0D]" : "bg-hairline text-[#F2F2F2]"
+          selected ? "bg-primary text-ink" : "bg-hairline text-foreground"
         )}
       >
         {icon}

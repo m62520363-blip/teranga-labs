@@ -150,7 +150,7 @@ export function NotificationsPage({ userId }: { userId: string }) {
             <button
               type="button"
               onClick={markAll}
-              className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-hairline bg-[#141414] px-5 text-sm font-medium text-[#F2F2F2] transition-colors outline-none hover:bg-[#1E1E1E] focus-visible:ring-2 focus-visible:ring-primary/50"
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-hairline bg-[#141414] px-5 text-sm font-medium text-foreground transition-colors outline-none hover:bg-[#1E1E1E] focus-visible:ring-2 focus-visible:ring-primary/50"
             >
               <CheckCircle2 className="size-4 text-primary" aria-hidden="true" />
               Tout marquer lu
@@ -171,7 +171,7 @@ export function NotificationsPage({ userId }: { userId: string }) {
               action={
                 <Link
                   href="/conversations"
-                  className="inline-flex h-10 items-center gap-2 rounded-xl bg-[#F2F2F2] px-5 text-sm font-medium text-[#0D0D0D] transition-colors outline-none hover:bg-[#EBEBEB]"
+                  className="inline-flex h-10 items-center gap-2 rounded-xl bg-foreground px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-[#EBEBEB]"
                 >
                   Ouvrir mes discussions
                   <ArrowRight className="size-4" aria-hidden="true" />

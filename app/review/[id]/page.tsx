@@ -73,7 +73,7 @@ export default async function ReviewPage({
       <div className="container-tl max-w-2xl">
         <Link
           href="/client"
-          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors outline-none hover:text-[#F2F2F2]"
+          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors outline-none hover:text-foreground"
         >
           <ArrowLeft className="size-4" aria-hidden="true" />
           Mon espace client

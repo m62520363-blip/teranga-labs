@@ -162,7 +162,7 @@ export function DirectoryCard({
 
       <div className="mt-4 flex flex-col gap-1.5 border-t border-hairline pt-4 text-xs text-muted-foreground">
         {rate ? (
-          <p className="font-medium text-[#F2F2F2]">Tarif : {rate}</p>
+          <p className="font-medium text-foreground">Tarif : {rate}</p>
         ) : null}
         {developer.phone_masked ? (
           <p>{"\u2022"} {developer.phone_masked}</p>
@@ -175,7 +175,7 @@ export function DirectoryCard({
       <div className="mt-4 flex items-center gap-2 pt-1">
         <Link
           href={`/dev/${developer.username ?? developer.id}`}
-          className="inline-flex h-10 flex-1 items-center justify-center rounded-xl border border-hairline text-sm font-medium transition-colors outline-none hover:border-primary/40 hover:text-[#F2F2F2] focus-visible:ring-2 focus-visible:ring-primary/50"
+          className="inline-flex h-10 flex-1 items-center justify-center rounded-xl border border-hairline text-sm font-medium transition-colors outline-none hover:border-primary/40 hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
         >
           Voir le profil
         </Link>

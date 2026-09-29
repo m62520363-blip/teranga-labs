@@ -79,7 +79,7 @@ export default async function BriefsPage() {
           {!user && (
             <Link
               href="/login?mode=signup"
-              className="inline-flex h-10 shrink-0 items-center gap-2 rounded-xl bg-[#F2F2F2] px-5 text-sm font-medium text-[#0D0D0D] transition-colors outline-none hover:bg-[#EBEBEB] focus-visible:ring-2 focus-visible:ring-primary/50"
+              className="inline-flex h-10 shrink-0 items-center gap-2 rounded-xl bg-foreground px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-[#EBEBEB] focus-visible:ring-2 focus-visible:ring-primary/50"
             >
               Créer un compte développeur
             </Link>

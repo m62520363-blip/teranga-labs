@@ -96,7 +96,7 @@ export function UpdatePasswordForm() {
         </p>
         <a
           href="/login"
-          className="inline-flex h-10 items-center justify-center rounded-xl bg-[#F2F2F2] px-5 text-sm font-medium text-[#0D0D0D]"
+          className="inline-flex h-10 items-center justify-center rounded-xl bg-foreground px-5 text-sm font-medium text-ink"
         >
           Retour à la connexion
         </a>

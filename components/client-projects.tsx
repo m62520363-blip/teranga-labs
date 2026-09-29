@@ -191,7 +191,7 @@ export function ClientProjects({ items }: { items: ClientProjectItem[] }) {
                     <Check className="size-4 shrink-0 text-[#4ADE80]" aria-hidden="true" />
                     <span className="text-muted-foreground">
                       Développeur retenu :{" "}
-                      <span className="font-medium text-[#F2F2F2]">{r.awardedName}</span>
+                      <span className="font-medium text-foreground">{r.awardedName}</span>
                     </span>
                     <Link
                       href={`/conversations/${r.awardedConvId}`}
@@ -214,7 +214,7 @@ export function ClientProjects({ items }: { items: ClientProjectItem[] }) {
                     <span
                       className={cn(
                         "flex size-9 shrink-0 items-center justify-center rounded-lg",
-                        r.review ? "bg-[#F5C26B]/15 text-[#F5C26B]" : "bg-primary text-[#0D0D0D]"
+                        r.review ? "bg-[#F5C26B]/15 text-[#F5C26B]" : "bg-primary text-ink"
                       )}
                     >
                       <Star className="size-4" aria-hidden="true" />
@@ -241,8 +241,8 @@ export function ClientProjects({ items }: { items: ClientProjectItem[] }) {
                       className={cn(
                         "shrink-0 rounded-lg px-3 py-2 text-xs font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
                         r.review
-                          ? "border border-hairline text-[#F2F2F2] hover:bg-[#1E1E1E]"
-                          : "bg-[#F2F2F2] text-[#0D0D0D] hover:bg-[#EBEBEB]"
+                          ? "border border-hairline text-foreground hover:bg-[#1E1E1E]"
+                          : "bg-foreground text-ink hover:bg-[#EBEBEB]"
                       )}
                     >
                       {r.review ? "Modifier l’avis" : "Évaluer la mission"}
@@ -272,7 +272,7 @@ export function ClientProjects({ items }: { items: ClientProjectItem[] }) {
                   ) : r.firstConvId ? (
                     <Link
                       href={`/conversations/${r.firstConvId}`}
-                      className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-[#F2F2F2]"
+                      className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground"
                     >
                       <MessageCircle className="size-3.5" aria-hidden="true" />
                       Voir la discussion

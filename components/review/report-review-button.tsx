@@ -138,7 +138,7 @@ export function ReportReviewButton({
                   className={cn(
                     "flex cursor-pointer items-center gap-3 rounded-xl border px-3.5 py-2.5 text-sm transition-colors",
                     reason === r.value
-                      ? "border-primary/60 bg-[#2A1A10] text-[#F2F2F2]"
+                      ? "border-primary/60 bg-[#2A1A10] text-foreground"
                       : "border-hairline bg-surface text-muted-foreground hover:border-[#3A3A3A]"
                   )}
                 >

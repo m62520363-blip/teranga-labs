@@ -158,13 +158,13 @@ export function DirectoryPage({
           <button
             type="button"
             onClick={() => setShowFilters((v) => !v)}
-            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-hairline bg-[#141414] px-4 text-sm font-medium text-muted-foreground transition-colors outline-none hover:border-primary/40 hover:text-[#F2F2F2] focus-visible:ring-2 focus-visible:ring-primary/50"
+            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-hairline bg-[#141414] px-4 text-sm font-medium text-muted-foreground transition-colors outline-none hover:border-primary/40 hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
             aria-expanded={showFilters}
           >
             <SlidersHorizontal className="size-4" aria-hidden="true" />
             Filtres
             {anyFilter ? (
-              <span className="flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-[#0D0D0D]">
+              <span className="flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-ink">
                 {techs.length + (specialty ? 1 : 0) + (city ? 1 : 0) + (availability ? 1 : 0) + (projectType ? 1 : 0) + (minRating !== "0" ? 1 : 0) + (minExperience !== "0" ? 1 : 0) + (verifiedOnly ? 1 : 0)}
               </span>
             ) : null}
@@ -267,7 +267,7 @@ export function DirectoryPage({
             <button
               type="button"
               onClick={reset}
-              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors outline-none hover:text-[#F2F2F2] focus-visible:ring-2 focus-visible:ring-primary/50"
+              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
             >
               <X className="size-3.5" aria-hidden="true" />
               Réinitialiser
@@ -321,7 +321,7 @@ export function DirectoryPage({
                 type="button"
                 onClick={() => void loadMore()}
                 disabled={loading}
-                className="inline-flex h-11 items-center gap-2 rounded-xl border border-hairline bg-[#141414] px-6 text-sm font-medium transition-colors outline-none hover:border-primary/40 hover:text-[#F2F2F2] focus-visible:ring-2 focus-visible:ring-primary/50 disabled:opacity-50"
+                className="inline-flex h-11 items-center gap-2 rounded-xl border border-hairline bg-[#141414] px-6 text-sm font-medium transition-colors outline-none hover:border-primary/40 hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50 disabled:opacity-50"
               >
                 {loading ? (
                   <Loader2 className="size-4 animate-spin" aria-hidden="true" />

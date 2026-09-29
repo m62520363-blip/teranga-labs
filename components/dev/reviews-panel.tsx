@@ -196,7 +196,7 @@ export function DevReviewsPanel({
                     title={reviewCriteriaLabel(c.key)}
                   >
                     {c.label}
-                    <span className="font-semibold text-[#F2F2F2]">
+                    <span className="font-semibold text-foreground">
                       {review.criteria?.[c.key]}★
                     </span>
                   </span>
@@ -277,7 +277,7 @@ export function DevReviewsPanel({
                   type="button"
                   onClick={() => saveResponse(review)}
                   disabled={responding === review.id}
-                  className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#F2F2F2] px-4 text-sm font-medium text-[#0D0D0D] transition-colors outline-none hover:bg-[#EBEBEB] focus-visible:ring-2 focus-visible:ring-primary/50 disabled:pointer-events-none disabled:opacity-60"
+                  className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-foreground px-4 text-sm font-medium text-ink transition-colors outline-none hover:bg-[#EBEBEB] focus-visible:ring-2 focus-visible:ring-primary/50 disabled:pointer-events-none disabled:opacity-60"
                 >
                   {responding === review.id ? (
                     <Loader2 className="size-4 animate-spin" aria-hidden="true" />

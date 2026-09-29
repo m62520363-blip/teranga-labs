@@ -165,7 +165,7 @@ export function ReviewForm({ context }: { context: ReviewForRequest }) {
     <div className="mt-6">
       <div className="flex flex-col gap-4 rounded-3xl border border-hairline bg-[#141414] p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
         <div className="flex min-w-0 items-center gap-4">
-          <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-hairline font-display text-lg font-bold text-[#F2F2F2]">
+          <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-hairline font-display text-lg font-bold text-foreground">
             {(context.developer?.full_name || "?").charAt(0).toUpperCase()}
           </span>
           <div className="min-w-0">
@@ -202,16 +202,16 @@ export function ReviewForm({ context }: { context: ReviewForRequest }) {
             <span
               className={cn(
                 "inline-flex items-center gap-1.5 text-xs font-medium",
-                step === s.step ? "text-[#F2F2F2]" : "text-muted-foreground"
+                step === s.step ? "text-foreground" : "text-muted-foreground"
               )}
             >
               <span
                 className={cn(
                   "flex size-5 items-center justify-center rounded-full text-[10px] font-bold",
                   step === s.step
-                    ? "bg-primary text-[#0D0D0D]"
+                    ? "bg-primary text-ink"
                     : step > s.step
-                      ? "bg-[#4ADE80] text-[#0D0D0D]"
+                      ? "bg-[#4ADE80] text-ink"
                       : "bg-hairline text-muted-foreground"
                 )}
               >

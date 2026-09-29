@@ -133,7 +133,7 @@ export default async function DeveloperProfilePage({
                     className="size-20 rounded-2xl border border-hairline object-cover md:size-24"
                   />
                 ) : (
-                  <div className="flex size-20 items-center justify-center rounded-2xl border border-hairline bg-gradient-to-br from-primary to-[#B34A14] text-2xl font-bold text-[#0D0D0D] md:size-24">
+                  <div className="flex size-20 items-center justify-center rounded-2xl border border-hairline bg-gradient-to-br from-primary to-[#B34A14] text-2xl font-bold text-ink md:size-24">
                     {initialsOf(name)}
                   </div>
                 )}
@@ -468,7 +468,7 @@ export default async function DeveloperProfilePage({
                           href={externalUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="mt-4 inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-hairline bg-surface px-4 text-sm font-medium text-[#F2F2F2] transition-colors outline-none hover:border-primary/50 hover:text-primary focus-visible:ring-2 focus-visible:ring-primary/50"
+                          className="mt-4 inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-hairline bg-surface px-4 text-sm font-medium text-foreground transition-colors outline-none hover:border-primary/50 hover:text-primary focus-visible:ring-2 focus-visible:ring-primary/50"
                         >
                           {buttonLabel}
                           <ExternalLink className="size-3.5" aria-hidden="true" />
@@ -577,7 +577,7 @@ export default async function DeveloperProfilePage({
                             title={reviewCriteriaLabel(c.key)}
                           >
                             {reviewCriteriaLabel(c.key)}
-                            <span className="font-semibold text-[#F2F2F2]">
+                            <span className="font-semibold text-foreground">
                               {review.criteria[c.key]}★
                             </span>
                           </span>
@@ -622,7 +622,7 @@ export default async function DeveloperProfilePage({
                             href={url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="rounded-lg border border-hairline bg-[#1E1E1E] px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-primary/50 hover:text-[#F2F2F2]"
+                            className="rounded-lg border border-hairline bg-[#1E1E1E] px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
                           >
                             Preuve {i + 1}
                           </a>

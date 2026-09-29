@@ -100,7 +100,7 @@ export function TokenCard({ pkg }: { pkg: TokenPackage }) {
       )}
     >
       {pkg.popular && (
-        <span className="absolute -top-3 left-6 inline-flex h-6 items-center rounded-full bg-primary px-3 text-[11px] font-semibold uppercase tracking-wide text-white">
+        <span className="absolute -top-3 left-6 inline-flex h-6 items-center rounded-full bg-primary px-3 text-[11px] font-semibold uppercase tracking-wide text-ink">
           Populaire
         </span>
       )}

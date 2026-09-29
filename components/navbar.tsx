@@ -164,7 +164,7 @@ export function Navbar({
                 </Link>
                 <Link
                   href="/poster"
-                  className="group inline-flex h-8 items-center gap-1.5 rounded-lg bg-primary px-3.5 font-display text-[15px] font-semibold text-[#0D0D0D] transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
+                  className="group inline-flex h-8 items-center gap-1.5 rounded-lg bg-primary px-3.5 font-display text-[15px] font-semibold text-ink transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
                 >
                   Publier une demande
                   <ArrowRight
@@ -222,7 +222,7 @@ export function Navbar({
                   <MobileNavLink href="/login">Se connecter</MobileNavLink>
                   <Link
                     href="/poster"
-                    className="mt-2 inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 font-display text-[15px] font-semibold text-[#0D0D0D] outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
+                    className="mt-2 inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 font-display text-[15px] font-semibold text-ink outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
                   >
                     Publier une demande
                     <ArrowRight className="size-4" aria-hidden="true" />
@@ -432,7 +432,7 @@ function MobileDock({ items, pathname }: { items: DockItem[]; pathname: string }
                   <span
                     className={cn(
                       "relative z-10 grid size-9 place-items-center transition-colors duration-200",
-                      active ? "text-[#0D0D0D]" : "text-muted-foreground group-hover:text-foreground"
+                      active ? "text-ink" : "text-muted-foreground group-hover:text-foreground"
                     )}
                   >
                     <Icon className="size-[18px]" aria-hidden="true" />

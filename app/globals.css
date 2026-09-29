@@ -29,6 +29,7 @@
   --color-surface: var(--surface);
   --color-surface-secondary: var(--surface-secondary);
   --color-hairline: var(--hairline);
+  --color-ink: var(--ink);
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-error: var(--error);
@@ -38,12 +39,15 @@
   --radius: 1rem;
   --background: #0a0a0a;
   --foreground: #f2f2f2;
+  --ink: #0d0d0d;
   --card: #141414;
   --card-foreground: #f2f2f2;
   --popover: #141414;
   --popover-foreground: #f2f2f2;
   --primary: #e86a2c;
-  --primary-foreground: #ffffff;
+  /* texte pose sur un aplat de marque : le noir ressort a 6.04:1 (AA) alors
+     que le blanc plafonne a 3.22:1 et echoue WCAG AA sur les boutons */
+  --primary-foreground: var(--ink);
   --secondary: #1c1c1c;
   --secondary-foreground: #f2f2f2;
   --muted: #1c1c1c;
@@ -474,11 +478,11 @@ h6 {
 }
 .btn-primary {
   background: var(--primary);
-  color: #ffffff;
-  box-shadow: 0 12px 30px -12px rgba(232, 106, 44, 0.55);
+  color: var(--primary-foreground);
+  box-shadow: 0 12px 30px -12px color-mix(in oklab, var(--primary) 55%, transparent);
 }
 .btn-primary:hover {
-  background: #d95c1f;
+  background: color-mix(in oklab, var(--primary) 88%, #000);
 }
 .btn-secondary {
   background: var(--card);

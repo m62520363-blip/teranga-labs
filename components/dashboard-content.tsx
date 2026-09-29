@@ -200,7 +200,7 @@ function DevStatusBanner({ profile }: { profile: DeveloperProfile }) {
         </div>
         <Link
           href="/verification"
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-[#0D0D0D] transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-ink transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
         >
           Faire vérifier mon profil
           <ArrowRight className="size-3.5" aria-hidden="true" />
@@ -299,7 +299,7 @@ function DevStatusBannerShell({
       {cta ? (
         <Link
           href={cta.href}
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-[#0D0D0D] transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-ink transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
         >
           {cta.label}
           <ArrowRight className="size-3.5" aria-hidden="true" />
@@ -638,14 +638,14 @@ export function DashboardContent({
           <div className="flex flex-wrap gap-2">
             <Link
               href="/conversations"
-              className="inline-flex h-10 items-center gap-2 rounded-xl border border-hairline bg-[#141414] px-5 text-sm font-medium text-[#F2F2F2] transition-colors outline-none hover:bg-[#1E1E1E] focus-visible:ring-2 focus-visible:ring-primary/50"
+              className="inline-flex h-10 items-center gap-2 rounded-xl border border-hairline bg-[#141414] px-5 text-sm font-medium text-foreground transition-colors outline-none hover:bg-[#1E1E1E] focus-visible:ring-2 focus-visible:ring-primary/50"
             >
               <MessageCircle className="size-4" aria-hidden="true" />
               Mes discussions
             </Link>
             <Link
               href="/tokens"
-              className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-[#0D0D0D] transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
+              className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
             >
               Recharger les Tokens
               <ArrowRight className="size-4" aria-hidden="true" />
@@ -675,8 +675,8 @@ export function DashboardContent({
               className={cn(
                 "inline-flex h-10 items-center gap-2 rounded-t-xl px-4 text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
                 tab === t.key
-                  ? "border border-hairline border-b-transparent bg-[#141414] text-[#F2F2F2]"
-                  : "text-muted-foreground hover:text-[#F2F2F2]"
+                  ? "border border-hairline border-b-transparent bg-[#141414] text-foreground"
+                  : "text-muted-foreground hover:text-foreground"
               )}
             >
               {t.label}
@@ -865,7 +865,7 @@ export function DashboardContent({
                   <button
                     type="button"
                     onClick={exportCsv}
-                    className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-hairline bg-[#141414] px-2.5 text-xs font-medium text-muted-foreground transition-colors outline-none hover:bg-[#1E1E1E] hover:text-[#F2F2F2] focus-visible:ring-2 focus-visible:ring-primary/50"
+                    className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-hairline bg-[#141414] px-2.5 text-xs font-medium text-muted-foreground transition-colors outline-none hover:bg-[#1E1E1E] hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
                   >
                     <Download className="size-3.5" aria-hidden="true" />
                     Export CSV
@@ -882,7 +882,7 @@ export function DashboardContent({
                   action={
                     <Link
                       href="/briefs"
-                      className="inline-flex h-10 items-center gap-2 rounded-xl bg-[#F2F2F2] px-5 text-sm font-medium text-[#0D0D0D] transition-colors outline-none hover:bg-[#EBEBEB]"
+                      className="inline-flex h-10 items-center gap-2 rounded-xl bg-foreground px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-[#EBEBEB]"
                     >
                       Voir les briefs
                       <ArrowRight className="size-4" aria-hidden="true" />
@@ -1142,7 +1142,7 @@ export function DashboardContent({
                               )}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg bg-[#F2F2F2] px-3 text-xs font-medium text-[#0D0D0D] transition-colors outline-none hover:bg-[#EBEBEB] focus-visible:ring-2 focus-visible:ring-primary/50"
+                              className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg bg-foreground px-3 text-xs font-medium text-ink transition-colors outline-none hover:bg-[#EBEBEB] focus-visible:ring-2 focus-visible:ring-primary/50"
                             >
                               <MessagesSquare className="size-3.5" aria-hidden="true" />
                               WhatsApp
@@ -1189,7 +1189,7 @@ export function DashboardContent({
                 <Link
                   href={publicUrl}
                   target="_blank"
-                  className="inline-flex h-10 items-center gap-2 rounded-xl border border-hairline bg-[#141414] px-5 text-sm font-medium text-[#F2F2F2] transition-colors outline-none hover:bg-[#1E1E1E] focus-visible:ring-2 focus-visible:ring-primary/50"
+                  className="inline-flex h-10 items-center gap-2 rounded-xl border border-hairline bg-[#141414] px-5 text-sm font-medium text-foreground transition-colors outline-none hover:bg-[#1E1E1E] focus-visible:ring-2 focus-visible:ring-primary/50"
                 >
                   <Share2 className="size-4 text-primary" aria-hidden="true" />
                   Voir mon profil public
@@ -1568,7 +1568,7 @@ export function DashboardContent({
                     action={
                       <Link
                         href="/tokens"
-                        className="inline-flex h-10 items-center gap-2 rounded-xl bg-[#F2F2F2] px-5 text-sm font-medium text-[#0D0D0D] transition-colors outline-none hover:bg-[#EBEBEB]"
+                        className="inline-flex h-10 items-center gap-2 rounded-xl bg-foreground px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-[#EBEBEB]"
                       >
                         Voir les packs
                         <ArrowRight className="size-4" aria-hidden="true" />
@@ -1627,7 +1627,7 @@ export function DashboardContent({
                     action={
                       <Link
                         href="/briefs"
-                        className="inline-flex h-10 items-center gap-2 rounded-xl bg-[#F2F2F2] px-5 text-sm font-medium text-[#0D0D0D] transition-colors outline-none hover:bg-[#EBEBEB]"
+                        className="inline-flex h-10 items-center gap-2 rounded-xl bg-foreground px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-[#EBEBEB]"
                       >
                         Chercher de nouveaux briefs
                         <ArrowRight className="size-4" aria-hidden="true" />
@@ -1657,7 +1657,7 @@ export function DashboardContent({
                       </div>
                       <Link
                         href={`/conversations/${c.id}`}
-                        className="mt-4 inline-flex h-9 items-center gap-2 rounded-xl bg-[#F2F2F2] px-4 text-sm font-medium text-[#0D0D0D] transition-colors outline-none hover:bg-[#EBEBEB]"
+                        className="mt-4 inline-flex h-9 items-center gap-2 rounded-xl bg-foreground px-4 text-sm font-medium text-ink transition-colors outline-none hover:bg-[#EBEBEB]"
                       >
                         Poursuivre la discussion
                         <MessageCircle className="size-4" aria-hidden="true" />
@@ -1709,7 +1709,7 @@ export function DashboardContent({
                       </div>
                       <Link
                         href={`/conversations/${c.id}`}
-                        className="mt-4 inline-flex h-9 items-center gap-2 rounded-xl border border-hairline bg-[#141414] px-4 text-sm font-medium text-[#F2F2F2] transition-colors outline-none hover:bg-[#1E1E1E]"
+                        className="mt-4 inline-flex h-9 items-center gap-2 rounded-xl border border-hairline bg-[#141414] px-4 text-sm font-medium text-foreground transition-colors outline-none hover:bg-[#1E1E1E]"
                       >
                         Suivre la réponse
                         <ArrowRight className="size-4" aria-hidden="true" />

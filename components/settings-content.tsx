@@ -257,7 +257,7 @@ export function SettingsContent({
                     <Link
                       href={devPublicUrl}
                       target="_blank"
-                      className="inline-flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-[#F2F2F2] transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
+                      className="inline-flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
                     >
                       <Share2 className="size-4 text-primary" aria-hidden="true" />
                       Voir mon profil public
@@ -589,7 +589,7 @@ function SideLink({
     <Link
       href={href}
       className={cn(
-        "inline-flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-[#F2F2F2] transition-colors outline-none hover:bg-muted [&>svg:first-child]:text-primary",
+        "inline-flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-foreground transition-colors outline-none hover:bg-muted [&>svg:first-child]:text-primary",
         !icon && "hover:underline underline-offset-4"
       )}
     >

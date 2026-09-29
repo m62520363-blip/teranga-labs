@@ -336,7 +336,7 @@ export function MessageThread({
                 className={cn(
                   "max-w-[78%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed shadow-sm",
                   mine
-                    ? "rounded-br-sm bg-primary text-[#0D0D0D]"
+                    ? "rounded-br-sm bg-primary text-ink"
                     : "rounded-bl-sm border border-hairline bg-[#1E1E1E]"
                 )}
               >
@@ -344,7 +344,7 @@ export function MessageThread({
                 <p
                   className={cn(
                     "mt-1 text-right text-[10px]",
-                    mine ? "text-[#0D0D0D]/60" : "text-muted-foreground"
+                    mine ? "text-ink/60" : "text-muted-foreground"
                   )}
                 >
                   {formatDateTime(msg.created_at)}
@@ -401,7 +401,7 @@ export function MessageThread({
                   key={t}
                   type="button"
                   onClick={() => setDraft(t)}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-hairline bg-surface px-2.5 py-1.5 text-xs text-muted-foreground transition-colors outline-none hover:border-primary/40 hover:text-[#F2F2F2] focus-visible:ring-2 focus-visible:ring-primary/50"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-hairline bg-surface px-2.5 py-1.5 text-xs text-muted-foreground transition-colors outline-none hover:border-primary/40 hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
                 >
                   <Zap className="size-3 text-primary" aria-hidden="true" />
                   <span className="line-clamp-1">{t}</span>

@@ -195,7 +195,7 @@ function Stepper({ step }: { step: 1 | 2 }) {
               className={cn(
                 "flex size-8 items-center justify-center rounded-full border text-sm font-semibold transition-colors",
                 step >= s.n
-                  ? "border-primary bg-primary text-[#0D0D0D]"
+                  ? "border-primary bg-primary text-ink"
                   : "border-hairline bg-[#141414] text-muted-foreground"
               )}
               aria-current={step === s.n ? "step" : undefined}

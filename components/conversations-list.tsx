@@ -57,7 +57,7 @@ export function ConversationsList({
             action={
               <Link
                 href="/briefs"
-                className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-[#0D0D0D] transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
+                className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
               >
                 Voir les briefs
                 <ArrowRight className="size-4" aria-hidden="true" />
@@ -83,8 +83,8 @@ export function ConversationsList({
                   className={cn(
                     "flex size-11 shrink-0 items-center justify-center rounded-xl",
                     c.unreadCount > 0
-                      ? "bg-primary text-[#0D0D0D]"
-                      : "bg-hairline text-[#F2F2F2]"
+                      ? "bg-primary text-ink"
+                      : "bg-hairline text-foreground"
                   )}
                   aria-hidden="true"
                 >
@@ -124,7 +124,7 @@ export function ConversationsList({
                   </div>
                 </div>
                 {c.unreadCount > 0 ? (
-                  <span className="ml-2 flex size-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-[#0D0D0D]">
+                  <span className="ml-2 flex size-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-ink">
                     {c.unreadCount}
                   </span>
                 ) : null}

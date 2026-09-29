@@ -14,7 +14,7 @@ export default function DevNotFound() {
         </p>
         <Link
           href="/"
-          className="mt-6 inline-flex h-10 items-center gap-2 rounded-xl bg-[#F2F2F2] px-5 text-sm font-medium text-[#0D0D0D] transition-colors hover:bg-[#EBEBEB]"
+          className="mt-6 inline-flex h-10 items-center gap-2 rounded-xl bg-foreground px-5 text-sm font-medium text-ink transition-colors hover:bg-[#EBEBEB]"
         >
           Retour à l’accueil
         </Link>

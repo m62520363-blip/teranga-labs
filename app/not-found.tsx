@@ -15,7 +15,7 @@ export default function NotFound() {
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
           <Link
             href="/briefs"
-            className="inline-flex h-10 items-center gap-2 rounded-xl bg-[#F2F2F2] px-5 text-sm font-medium text-[#0D0D0D] transition-colors hover:bg-[#EBEBEB]"
+            className="inline-flex h-10 items-center gap-2 rounded-xl bg-foreground px-5 text-sm font-medium text-ink transition-colors hover:bg-[#EBEBEB]"
           >
             Voir les briefs
           </Link>

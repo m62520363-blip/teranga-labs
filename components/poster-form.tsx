@@ -339,7 +339,7 @@ export function PosterForm() {
                 )}
               >
                 {selected ? (
-                  <span className="absolute right-3 top-3 flex size-5 items-center justify-center rounded-full bg-primary text-[#0D0D0D]">
+                  <span className="absolute right-3 top-3 flex size-5 items-center justify-center rounded-full bg-primary text-ink">
                     <Check className="size-3.5" aria-hidden="true" />
                   </span>
                 ) : null}
@@ -369,7 +369,7 @@ export function PosterForm() {
               className={cn(
                 "rounded-xl border px-4 py-2 text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
                 watch("budget") === val
-                  ? "border-primary/60 bg-[#2A1A10] text-[#F2F2F2]"
+                  ? "border-primary/60 bg-[#2A1A10] text-foreground"
                   : "border-hairline bg-[#141414] text-muted-foreground hover:bg-[#1E1E1E]"
               )}
             >
