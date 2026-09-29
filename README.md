@@ -28,7 +28,11 @@ app/
   auth/update-password
 components/         UI métier (unlock-dialog, brief-filters, admin-dashboard…)
 lib/supabase/       clients browser/server null-safe
-supabase/           Migrations SQL, seed, RPC
+scripts/            db-test.mjs (runner pgtap)
+supabase/
+  migrations/       31 migrations SQL (0001 → 0031)
+  tests/            tests pgtap (permissions.sql, reviews.sql)
+  config.toml       stack locale (supabase start / supabase test db)
 ```
 
 ## Configuration locale
@@ -42,12 +46,14 @@ npm run dev                  # http://localhost:3000
 ### Supabase (production)
 
 1. Créer un projet Supabase.
-2. Exécuter les migrations dans l'ordre : `supabase/migrations/0001_initial_schema.sql`,
-   `0002_rls.sql`, `0003_rpc.sql` (SQL Editor).
+2. Exécuter **toutes** les migrations dans l'ordre : `supabase/migrations/*.sql`
+   (`0001_initial_schema.sql` → `0031_security_hardening.sql`).
 3. Insérer les données de démo : `supabase/seed.sql` (6 briefs).
 4. Configurer **Auth → URL : http://localhost:3000** et le redirect à `/auth/confirm`.
 
 > Sans `.env.local` renseigné, l'app tourne en « mode démo » (aucun appel Supabase).
+
+> **Après toute migration** : `npm run test:db` valide en base (voir Tests).
 
 ## Modèle de sécurité
 
@@ -60,7 +66,20 @@ npm run dev                  # http://localhost:3000
   `unlocks` avec unique `(developer_id, request_id)`, jamais deux fois).
 - **Admin** : `user_roles.role = 'admin'` + `is_admin()`. La page `/admin`
   vérifie le rôle côté serveur.
+- **Avis clients** : `submit_review` n'accepte que le propriétaire d'une mission
+  **terminée** (SQLSTATE `TLFOR` / `TLTMP`), un avis par mission (upsert), et
+  toute réponse publique est notée sans jamais pouvoir modifier la note.
+- **Surface SQL figée** : seules 19 fonctions de `public` sont atteignables par
+  un visiteur non connecté (briefs, avis publics, annuaire, formulaire de
+  contact). Tout le reste exige une session ou `service_role`.
+- ⚠️ **PostgreSQL** : une fonction hérite d'EXECUTE via `PUBLIC`. `revoke …
+  from anon` seul ne protège donc rien — chaque révocation porte aussi sur
+  `PUBLIC` (cf. migration 0031). Ce piège avait laissé 88 fonctions
+  (dont `notify_user` et toutes les `admin_*`) exécutables par un visiteur.
 - Création automatique du profil développeur via le trigger `handle_new_user`.
+
+Ces règles sont **testées**, pas seulement documentées : voir
+`supabase/tests/permissions.sql`.
 
 ## Économie des Tokens
 
@@ -70,14 +89,54 @@ npm run dev                  # http://localhost:3000
 - **Aucun paiement simulé** : le bouton d'achat affiche « Paiement bientôt
   disponible ». Le crédit est administrable via `/admin` (`credit_tokens`).
 
+## Tests
+
+Trois niveaux, tous exécutés automatiquement par `.github/workflows/ci.yml` :
+
+```bash
+npm run check     # typecheck + lint + tests unitaires (68)
+npm run test:db   # tests pgtap sur la base (69 assertions)
+npm run build     # build de production
+```
+
+### Tests SQL (pgtap)
+
+| Fichier | Couverture |
+| --- | --- |
+| `supabase/tests/permissions.sql` | RLS de toutes les tables, surface publique figée (liste exacte des fonctions accessibles à `anon`), fonctions internes inaccessibles, `search_path` des `SECURITY DEFINER`, absence de fuite de secrets / d'e-mails non masqués |
+| `supabase/tests/reviews.sql` | Cycle de vie complet des avis : notification « mission terminée », 11 garde-fous (SQLSTATE `TLNAU`/`TLFOR`/`TLTMP`/`TLBAD`), publication, déduction du développeur, upsert, notes et réputation, lecture client/développeur/public, réponse publique, signalement, modération admin sans altération de la note |
+
+Exécution :
+
+```bash
+# base locale (Supabase CLI)
+supabase start && supabase test db
+
+# projet lié (aucune installation requise)
+export SUPABASE_ACCESS_TOKEN=sbp_…      # https://supabase.com/dashboard/account/tokens
+export SUPABASE_PROJECT_REF=xxxxxxxxxxxx
+npm run test:db
+```
+
+`scripts/db-test.mjs` fonctionne dans les deux cas (psql si `SUPABASE_DB_URL`
+est défini, sinon API Management) et **vérifie après chaque fichier qu'aucune
+fixture n'a subsigné** : les tests sont encadrés par `BEGIN` / `ROLLBACK`.
+
 ## Scripts
 
 ```bash
-npm run lint   # ESLint
-npm run build  # build de production + vérification des types
+npm run typecheck   # tsc --noEmit
+npm run lint        # ESLint
+npm run test        # Vitest
+npm run test:db     # pgtap (base locale ou projet lié)
+npm run check       # typecheck + lint + test
+npm run build       # build de production
 ```
 
 ## Roadmap (limites actuelles)
 
 - Paiement réel Wave (actif) / Max It (hors service pour le moment) à brancher (webhook → `credit_tokens`).
-- Pagination des briefs, notifications, modération auto.
+- Pagination des briefs, rate limiting de `create_brief` (le plus court chemin
+  vers le spam de notifications), modération auto.
+- Suppression définitive de `token_refund_requests` (table vide, verrouillée
+  par la migration 0031) si la fonctionnalité n'est pas reprise.
