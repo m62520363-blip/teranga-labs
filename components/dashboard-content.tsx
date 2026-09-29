@@ -31,6 +31,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { DashboardStats } from "@/components/dashboard-stats";
+import { MissionsManager, type TlMissionOption } from "@/components/dev/missions-manager";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -63,6 +64,7 @@ import type {
   TokenOrderStatus,
   CrmStatus,
   PortfolioLink,
+  MyDeveloperMission,
 } from "@/types/database";
 import { cn } from "cn";
 
@@ -135,7 +137,7 @@ function FilterChip({
   );
 }
 
-type TabKey = "crm" | "profil" | "activite" | "devis";
+type TabKey = "crm" | "profil" | "activite" | "devis" | "missions";
 
 function DevStatusBanner({ profile }: { profile: DeveloperProfile }) {
   const status = profile.status;
@@ -308,6 +310,8 @@ export function DashboardContent({
   orders,
   reviews,
   missions,
+  myMissions,
+  tlMissions,
   devisEnAttente,
   initialTab,
 }: {
@@ -319,6 +323,8 @@ export function DashboardContent({
   orders: OrderItem[];
   reviews: ReviewsSummary | null;
   missions: ConversationListItem[];
+  myMissions: MyDeveloperMission[];
+  tlMissions: TlMissionOption[];
   devisEnAttente: ConversationListItem[];
   initialTab?: string;
 }) {
@@ -351,7 +357,7 @@ export function DashboardContent({
   const [crmView, setCrmView] = React.useState<"board" | "list">("board");
   const [savingGoal, setSavingGoal] = React.useState(false);
   const [saving, setSaving] = React.useState(false);
-  const defaultTab: TabKey = (["crm", "profil", "activite", "devis"] as TabKey[]).includes(
+  const defaultTab: TabKey = (["crm", "profil", "activite", "devis", "missions"] as TabKey[]).includes(
     initialTab as TabKey
   )
     ? (initialTab as TabKey)
@@ -603,6 +609,7 @@ export function DashboardContent({
     { key: "profil", label: "Mon profil & portfolio" },
     { key: "activite", label: "Réputation & commandes" },
     { key: "devis", label: "Devis & missions", count: missions.length + devisEnAttente.length },
+    { key: "missions", label: "Missions réalisées", count: myMissions.length },
   ];
 
   return (
@@ -1687,6 +1694,12 @@ export function DashboardContent({
               )}
             </section>
           </div>
+        ) : null}
+
+        {tab === "missions" ? (
+          <section className="mt-8" aria-label="Missions réalisées">
+            <MissionsManager initial={myMissions} tlMissions={tlMissions} />
+          </section>
         ) : null}
 
         <Dialog open={Boolean(refundFor)} onOpenChange={(open) => !open && setRefundFor(null)}>

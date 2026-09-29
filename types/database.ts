@@ -331,6 +331,68 @@ export interface Database {
         Update: Partial<Database["public"]["Tables"]["conversations"]["Insert"]>;
         Relationships: [];
       };
+      developer_projects: {
+        Row: {
+          id: string;
+          developer_id: string;
+          name: string;
+          description: string | null;
+          project_type: string | null;
+          technologies: string[];
+          url: string | null;
+          screenshots: string[];
+          role: string | null;
+          key_features: string[];
+          client_name: string | null;
+          client_authorization: "public" | "confidential" | "clients_only";
+          completion_date: string | null;
+          duration: string | null;
+          demo_url: string | null;
+          demo_video_url: string | null;
+          status: "pending" | "verified" | "corrections" | "rejected";
+          admin_note: string | null;
+          is_hidden: boolean;
+          via_teranga_labs: boolean;
+          mission_ref: string | null;
+          conversation_id: string | null;
+          details_locked: boolean;
+          reviewed_at: string | null;
+          verified_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          developer_id: string;
+          name: string;
+          description?: string | null;
+          project_type?: string | null;
+          technologies?: string[];
+          url?: string | null;
+          screenshots?: string[];
+          role?: string | null;
+          key_features?: string[];
+          client_name?: string | null;
+          client_authorization?: "public" | "confidential" | "clients_only";
+          completion_date?: string | null;
+          duration?: string | null;
+          demo_url?: string | null;
+          demo_video_url?: string | null;
+          status?: "pending" | "verified" | "corrections" | "rejected";
+          admin_note?: string | null;
+          is_hidden?: boolean;
+          via_teranga_labs?: boolean;
+          mission_ref?: string | null;
+          conversation_id?: string | null;
+          details_locked?: boolean;
+          reviewed_at?: string | null;
+          verified_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["developer_projects"]["Insert"]>;
+        Relationships: [];
+      };
       messages: {
         Row: {
           id: string;
@@ -760,6 +822,24 @@ export interface Database {
       get_public_developer_profile: {
         Args: {
           p_identifier: string;
+          p_viewer_role?: string;
+        };
+        Returns: Json;
+      };
+      list_my_missions: {
+        Args: Record<string, never>;
+        Returns: Json;
+      };
+      set_developer_mission: {
+        Args: {
+          p_payload: Json;
+          p_tl_conversation?: string;
+        };
+        Returns: Json;
+      };
+      delete_developer_mission: {
+        Args: {
+          p_mission: string;
         };
         Returns: Json;
       };
@@ -1079,6 +1159,7 @@ export type PublicDeveloperProfile = {
   reputation_score: number;
   reputation_level: string;
   penalty: number;
+  projects: DeveloperMission[];
   reviews: {
     id: string;
     rating: number;
@@ -1117,6 +1198,37 @@ export type ApprovedDeveloper = {
   satisfaction_pct: number | null;
   phone_masked: string | null;
   email_masked: string | null;
+};
+
+export type DeveloperMission = {
+  id: string;
+  name: string;
+  description: string | null;
+  project_type: string | null;
+  technologies: string[];
+  url: string | null;
+  screenshots: string[];
+  role: string | null;
+  key_features: string[];
+  client_name: string | null;
+  client_authorization: "public" | "confidential" | "clients_only";
+  completion_date: string | null;
+  duration: string | null;
+  demo_url: string | null;
+  demo_video_url: string | null;
+  via_teranga_labs: boolean;
+  mission_ref: string | null;
+  is_verified: boolean;
+};
+
+export type MyDeveloperMission = Omit<DeveloperMission, "is_verified"> & {
+  status: "pending" | "verified" | "corrections" | "rejected";
+  admin_note: string | null;
+  is_hidden: boolean;
+  conversation_id: string | null;
+  details_locked: boolean;
+  created_at: string;
+  updated_at: string;
 };
 
 export type TokenHistoryItem = {

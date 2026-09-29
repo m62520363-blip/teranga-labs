@@ -8,6 +8,8 @@ import {
   MapPin,
   ShieldCheck,
   Star,
+  Lock,
+  CheckCircle2,
 } from "lucide-react";
 import { createClient, getCurrentRole, getCurrentUser } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/formatting";
@@ -15,6 +17,7 @@ import { ShareProfileButton } from "@/components/dev/share-profile-button";
 import { ReportButton } from "@/components/report-button";
 import { ContactButton } from "@/components/dev/contact-dialog";
 import { availabilityInfo, experienceLabel } from "@/lib/dev-labels";
+import { projectTypeLabel, formatProjectDate } from "@/lib/dev-missions-labels";
 import type { PublicDeveloperProfile } from "@/types/database";
 import { cn } from "cn";
 
@@ -37,11 +40,15 @@ function formatResponse(minutes: number): string {
   return `${Math.round(hours / 24)} j`;
 }
 
-async function getProfile(identifier: string): Promise<PublicDeveloperProfile | null> {
+async function getProfile(
+  identifier: string,
+  viewerRole?: string | null
+): Promise<PublicDeveloperProfile | null> {
   const supabase = await createClient();
   if (!supabase) return null;
   const { data, error } = await supabase.rpc("get_public_developer_profile", {
     p_identifier: identifier,
+    p_viewer_role: viewerRole || undefined,
   });
   if (error || !data) return null;
   return data as unknown as PublicDeveloperProfile;
@@ -69,18 +76,20 @@ export default async function DeveloperProfilePage({
   params: Promise<{ username: string }>;
 }) {
   const { username } = await params;
-  const profile = await getProfile(username);
+
+  const [currentUser, role] = await Promise.all([
+    getCurrentUser(),
+    getCurrentRole(),
+  ]);
+
+  const profile = await getProfile(username, role);
   if (!profile) notFound();
 
   const supabase = await createClient();
 
-  const [currentUser, role, costRes] = await Promise.all([
-    getCurrentUser(),
-    getCurrentRole(),
-    supabase
-      ? supabase.rpc("get_contact_cost")
-      : Promise.resolve({ data: null }),
-  ]);
+  const costRes = supabase
+    ? await supabase.rpc("get_contact_cost")
+    : { data: null };
 
   const contactCost =
     typeof costRes?.data === "number" && costRes.data > 0 ? costRes.data : 1;
@@ -345,6 +354,116 @@ export default async function DeveloperProfilePage({
                     ) : null}
                   </a>
                 ))}
+              </div>
+            </section>
+          ) : null}
+
+          {profile.projects.length > 0 ? (
+            <section className="mt-8 border-t border-[#2A2A2A] pt-8" aria-label="Missions réalisées">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                Missions réalisées
+              </h2>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Des projets concrets, vérifiés par TERANGA LABS lorsque la mention
+                est affichée.
+              </p>
+              <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {profile.projects.map((mission) => {
+                  const confidential = mission.client_authorization === "confidential";
+                  const shot = mission.screenshots[0];
+                  const externalUrl = confidential ? mission.demo_url : mission.url;
+                  const buttonLabel = confidential ? "Voir la présentation" : "Voir le projet";
+                  return (
+                    <article
+                      key={mission.id}
+                      className="flex flex-col rounded-2xl border border-[#2A2A2A] bg-[#141414] p-5"
+                    >
+                      {shot ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={shot}
+                          alt=""
+                          loading="lazy"
+                          className="mb-4 h-32 w-full rounded-xl border border-[#2A2A2A] object-cover"
+                        />
+                      ) : (
+                        <div className="mb-4 flex h-32 w-full items-center justify-center rounded-xl border border-[#2A2A2A] bg-[#1E1E1E]">
+                          {confidential ? (
+                            <Lock className="size-8 text-[#E86A2C]" aria-hidden="true" />
+                          ) : (
+                            <Globe className="size-8 text-[#E86A2C]" aria-hidden="true" />
+                          )}
+                        </div>
+                      )}
+                      <div className="flex items-center justify-between gap-2">
+                        <h3 className="font-medium leading-snug">{mission.name}</h3>
+                        <span className="shrink-0 rounded-full border border-[#3A2A20] bg-[#1C1210] px-2.5 py-0.5 text-xs text-[#F2D8C6]">
+                          {projectTypeLabel(mission.project_type)}
+                        </span>
+                      </div>
+                      {mission.description ? (
+                        <p className="mt-2 text-sm leading-relaxed text-muted-foreground line-clamp-3">
+                          {mission.description}
+                        </p>
+                      ) : null}
+                      {mission.technologies.length > 0 ? (
+                        <div className="mt-3 flex flex-wrap gap-1.5">
+                          {mission.technologies.slice(0, 6).map((tech) => (
+                            <span
+                              key={tech}
+                              className="rounded-full border border-[#2A2A2A] bg-[#0F0F0F] px-2.5 py-0.5 text-xs text-muted-foreground"
+                            >
+                              {tech}
+                            </span>
+                          ))}
+                          {mission.technologies.length > 6 ? (
+                            <span className="rounded-full border border-[#2A2A2A] bg-[#0F0F0F] px-2.5 py-0.5 text-xs text-muted-foreground">
+                              +{mission.technologies.length - 6}
+                            </span>
+                          ) : null}
+                        </div>
+                      ) : null}
+                      <p className="mt-3 text-xs text-muted-foreground">
+                        {formatProjectDate(mission.completion_date)}
+                        {mission.duration ? ` · ${mission.duration}` : ""}
+                      </p>
+                      <div className="mt-3 flex flex-wrap items-center gap-2">
+                        {mission.via_teranga_labs ? (
+                          <span className="inline-flex items-center gap-1.5 rounded-full border border-[#166534]/60 bg-[#0F2E18] px-2.5 py-1 text-[11px] font-medium text-[#4ADE80]">
+                            <CheckCircle2 className="size-3" aria-hidden="true" />
+                            Réalisée via TERANGA LABS
+                          </span>
+                        ) : confidential ? (
+                          <span className="inline-flex items-center gap-1.5 rounded-full border border-[#E86A2C]/40 bg-[#2A1A10] px-2.5 py-1 text-[11px] font-medium text-[#F2A378]">
+                            <Lock className="size-3" aria-hidden="true" />
+                            Projet confidentiel
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1.5 rounded-full border border-[#166534]/60 bg-[#0F2E18] px-2.5 py-1 text-[11px] font-medium text-[#4ADE80]">
+                            <CheckCircle2 className="size-3" aria-hidden="true" />
+                            Mission vérifiée par TERANGA LABS
+                          </span>
+                        )}
+                        {mission.mission_ref ? (
+                          <span className="text-[11px] font-medium text-muted-foreground">
+                            {mission.mission_ref}
+                          </span>
+                        ) : null}
+                      </div>
+                      {externalUrl ? (
+                        <a
+                          href={externalUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-4 inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-[#2A2A2A] bg-[#0F0F0F] px-4 text-sm font-medium text-[#F2F2F2] transition-colors outline-none hover:border-[#E86A2C]/50 hover:text-[#E86A2C] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+                        >
+                          {buttonLabel}
+                          <ExternalLink className="size-3.5" aria-hidden="true" />
+                        </a>
+                      ) : null}
+                    </article>
+                  );
+                })}
               </div>
             </section>
           ) : null}

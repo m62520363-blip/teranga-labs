@@ -4,6 +4,7 @@ import Link from "next/link";
 import { DashboardContent, type OrderItem, type UnlockHistoryItem } from "@/components/dashboard-content";
 import { getCurrentUser, createClient } from "@/lib/supabase/server";
 import { getConversations } from "@/lib/conversations";
+import type { MyDeveloperMission } from "@/types/database";
 
 export const metadata: Metadata = {
   title: "Dashboard développeur",
@@ -46,7 +47,7 @@ export default async function DashboardPage({
   const roleRes = await supabase.rpc("get_my_role");
   if (roleRes.data === "client") redirect("/client");
 
-  const [devRes, balanceRes, unlocksRes, transactionsRes, ordersRes, reviewsRes, conversations] =
+  const [devRes, balanceRes, unlocksRes, transactionsRes, ordersRes, reviewsRes, missionsRes, conversations] =
     await Promise.all([
       supabase
         .from("developers")
@@ -63,6 +64,7 @@ export default async function DashboardPage({
         .limit(200),
       supabase.rpc("get_my_orders"),
       supabase.rpc("get_developer_reviews", { p_developer: user.id }),
+      supabase.rpc("list_my_missions"),
       getConversations(supabase, user.id),
     ]);
 
@@ -86,6 +88,11 @@ export default async function DashboardPage({
   } | null;
   const missions = conversations.filter((c) => c.status === "awarded");
   const devisEnAttente = conversations.filter((c) => c.pendingOffers > 0);
+  const myMissions = (Array.isArray(missionsRes.data) ? missionsRes.data : []) as unknown as MyDeveloperMission[];
+  const tlMissions = missions.map((c) => ({
+    conversation_id: c.id,
+    name: `${c.request.client_name} · ${c.request.project_type}`,
+  }));
 
   return (
     <DashboardContent
@@ -97,6 +104,8 @@ export default async function DashboardPage({
       orders={orders}
       reviews={reviews}
       missions={missions}
+      myMissions={myMissions}
+      tlMissions={tlMissions}
       devisEnAttente={devisEnAttente}
       initialTab={(tab ?? "") as never}
     />
