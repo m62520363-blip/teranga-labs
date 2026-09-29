@@ -28,6 +28,10 @@ function bellIcon(type: string) {
       return CheckCheck;
     case "review_received":
       return Star;
+    case "review_requested":
+      return Star;
+    case "review_responded":
+      return MessageCircle;
     case "account_certified":
       return BadgeCheck;
     case "unlock_received":

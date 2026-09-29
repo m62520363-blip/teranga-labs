@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { DashboardStats } from "@/components/dashboard-stats";
 import { MissionsManager, type TlMissionOption } from "@/components/dev/missions-manager";
+import { DevReviewsPanel } from "@/components/dev/reviews-panel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -65,6 +66,7 @@ import type {
   CrmStatus,
   PortfolioLink,
   MyDeveloperMission,
+  MyDeveloperReviews,
 } from "@/types/database";
 import { cn } from "cn";
 
@@ -95,11 +97,17 @@ export type OrderItem = {
 export type ReviewsSummary = {
   total: number;
   average: number;
+  satisfaction: number;
+  average_criteria: Record<string, number>;
   reviews: {
     id: string;
     rating: number;
     comment: string | null;
-    request_name: string | null;
+    client_name: string | null;
+    request_type: string | null;
+    request_budget: number | null;
+    response: string | null;
+    responded_at: string | null;
     created_at: string;
   }[];
 };
@@ -137,7 +145,7 @@ function FilterChip({
   );
 }
 
-type TabKey = "crm" | "profil" | "activite" | "devis" | "missions";
+type TabKey = "crm" | "profil" | "activite" | "devis" | "missions" | "avis";
 
 function DevStatusBanner({ profile }: { profile: DeveloperProfile }) {
   const status = profile.status;
@@ -309,6 +317,7 @@ export function DashboardContent({
   transactions,
   orders,
   reviews,
+  myReviews,
   missions,
   myMissions,
   tlMissions,
@@ -322,6 +331,7 @@ export function DashboardContent({
   transactions: TransactionRow[];
   orders: OrderItem[];
   reviews: ReviewsSummary | null;
+  myReviews: MyDeveloperReviews | null;
   missions: ConversationListItem[];
   myMissions: MyDeveloperMission[];
   tlMissions: TlMissionOption[];
@@ -357,7 +367,7 @@ export function DashboardContent({
   const [crmView, setCrmView] = React.useState<"board" | "list">("board");
   const [savingGoal, setSavingGoal] = React.useState(false);
   const [saving, setSaving] = React.useState(false);
-  const defaultTab: TabKey = (["crm", "profil", "activite", "devis", "missions"] as TabKey[]).includes(
+  const defaultTab: TabKey = (["crm", "profil", "activite", "devis", "missions", "avis"] as TabKey[]).includes(
     initialTab as TabKey
   )
     ? (initialTab as TabKey)
@@ -610,6 +620,7 @@ export function DashboardContent({
     { key: "activite", label: "Réputation & commandes" },
     { key: "devis", label: "Devis & missions", count: missions.length + devisEnAttente.length },
     { key: "missions", label: "Missions réalisées", count: myMissions.length },
+    { key: "avis", label: "Mes avis", count: myReviews?.total },
   ];
 
   return (
@@ -1482,7 +1493,7 @@ export function DashboardContent({
                         ))}
                       </div>
                       <p className="mt-0.5 text-xs text-muted-foreground">
-                        {reviews.total} avis
+                        {reviews.total} avis · {reviews.satisfaction} % de clients satisfaits
                       </p>
                     </div>
                   </div>
@@ -1492,7 +1503,12 @@ export function DashboardContent({
                       <li key={review.id} className="rounded-xl border border-[#2A2A2A] p-4">
                         <div className="flex items-center justify-between gap-3">
                           <p className="text-sm font-semibold">
-                            {review.request_name ?? "Projet"}
+                            {review.client_name ?? "Client"}
+                            {review.request_type ? (
+                              <span className="ml-1.5 font-normal text-muted-foreground">
+                                · {review.request_type}
+                              </span>
+                            ) : null}
                           </p>
                           <div className="flex items-center gap-0.5">
                             {[1, 2, 3, 4, 5].map((n) => (
@@ -1513,6 +1529,16 @@ export function DashboardContent({
                           <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
                             {review.comment}
                           </p>
+                        ) : null}
+                        {review.response ? (
+                          <div className="mt-2 rounded-lg bg-[#1E1E1E] p-3">
+                            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                              Votre réponse publique
+                            </p>
+                            <p className="mt-1 text-sm leading-relaxed">
+                              {review.response}
+                            </p>
+                          </div>
                         ) : null}
                         <p className="mt-2 text-xs text-muted-foreground">
                           {formatDate(review.created_at)}
@@ -1699,6 +1725,12 @@ export function DashboardContent({
         {tab === "missions" ? (
           <section className="mt-8" aria-label="Missions réalisées">
             <MissionsManager initial={myMissions} tlMissions={tlMissions} />
+          </section>
+        ) : null}
+
+        {tab === "avis" ? (
+          <section className="mt-8" aria-label="Mes avis clients">
+            <DevReviewsPanel initial={myReviews} />
           </section>
         ) : null}
 

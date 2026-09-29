@@ -4,7 +4,7 @@ import Link from "next/link";
 import { DashboardContent, type OrderItem, type UnlockHistoryItem } from "@/components/dashboard-content";
 import { getCurrentUser, createClient } from "@/lib/supabase/server";
 import { getConversations } from "@/lib/conversations";
-import type { MyDeveloperMission } from "@/types/database";
+import type { MyDeveloperMission, MyDeveloperReviews } from "@/types/database";
 
 export const metadata: Metadata = {
   title: "Dashboard développeur",
@@ -47,7 +47,7 @@ export default async function DashboardPage({
   const roleRes = await supabase.rpc("get_my_role");
   if (roleRes.data === "client") redirect("/client");
 
-  const [devRes, balanceRes, unlocksRes, transactionsRes, ordersRes, reviewsRes, missionsRes, conversations] =
+  const [devRes, balanceRes, unlocksRes, transactionsRes, ordersRes, reviewsRes, myReviewsRes, missionsRes, conversations] =
     await Promise.all([
       supabase
         .from("developers")
@@ -64,6 +64,7 @@ export default async function DashboardPage({
         .limit(200),
       supabase.rpc("get_my_orders"),
       supabase.rpc("get_developer_reviews", { p_developer: user.id }),
+      supabase.rpc("list_my_developer_reviews"),
       supabase.rpc("list_my_missions"),
       getConversations(supabase, user.id),
     ]);
@@ -78,14 +79,23 @@ export default async function DashboardPage({
   const reviews = reviewsRes.data as unknown as {
     total: number;
     average: number;
+    satisfaction: number;
+    average_criteria: Record<string, number>;
     reviews: {
       id: string;
       rating: number;
       comment: string | null;
-      request_name: string | null;
+      client_name: string | null;
+      request_type: string | null;
+      request_budget: number | null;
+      response: string | null;
+      responded_at: string | null;
       created_at: string;
     }[];
   } | null;
+  const myReviews = (Array.isArray(myReviewsRes.data)
+    ? myReviewsRes.data
+    : null) as unknown as MyDeveloperReviews | null;
   const missions = conversations.filter((c) => c.status === "awarded");
   const devisEnAttente = conversations.filter((c) => c.pendingOffers > 0);
   const myMissions = (Array.isArray(missionsRes.data) ? missionsRes.data : []) as unknown as MyDeveloperMission[];
@@ -103,6 +113,7 @@ export default async function DashboardPage({
       transactions={transactions}
       orders={orders}
       reviews={reviews}
+      myReviews={myReviews}
       missions={missions}
       myMissions={myMissions}
       tlMissions={tlMissions}

@@ -10,6 +10,7 @@ import {
   Loader2,
   MessageCircle,
   Sparkles,
+  Star,
   Wallet,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
@@ -37,6 +38,7 @@ export type ClientProjectItem = {
   convIdToArchive: string | null;
   lastActiveAt: string | null;
   daysLeft: number | null;
+  review: { id: string; rating: number } | null;
 };
 
 const PHASES: Record<
@@ -196,6 +198,54 @@ export function ClientProjects({ items }: { items: ClientProjectItem[] }) {
                       className="ml-auto shrink-0 text-xs font-medium text-[#4ADE80] underline-offset-4 hover:underline"
                     >
                       Ouvrir la discussion
+                    </Link>
+                  </div>
+                ) : null}
+
+                {r.status === "terminé" ? (
+                  <div
+                    className={cn(
+                      "flex items-start gap-3 rounded-xl border p-3.5 sm:items-center",
+                      r.review
+                        ? "border-[#2A2A2A] bg-[#101010]"
+                        : "border-[#E86A2C]/30 bg-[#1A120B]"
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        "flex size-9 shrink-0 items-center justify-center rounded-lg",
+                        r.review ? "bg-[#F5C26B]/15 text-[#F5C26B]" : "bg-[#E86A2C] text-[#0D0D0D]"
+                      )}
+                    >
+                      <Star className="size-4" aria-hidden="true" />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      {r.review ? (
+                        <p className="text-sm">
+                          <span className="font-medium">
+                            Votre avis : {r.review.rating}/5
+                          </span>{" "}
+                          <span className="text-muted-foreground">
+                            publié pour cette mission.
+                          </span>
+                        </p>
+                      ) : (
+                        <p className="text-sm">
+                          La mission est terminée : votre note et votre avis
+                          aideront les futurs clients.
+                        </p>
+                      )}
+                    </div>
+                    <Link
+                      href={`/review/${r.id}`}
+                      className={cn(
+                        "shrink-0 rounded-lg px-3 py-2 text-xs font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50",
+                        r.review
+                          ? "border border-[#2A2A2A] text-[#F2F2F2] hover:bg-[#1E1E1E]"
+                          : "bg-[#F2F2F2] text-[#0D0D0D] hover:bg-[#EBEBEB]"
+                      )}
+                    >
+                      {r.review ? "Modifier l’avis" : "Évaluer la mission"}
                     </Link>
                   </div>
                 ) : null}

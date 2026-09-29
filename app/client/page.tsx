@@ -67,12 +67,14 @@ export default async function ClientPage() {
   const roleRes = await supabase.rpc("get_my_role");
   if (roleRes.data !== "client") redirect("/dashboard");
 
-  const [requestsRes, conversations, tokenBalanceRes, tokenHistoryRes] = await Promise.all([
-    supabase.rpc("get_my_requests" as never),
-    getConversations(supabase, user.id),
-    supabase.rpc("get_token_balance"),
-    supabase.rpc("get_my_token_history", { p_limit: 5 }),
-  ]);
+  const [requestsRes, conversations, tokenBalanceRes, tokenHistoryRes, reviewMapRes] =
+    await Promise.all([
+      supabase.rpc("get_my_requests" as never),
+      getConversations(supabase, user.id),
+      supabase.rpc("get_token_balance"),
+      supabase.rpc("get_my_token_history", { p_limit: 5 }),
+      supabase.rpc("get_my_request_reviews"),
+    ]);
 
   const tokenBalance = typeof tokenBalanceRes.data === "number" ? tokenBalanceRes.data : 0;
   const tokenHistory = ((tokenHistoryRes.data ?? []) as TokenHistoryItem[]).filter(
@@ -88,6 +90,17 @@ export default async function ClientPage() {
     const arr = convByRequest.get(c.request.id) ?? [];
     arr.push(c);
     convByRequest.set(c.request.id, arr);
+  }
+
+  const reviewMap = new Map<string, { id: string; rating: number }>();
+  for (const rev of (reviewMapRes.data ?? []) as {
+    request_id: string;
+    review_id: string;
+    rating: number;
+  }[]) {
+    if (rev?.request_id && rev?.review_id) {
+      reviewMap.set(rev.request_id, { id: rev.review_id, rating: rev.rating });
+    }
   }
 
   const totalUnread = conversations.reduce((acc, c) => acc + c.unreadCount, 0);
@@ -147,6 +160,7 @@ export default async function ClientPage() {
       ) ?? awarded?.id ?? convs[0]?.id ?? null,
       lastActiveAt,
       daysLeft,
+      review: reviewMap.get(r.id) ?? null,
     };
   });
 

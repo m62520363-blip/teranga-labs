@@ -12,14 +12,21 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { createClient, getCurrentRole, getCurrentUser } from "@/lib/supabase/server";
-import { formatDate } from "@/lib/formatting";
+import { formatFCFA, formatDate } from "@/lib/formatting";
 import { ShareProfileButton } from "@/components/dev/share-profile-button";
 import { ReportButton } from "@/components/report-button";
 import { ContactButton } from "@/components/dev/contact-dialog";
 import { availabilityInfo, experienceLabel } from "@/lib/dev-labels";
 import { projectTypeLabel, formatProjectDate } from "@/lib/dev-missions-labels";
-import type { PublicDeveloperProfile } from "@/types/database";
+import {
+  REVIEW_CRITERIA,
+  REVIEW_QUESTIONS,
+  reviewCriteriaLabel,
+  reviewQuestionLabel,
+} from "@/lib/reviews-labels";
+import type { DeveloperReviewStats, PublicDeveloperProfile } from "@/types/database";
 import { cn } from "cn";
+import { ReportReviewButton } from "@/components/review/report-review-button";
 
 export const dynamic = "force-dynamic";
 
@@ -90,6 +97,12 @@ export default async function DeveloperProfilePage({
   const costRes = supabase
     ? await supabase.rpc("get_contact_cost")
     : { data: null };
+
+  const statsRes = supabase
+    ? await supabase.rpc("get_developer_reviews", { p_developer: profile.id })
+    : { data: null };
+  const reviewStats = statsRes?.data as unknown as DeveloperReviewStats | null;
+  const visibleReviews = reviewStats?.reviews ?? [];
 
   const contactCost =
     typeof costRes?.data === "number" && costRes.data > 0 ? costRes.data : 1;
@@ -469,25 +482,75 @@ export default async function DeveloperProfilePage({
           ) : null}
 
           <section className="mt-8 border-t border-[#2A2A2A] pt-8" aria-label="Avis clients">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-              Avis clients
-            </h2>
-            {profile.reviews.length === 0 ? (
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                Avis clients
+              </h2>
+              {reviewStats && reviewStats.total > 0 ? (
+                <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-[#2A2A2A] bg-[#141414] px-2.5 py-1">
+                    <Star className="size-3.5 fill-[#E86A2C] text-[#E86A2C]" aria-hidden="true" />
+                    {reviewStats.average}/5 · {reviewStats.total} avis
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-[#166534]/60 bg-[#0F2E18] px-2.5 py-1 text-[#4ADE80]">
+                    {reviewStats.satisfaction} % de clients satisfaits
+                  </span>
+                </div>
+              ) : null}
+            </div>
+
+            {reviewStats && reviewStats.total > 0 ? (
+              <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2.5 rounded-2xl border border-[#2A2A2A] bg-[#141414] p-4 sm:grid-cols-4">
+                {REVIEW_CRITERIA.map((c) => {
+                  const value = reviewStats.average_criteria?.[c.key];
+                  return (
+                    <div key={c.key}>
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="truncate text-xs text-muted-foreground">
+                          {c.label}
+                        </span>
+                        <span className="shrink-0 text-xs font-semibold">
+                          {value != null ? `${value}/5` : "—"}
+                        </span>
+                      </div>
+                      <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-[#2A2A2A]">
+                        <div
+                          className="h-full rounded-full bg-[#E86A2C]"
+                          style={{
+                            width: `${Math.max(0, Math.min(100, ((value ?? 0) / 5) * 100))}%`,
+                          }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : null}
+
+            {visibleReviews.length === 0 ? (
               <p className="mt-3 text-sm text-muted-foreground">
                 Aucun avis publié pour le moment.
               </p>
             ) : (
               <ul className="mt-4 grid gap-4 md:grid-cols-2">
-                {profile.reviews.map((review) => (
+                {visibleReviews.map((review) => (
                   <li
                     key={review.id}
-                    className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-5"
+                    className="flex flex-col rounded-2xl border border-[#2A2A2A] bg-[#141414] p-5"
                   >
-                    <div className="flex items-center justify-between gap-3">
-                      <p className="text-sm font-semibold">
-                        {review.request_name ?? "Projet"}
-                      </p>
-                      <div className="flex items-center gap-0.5">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold">
+                          {review.client_name ?? "Client"}
+                        </p>
+                        <p className="mt-0.5 text-xs text-muted-foreground">
+                          {projectTypeLabel(review.request_type)}
+                          {review.request_budget
+                            ? ` · ${formatFCFA(review.request_budget)}`
+                            : ""}
+                        </p>
+                      </div>
+                      <div className="flex shrink-0 items-center gap-0.5">
                         {[1, 2, 3, 4, 5].map((n) => (
                           <Star
                             key={n}
@@ -502,14 +565,96 @@ export default async function DeveloperProfilePage({
                         ))}
                       </div>
                     </div>
+
+                    {Object.keys(review.criteria ?? {}).length > 0 ? (
+                      <div className="mt-3 flex flex-wrap gap-1.5">
+                        {REVIEW_CRITERIA.filter(
+                          (c) => review.criteria[c.key] !== undefined && review.criteria[c.key] !== null
+                        ).map((c) => (
+                          <span
+                            key={c.key}
+                            className="inline-flex items-center gap-1 rounded-full bg-[#1E1E1E] px-2.5 py-1 text-xs text-muted-foreground"
+                            title={reviewCriteriaLabel(c.key)}
+                          >
+                            {reviewCriteriaLabel(c.key)}
+                            <span className="font-semibold text-[#F2F2F2]">
+                              {review.criteria[c.key]}★
+                            </span>
+                          </span>
+                        ))}
+                      </div>
+                    ) : null}
+
                     {review.comment ? (
-                      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                      <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
                         {review.comment}
                       </p>
                     ) : null}
-                    <p className="mt-2 text-xs text-muted-foreground">
-                      {formatDate(review.created_at)}
-                    </p>
+
+                    {Object.keys(review.questions ?? {}).length > 0 ? (
+                      <dl className="mt-3 flex flex-col gap-1 rounded-xl bg-[#101010] p-3 text-xs">
+                        {REVIEW_QUESTIONS.map((q) =>
+                          review.questions?.[q.key] ? (
+                            <div
+                              key={q.key}
+                              className="flex items-start justify-between gap-3"
+                            >
+                              <dt className="text-muted-foreground">
+                                {reviewQuestionLabel(q.key)}
+                              </dt>
+                              <dd className="shrink-0 font-medium">
+                                {String(review.questions[q.key])
+                                  .charAt(0)
+                                  .toUpperCase() +
+                                  String(review.questions[q.key]).slice(1)}
+                              </dd>
+                            </div>
+                          ) : null
+                        )}
+                      </dl>
+                    ) : null}
+
+                    {review.assets && review.assets.length > 0 ? (
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {review.assets.map((url, i) => (
+                          <a
+                            key={`${url}-${i}`}
+                            href={url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="rounded-lg border border-[#2A2A2A] bg-[#1E1E1E] px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-[#E86A2C]/50 hover:text-[#F2F2F2]"
+                          >
+                            Preuve {i + 1}
+                          </a>
+                        ))}
+                      </div>
+                    ) : null}
+
+                    {review.response ? (
+                      <div className="mt-3 flex items-start gap-2.5 rounded-xl bg-[#1E1E1E] p-3">
+                        <span className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-lg bg-[#2A1A10] text-[#E86A2C]">
+                          <ShieldCheck className="size-3.5" aria-hidden="true" />
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                            Réponse du développeur
+                          </p>
+                          <p className="mt-0.5 text-sm leading-relaxed">
+                            {review.response}
+                          </p>
+                        </div>
+                      </div>
+                    ) : null}
+
+                    <div className="mt-auto flex items-center justify-between gap-3 pt-4">
+                      <p className="text-xs text-muted-foreground">
+                        {formatDate(review.created_at)}
+                      </p>
+                      <ReportReviewButton
+                        reviewId={review.id}
+                        reviewAuthor={review.client_name}
+                      />
+                    </div>
                   </li>
                 ))}
               </ul>

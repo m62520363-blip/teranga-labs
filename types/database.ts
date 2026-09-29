@@ -927,10 +927,61 @@ export interface Database {
       };
       submit_review: {
         Args: {
-          p_management_key: string;
-          p_developer_id: string;
+          p_request_id: string;
           p_rating: number;
-          p_comment: string;
+          p_comment?: string | null;
+          p_criteria?: Json | null;
+          p_questions?: Json | null;
+          p_assets?: string[] | null;
+        };
+        Returns: Json;
+      };
+      get_review_for_request: {
+        Args: {
+          p_request_id: string;
+        };
+        Returns: Json;
+      };
+      get_my_request_reviews: {
+        Args: Record<string, never>;
+        Returns: Json;
+      };
+      list_my_developer_reviews: {
+        Args: Record<string, never>;
+        Returns: Json;
+      };
+      respond_to_review: {
+        Args: {
+          p_review_id: string;
+          p_response: string;
+        };
+        Returns: Json;
+      };
+      submit_review_report: {
+        Args: {
+          p_review_id: string;
+          p_reason: string;
+          p_description?: string | null;
+        };
+        Returns: Json;
+      };
+      admin_get_reviews: {
+        Args: {
+          p_visibility?: string | null;
+        };
+        Returns: Json;
+      };
+      admin_set_review_status: {
+        Args: {
+          p_review_id: string;
+          p_hidden: boolean;
+          p_note?: string | null;
+        };
+        Returns: Json;
+      };
+      admin_list_review_reports: {
+        Args: {
+          p_status?: string | null;
         };
         Returns: Json;
       };
@@ -1160,16 +1211,93 @@ export type PublicDeveloperProfile = {
   reputation_level: string;
   penalty: number;
   projects: DeveloperMission[];
-  reviews: {
+  reviews: PublicReview[];
+};
+
+export type ReviewCriteria = {
+  qualite?: number;
+  delais?: number;
+  communication?: number;
+  comprehension?: number;
+  interface?: number;
+  fonctionnalites?: number;
+  qualite_prix?: number;
+  professionnalisme?: number;
+};
+
+export type ReviewAnswer = "oui" | "partiellement" | "non";
+
+export type ReviewQuestions = {
+  conforme?: ReviewAnswer;
+  reactivite?: ReviewAnswer;
+  recommandation?: ReviewAnswer;
+  retenir?: ReviewAnswer;
+};
+
+export type PublicReview = {
+  id: string;
+  rating: number;
+  comment: string | null;
+  criteria: ReviewCriteria;
+  questions: ReviewQuestions;
+  assets: string[];
+  response: string | null;
+  responded_at: string | null;
+  client_name: string | null;
+  request_type: string | null;
+  request_budget: number | null;
+  created_at: string;
+};
+
+export type DeveloperReviewStats = {
+  total: number;
+  average: number;
+  satisfaction: number;
+  average_criteria: Record<string, number>;
+  reviews: PublicReview[];
+};
+
+export type DeveloperReviewItem = PublicReview & {
+  hidden: boolean;
+  admin_note: string | null;
+};
+
+export type MyDeveloperReviews = {
+  total: number;
+  average: number;
+  satisfaction: number;
+  average_criteria: Record<string, number>;
+  reviews: DeveloperReviewItem[];
+};
+
+export type ReviewForRequest = {
+  request: {
+    id: string;
+    client_name: string;
+    project_type: string;
+    budget: number;
+    description: string;
+    status: string;
+    created_at: string;
+  };
+  developer: {
+    id: string;
+    full_name: string | null;
+    username: string | null;
+    avatar_url: string | null;
+  } | null;
+  review: {
     id: string;
     rating: number;
     comment: string | null;
-    request_name: string | null;
+    criteria: ReviewCriteria;
+    questions: ReviewQuestions;
+    assets: string[];
     created_at: string;
-  }[];
+    updated_at: string;
+    hidden: boolean;
+  } | null;
 };
-
-export type PublicReview = PublicDeveloperProfile["reviews"][number];
 
 export type ApprovedDeveloper = {
   id: string;
