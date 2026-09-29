@@ -55,7 +55,7 @@ export default function CookiesPage() {
               {cookieGroups.map((group) => (
                 <div
                   key={group.name}
-                  className="rounded-xl border border-[#2A2A2A] bg-[#141414] p-4"
+                  className="rounded-xl border border-hairline bg-[#141414] p-4"
                 >
                   <h3 className="text-sm font-semibold tracking-tight text-foreground">
                     {group.name}
@@ -106,7 +106,7 @@ export default function CookiesPage() {
               Une question sur cette politique ? Écrivez-nous à{" "}
               <a
                 href="mailto:contact@terangalabs.sn"
-                className="font-medium text-[#E86A2C] underline underline-offset-2"
+                className="font-medium text-primary underline underline-offset-2"
               >
                 contact@terangalabs.sn
               </a>

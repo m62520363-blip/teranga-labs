@@ -44,7 +44,7 @@ export default async function BriefManagementPage({
   }
 
   return (
-    <div className="bg-[#0F0F0F] py-16 md:py-24">
+    <div className="bg-surface py-16 md:py-24">
       <div className="container-tl">
         <div className="mx-auto max-w-3xl">
           {data ? (
@@ -64,7 +64,7 @@ export default async function BriefManagementPage({
               </div>
             </div>
           ) : (
-            <div className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-8 text-center shadow-sm">
+            <div className="rounded-2xl border border-hairline bg-[#141414] p-8 text-center shadow-sm">
               <h1 className="text-2xl font-semibold tracking-tight">
                 {errorMessage ?? "Lien invalide"}
               </h1>

@@ -70,7 +70,7 @@ export function ContactForm() {
   };
 
   return (
-    <div className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 shadow-sm sm:p-8">
+    <div className="rounded-2xl border border-hairline bg-[#141414] p-6 shadow-sm sm:p-8">
       {status === "success" ? (
         <div className="flex flex-col items-start gap-4">
           <div className="flex items-center gap-3">
@@ -103,7 +103,7 @@ export function ContactForm() {
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="contact-name">
-                Votre nom <span className="text-[#E86A2C]">*</span>
+                Votre nom <span className="text-primary">*</span>
               </Label>
               <Input
                 id="contact-name"
@@ -116,7 +116,7 @@ export function ContactForm() {
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="contact-email">
-                Votre email <span className="text-[#E86A2C]">*</span>
+                Votre email <span className="text-primary">*</span>
               </Label>
               <Input
                 id="contact-email"
@@ -152,7 +152,7 @@ export function ContactForm() {
 
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="contact-message">
-              Votre message <span className="text-[#E86A2C]">*</span>
+              Votre message <span className="text-primary">*</span>
             </Label>
             <Textarea
               id="contact-message"
@@ -175,7 +175,7 @@ export function ContactForm() {
               Vous préférez un email direct ?{" "}
               <a
                 href="mailto:contact@terangalabs.sn"
-                className="font-medium text-[#E86A2C] underline underline-offset-2"
+                className="font-medium text-primary underline underline-offset-2"
               >
                 contact@terangalabs.sn
               </a>

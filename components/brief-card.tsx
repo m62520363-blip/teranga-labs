@@ -20,7 +20,7 @@ export function BriefCard({
   return (
     <article
       className={cn(
-        "group flex h-full flex-col rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#E86A2C]/30 hover:shadow-md",
+        "group flex h-full flex-col rounded-2xl border border-hairline bg-[#141414] p-6 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md",
         compact && "p-5"
       )}
     >
@@ -36,12 +36,12 @@ export function BriefCard({
 
       <div className="mt-3 flex flex-wrap items-center gap-1.5">
         {brief.demo ? (
-          <span className="inline-flex h-5 items-center rounded-full border border-[#E86A2C]/40 bg-[#2A1A10] px-2.5 text-[11px] font-semibold text-[#E86A2C]">
+          <span className="inline-flex h-5 items-center rounded-full border border-primary/40 bg-[#2A1A10] px-2.5 text-[11px] font-semibold text-primary">
             Exemple
           </span>
         ) : null}
         {freshness === "h24" ? (
-          <span className="inline-flex h-5 items-center gap-1 rounded-full bg-[#2A1A10] px-2.5 text-[11px] font-semibold text-[#E86A2C]">
+          <span className="inline-flex h-5 items-center gap-1 rounded-full bg-[#2A1A10] px-2.5 text-[11px] font-semibold text-primary">
             <Timer className="size-3" aria-hidden="true" />
             Moins de 24h
           </span>
@@ -63,7 +63,7 @@ export function BriefCard({
       <h3 className="mt-3 text-lg font-semibold leading-snug tracking-tight">
         <Link
           href={`/briefs/${brief.id}`}
-          className="outline-none underline-offset-4 hover:text-[#E86A2C] focus-visible:underline"
+          className="outline-none underline-offset-4 hover:text-primary focus-visible:underline"
         >
           {brief.client_name}
         </Link>
@@ -79,7 +79,7 @@ export function BriefCard({
 
       <div className="min-h-6 grow" aria-hidden="true" />
 
-      <div className="flex items-center justify-between gap-3 border-t border-[#2A2A2A] pt-4">
+      <div className="flex items-center justify-between gap-3 border-t border-hairline pt-4">
         <span className="text-xs text-muted-foreground">
           {formatRelativeTime(brief.created_at)}
         </span>

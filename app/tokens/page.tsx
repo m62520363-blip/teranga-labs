@@ -23,7 +23,7 @@ export default async function TokensPage() {
     : { data: null };
 
   return (
-    <div className="bg-[#0F0F0F] py-16 md:py-24">
+    <div className="bg-surface py-16 md:py-24">
       <div className="container-tl">
         <div className="mx-auto max-w-2xl text-center">
           <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
@@ -50,7 +50,7 @@ export default async function TokensPage() {
         )}
 
         <div className="mx-auto mt-8 max-w-2xl">
-          <div className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-5 shadow-sm">
+          <div className="rounded-2xl border border-hairline bg-[#141414] p-5 shadow-sm">
             <h2 className="text-[15px] font-semibold tracking-tight">
               Moyens de paiement
             </h2>
@@ -73,10 +73,10 @@ export default async function TokensPage() {
         </div>
 
         <div className="mx-auto mt-8 max-w-2xl">
-          <div className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 shadow-sm">
+          <div className="rounded-2xl border border-hairline bg-[#141414] p-6 shadow-sm">
             <div className="flex items-start gap-3">
               <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#2A1A10]">
-                <CheckCircle2 className="size-4 text-[#E86A2C]" aria-hidden="true" />
+                <CheckCircle2 className="size-4 text-primary" aria-hidden="true" />
               </span>
               <div>
                 <h2 className="text-[15px] font-semibold tracking-tight">

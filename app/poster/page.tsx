@@ -14,7 +14,7 @@ export default async function PosterPage() {
 
   if (!user) {
     return (
-      <div className="bg-[#0F0F0F] py-16 md:py-24">
+      <div className="bg-surface py-16 md:py-24">
         <div className="container-tl">
           <div className="mx-auto max-w-xl">
             <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
@@ -37,7 +37,7 @@ export default async function PosterPage() {
 
             <p className="mt-8 text-sm leading-relaxed text-muted-foreground">
               Pas encore de compte ?{" "}
-              <Link href="/login?mode=signup" className="underline decoration-[#E86A2C]/60 underline-offset-4 hover:text-foreground">
+              <Link href="/login?mode=signup" className="underline decoration-primary/60 underline-offset-4 hover:text-foreground">
                 Inscrivez-vous gratuitement
               </Link>{" "}
               — l’inscription est gratuite, seule la publication consomme 1 Token.
@@ -49,7 +49,7 @@ export default async function PosterPage() {
   }
 
   return (
-    <div className="bg-[#0F0F0F] py-16 md:py-24">
+    <div className="bg-surface py-16 md:py-24">
       <div className="container-tl">
         <div className="mx-auto max-w-xl">
           <div>
@@ -62,7 +62,7 @@ export default async function PosterPage() {
             </p>
           </div>
 
-          <div className="mt-10 rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 shadow-sm sm:p-8">
+          <div className="mt-10 rounded-2xl border border-hairline bg-[#141414] p-6 shadow-sm sm:p-8">
             <PosterForm />
           </div>
 
@@ -73,7 +73,7 @@ export default async function PosterPage() {
             {["1 Token par brief", "2 minutes", "Sans engagement"].map((item) => (
               <li
                 key={item}
-                className="rounded-xl border border-[#2A2A2A] bg-[#141414] px-4 py-3 text-center text-sm font-medium"
+                className="rounded-xl border border-hairline bg-[#141414] px-4 py-3 text-center text-sm font-medium"
               >
                 {item}
               </li>

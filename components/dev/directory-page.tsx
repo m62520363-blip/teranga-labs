@@ -158,13 +158,13 @@ export function DirectoryPage({
           <button
             type="button"
             onClick={() => setShowFilters((v) => !v)}
-            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-[#2A2A2A] bg-[#141414] px-4 text-sm font-medium text-muted-foreground transition-colors outline-none hover:border-[#E86A2C]/40 hover:text-[#F2F2F2] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-hairline bg-[#141414] px-4 text-sm font-medium text-muted-foreground transition-colors outline-none hover:border-primary/40 hover:text-[#F2F2F2] focus-visible:ring-2 focus-visible:ring-primary/50"
             aria-expanded={showFilters}
           >
             <SlidersHorizontal className="size-4" aria-hidden="true" />
             Filtres
             {anyFilter ? (
-              <span className="flex size-5 items-center justify-center rounded-full bg-[#E86A2C] text-[10px] font-bold text-[#0D0D0D]">
+              <span className="flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-[#0D0D0D]">
                 {techs.length + (specialty ? 1 : 0) + (city ? 1 : 0) + (availability ? 1 : 0) + (projectType ? 1 : 0) + (minRating !== "0" ? 1 : 0) + (minExperience !== "0" ? 1 : 0) + (verifiedOnly ? 1 : 0)}
               </span>
             ) : null}
@@ -172,7 +172,7 @@ export function DirectoryPage({
         </div>
 
         {showFilters ? (
-          <div className="grid grid-cols-1 gap-3 rounded-2xl border border-[#2A2A2A] bg-[#141414] p-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-3 rounded-2xl border border-hairline bg-[#141414] p-4 sm:grid-cols-2 lg:grid-cols-4">
             <FilterSelect
               label="Spécialité"
               value={specialty}
@@ -231,10 +231,10 @@ export function DirectoryPage({
                     type="button"
                     onClick={() => toggleTech(tag)}
                     className={cn(
-                      "rounded-lg border px-2 py-1 text-xs transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50",
+                      "rounded-lg border px-2 py-1 text-xs transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
                       techs.includes(tag)
-                        ? "border-[#E86A2C] bg-[#2A1A10] text-[#E86A2C]"
-                        : "border-[#2A2A2A] bg-[#1E1E1E] text-muted-foreground hover:border-[#E86A2C]/40"
+                        ? "border-primary bg-[#2A1A10] text-primary"
+                        : "border-hairline bg-[#1E1E1E] text-muted-foreground hover:border-primary/40"
                     )}
                   >
                     {tag}
@@ -249,7 +249,7 @@ export function DirectoryPage({
                   type="checkbox"
                   checked={verifiedOnly}
                   onChange={(e) => setVerifiedOnly(e.target.checked)}
-                  className="size-4 accent-[#E86A2C]"
+                  className="size-4 accent-primary"
                 />
                 Profils vérifiés uniquement
               </label>
@@ -267,7 +267,7 @@ export function DirectoryPage({
             <button
               type="button"
               onClick={reset}
-              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors outline-none hover:text-[#F2F2F2] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors outline-none hover:text-[#F2F2F2] focus-visible:ring-2 focus-visible:ring-primary/50"
             >
               <X className="size-3.5" aria-hidden="true" />
               Réinitialiser
@@ -290,7 +290,7 @@ export function DirectoryPage({
 
       {loading && items.length === 0 ? (
         <div className="flex items-center justify-center gap-2 py-16 text-sm text-muted-foreground">
-          <Loader2 className="size-5 animate-spin text-[#E86A2C]" aria-hidden="true" />
+          <Loader2 className="size-5 animate-spin text-primary" aria-hidden="true" />
           Recherche en cours…
         </div>
       ) : items.length === 0 ? (
@@ -321,7 +321,7 @@ export function DirectoryPage({
                 type="button"
                 onClick={() => void loadMore()}
                 disabled={loading}
-                className="inline-flex h-11 items-center gap-2 rounded-xl border border-[#2A2A2A] bg-[#141414] px-6 text-sm font-medium transition-colors outline-none hover:border-[#E86A2C]/40 hover:text-[#F2F2F2] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50 disabled:opacity-50"
+                className="inline-flex h-11 items-center gap-2 rounded-xl border border-hairline bg-[#141414] px-6 text-sm font-medium transition-colors outline-none hover:border-primary/40 hover:text-[#F2F2F2] focus-visible:ring-2 focus-visible:ring-primary/50 disabled:opacity-50"
               >
                 {loading ? (
                   <Loader2 className="size-4 animate-spin" aria-hidden="true" />

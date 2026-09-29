@@ -22,9 +22,9 @@ export function LogoMark({ className }: { className?: string }) {
         <path d="M24 20 C 34 23 42 28 43 38 C 34 35 26 30 24 25 Z" />
         <path d="M25 44 V48 H33" fill="none" />
       </g>
-      <circle cx="24" cy="31" r="2.3" fill="#E86A2C" />
-      <circle cx="24" cy="35.5" r="2.3" fill="#E86A2C" />
-      <circle cx="24" cy="40" r="2.3" fill="#E86A2C" />
+      <circle cx="24" cy="31" r="2.3" className="fill-primary" />
+      <circle cx="24" cy="35.5" r="2.3" className="fill-primary" />
+      <circle cx="24" cy="40" r="2.3" className="fill-primary" />
     </svg>
   );
 }

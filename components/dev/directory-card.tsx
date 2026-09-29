@@ -46,10 +46,10 @@ export function DirectoryCard({
         : null;
 
   return (
-    <article className="flex h-full flex-col rounded-2xl border border-[#2A2A2A] bg-[#141414] p-5 transition-colors hover:border-[#E86A2C]/40">
+    <article className="flex h-full flex-col rounded-2xl border border-hairline bg-[#141414] p-5 transition-colors hover:border-primary/40">
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
-          <div className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#2A2A2A]">
+          <div className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-hairline">
             {developer.avatar_url ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -58,7 +58,7 @@ export function DirectoryCard({
                 className="size-full object-cover"
               />
             ) : (
-              <span className="text-lg font-bold text-[#E86A2C]">
+              <span className="text-lg font-bold text-primary">
                 {(developer.full_name ?? developer.username ?? "?")
                   .trim()
                   .slice(0, 1)
@@ -70,7 +70,7 @@ export function DirectoryCard({
             <p className="flex items-center gap-1.5 truncate font-semibold tracking-tight">
               {developer.full_name ?? developer.username ?? "Développeur"}
               {developer.is_verified ? (
-                <BadgeCheck className="size-4 shrink-0 text-[#E86A2C]" aria-label="Profil vérifié" />
+                <BadgeCheck className="size-4 shrink-0 text-primary" aria-label="Profil vérifié" />
               ) : null}
             </p>
             <p className="truncate text-xs text-muted-foreground">
@@ -131,13 +131,13 @@ export function DirectoryCard({
           {skills.map((s) => (
             <span
               key={s}
-              className="rounded-lg border border-[#2A2A2A] bg-[#1E1E1E] px-2 py-1 text-xs text-muted-foreground"
+              className="rounded-lg border border-hairline bg-[#1E1E1E] px-2 py-1 text-xs text-muted-foreground"
             >
               {s}
             </span>
           ))}
           {(developer.skills ?? []).length > skills.length ? (
-            <span className="rounded-lg border border-[#2A2A2A] px-2 py-1 text-xs text-muted-foreground">
+            <span className="rounded-lg border border-hairline px-2 py-1 text-xs text-muted-foreground">
               +{(developer.skills ?? []).length - skills.length}
             </span>
           ) : null}
@@ -160,7 +160,7 @@ export function DirectoryCard({
         </p>
       ) : null}
 
-      <div className="mt-4 flex flex-col gap-1.5 border-t border-[#2A2A2A] pt-4 text-xs text-muted-foreground">
+      <div className="mt-4 flex flex-col gap-1.5 border-t border-hairline pt-4 text-xs text-muted-foreground">
         {rate ? (
           <p className="font-medium text-[#F2F2F2]">Tarif : {rate}</p>
         ) : null}
@@ -175,7 +175,7 @@ export function DirectoryCard({
       <div className="mt-4 flex items-center gap-2 pt-1">
         <Link
           href={`/dev/${developer.username ?? developer.id}`}
-          className="inline-flex h-10 flex-1 items-center justify-center rounded-xl border border-[#2A2A2A] text-sm font-medium transition-colors outline-none hover:border-[#E86A2C]/40 hover:text-[#F2F2F2] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+          className="inline-flex h-10 flex-1 items-center justify-center rounded-xl border border-hairline text-sm font-medium transition-colors outline-none hover:border-primary/40 hover:text-[#F2F2F2] focus-visible:ring-2 focus-visible:ring-primary/50"
         >
           Voir le profil
         </Link>
@@ -207,8 +207,8 @@ function Stat({
   hint: string;
 }) {
   return (
-    <div className="flex items-center gap-2 rounded-xl border border-[#2A2A2A] bg-[#1E1E1E] px-3 py-2">
-      <span className="text-[#E86A2C]">{icon}</span>
+    <div className="flex items-center gap-2 rounded-xl border border-hairline bg-[#1E1E1E] px-3 py-2">
+      <span className="text-primary">{icon}</span>
       <span className="min-w-0">
         <span className="block truncate text-sm font-semibold leading-tight">{label}</span>
         <span className="block truncate text-[10px] text-muted-foreground">{hint}</span>

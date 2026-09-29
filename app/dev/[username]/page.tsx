@@ -121,7 +121,7 @@ export default async function DeveloperProfilePage({
   return (
     <div className="bg-[#0A0A0A] py-14 md:py-20">
       <div className="container-tl">
-        <div className="rounded-3xl border border-[#2A2A2A] bg-gradient-to-b from-[#141414] via-[#131210] to-[#0F0F0F] p-6 md:p-10">
+        <div className="rounded-3xl border border-hairline bg-gradient-to-b from-[#141414] via-[#131210] to-surface p-6 md:p-10">
           <header className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div className="flex items-start gap-5">
               <div className="relative shrink-0">
@@ -130,10 +130,10 @@ export default async function DeveloperProfilePage({
                   <img
                     src={profile.avatar_url}
                     alt=""
-                    className="size-20 rounded-2xl border border-[#2A2A2A] object-cover md:size-24"
+                    className="size-20 rounded-2xl border border-hairline object-cover md:size-24"
                   />
                 ) : (
-                  <div className="flex size-20 items-center justify-center rounded-2xl border border-[#2A2A2A] bg-gradient-to-br from-[#E86A2C] to-[#B34A14] text-2xl font-bold text-[#0D0D0D] md:size-24">
+                  <div className="flex size-20 items-center justify-center rounded-2xl border border-hairline bg-gradient-to-br from-primary to-[#B34A14] text-2xl font-bold text-[#0D0D0D] md:size-24">
                     {initialsOf(name)}
                   </div>
                 )}
@@ -162,21 +162,21 @@ export default async function DeveloperProfilePage({
                 <p className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
                   {profile.professional_title || profile.main_specialty ? (
                     <span className="inline-flex items-center gap-1.5">
-                      <Briefcase className="size-4 text-[#E86A2C]" aria-hidden="true" />
+                      <Briefcase className="size-4 text-primary" aria-hidden="true" />
                       {profile.professional_title ??
                         experienceLabel(profile.main_specialty)}
                     </span>
                   ) : null}
                   {profile.city ? (
                     <span className="inline-flex items-center gap-1.5">
-                      <MapPin className="size-4 text-[#E86A2C]" aria-hidden="true" />
+                      <MapPin className="size-4 text-primary" aria-hidden="true" />
                       {profile.city}
                       {profile.country ? `, ${profile.country}` : ""}
                     </span>
                   ) : null}
                   {profile.experience_years > 0 ? (
                     <span className="inline-flex items-center gap-1.5">
-                      <Briefcase className="size-4 text-[#E86A2C]" aria-hidden="true" />
+                      <Briefcase className="size-4 text-primary" aria-hidden="true" />
                       {profile.experience_years} an{profile.experience_years > 1 ? "s" : ""} d’expérience
                     </span>
                   ) : null}
@@ -201,7 +201,7 @@ export default async function DeveloperProfilePage({
                           className={cn(
                             "size-4",
                             n <= roundAverage
-                              ? "fill-[#E86A2C] text-[#E86A2C]"
+                              ? "fill-primary text-primary"
                               : "fill-none text-[#3A3A3A]"
                           )}
                           aria-hidden="true"
@@ -226,7 +226,7 @@ export default async function DeveloperProfilePage({
                     </span>
                   </span>
                   <span className="inline-flex items-center gap-1.5 text-muted-foreground">
-                    <Briefcase className="size-4 text-[#E86A2C]" aria-hidden="true" />
+                    <Briefcase className="size-4 text-primary" aria-hidden="true" />
                     {profile.completed_projects_count} projet
                     {profile.completed_projects_count > 1 ? "s terminés" : " terminé"}
                   </span>
@@ -265,16 +265,16 @@ export default async function DeveloperProfilePage({
             </div>
           </header>
 
-          <section className="mt-8 border-t border-[#2A2A2A] pt-8" aria-label="Contact">
+          <section className="mt-8 border-t border-hairline pt-8" aria-label="Contact">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
               Contact
             </h2>
             <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <div className="max-w-md rounded-2xl border border-[#2A2A2A] bg-[#141414] p-4 text-sm">
+              <div className="max-w-md rounded-2xl border border-hairline bg-[#141414] p-4 text-sm">
                 <p className="text-muted-foreground">
                   Coordonnées masquées — elles ne sont révélées qu’après attribution
                   d’un projet. Ouvrez un contact direct (
-                  <span className="font-semibold text-[#E86A2C]">{contactCost} Token</span>
+                  <span className="font-semibold text-primary">{contactCost} Token</span>
                   ) pour discuter en sécurité.
                 </p>
                 {profile.phone_masked || profile.email_masked ? (
@@ -289,7 +289,7 @@ export default async function DeveloperProfilePage({
                 ) : null}
               </div>
               {rate ? (
-                <div className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-4 text-sm">
+                <div className="rounded-2xl border border-hairline bg-[#141414] p-4 text-sm">
                   <p className="text-muted-foreground">Tarifs indicatifs</p>
                   <p className="mt-1 font-semibold">{rate}</p>
                 </div>
@@ -298,7 +298,7 @@ export default async function DeveloperProfilePage({
           </section>
 
           {profile.bio ? (
-            <section className="mt-8 border-t border-[#2A2A2A] pt-8" aria-label="Présentation">
+            <section className="mt-8 border-t border-hairline pt-8" aria-label="Présentation">
               <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
                 À propos
               </h2>
@@ -309,7 +309,7 @@ export default async function DeveloperProfilePage({
           ) : null}
 
           {profile.skills && profile.skills.length > 0 ? (
-            <section className="mt-8 border-t border-[#2A2A2A] pt-8" aria-label="Compétences">
+            <section className="mt-8 border-t border-hairline pt-8" aria-label="Compétences">
               <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
                 Spécialités
               </h2>
@@ -327,7 +327,7 @@ export default async function DeveloperProfilePage({
           ) : null}
 
           {profile.portfolio_links.length > 0 ? (
-            <section className="mt-8 border-t border-[#2A2A2A] pt-8" aria-label="Portfolio">
+            <section className="mt-8 border-t border-hairline pt-8" aria-label="Portfolio">
               <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
                 Projets réalisés
               </h2>
@@ -338,7 +338,7 @@ export default async function DeveloperProfilePage({
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group rounded-2xl border border-[#2A2A2A] bg-[#141414] p-5 transition-colors hover:border-[#E86A2C]/50"
+                    className="group rounded-2xl border border-hairline bg-[#141414] p-5 transition-colors hover:border-primary/50"
                   >
                     {link.image_url ? (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -346,17 +346,17 @@ export default async function DeveloperProfilePage({
                         src={link.image_url}
                         alt=""
                         loading="lazy"
-                        className="mb-4 h-32 w-full rounded-xl border border-[#2A2A2A] object-cover"
+                        className="mb-4 h-32 w-full rounded-xl border border-hairline object-cover"
                       />
                     ) : (
-                      <div className="mb-4 flex h-32 w-full items-center justify-center rounded-xl border border-[#2A2A2A] bg-[#1E1E1E]">
-                        <Globe className="size-8 text-[#E86A2C]" aria-hidden="true" />
+                      <div className="mb-4 flex h-32 w-full items-center justify-center rounded-xl border border-hairline bg-[#1E1E1E]">
+                        <Globe className="size-8 text-primary" aria-hidden="true" />
                       </div>
                     )}
                     <div className="flex items-start justify-between gap-2">
                       <h3 className="font-medium leading-snug">{link.title}</h3>
                       <ExternalLink
-                        className="mt-0.5 size-4 shrink-0 text-muted-foreground transition-colors group-hover:text-[#E86A2C]"
+                        className="mt-0.5 size-4 shrink-0 text-muted-foreground transition-colors group-hover:text-primary"
                         aria-hidden="true"
                       />
                     </div>
@@ -372,7 +372,7 @@ export default async function DeveloperProfilePage({
           ) : null}
 
           {profile.projects.length > 0 ? (
-            <section className="mt-8 border-t border-[#2A2A2A] pt-8" aria-label="Missions réalisées">
+            <section className="mt-8 border-t border-hairline pt-8" aria-label="Missions réalisées">
               <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
                 Missions réalisées
               </h2>
@@ -389,7 +389,7 @@ export default async function DeveloperProfilePage({
                   return (
                     <article
                       key={mission.id}
-                      className="flex flex-col rounded-2xl border border-[#2A2A2A] bg-[#141414] p-5"
+                      className="flex flex-col rounded-2xl border border-hairline bg-[#141414] p-5"
                     >
                       {shot ? (
                         // eslint-disable-next-line @next/next/no-img-element
@@ -397,14 +397,14 @@ export default async function DeveloperProfilePage({
                           src={shot}
                           alt=""
                           loading="lazy"
-                          className="mb-4 h-32 w-full rounded-xl border border-[#2A2A2A] object-cover"
+                          className="mb-4 h-32 w-full rounded-xl border border-hairline object-cover"
                         />
                       ) : (
-                        <div className="mb-4 flex h-32 w-full items-center justify-center rounded-xl border border-[#2A2A2A] bg-[#1E1E1E]">
+                        <div className="mb-4 flex h-32 w-full items-center justify-center rounded-xl border border-hairline bg-[#1E1E1E]">
                           {confidential ? (
-                            <Lock className="size-8 text-[#E86A2C]" aria-hidden="true" />
+                            <Lock className="size-8 text-primary" aria-hidden="true" />
                           ) : (
-                            <Globe className="size-8 text-[#E86A2C]" aria-hidden="true" />
+                            <Globe className="size-8 text-primary" aria-hidden="true" />
                           )}
                         </div>
                       )}
@@ -424,13 +424,13 @@ export default async function DeveloperProfilePage({
                           {mission.technologies.slice(0, 6).map((tech) => (
                             <span
                               key={tech}
-                              className="rounded-full border border-[#2A2A2A] bg-[#0F0F0F] px-2.5 py-0.5 text-xs text-muted-foreground"
+                              className="rounded-full border border-hairline bg-surface px-2.5 py-0.5 text-xs text-muted-foreground"
                             >
                               {tech}
                             </span>
                           ))}
                           {mission.technologies.length > 6 ? (
-                            <span className="rounded-full border border-[#2A2A2A] bg-[#0F0F0F] px-2.5 py-0.5 text-xs text-muted-foreground">
+                            <span className="rounded-full border border-hairline bg-surface px-2.5 py-0.5 text-xs text-muted-foreground">
                               +{mission.technologies.length - 6}
                             </span>
                           ) : null}
@@ -447,7 +447,7 @@ export default async function DeveloperProfilePage({
                             Réalisée via TERANGA LABS
                           </span>
                         ) : confidential ? (
-                          <span className="inline-flex items-center gap-1.5 rounded-full border border-[#E86A2C]/40 bg-[#2A1A10] px-2.5 py-1 text-[11px] font-medium text-[#F2A378]">
+                          <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-[#2A1A10] px-2.5 py-1 text-[11px] font-medium text-[#F2A378]">
                             <Lock className="size-3" aria-hidden="true" />
                             Projet confidentiel
                           </span>
@@ -468,7 +468,7 @@ export default async function DeveloperProfilePage({
                           href={externalUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="mt-4 inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-[#2A2A2A] bg-[#0F0F0F] px-4 text-sm font-medium text-[#F2F2F2] transition-colors outline-none hover:border-[#E86A2C]/50 hover:text-[#E86A2C] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+                          className="mt-4 inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-hairline bg-surface px-4 text-sm font-medium text-[#F2F2F2] transition-colors outline-none hover:border-primary/50 hover:text-primary focus-visible:ring-2 focus-visible:ring-primary/50"
                         >
                           {buttonLabel}
                           <ExternalLink className="size-3.5" aria-hidden="true" />
@@ -481,15 +481,15 @@ export default async function DeveloperProfilePage({
             </section>
           ) : null}
 
-          <section className="mt-8 border-t border-[#2A2A2A] pt-8" aria-label="Avis clients">
+          <section className="mt-8 border-t border-hairline pt-8" aria-label="Avis clients">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
                 Avis clients
               </h2>
               {reviewStats && reviewStats.total > 0 ? (
                 <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-[#2A2A2A] bg-[#141414] px-2.5 py-1">
-                    <Star className="size-3.5 fill-[#E86A2C] text-[#E86A2C]" aria-hidden="true" />
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-hairline bg-[#141414] px-2.5 py-1">
+                    <Star className="size-3.5 fill-primary text-primary" aria-hidden="true" />
                     {reviewStats.average}/5 · {reviewStats.total} avis
                   </span>
                   <span className="inline-flex items-center gap-1.5 rounded-full border border-[#166534]/60 bg-[#0F2E18] px-2.5 py-1 text-[#4ADE80]">
@@ -500,7 +500,7 @@ export default async function DeveloperProfilePage({
             </div>
 
             {reviewStats && reviewStats.total > 0 ? (
-              <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2.5 rounded-2xl border border-[#2A2A2A] bg-[#141414] p-4 sm:grid-cols-4">
+              <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2.5 rounded-2xl border border-hairline bg-[#141414] p-4 sm:grid-cols-4">
                 {REVIEW_CRITERIA.map((c) => {
                   const value = reviewStats.average_criteria?.[c.key];
                   return (
@@ -513,9 +513,9 @@ export default async function DeveloperProfilePage({
                           {value != null ? `${value}/5` : "—"}
                         </span>
                       </div>
-                      <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-[#2A2A2A]">
+                      <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-hairline">
                         <div
-                          className="h-full rounded-full bg-[#E86A2C]"
+                          className="h-full rounded-full bg-primary"
                           style={{
                             width: `${Math.max(0, Math.min(100, ((value ?? 0) / 5) * 100))}%`,
                           }}
@@ -536,7 +536,7 @@ export default async function DeveloperProfilePage({
                 {visibleReviews.map((review) => (
                   <li
                     key={review.id}
-                    className="flex flex-col rounded-2xl border border-[#2A2A2A] bg-[#141414] p-5"
+                    className="flex flex-col rounded-2xl border border-hairline bg-[#141414] p-5"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
@@ -557,7 +557,7 @@ export default async function DeveloperProfilePage({
                             className={cn(
                               "size-3.5",
                               n <= review.rating
-                                ? "fill-[#E86A2C] text-[#E86A2C]"
+                                ? "fill-primary text-primary"
                                 : "fill-none text-[#3A3A3A]"
                             )}
                             aria-hidden="true"
@@ -622,7 +622,7 @@ export default async function DeveloperProfilePage({
                             href={url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="rounded-lg border border-[#2A2A2A] bg-[#1E1E1E] px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-[#E86A2C]/50 hover:text-[#F2F2F2]"
+                            className="rounded-lg border border-hairline bg-[#1E1E1E] px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-primary/50 hover:text-[#F2F2F2]"
                           >
                             Preuve {i + 1}
                           </a>
@@ -632,7 +632,7 @@ export default async function DeveloperProfilePage({
 
                     {review.response ? (
                       <div className="mt-3 flex items-start gap-2.5 rounded-xl bg-[#1E1E1E] p-3">
-                        <span className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-lg bg-[#2A1A10] text-[#E86A2C]">
+                        <span className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-lg bg-[#2A1A10] text-primary">
                           <ShieldCheck className="size-3.5" aria-hidden="true" />
                         </span>
                         <div className="min-w-0 flex-1">

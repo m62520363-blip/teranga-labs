@@ -16,7 +16,7 @@ export const dynamic = "force-dynamic";
 
 function notConfigured() {
   return (
-    <div className="bg-[#0F0F0F] py-16">
+    <div className="bg-surface py-16">
       <div className="container-tl mx-auto max-w-md text-center">
         <h1 className="text-2xl font-semibold">Configuration requise</h1>
         <p className="mt-3 text-sm text-muted-foreground">

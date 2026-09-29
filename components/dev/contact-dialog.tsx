@@ -180,7 +180,7 @@ export function ContactButton({
           />
         ) : screen.kind === "loading" ? (
           <div className="flex flex-col items-center justify-center gap-3 py-10 text-center">
-            <Loader2 className="size-6 animate-spin text-[#E86A2C]" aria-hidden="true" />
+            <Loader2 className="size-6 animate-spin text-primary" aria-hidden="true" />
             <p className="text-sm text-muted-foreground">Vérification de votre solde…</p>
           </div>
         ) : screen.kind === "insufficient" ? (
@@ -219,7 +219,7 @@ export function ContactButton({
             </DialogHeader>
 
             <div className="flex flex-col gap-3">
-              <div className="rounded-xl border border-[#2A2A2A] bg-[#1E1E1E] p-4">
+              <div className="rounded-xl border border-hairline bg-[#1E1E1E] p-4">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Coût du contact</span>
                   <span className="font-semibold">
@@ -230,9 +230,9 @@ export function ContactButton({
                   <span className="text-muted-foreground">Votre solde</span>
                   <span className="font-medium">{balance ?? 0} Token{(balance ?? 0) > 1 ? "s" : ""}</span>
                 </div>
-                <div className="mt-2 flex items-center justify-between border-t border-[#2A2A2A] pt-2 text-sm">
+                <div className="mt-2 flex items-center justify-between border-t border-hairline pt-2 text-sm">
                   <span className="text-muted-foreground">Solde après</span>
-                  <span className="font-semibold text-[#E86A2C]">
+                  <span className="font-semibold text-primary">
                     {(balance ?? 0) - cost} Token{(balance ?? 0) - cost > 1 ? "s" : ""}
                   </span>
                 </div>
@@ -290,7 +290,7 @@ function NotAllowed({
 }) {
   return (
     <div className="flex flex-col items-center gap-3 py-6 text-center">
-      <span className="flex size-12 items-center justify-center rounded-2xl bg-[#2A1A10] text-[#E86A2C]">
+      <span className="flex size-12 items-center justify-center rounded-2xl bg-[#2A1A10] text-primary">
         {icon}
       </span>
       <h2 className="text-lg font-semibold tracking-tight">{title}</h2>

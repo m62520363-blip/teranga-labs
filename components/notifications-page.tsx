@@ -135,7 +135,7 @@ export function NotificationsPage({ userId }: { userId: string }) {
   };
 
   return (
-    <div className="bg-[#0F0F0F] py-16 md:py-24">
+    <div className="bg-surface py-16 md:py-24">
       <div className="container-tl max-w-2xl">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -150,9 +150,9 @@ export function NotificationsPage({ userId }: { userId: string }) {
             <button
               type="button"
               onClick={markAll}
-              className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-[#2A2A2A] bg-[#141414] px-5 text-sm font-medium text-[#F2F2F2] transition-colors outline-none hover:bg-[#1E1E1E] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-hairline bg-[#141414] px-5 text-sm font-medium text-[#F2F2F2] transition-colors outline-none hover:bg-[#1E1E1E] focus-visible:ring-2 focus-visible:ring-primary/50"
             >
-              <CheckCircle2 className="size-4 text-[#E86A2C]" aria-hidden="true" />
+              <CheckCircle2 className="size-4 text-primary" aria-hidden="true" />
               Tout marquer lu
             </button>
           ) : null}
@@ -160,7 +160,7 @@ export function NotificationsPage({ userId }: { userId: string }) {
 
         <div className="mt-10">
           {loading ? (
-            <div className="flex items-center justify-center gap-2 rounded-2xl border border-[#2A2A2A] bg-[#141414] p-10 text-sm text-muted-foreground">
+            <div className="flex items-center justify-center gap-2 rounded-2xl border border-hairline bg-[#141414] p-10 text-sm text-muted-foreground">
               <Loader2 className="size-4 animate-spin" aria-hidden="true" />
               Chargement…
             </div>
@@ -188,14 +188,14 @@ export function NotificationsPage({ userId }: { userId: string }) {
                       type="button"
                       onClick={() => openItem(item)}
                       className={cn(
-                        "flex w-full items-start gap-3 rounded-2xl border p-4 text-left outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50 sm:p-5",
+                        "flex w-full items-start gap-3 rounded-2xl border p-4 text-left outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50 sm:p-5",
                         item.read
-                          ? "border-[#2A2A2A] bg-[#141414] hover:bg-[#171717]"
-                          : "border-[#E86A2C]/40 bg-[#1A120B] hover:bg-[#1E160F]"
+                          ? "border-hairline bg-[#141414] hover:bg-[#171717]"
+                          : "border-primary/40 bg-[#1A120B] hover:bg-[#1E160F]"
                       )}
                     >
                       <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#2A1A10]">
-                        <Icon className="size-5 text-[#E86A2C]" aria-hidden="true" />
+                        <Icon className="size-5 text-primary" aria-hidden="true" />
                       </span>
                       <span className="min-w-0 flex-1">
                         <span className="flex items-center justify-between gap-3">
@@ -213,7 +213,7 @@ export function NotificationsPage({ userId }: { userId: string }) {
                         ) : null}
                       </span>
                       {!item.read ? (
-                        <span className="mt-1.5 size-2.5 shrink-0 rounded-full bg-[#E86A2C]" />
+                        <span className="mt-1.5 size-2.5 shrink-0 rounded-full bg-primary" />
                       ) : null}
                     </button>
                   </li>

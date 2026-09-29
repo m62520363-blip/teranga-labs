@@ -26,7 +26,7 @@ export default function MentionsLegalesPage() {
                 Email de contact :{" "}
                 <a
                   href="mailto:contact@terangalabs.sn"
-                  className="font-medium text-[#E86A2C] underline underline-offset-2"
+                  className="font-medium text-primary underline underline-offset-2"
                 >
                   contact@terangalabs.sn
                 </a>
@@ -52,7 +52,7 @@ export default function MentionsLegalesPage() {
               finalisée. En attendant, pour toute demande, écrivez à{" "}
               <a
                 href="mailto:contact@terangalabs.sn"
-                className="font-medium text-[#E86A2C] underline underline-offset-2"
+                className="font-medium text-primary underline underline-offset-2"
               >
                 contact@terangalabs.sn
               </a>
@@ -70,7 +70,7 @@ export default function MentionsLegalesPage() {
                 91789, États-Unis —{" "}
                 <a
                   href="https://vercel.com"
-                  className="font-medium text-[#E86A2C] underline underline-offset-2"
+                  className="font-medium text-primary underline underline-offset-2"
                 >
                   vercel.com
                 </a>
@@ -93,14 +93,14 @@ export default function MentionsLegalesPage() {
                 sont traitées pour la seule mise en relation décrite dans la{" "}
                 <a
                   href="/politique-de-confidentialite"
-                  className="font-medium text-[#E86A2C] underline underline-offset-2"
+                  className="font-medium text-primary underline underline-offset-2"
                 >
                   politique de confidentialité
                 </a>
                 . Le détail des cookies est expliqué dans la{" "}
                 <a
                   href="/cookies"
-                  className="font-medium text-[#E86A2C] underline underline-offset-2"
+                  className="font-medium text-primary underline underline-offset-2"
                 >
                   politique de cookies
                 </a>

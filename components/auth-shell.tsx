@@ -9,7 +9,7 @@ export function AuthShell({
   return (
     <div className="relative isolate overflow-hidden bg-[#0A0A0A] py-14 md:py-20">
       {/* halos d’arrière-plan */}
-      <div className="pointer-events-none absolute left-1/2 top-0 h-[36rem] w-[36rem] -translate-x-1/2 rounded-full bg-[#E86A2C]/10 blur-[110px]" />
+      <div className="pointer-events-none absolute left-1/2 top-0 h-[36rem] w-[36rem] -translate-x-1/2 rounded-full bg-primary/10 blur-[110px]" />
       <div className="glow-orb pointer-events-none absolute -right-40 top-40 hidden size-[26rem] lg:block" />
       <div className="pointer-events-none absolute inset-0 bg-grid opacity-40" />
 

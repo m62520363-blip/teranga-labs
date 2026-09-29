@@ -5,7 +5,7 @@ import { Section, SectionHeader, Eyebrow } from "@/components/landing/section";
 
 export function ProblemSection() {
   return (
-    <Section className="border-y border-[#2A2A2A] bg-[#0F0F0F]" ariaLabel="Le problème des marketplaces classiques">
+    <Section className="border-y border-hairline bg-surface" ariaLabel="Le problème des marketplaces classiques">
       <div className="mx-auto max-w-3xl text-center">
         <SectionHeader eyebrow={PROBLEM.eyebrow} title={PROBLEM.title} lead={PROBLEM.lead} />
 

@@ -19,7 +19,7 @@ export default async function ConversationsPage() {
   const supabase = await createClient();
   if (!supabase) {
     return (
-      <div className="bg-[#0F0F0F] py-16">
+      <div className="bg-surface py-16">
         <div className="container-tl mx-auto max-w-md text-center">
           <h1 className="text-2xl font-semibold">Configuration requise</h1>
           <p className="mt-3 text-sm text-muted-foreground">
@@ -34,7 +34,7 @@ export default async function ConversationsPage() {
   const totalUnread = conversations.reduce((acc, c) => acc + c.unreadCount, 0);
 
   return (
-    <div className="bg-[#0F0F0F] py-16 md:py-24">
+    <div className="bg-surface py-16 md:py-24">
       <div className="container-tl">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>

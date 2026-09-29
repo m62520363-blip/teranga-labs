@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function UpdatePasswordPage() {
   return (
-    <div className="bg-[#0F0F0F] py-16 md:py-24">
+    <div className="bg-surface py-16 md:py-24">
       <div className="container-tl">
         <div className="mx-auto w-full max-w-md">
           <h1 className="text-3xl font-semibold leading-tight tracking-tight">
@@ -18,7 +18,7 @@ export default function UpdatePasswordPage() {
             Choisissez un nouveau mot de passe pour votre compte.
           </p>
 
-          <div className="mt-8 rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 shadow-sm sm:p-8">
+          <div className="mt-8 rounded-2xl border border-hairline bg-[#141414] p-6 shadow-sm sm:p-8">
             <UpdatePasswordForm />
           </div>
         </div>

@@ -223,7 +223,7 @@ export function SettingsContent({
   const homeHref = isClient ? "/client" : "/dashboard";
 
   return (
-    <div className="bg-[#0F0F0F] py-16 md:py-24">
+    <div className="bg-surface py-16 md:py-24">
       <div className="container-tl">
         <div>
           <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
@@ -236,11 +236,11 @@ export function SettingsContent({
 
         <div className="mt-10 grid gap-6 lg:grid-cols-2">
           <section
-            className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 sm:p-8"
+            className="rounded-2xl border border-hairline bg-[#141414] p-6 sm:p-8"
             aria-label="Mon espace"
           >
             <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
-              <Settings className="size-4 text-[#E86A2C]" aria-hidden="true" />
+              <Settings className="size-4 text-primary" aria-hidden="true" />
               Ma navigation
             </h2>
             <ul className="mt-5 flex flex-col gap-2">
@@ -257,15 +257,15 @@ export function SettingsContent({
                     <Link
                       href={devPublicUrl}
                       target="_blank"
-                      className="inline-flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-[#F2F2F2] transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+                      className="inline-flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-[#F2F2F2] transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
                     >
-                      <Share2 className="size-4 text-[#E86A2C]" aria-hidden="true" />
+                      <Share2 className="size-4 text-primary" aria-hidden="true" />
                       Voir mon profil public
                     </Link>
                   ) : null}
                 </>
               ) : null}
-              <div className="my-2 h-px bg-[#2A2A2A]" />
+              <div className="my-2 h-px bg-hairline" />
               <li>
                 <SignOutButton />
               </li>
@@ -274,14 +274,14 @@ export function SettingsContent({
 
           <div className="flex flex-col gap-6">
             <section
-              className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 sm:p-8"
+              className="rounded-2xl border border-hairline bg-[#141414] p-6 sm:p-8"
               aria-label="Informations du compte"
             >
               <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
                 {isClient ? (
-                  <Store className="size-4 text-[#E86A2C]" aria-hidden="true" />
+                  <Store className="size-4 text-primary" aria-hidden="true" />
                 ) : (
-                  <Briefcase className="size-4 text-[#E86A2C]" aria-hidden="true" />
+                  <Briefcase className="size-4 text-primary" aria-hidden="true" />
                 )}
                 Mon compte
               </h2>
@@ -311,11 +311,11 @@ export function SettingsContent({
             </section>
 
             <section
-              className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 sm:p-8"
+              className="rounded-2xl border border-hairline bg-[#141414] p-6 sm:p-8"
               aria-label="Changer le mot de passe"
             >
               <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
-                <KeyRound className="size-4 text-[#E86A2C]" aria-hidden="true" />
+                <KeyRound className="size-4 text-primary" aria-hidden="true" />
                 Sécurité
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
@@ -381,11 +381,11 @@ export function SettingsContent({
             </section>
 
             <section
-              className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 sm:p-8"
+              className="rounded-2xl border border-hairline bg-[#141414] p-6 sm:p-8"
               aria-label="Changer l'adresse email"
             >
               <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
-                <Mail className="size-4 text-[#E86A2C]" aria-hidden="true" />
+                <Mail className="size-4 text-primary" aria-hidden="true" />
                 Email de connexion
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
@@ -435,14 +435,14 @@ export function SettingsContent({
             </section>
 
             <section
-              className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 sm:p-8"
+              className="rounded-2xl border border-hairline bg-[#141414] p-6 sm:p-8"
               aria-label="Préférences"
             >
               <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
-                <Moon className="size-4 text-[#E86A2C]" aria-hidden="true" />
+                <Moon className="size-4 text-primary" aria-hidden="true" />
                 Préférences
               </h2>
-              <div className="mt-4 flex items-center justify-between gap-4 rounded-xl border border-[#2A2A2A] bg-[#0F0F0F] p-4">
+              <div className="mt-4 flex items-center justify-between gap-4 rounded-xl border border-hairline bg-surface p-4">
                 <label htmlFor="reduce-motion" className="cursor-pointer text-sm">
                   <span className="block font-medium text-foreground">Réduire les animations</span>
                   <span className="block text-sm text-muted-foreground">
@@ -456,8 +456,8 @@ export function SettingsContent({
                   aria-checked={reduceMotion}
                   onClick={() => toggleReduceMotion(!reduceMotion)}
                   className={cn(
-                    "relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-[#E86A2C]/60",
-                    reduceMotion ? "bg-[#E86A2C]" : "bg-[#2A2A2A]"
+                    "relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-primary/60",
+                    reduceMotion ? "bg-primary" : "bg-hairline"
                   )}
                 >
                   <span
@@ -471,11 +471,11 @@ export function SettingsContent({
             </section>
 
             <section
-              className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 sm:p-8"
+              className="rounded-2xl border border-hairline bg-[#141414] p-6 sm:p-8"
               aria-label="Mes données"
             >
               <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
-                <Download className="size-4 text-[#E86A2C]" aria-hidden="true" />
+                <Download className="size-4 text-primary" aria-hidden="true" />
                 Mes données
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
@@ -502,11 +502,11 @@ export function SettingsContent({
             </section>
 
             <section
-              className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 sm:p-8"
+              className="rounded-2xl border border-hairline bg-[#141414] p-6 sm:p-8"
               aria-label="Aide et légal"
             >
               <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
-                <MessageCircle className="size-4 text-[#E86A2C]" aria-hidden="true" />
+                <MessageCircle className="size-4 text-primary" aria-hidden="true" />
                 Aide &amp; légal
               </h2>
               <div className="mt-4 grid gap-2 sm:grid-cols-2">
@@ -519,7 +519,7 @@ export function SettingsContent({
             </section>
 
             <section
-              className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 sm:p-8"
+              className="rounded-2xl border border-hairline bg-[#141414] p-6 sm:p-8"
               aria-label="Zone de danger"
             >
               <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight text-destructive">
@@ -589,12 +589,12 @@ function SideLink({
     <Link
       href={href}
       className={cn(
-        "inline-flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-[#F2F2F2] transition-colors outline-none hover:bg-muted [&>svg:first-child]:text-[#E86A2C]",
+        "inline-flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-[#F2F2F2] transition-colors outline-none hover:bg-muted [&>svg:first-child]:text-primary",
         !icon && "hover:underline underline-offset-4"
       )}
     >
       {icon ?? (
-        <span className="flex size-4 items-center justify-center text-[#E86A2C]">
+        <span className="flex size-4 items-center justify-center text-primary">
           <MessageCircle className="size-4" aria-hidden="true" />
         </span>
       )}
@@ -605,7 +605,7 @@ function SideLink({
 
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between gap-3 border-b border-[#2A2A2A] py-2 last:border-b-0">
+    <div className="flex items-center justify-between gap-3 border-b border-hairline py-2 last:border-b-0">
       <dt className="text-muted-foreground">{label}</dt>
       <dd className="truncate font-medium">{value}</dd>
     </div>

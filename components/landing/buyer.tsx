@@ -6,7 +6,7 @@ import { Section, SectionHeader } from "@/components/landing/section";
 
 export function BuyerSection() {
   return (
-    <Section className="border-y border-[#2A2A2A] bg-[#0F0F0F]" ariaLabel="Pour les clients">
+    <Section className="border-y border-hairline bg-surface" ariaLabel="Pour les clients">
       <div className="grid items-center gap-14 lg:grid-cols-2">
         <Reveal>
           <SectionHeader
@@ -22,7 +22,7 @@ export function BuyerSection() {
               <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
             <p className="flex items-center gap-2 text-sm text-muted-foreground">
-              <ShieldCheck className="size-4 text-[#E86A2C]" aria-hidden="true" />
+              <ShieldCheck className="size-4 text-primary" aria-hidden="true" />
               Sans abonnement, sans frais de publication
             </p>
           </div>
@@ -36,7 +36,7 @@ export function BuyerSection() {
               <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 {BUYER.form.questionLabel}
               </label>
-              <div className="mt-2 rounded-xl border border-[#2A2A2A] bg-[#141414] px-4 py-3 text-[15px] font-medium text-foreground">
+              <div className="mt-2 rounded-xl border border-hairline bg-[#141414] px-4 py-3 text-[15px] font-medium text-foreground">
                 {BUYER.form.questionValue}
               </div>
             </div>
@@ -45,7 +45,7 @@ export function BuyerSection() {
               <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 {BUYER.form.budgetLabel}
               </label>
-              <div className="mt-2 rounded-xl border border-[#2A2A2A] bg-[#141414] px-4 py-3 text-[15px] font-medium text-foreground">
+              <div className="mt-2 rounded-xl border border-hairline bg-[#141414] px-4 py-3 text-[15px] font-medium text-foreground">
                 {BUYER.form.budgetValue}
               </div>
             </div>
@@ -54,7 +54,7 @@ export function BuyerSection() {
               <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 {BUYER.form.cityLabel}
               </label>
-              <div className="mt-2 rounded-xl border border-[#2A2A2A] bg-[#141414] px-4 py-3 text-[15px] font-medium text-foreground">
+              <div className="mt-2 rounded-xl border border-hairline bg-[#141414] px-4 py-3 text-[15px] font-medium text-foreground">
                 {BUYER.form.cityValue}
               </div>
             </div>
@@ -63,7 +63,7 @@ export function BuyerSection() {
               <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 {BUYER.form.contactLabel}
               </label>
-              <div className="mt-2 flex items-center justify-between gap-2 rounded-xl border border-[#2A2A2A] bg-[#141414] px-4 py-3">
+              <div className="mt-2 flex items-center justify-between gap-2 rounded-xl border border-hairline bg-[#141414] px-4 py-3">
                 <span className="text-[15px] font-medium text-foreground">{BUYER.form.contactValue}</span>
                 <span className="badge badge-muted">1 Token</span>
               </div>

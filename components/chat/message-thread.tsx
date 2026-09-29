@@ -278,8 +278,8 @@ export function MessageThread({
   const awardedOffer = offers.find((o) => o.status === "accepted");
 
   return (
-    <div className="flex h-full min-h-[60vh] flex-col overflow-hidden rounded-2xl border border-[#2A2A2A] bg-[#141414]">
-      <div className="flex items-center justify-between gap-3 border-b border-[#2A2A2A] px-5 py-4">
+    <div className="flex h-full min-h-[60vh] flex-col overflow-hidden rounded-2xl border border-hairline bg-[#141414]">
+      <div className="flex items-center justify-between gap-3 border-b border-hairline px-5 py-4">
         <div className="min-w-0">
           <p className="truncate font-semibold tracking-tight">{otherName}</p>
           <p className="mt-0.5 text-xs text-muted-foreground">
@@ -323,7 +323,7 @@ export function MessageThread({
                 key={msg.id}
                 className="flex justify-center"
               >
-                <p className="max-w-sm rounded-full border border-[#2A2A2A] bg-[#1E1E1E] px-4 py-1.5 text-center text-xs text-muted-foreground">
+                <p className="max-w-sm rounded-full border border-hairline bg-[#1E1E1E] px-4 py-1.5 text-center text-xs text-muted-foreground">
                   {msg.content}
                 </p>
               </div>
@@ -336,8 +336,8 @@ export function MessageThread({
                 className={cn(
                   "max-w-[78%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed shadow-sm",
                   mine
-                    ? "rounded-br-sm bg-[#E86A2C] text-[#0D0D0D]"
-                    : "rounded-bl-sm border border-[#2A2A2A] bg-[#1E1E1E]"
+                    ? "rounded-br-sm bg-primary text-[#0D0D0D]"
+                    : "rounded-bl-sm border border-hairline bg-[#1E1E1E]"
                 )}
               >
                 <p className="whitespace-pre-wrap break-words">{msg.content}</p>
@@ -374,7 +374,7 @@ export function MessageThread({
         <div ref={bottomRef} aria-hidden="true" />
       </div>
 
-      <div className="border-t border-[#2A2A2A] px-5 py-4">
+      <div className="border-t border-hairline px-5 py-4">
         {locked ? (
           <p className="text-center text-sm text-muted-foreground">
             {requestStatus === "attribué"
@@ -387,7 +387,7 @@ export function MessageThread({
               <Button
                 variant="secondary"
                 size="sm"
-                className="self-start border-[#E86A2C]/30 bg-[#2A1A10] text-[#E86A2C] hover:bg-[#FBE3D2]"
+                className="self-start border-primary/30 bg-[#2A1A10] text-primary hover:bg-[#FBE3D2]"
                 onClick={() => setOfferOpen(true)}
               >
                 <Sparkles className="size-3.5" aria-hidden="true" />
@@ -401,9 +401,9 @@ export function MessageThread({
                   key={t}
                   type="button"
                   onClick={() => setDraft(t)}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-[#2A2A2A] bg-[#0F0F0F] px-2.5 py-1.5 text-xs text-muted-foreground transition-colors outline-none hover:border-[#E86A2C]/40 hover:text-[#F2F2F2] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-hairline bg-surface px-2.5 py-1.5 text-xs text-muted-foreground transition-colors outline-none hover:border-primary/40 hover:text-[#F2F2F2] focus-visible:ring-2 focus-visible:ring-primary/50"
                 >
-                  <Zap className="size-3 text-[#E86A2C]" aria-hidden="true" />
+                  <Zap className="size-3 text-primary" aria-hidden="true" />
                   <span className="line-clamp-1">{t}</span>
                 </button>
               ))}
@@ -544,13 +544,13 @@ function OfferCard({
         offer.status === "accepted"
           ? "border-[#3DD68C]/40 bg-[#122A1C]"
           : offer.status === "rejected"
-            ? "border-[#2A2A2A] bg-[#1E1E1E] opacity-70"
-            : "border-[#E86A2C]/30 bg-[#1E1E1E]"
+            ? "border-hairline bg-[#1E1E1E] opacity-70"
+            : "border-primary/30 bg-[#1E1E1E]"
       )}
     >
       <div className="flex flex-wrap items-center justify-between gap-2">
         <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          <Sparkles className={cn("size-3.5", offer.status === "pending" && "text-[#E86A2C]")} aria-hidden="true" />
+          <Sparkles className={cn("size-3.5", offer.status === "pending" && "text-primary")} aria-hidden="true" />
           Devis formel {mine ? "· vous" : isClient ? "· développeur" : ""}
         </span>
         {offer.status === "pending" ? (

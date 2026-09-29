@@ -6,7 +6,7 @@ import { cn } from "cn";
 
 export function TrustSection() {
   return (
-    <Section className="border-y border-[#2A2A2A] bg-[#0F0F0F]" ariaLabel="Confiance">
+    <Section className="border-y border-hairline bg-surface" ariaLabel="Confiance">
       <SectionHeader
         eyebrow="Confiance"
         title="Un nouveau marché, construit avec confiance."
@@ -19,7 +19,7 @@ export function TrustSection() {
             <div className="card card-interactive h-full p-7">
               <div className="flex items-start justify-between gap-3">
                 <span className="flex size-10 items-center justify-center rounded-xl bg-[#2A1A10]">
-                  <ShieldCheck className="size-5 text-[#E86A2C]" aria-hidden="true" />
+                  <ShieldCheck className="size-5 text-primary" aria-hidden="true" />
                 </span>
                 <span
                   className={cn(

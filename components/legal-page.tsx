@@ -13,7 +13,7 @@ export function LegalPage({
   sections: { heading: string; body: ReactNode }[];
 }) {
   return (
-    <div className="bg-[#0F0F0F] py-16 md:py-24">
+    <div className="bg-surface py-16 md:py-24">
       <div className="container-tl">
         <div className="mx-auto max-w-2xl">
           <h1 className="text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
@@ -35,7 +35,7 @@ export function LegalPage({
                     index === 0 ? "text-2xl" : "text-xl"
                   )}
                 >
-                  <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#2A1A10] text-xs font-bold text-[#E86A2C]">
+                  <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#2A1A10] text-xs font-bold text-primary">
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   {section.heading}

@@ -13,7 +13,7 @@ export function BenefitsSection() {
         {BENEFITS.cards.map((card, index) => (
           <Reveal key={card.title} delay={(index % 4) as 0 | 1 | 2 | 3}>
             <div className="card card-interactive h-full p-7">
-              <p className="font-display text-sm font-bold tracking-[0.2em] text-[#E86A2C]">
+              <p className="font-display text-sm font-bold tracking-[0.2em] text-primary">
                 0{index + 1}
               </p>
               <h3 className="mt-4 text-lg font-semibold tracking-tight">{card.title}</h3>

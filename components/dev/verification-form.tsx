@@ -222,7 +222,7 @@ export function VerificationForm({
         </div>
         <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
           Vous avez payé par un autre moyen ?{" "}
-          <Link href="/contact" className="font-medium text-[#E86A2C] underline-offset-4 hover:underline">
+          <Link href="/contact" className="font-medium text-primary underline-offset-4 hover:underline">
             Contactez notre équipe
           </Link>{" "}
           en joignant votre reçu : la confirmation manuelle prend généralement moins d’une journée.
@@ -273,9 +273,9 @@ export function VerificationForm({
         </p>
       ) : null}
 
-      <div className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 shadow-sm sm:p-8">
+      <div className="rounded-2xl border border-hairline bg-[#141414] p-6 shadow-sm sm:p-8">
         <div className="flex items-center gap-2">
-          <ShieldCheck className="size-5 text-[#E86A2C]" aria-hidden="true" />
+          <ShieldCheck className="size-5 text-primary" aria-hidden="true" />
           <h2 className="text-lg font-semibold tracking-tight">Vérification de votre profil</h2>
         </div>
         <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
@@ -284,7 +284,7 @@ export function VerificationForm({
           après confirmation du paiement.
         </p>
 
-        <div className="mt-6 flex items-end justify-between gap-4 rounded-2xl border border-[#2A2A2A] bg-[#0F0F0F] p-5">
+        <div className="mt-6 flex items-end justify-between gap-4 rounded-2xl border border-hairline bg-surface p-5">
           <div>
             <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
               Tarif unique de vérification
@@ -311,17 +311,17 @@ export function VerificationForm({
                   aria-checked={active}
                   onClick={() => setMethod(m)}
                   className={cn(
-                    "flex items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-left text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50",
+                    "flex items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-left text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
                     active
-                      ? "border-[#E86A2C]/60 bg-[#2A1A10] text-foreground"
-                      : "border-[#2A2A2A] bg-[#0F0F0F] text-muted-foreground hover:bg-[#1E1E1E]"
+                      ? "border-primary/60 bg-[#2A1A10] text-foreground"
+                      : "border-hairline bg-surface text-muted-foreground hover:bg-[#1E1E1E]"
                   )}
                 >
                   <span className="inline-flex items-center gap-2.5">
-                    <Smartphone className="size-4 text-[#E86A2C]" aria-hidden="true" />
+                    <Smartphone className="size-4 text-primary" aria-hidden="true" />
                     {METHOD_LABELS[m]}
                   </span>
-                  {active ? <CheckCircle2 className="size-4 text-[#E86A2C]" aria-hidden="true" /> : null}
+                  {active ? <CheckCircle2 className="size-4 text-primary" aria-hidden="true" /> : null}
                 </button>
               );
             })}
@@ -383,18 +383,18 @@ export function VerificationForm({
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
-        <div className="flex items-start gap-3 rounded-2xl border border-[#2A2A2A] bg-[#141414] p-5">
+        <div className="flex items-start gap-3 rounded-2xl border border-hairline bg-[#141414] p-5">
           <span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#2A1A10]">
-            <BadgeCheck className="size-4 text-[#E86A2C]" aria-hidden="true" />
+            <BadgeCheck className="size-4 text-primary" aria-hidden="true" />
           </span>
           <p className="text-sm leading-relaxed text-muted-foreground">
             <span className="font-medium text-foreground">Badge Vérifié.</span> Affiché sur
             votre fiche publique et dans vos candidatures.
           </p>
         </div>
-        <div className="flex items-start gap-3 rounded-2xl border border-[#2A2A2A] bg-[#141414] p-5">
+        <div className="flex items-start gap-3 rounded-2xl border border-hairline bg-[#141414] p-5">
           <span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#2A1A10]">
-            <ShieldCheck className="size-4 text-[#E86A2C]" aria-hidden="true" />
+            <ShieldCheck className="size-4 text-primary" aria-hidden="true" />
           </span>
           <p className="text-sm leading-relaxed text-muted-foreground">
             <span className="font-medium text-foreground">Revue humaine.</span> Vérification
@@ -423,7 +423,7 @@ function Panel({
           ? "border-[#166534]/60 bg-[#0F2E18]"
           : tone === "error"
             ? "border-[var(--error)]/40 bg-[#1A0F0F]"
-            : "border-[#2A2A2A] bg-[#141414]"
+            : "border-hairline bg-[#141414]"
       )}
     >
       <span

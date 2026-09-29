@@ -16,7 +16,7 @@ export function TestimonialsSection() {
           <Reveal key={t.name} delay={(index % 3) as 0 | 1 | 2}>
             <figure className="card card-interactive h-full p-7">
               <div className="flex items-center justify-between">
-                <span className="flex size-11 items-center justify-center rounded-full bg-[#2A1A10] text-sm font-bold text-[#E86A2C]">
+                <span className="flex size-11 items-center justify-center rounded-full bg-[#2A1A10] text-sm font-bold text-primary">
                   {t.initials}
                 </span>
                 <span className="badge badge-muted">Exemple</span>
@@ -24,7 +24,7 @@ export function TestimonialsSection() {
               <blockquote className="mt-5 flex-1 text-[15px] leading-relaxed">
                 {t.quote}
               </blockquote>
-              <figcaption className="mt-6 border-t border-[#2A2A2A] pt-4">
+              <figcaption className="mt-6 border-t border-hairline pt-4">
                 <p className="text-sm font-semibold tracking-tight">{t.name}</p>
                 <p className="mt-0.5 text-xs text-muted-foreground">{t.activity}</p>
               </figcaption>

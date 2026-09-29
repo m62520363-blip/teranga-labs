@@ -18,7 +18,7 @@ export default async function DirectoryPageRoute() {
   const supabase = await createClient();
   if (!supabase) {
     return (
-      <div className="bg-[#0F0F0F] py-16">
+      <div className="bg-surface py-16">
         <div className="container-tl mx-auto max-w-md text-center">
           <h1 className="text-2xl font-semibold">Configuration requise</h1>
           <p className="mt-3 text-sm text-muted-foreground">
@@ -48,17 +48,17 @@ export default async function DirectoryPageRoute() {
   const filters = (filtersRes.data ?? {}) as Partial<DirectoryFilters>;
 
   return (
-    <div className="bg-[#0F0F0F] py-10 md:py-14">
+    <div className="bg-surface py-10 md:py-14">
       <div className="container-tl">
         <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div className="max-w-2xl">
-            <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-[#E86A2C]/30 bg-[#2A1A10] px-3 py-1 text-xs font-semibold text-[#E86A2C]">
+            <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-[#2A1A10] px-3 py-1 text-xs font-semibold text-primary">
               <UsersRound className="size-3.5" aria-hidden="true" />
               Annuaire des développeurs
             </p>
             <h1 className="text-3xl font-semibold leading-tight tracking-tight md:text-4xl">
               Trouvez le développeur
-              <span className="text-[#E86A2C]"> qu’il vous faut</span>
+              <span className="text-primary"> qu’il vous faut</span>
             </h1>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground md:text-base">
               Des profils vérifiés avec leurs réalisations, leur disponibilité et leurs
@@ -69,11 +69,11 @@ export default async function DirectoryPageRoute() {
 
           <div className="flex flex-col gap-2 text-xs text-muted-foreground">
             <p className="inline-flex items-center gap-2">
-              <ShieldCheck className="size-3.5 text-[#E86A2C]" aria-hidden="true" />
+              <ShieldCheck className="size-3.5 text-primary" aria-hidden="true" />
               Coordonnées masquées jusqu’au contact.
             </p>
             <p className="inline-flex items-center gap-2">
-              <Sparkles className="size-3.5 text-[#E86A2C]" aria-hidden="true" />
+              <Sparkles className="size-3.5 text-primary" aria-hidden="true" />
               1 contact = 1 conversation, sans engagement.
             </p>
           </div>

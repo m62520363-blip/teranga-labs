@@ -195,8 +195,8 @@ function Stepper({ step }: { step: 1 | 2 }) {
               className={cn(
                 "flex size-8 items-center justify-center rounded-full border text-sm font-semibold transition-colors",
                 step >= s.n
-                  ? "border-[#E86A2C] bg-[#E86A2C] text-[#0D0D0D]"
-                  : "border-[#2A2A2A] bg-[#141414] text-muted-foreground"
+                  ? "border-primary bg-primary text-[#0D0D0D]"
+                  : "border-hairline bg-[#141414] text-muted-foreground"
               )}
               aria-current={step === s.n ? "step" : undefined}
             >
@@ -219,7 +219,7 @@ function Stepper({ step }: { step: 1 | 2 }) {
             <span
               className={cn(
                 "h-px flex-1",
-                step > s.n ? "bg-[#E86A2C]" : "bg-[#2A2A2A]"
+                step > s.n ? "bg-primary" : "bg-hairline"
               )}
               aria-hidden="true"
             />
@@ -335,7 +335,7 @@ function IdentityStep({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 shadow-sm sm:p-8"
+      className="rounded-2xl border border-hairline bg-[#141414] p-6 shadow-sm sm:p-8"
       noValidate
     >
       <div className="flex items-start justify-between gap-4">
@@ -345,7 +345,7 @@ function IdentityStep({
             Ces informations restent privées ; seul votre pseudo apparaît sur votre fiche publique.
           </p>
         </div>
-        <span className="chip shrink-0 gap-1.5 border-[#2A2A2A] bg-[#0F0F0F]">
+        <span className="chip shrink-0 gap-1.5 border-hairline bg-surface">
           <Mail className="size-3.5 text-muted-foreground" aria-hidden="true" />
           {email}
         </span>
@@ -362,7 +362,7 @@ function IdentityStep({
               id="oi-first"
               autoComplete="given-name"
               {...register("first_name")}
-              className="h-11 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 pl-10"
+              className="h-11 rounded-xl border-hairline bg-[#0A0A0A]/70 pl-10"
               placeholder="Awa"
               aria-invalid={Boolean(errors.first_name)}
             />
@@ -379,7 +379,7 @@ function IdentityStep({
               id="oi-last"
               autoComplete="family-name"
               {...register("last_name")}
-              className="h-11 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 pl-10"
+              className="h-11 rounded-xl border-hairline bg-[#0A0A0A]/70 pl-10"
               placeholder="Diop"
               aria-invalid={Boolean(errors.last_name)}
             />
@@ -401,7 +401,7 @@ function IdentityStep({
               autoComplete="off"
               spellCheck={false}
               {...register("username")}
-              className="h-11 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 pl-3"
+              className="h-11 rounded-xl border-hairline bg-[#0A0A0A]/70 pl-3"
               placeholder="awa-diop"
               aria-invalid={Boolean(errors.username)}
             />
@@ -410,7 +410,7 @@ function IdentityStep({
             type="button"
             onClick={availableSoon}
             disabled={checkingUsername}
-            className="text-xs font-medium text-[#E86A2C] underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+            className="text-xs font-medium text-primary underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-primary/50"
           >
             {checkingUsername ? "Vérification…" : "Vérifier la disponibilité"}
           </button>
@@ -427,7 +427,7 @@ function IdentityStep({
               type="tel"
               autoComplete="tel"
               {...register("phone")}
-              className="h-11 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 pl-10"
+              className="h-11 rounded-xl border-hairline bg-[#0A0A0A]/70 pl-10"
               placeholder="+221 77 123 45 67"
               aria-invalid={Boolean(errors.phone)}
             />
@@ -445,7 +445,7 @@ function IdentityStep({
               type="tel"
               autoComplete="tel"
               {...register("whatsapp")}
-              className="h-11 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 pl-10"
+              className="h-11 rounded-xl border-hairline bg-[#0A0A0A]/70 pl-10"
               placeholder="+221 77 123 45 67"
               aria-invalid={Boolean(errors.whatsapp)}
             />
@@ -466,7 +466,7 @@ function IdentityStep({
             >
               <SelectTrigger
                 id="oi-city"
-                className="h-11 w-full rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 pl-10 data-[size=default]:h-11"
+                className="h-11 w-full rounded-xl border-hairline bg-[#0A0A0A]/70 pl-10 data-[size=default]:h-11"
               >
                 <SelectValue />
               </SelectTrigger>
@@ -491,7 +491,7 @@ function IdentityStep({
               id="oi-address"
               autoComplete="street-address"
               {...register("address")}
-              className="h-11 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 pl-10"
+              className="h-11 rounded-xl border-hairline bg-[#0A0A0A]/70 pl-10"
               placeholder="Scat Urbam, Parcelles Assainies…(optionnel)"
               aria-invalid={Boolean(errors.address)}
             />
@@ -508,7 +508,7 @@ function IdentityStep({
               id="oi-country"
               autoComplete="country-name"
               {...register("country")}
-              className="h-11 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 pl-10"
+              className="h-11 rounded-xl border-hairline bg-[#0A0A0A]/70 pl-10"
               placeholder="Sénégal"
               aria-invalid={Boolean(errors.country)}
             />
@@ -524,7 +524,7 @@ function IdentityStep({
       ) : null}
 
       <div className="mt-7 flex items-center justify-between gap-3">
-        <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50">
+        <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50">
           <ArrowLeft className="size-4" aria-hidden="true" />
           Plus tard
         </Link>
@@ -723,7 +723,7 @@ function ProfessionalStep({
       noValidate
     >
       {/* Socle professionnel */}
-      <section className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 shadow-sm sm:p-8">
+      <section className="rounded-2xl border border-hairline bg-[#141414] p-6 shadow-sm sm:p-8">
         <h2 className="text-lg font-semibold tracking-tight">Votre profil professionnel</h2>
         <p className="mt-1 text-sm text-muted-foreground">
           Ce que les clients voient lorsqu’ils reçoivent vos candidatures.
@@ -735,7 +735,7 @@ function ProfessionalStep({
               <Input
                 id="oi-title"
                 {...register("professional_title")}
-                className="h-11 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70"
+                className="h-11 rounded-xl border-hairline bg-[#0A0A0A]/70"
                 placeholder="Développeur full-stack, spécialiste Next.js"
                 aria-invalid={Boolean(errors.professional_title)}
               />
@@ -748,7 +748,7 @@ function ProfessionalStep({
                 id="oi-specialty"
                 list="oi-specialty-suggestions"
                 {...register("main_specialty")}
-                className="h-11 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70"
+                className="h-11 rounded-xl border-hairline bg-[#0A0A0A]/70"
                 placeholder="Développeur web"
                 aria-invalid={Boolean(errors.main_specialty)}
               />
@@ -769,7 +769,7 @@ function ProfessionalStep({
             >
               <SelectTrigger
                 id="oi-experience"
-                className="h-11 w-full rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 data-[size=default]:h-11"
+                className="h-11 w-full rounded-xl border-hairline bg-[#0A0A0A]/70 data-[size=default]:h-11"
               >
                 <SelectValue />
               </SelectTrigger>
@@ -790,7 +790,7 @@ function ProfessionalStep({
               min={0}
               step={1}
               {...register("experience_years")}
-              className="h-11 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70"
+              className="h-11 rounded-xl border-hairline bg-[#0A0A0A]/70"
               aria-invalid={Boolean(errors.experience_years)}
             />
           </Field>
@@ -802,7 +802,7 @@ function ProfessionalStep({
               min={0}
               step={1}
               {...register("projects_estimate")}
-              className="h-11 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70"
+              className="h-11 rounded-xl border-hairline bg-[#0A0A0A]/70"
               aria-invalid={Boolean(errors.projects_estimate)}
             />
           </Field>
@@ -816,7 +816,7 @@ function ProfessionalStep({
             >
               <SelectTrigger
                 id="oi-availability"
-                className="h-11 w-full rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 data-[size=default]:h-11"
+                className="h-11 w-full rounded-xl border-hairline bg-[#0A0A0A]/70 data-[size=default]:h-11"
               >
                 <SelectValue />
               </SelectTrigger>
@@ -837,7 +837,7 @@ function ProfessionalStep({
               min={0}
               step={1000}
               {...register("rate_min_fcfa")}
-              className="h-11 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70"
+              className="h-11 rounded-xl border-hairline bg-[#0A0A0A]/70"
               placeholder="100000"
               aria-invalid={Boolean(errors.rate_min_fcfa)}
             />
@@ -850,7 +850,7 @@ function ProfessionalStep({
               min={0}
               step={1000}
               {...register("rate_max_fcfa")}
-              className="h-11 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70"
+              className="h-11 rounded-xl border-hairline bg-[#0A0A0A]/70"
               placeholder="350000"
               aria-invalid={Boolean(errors.rate_max_fcfa)}
             />
@@ -862,7 +862,7 @@ function ProfessionalStep({
                 id="oi-bio"
                 rows={5}
                 {...register("bio")}
-                className="rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 p-3 text-sm"
+                className="rounded-xl border-hairline bg-[#0A0A0A]/70 p-3 text-sm"
                 placeholder="Parlez de votre parcours, vos technologies de prédilection, votre façon de travailler…"
                 aria-invalid={Boolean(errors.bio)}
               />
@@ -875,7 +875,7 @@ function ProfessionalStep({
                 id="oi-avatar"
                 type="url"
                 {...register("avatar_url")}
-                className="h-11 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70"
+                className="h-11 rounded-xl border-hairline bg-[#0A0A0A]/70"
                 placeholder="https://…/ma-photo.jpg (optionnel)"
                 aria-invalid={Boolean(errors.avatar_url)}
               />
@@ -892,9 +892,9 @@ function ProfessionalStep({
       </section>
 
       {/* Services */}
-      <section className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 shadow-sm sm:p-8">
+      <section className="rounded-2xl border border-hairline bg-[#141414] p-6 shadow-sm sm:p-8">
         <div className="flex items-center gap-2">
-          <Briefcase className="size-5 text-[#E86A2C]" aria-hidden="true" />
+          <Briefcase className="size-5 text-primary" aria-hidden="true" />
           <h2 className="text-lg font-semibold tracking-tight">Services proposés</h2>
         </div>
         <p className="mt-1 text-sm text-muted-foreground">
@@ -910,10 +910,10 @@ function ProfessionalStep({
                 aria-pressed={active}
                 onClick={() => toggleService(s)}
                 className={cn(
-                  "inline-flex items-center gap-1.5 rounded-full border px-3.5 py-2 text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50",
+                  "inline-flex items-center gap-1.5 rounded-full border px-3.5 py-2 text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
                   active
-                    ? "border-[#E86A2C]/60 bg-[#2A1A10] text-[#F2A378]"
-                    : "border-[#2A2A2A] bg-[#0F0F0F] text-muted-foreground hover:bg-[#1E1E1E]"
+                    ? "border-primary/60 bg-[#2A1A10] text-[#F2A378]"
+                    : "border-hairline bg-surface text-muted-foreground hover:bg-[#1E1E1E]"
                 )}
               >
                 {active ? <Check className="size-3.5" aria-hidden="true" /> : null}
@@ -930,7 +930,7 @@ function ProfessionalStep({
       </section>
 
       {/* Compétences */}
-      <section className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 shadow-sm sm:p-8">
+      <section className="rounded-2xl border border-hairline bg-[#141414] p-6 shadow-sm sm:p-8">
         <h2 className="text-lg font-semibold tracking-tight">Compétences techniques</h2>
         <p className="mt-1 text-sm text-muted-foreground">
           Technologies et outils maîtrisés, séparés par des virgules.
@@ -946,14 +946,14 @@ function ProfessionalStep({
                   addSkill();
                 }
               }}
-              className="h-11 flex-1 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70"
+              className="h-11 flex-1 rounded-xl border-hairline bg-[#0A0A0A]/70"
               placeholder="Next.js, React, PostgreSQL, Figma…"
               aria-label="Ajouter une compétence"
             />
             <button
               type="button"
               onClick={addSkill}
-              className="inline-flex h-11 shrink-0 items-center gap-1.5 rounded-xl border border-[#2A2A2A] bg-[#0F0F0F] px-4 text-sm font-medium text-muted-foreground transition-colors outline-none hover:bg-[#1E1E1E] hover:text-foreground focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+              className="inline-flex h-11 shrink-0 items-center gap-1.5 rounded-xl border border-hairline bg-surface px-4 text-sm font-medium text-muted-foreground transition-colors outline-none hover:bg-[#1E1E1E] hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
             >
               <Plus className="size-4" aria-hidden="true" />
               Ajouter
@@ -964,13 +964,13 @@ function ProfessionalStep({
               {skills.map((skill) => (
                 <span
                   key={skill}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-[#E86A2C]/40 bg-[#2A1A10] px-3 py-1.5 text-sm text-[#F2A378]"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-[#2A1A10] px-3 py-1.5 text-sm text-[#F2A378]"
                 >
                   {skill}
                   <button
                     type="button"
                     onClick={() => removeSkill(skill)}
-                    className="text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+                    className="text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
                     aria-label={`Retirer ${skill}`}
                   >
                     <X className="size-3.5" aria-hidden="true" />
@@ -988,7 +988,7 @@ function ProfessionalStep({
       </section>
 
       {/* Portfolio */}
-      <section className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 shadow-sm sm:p-8">
+      <section className="rounded-2xl border border-hairline bg-[#141414] p-6 shadow-sm sm:p-8">
         <div className="flex items-center justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold tracking-tight">Portfolio</h2>
@@ -1007,7 +1007,7 @@ function ProfessionalStep({
           {projectFields.map((field, i) => (
             <div
               key={field.id}
-              className="rounded-2xl border border-[#2A2A2A] bg-[#0F0F0F] p-5"
+              className="rounded-2xl border border-hairline bg-surface p-5"
             >
               <div className="flex items-start justify-between gap-3">
                 <p className="text-sm font-semibold text-muted-foreground">
@@ -1016,7 +1016,7 @@ function ProfessionalStep({
                 <button
                   type="button"
                   onClick={() => projectArray.remove(i)}
-                  className="inline-flex h-8 items-center gap-1 rounded-lg px-2 text-xs text-muted-foreground transition-colors outline-none hover:text-[var(--error)] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+                  className="inline-flex h-8 items-center gap-1 rounded-lg px-2 text-xs text-muted-foreground transition-colors outline-none hover:text-[var(--error)] focus-visible:ring-2 focus-visible:ring-primary/50"
                   aria-label={`Supprimer le projet ${i + 1}`}
                 >
                   <Trash2 className="size-3.5" aria-hidden="true" />
@@ -1028,7 +1028,7 @@ function ProfessionalStep({
                   <Input
                     id={`prj-name-${i}`}
                     {...register(`projects.${i}.name`)}
-                    className="h-10 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70"
+                    className="h-10 rounded-xl border-hairline bg-[#0A0A0A]/70"
                     placeholder="Boutique de prêt-à-porter"
                     aria-invalid={Boolean(errors.projects?.[i]?.name)}
                   />
@@ -1043,7 +1043,7 @@ function ProfessionalStep({
                   >
                     <SelectTrigger
                       id={`prj-type-${i}`}
-                      className="h-10 w-full rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 data-[size=default]:h-10"
+                      className="h-10 w-full rounded-xl border-hairline bg-[#0A0A0A]/70 data-[size=default]:h-10"
                     >
                       <SelectValue placeholder="Choisir…" />
                     </SelectTrigger>
@@ -1062,7 +1062,7 @@ function ProfessionalStep({
                       id={`prj-desc-${i}`}
                       rows={3}
                       {...register(`projects.${i}.description`)}
-                      className="rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 p-3 text-sm"
+                      className="rounded-xl border-hairline bg-[#0A0A0A]/70 p-3 text-sm"
                       placeholder="Ce que le projet accomplissait, vos apports…"
                     />
                   </Field>
@@ -1091,7 +1091,7 @@ function ProfessionalStep({
                       id={`prj-url-${i}`}
                       type="url"
                       {...register(`projects.${i}.url`)}
-                      className="h-10 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70"
+                      className="h-10 rounded-xl border-hairline bg-[#0A0A0A]/70"
                       placeholder="https://… (optionnel)"
                       aria-invalid={Boolean(errors.projects?.[i]?.url)}
                     />
@@ -1114,7 +1114,7 @@ function ProfessionalStep({
               screenshots: [],
             })
           }
-          className="mt-4 inline-flex h-10 items-center gap-2 rounded-xl border border-[#2A2A2A] bg-[#0F0F0F] px-4 text-sm font-medium text-muted-foreground transition-colors outline-none hover:bg-[#1E1E1E] hover:text-foreground focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+          className="mt-4 inline-flex h-10 items-center gap-2 rounded-xl border border-hairline bg-surface px-4 text-sm font-medium text-muted-foreground transition-colors outline-none hover:bg-[#1E1E1E] hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
         >
           <Plus className="size-4" aria-hidden="true" />
           Ajouter un projet
@@ -1122,9 +1122,9 @@ function ProfessionalStep({
       </section>
 
       {/* Documents */}
-      <section className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 shadow-sm sm:p-8">
+      <section className="rounded-2xl border border-hairline bg-[#141414] p-6 shadow-sm sm:p-8">
         <div className="flex items-center gap-2">
-          <FileText className="size-5 text-[#E86A2C]" aria-hidden="true" />
+          <FileText className="size-5 text-primary" aria-hidden="true" />
           <div>
             <h2 className="text-lg font-semibold tracking-tight">Documents</h2>
             <p className="mt-1 text-sm text-muted-foreground">
@@ -1148,7 +1148,7 @@ function ProfessionalStep({
                     )
                   }
                 >
-                  <SelectTrigger className="h-10 w-full rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 data-[size=default]:h-10">
+                  <SelectTrigger className="h-10 w-full rounded-xl border-hairline bg-[#0A0A0A]/70 data-[size=default]:h-10">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent align="start">
@@ -1163,7 +1163,7 @@ function ProfessionalStep({
               <Field label="Nom" error={undefined}>
                 <Input
                   {...register(`documents.${i}.name`)}
-                  className="h-10 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70"
+                  className="h-10 rounded-xl border-hairline bg-[#0A0A0A]/70"
                   placeholder="CV Awa Diop"
                 />
               </Field>
@@ -1171,7 +1171,7 @@ function ProfessionalStep({
                 <Input
                   type="url"
                   {...register(`documents.${i}.url`)}
-                  className="h-10 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70"
+                  className="h-10 rounded-xl border-hairline bg-[#0A0A0A]/70"
                   placeholder="https://drive.google.com/…"
                   aria-invalid={Boolean(errors.documents?.[i]?.url)}
                 />
@@ -1179,7 +1179,7 @@ function ProfessionalStep({
               <button
                 type="button"
                 onClick={() => documentArray.remove(i)}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#2A2A2A] bg-[#0F0F0F] text-muted-foreground transition-colors outline-none hover:text-[var(--error)] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-hairline bg-surface text-muted-foreground transition-colors outline-none hover:text-[var(--error)] focus-visible:ring-2 focus-visible:ring-primary/50"
                 aria-label="Supprimer le document"
               >
                 <Trash2 className="size-4" aria-hidden="true" />
@@ -1191,7 +1191,7 @@ function ProfessionalStep({
         <button
           type="button"
           onClick={() => documentArray.append({ kind: "cv", name: "", url: "" })}
-          className="mt-4 inline-flex h-10 items-center gap-2 rounded-xl border border-[#2A2A2A] bg-[#0F0F0F] px-4 text-sm font-medium text-muted-foreground transition-colors outline-none hover:bg-[#1E1E1E] hover:text-foreground focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+          className="mt-4 inline-flex h-10 items-center gap-2 rounded-xl border border-hairline bg-surface px-4 text-sm font-medium text-muted-foreground transition-colors outline-none hover:bg-[#1E1E1E] hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
         >
           <Plus className="size-4" aria-hidden="true" />
           Ajouter un document
@@ -1199,7 +1199,7 @@ function ProfessionalStep({
       </section>
 
       {/* Liens */}
-      <section className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 shadow-sm sm:p-8">
+      <section className="rounded-2xl border border-hairline bg-[#141414] p-6 shadow-sm sm:p-8">
         <h2 className="text-lg font-semibold tracking-tight">Liens professionnels</h2>
         <p className="mt-1 text-sm text-muted-foreground">
           GitHub, LinkedIn, portfolio ou autre présence en ligne.
@@ -1220,7 +1220,7 @@ function ProfessionalStep({
                     )
                   }
                 >
-                  <SelectTrigger className="h-10 w-full rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70 data-[size=default]:h-10">
+                  <SelectTrigger className="h-10 w-full rounded-xl border-hairline bg-[#0A0A0A]/70 data-[size=default]:h-10">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent align="start">
@@ -1235,7 +1235,7 @@ function ProfessionalStep({
               <Field label="Libellé" error={undefined}>
                 <Input
                   {...register(`links.${i}.label`)}
-                  className="h-10 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70"
+                  className="h-10 rounded-xl border-hairline bg-[#0A0A0A]/70"
                   placeholder="Mon GitHub"
                 />
               </Field>
@@ -1243,7 +1243,7 @@ function ProfessionalStep({
                 <Input
                   type="url"
                   {...register(`links.${i}.url`)}
-                  className="h-10 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70"
+                  className="h-10 rounded-xl border-hairline bg-[#0A0A0A]/70"
                   placeholder="https://github.com/…"
                   aria-invalid={Boolean(errors.links?.[i]?.url)}
                 />
@@ -1251,7 +1251,7 @@ function ProfessionalStep({
               <button
                 type="button"
                 onClick={() => linkArray.remove(i)}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#2A2A2A] bg-[#0F0F0F] text-muted-foreground transition-colors outline-none hover:text-[var(--error)] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-hairline bg-surface text-muted-foreground transition-colors outline-none hover:text-[var(--error)] focus-visible:ring-2 focus-visible:ring-primary/50"
                 aria-label="Supprimer le lien"
               >
                 <Trash2 className="size-4" aria-hidden="true" />
@@ -1263,7 +1263,7 @@ function ProfessionalStep({
         <button
           type="button"
           onClick={() => linkArray.append({ kind: "github", label: "", url: "" })}
-          className="mt-4 inline-flex h-10 items-center gap-2 rounded-xl border border-[#2A2A2A] bg-[#0F0F0F] px-4 text-sm font-medium text-muted-foreground transition-colors outline-none hover:bg-[#1E1E1E] hover:text-foreground focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+          className="mt-4 inline-flex h-10 items-center gap-2 rounded-xl border border-hairline bg-surface px-4 text-sm font-medium text-muted-foreground transition-colors outline-none hover:bg-[#1E1E1E] hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
         >
           <Plus className="size-4" aria-hidden="true" />
           Ajouter un lien
@@ -1271,17 +1271,17 @@ function ProfessionalStep({
       </section>
 
       {/* Accord */}
-      <section className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 shadow-sm sm:p-8">
+      <section className="rounded-2xl border border-hairline bg-[#141414] p-6 shadow-sm sm:p-8">
         <label className="flex cursor-pointer items-start gap-3">
           <input
             type="checkbox"
             checked={Boolean(watch("terms_accepted"))}
             onChange={(e) => setValue("terms_accepted", e.target.checked as unknown as true, { shouldValidate: true })}
-            className="mt-0.5 size-4 shrink-0 accent-[#E86A2C]"
+            className="mt-0.5 size-4 shrink-0 accent-primary"
           />
           <span className="text-sm leading-relaxed text-muted-foreground">
             Je certifie l’exactitude des informations fournies et j’accepte les{" "}
-            <Link href="/conditions-utilisation" className="font-medium text-[#E86A2C] underline-offset-4 hover:underline">
+            <Link href="/conditions-utilisation" className="font-medium text-primary underline-offset-4 hover:underline">
               conditions d’utilisation
             </Link>{" "}
             de TERANGA LABS. Mon dossier sera examiné par notre équipe avant activation.
@@ -1305,7 +1305,7 @@ function ProfessionalStep({
         <button
           type="button"
           onClick={onBack}
-          className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-[#2A2A2A] bg-[#0F0F0F] px-5 py-2.5 text-sm font-medium text-muted-foreground transition-colors outline-none hover:bg-[#1E1E1E] hover:text-foreground focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+          className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-hairline bg-surface px-5 py-2.5 text-sm font-medium text-muted-foreground transition-colors outline-none hover:bg-[#1E1E1E] hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
         >
           <ArrowLeft className="size-4" aria-hidden="true" />
           Étape 1
@@ -1384,13 +1384,13 @@ function TagListInput({
               add();
             }
           }}
-          className="h-10 flex-1 rounded-xl border-[#2A2A2A] bg-[#0A0A0A]/70"
+          className="h-10 flex-1 rounded-xl border-hairline bg-[#0A0A0A]/70"
           placeholder={placeholder}
         />
         <button
           type="button"
           onClick={add}
-          className="inline-flex h-10 shrink-0 items-center gap-1 rounded-xl border border-[#2A2A2A] bg-[#0F0F0F] px-3 text-sm text-muted-foreground transition-colors outline-none hover:bg-[#1E1E1E] hover:text-foreground focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+          className="inline-flex h-10 shrink-0 items-center gap-1 rounded-xl border border-hairline bg-surface px-3 text-sm text-muted-foreground transition-colors outline-none hover:bg-[#1E1E1E] hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
         >
           <Plus className="size-4" aria-hidden="true" />
         </button>
@@ -1400,7 +1400,7 @@ function TagListInput({
           {values.map((v) => (
             <span
               key={v}
-              className="inline-flex items-center gap-1 rounded-full border border-[#2A2A2A] bg-[#1E1E1E] px-2.5 py-1 text-xs text-foreground"
+              className="inline-flex items-center gap-1 rounded-full border border-hairline bg-[#1E1E1E] px-2.5 py-1 text-xs text-foreground"
             >
               {v}
               <button

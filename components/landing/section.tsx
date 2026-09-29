@@ -15,12 +15,12 @@ export function Eyebrow({
       className={cn(
         "inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em]",
         tone === "light"
-          ? "border border-[#2A2A2A] bg-[#141414] text-muted-foreground"
+          ? "border border-hairline bg-[#141414] text-muted-foreground"
           : "border border-white/15 bg-[#FFFFFF]/8 text-white/80 backdrop-blur",
         className
       )}
     >
-      <span className="size-1.5 rounded-full bg-[#E86A2C]" aria-hidden="true" />
+      <span className="size-1.5 rounded-full bg-primary" aria-hidden="true" />
       {children}
     </span>
   );

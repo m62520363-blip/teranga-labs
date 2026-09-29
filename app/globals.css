@@ -28,6 +28,7 @@
   --font-mono: var(--font-geist-mono);
   --color-surface: var(--surface);
   --color-surface-secondary: var(--surface-secondary);
+  --color-hairline: var(--hairline);
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-error: var(--error);
@@ -53,20 +54,22 @@
   --destructive-foreground: #ffffff;
   --border: #262626;
   --input: #2e2e2e;
-  --ring: #e86a2c;
+  --ring: var(--primary);
+  /* filet de séparation réellement utilisé dans les cartes */
+  --hairline: #2a2a2a;
 
   /* TERANGA design system */
   --surface: #0f0f0f;
   --surface-secondary: #141414;
   --text-primary: #f2f2f2;
   --text-secondary: #a3a3a3;
-  --accent-glow: rgba(232, 106, 44, 0.45);
+  --accent-glow: color-mix(in oklab, var(--primary) 45%, transparent);
   --success: #34d399;
-  --success-soft: rgba(52, 211, 153, 0.12);
+  --success-soft: color-mix(in oklab, var(--success) 12%, transparent);
   --warning: #fbbf24;
-  --warning-soft: rgba(251, 191, 36, 0.12);
+  --warning-soft: color-mix(in oklab, var(--warning) 12%, transparent);
   --error: #e5484d;
-  --error-soft: rgba(229, 72, 77, 0.12);
+  --error-soft: color-mix(in oklab, var(--error) 12%, transparent);
   --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -161,8 +164,14 @@ h6 {
 
 /* ------------------------------ Accents visuels ---------------------------- */
 
+/* le dégradé d'accent va du token de marque vers un éclaircit plus doux */
 .text-accent-gradient {
-  background: linear-gradient(94deg, #e86a2c 0%, #f59348 48%, #e86a2c 100%);
+  background: linear-gradient(
+    94deg,
+    var(--primary) 0%,
+    color-mix(in oklab, var(--primary) 62%, #fff) 48%,
+    var(--primary) 100%
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

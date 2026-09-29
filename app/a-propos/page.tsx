@@ -28,7 +28,7 @@ const values = [
 
 export default function AProposPage() {
   return (
-    <div className="bg-[#0F0F0F] py-16 md:py-24">
+    <div className="bg-surface py-16 md:py-24">
       <div className="container-tl">
         <div className="mx-auto max-w-3xl">
           <h1 className="text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
@@ -46,9 +46,9 @@ export default function AProposPage() {
             {values.map((value) => (
               <div
                 key={value.title}
-                className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6"
+                className="rounded-2xl border border-hairline bg-[#141414] p-6"
               >
-                <value.icon className="size-5 text-[#E86A2C]" aria-hidden="true" />
+                <value.icon className="size-5 text-primary" aria-hidden="true" />
                 <h2 className="mt-4 font-semibold tracking-tight">{value.title}</h2>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                   {value.text}

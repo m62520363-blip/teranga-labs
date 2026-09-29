@@ -52,10 +52,10 @@ export function PortalSection() {
       />
 
       <div className="mt-14 grid gap-6 lg:grid-cols-2">
-        <div className="flex flex-col rounded-2xl border border-[#2A2A2A] bg-[#141414] p-8 shadow-[0_30px_80px_-40px_rgba(0,0,0,0.8)]">
+        <div className="flex flex-col rounded-2xl border border-hairline bg-[#141414] p-8 shadow-[0_30px_80px_-40px_rgba(0,0,0,0.8)]">
           <div className="flex items-center justify-between gap-3">
-            <span className="chip gap-2 bg-[#1C1C1C]/90 border-[#2A2A2A]">
-              <UserRound className="size-4 text-[#E86A2C]" aria-hidden="true" />
+            <span className="chip gap-2 bg-[#1C1C1C]/90 border-hairline">
+              <UserRound className="size-4 text-primary" aria-hidden="true" />
               Univers client
             </span>
             <span className="badge badge-muted">Gratuit d’inscription</span>
@@ -72,7 +72,7 @@ export function PortalSection() {
           <ul className="mt-7 space-y-3">
             {CLIENT_POINTS.map((point) => (
               <li key={point} className="flex items-start gap-3 text-sm leading-relaxed text-muted-foreground">
-                <Check className="mt-0.5 size-4 shrink-0 text-[#E86A2C]" aria-hidden="true" />
+                <Check className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
                 {point}
               </li>
             ))}
@@ -89,10 +89,10 @@ export function PortalSection() {
           </div>
         </div>
 
-        <div className="flex flex-col rounded-2xl border border-[#2A2A2A] bg-[#141414] p-8 shadow-[0_30px_80px_-40px_rgba(0,0,0,0.8)]">
+        <div className="flex flex-col rounded-2xl border border-hairline bg-[#141414] p-8 shadow-[0_30px_80px_-40px_rgba(0,0,0,0.8)]">
           <div className="flex items-center justify-between gap-3">
-            <span className="chip gap-2 bg-[#1C1C1C]/90 border-[#2A2A2A]">
-              <Laptop className="size-4 text-[#E86A2C]" aria-hidden="true" />
+            <span className="chip gap-2 bg-[#1C1C1C]/90 border-hairline">
+              <Laptop className="size-4 text-primary" aria-hidden="true" />
               Univers développeur
             </span>
             <span className="badge badge-muted">1 Token par contact</span>
@@ -109,7 +109,7 @@ export function PortalSection() {
           <ul className="mt-7 space-y-3">
             {DEV_POINTS.map((point) => (
               <li key={point} className="flex items-start gap-3 text-sm leading-relaxed text-muted-foreground">
-                <Check className="mt-0.5 size-4 shrink-0 text-[#E86A2C]" aria-hidden="true" />
+                <Check className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
                 {point}
               </li>
             ))}
@@ -127,15 +127,15 @@ export function PortalSection() {
         </div>
       </div>
 
-      <div className="mt-14 rounded-2xl border border-[#2A2A2A] bg-gradient-to-br from-[#141414] to-[#0F0F0F] p-8 md:p-10">
+      <div className="mt-14 rounded-2xl border border-hairline bg-gradient-to-br from-[#141414] to-surface p-8 md:p-10">
         <h3 className="text-center text-lg font-semibold tracking-tight md:text-xl">
           Pourquoi Teranga Labs au Sénégal
         </h3>
         <div className="mt-8 grid gap-8 md:grid-cols-3">
           {SENEGAL_POINTS.map(({ icon: Icon, title, text }) => (
             <div key={title} className="flex flex-col items-center text-center">
-              <span className="flex size-12 items-center justify-center rounded-xl border border-[#2A2A2A] bg-[#1C1C1C]">
-                <Icon className="size-5 text-[#E86A2C]" aria-hidden="true" />
+              <span className="flex size-12 items-center justify-center rounded-xl border border-hairline bg-[#1C1C1C]">
+                <Icon className="size-5 text-primary" aria-hidden="true" />
               </span>
               <span className="mt-4 text-sm font-semibold tracking-tight">{title}</span>
               <p className="mt-2 max-w-xs text-sm leading-relaxed text-muted-foreground">

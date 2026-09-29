@@ -156,14 +156,14 @@ export function UnlockDialog({
               </DialogDescription>
             </DialogHeader>
 
-            <div className="rounded-xl border border-[#2A2A2A] bg-[#1E1E1E] p-4">
+            <div className="rounded-xl border border-hairline bg-[#1E1E1E] p-4">
               <p className="text-sm font-medium">{brief.client_name}</p>
               <p className="mt-0.5 text-sm text-muted-foreground">
                 {brief.client_city} · {formatFCFA(brief.budget)} ·{" "}
                 {brief.project_type}
               </p>
               {brief.demo ? (
-                <p className="mt-2 inline-flex items-center gap-1 rounded-full border border-[#E86A2C]/40 bg-[#2A1A10] px-2.5 py-0.5 text-[11px] font-semibold text-[#E86A2C]">
+                <p className="mt-2 inline-flex items-center gap-1 rounded-full border border-primary/40 bg-[#2A1A10] px-2.5 py-0.5 text-[11px] font-semibold text-primary">
                   <Sparkles className="size-3" aria-hidden="true" />
                   Brief d’exemple · déblocage gratuit
                 </p>
@@ -173,7 +173,7 @@ export function UnlockDialog({
             <div className="flex flex-col gap-3">
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="unlock-message">
-                  Votre message <span className="text-[#E86A2C]">*</span>
+                  Votre message <span className="text-primary">*</span>
                 </Label>
                 <Textarea
                   id="unlock-message"
@@ -214,15 +214,15 @@ export function UnlockDialog({
                 </div>
               </div>
 
-              <div className="flex items-center justify-between rounded-xl border border-[#2A2A2A] px-4 py-2.5">
+              <div className="flex items-center justify-between rounded-xl border border-hairline px-4 py-2.5">
                 {brief.demo ? (
                   <span className="flex items-center gap-1.5 text-sm font-semibold">
-                    <Sparkles className="size-4 text-[#E86A2C]" aria-hidden="true" />
+                    <Sparkles className="size-4 text-primary" aria-hidden="true" />
                     Déblocage gratuit
                   </span>
                 ) : (
                   <span className="flex items-center gap-1.5 text-sm font-semibold">
-                    <Coins className="size-4 text-[#E86A2C]" aria-hidden="true" />
+                    <Coins className="size-4 text-primary" aria-hidden="true" />
                     {balance ?? 0} token{(balance ?? 0) > 1 ? "s" : ""}
                   </span>
                 )}
@@ -277,14 +277,14 @@ export function UnlockDialog({
             </DialogHeader>
             <div className="flex flex-col gap-4 py-2">
               <div className="flex items-center gap-3 rounded-xl bg-[#2A1A10] p-3.5">
-                <Coins className="size-5 shrink-0 text-[#E86A2C]" aria-hidden="true" />
+                <Coins className="size-5 shrink-0 text-primary" aria-hidden="true" />
                 <p className="text-sm text-foreground">
                   <span className="font-medium">Vous n’avez plus de Tokens.</span>{" "}
                   Démarrer une discussion coûte 1 Token.
                 </p>
               </div>
               <Button
-                className="h-10 bg-[#E86A2C] hover:bg-[#d95c1f]"
+                className="h-10 bg-primary hover:bg-[#d95c1f]"
                 render={
                   <Link href="/tokens">
                     <Coins className="size-4" aria-hidden="true" />

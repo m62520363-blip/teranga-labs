@@ -53,7 +53,7 @@ export default async function ClientPage() {
   const supabase = await createClient();
   if (!supabase) {
     return (
-      <div className="bg-[#0F0F0F] py-16">
+      <div className="bg-surface py-16">
         <div className="container-tl mx-auto max-w-md text-center">
           <h1 className="text-2xl font-semibold">Configuration requise</h1>
           <p className="mt-3 text-sm text-muted-foreground">
@@ -165,7 +165,7 @@ export default async function ClientPage() {
   });
 
   return (
-    <div className="bg-[#0F0F0F] py-16 md:py-24">
+    <div className="bg-surface py-16 md:py-24">
       <div className="container-tl">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
@@ -179,7 +179,7 @@ export default async function ClientPage() {
           </div>
           <Link
             href="/poster"
-            className="inline-flex h-10 items-center gap-2 rounded-xl bg-[#E86A2C] px-5 text-sm font-medium text-[#0D0D0D] transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+            className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-[#0D0D0D] transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
           >
             <Plus className="size-4" aria-hidden="true" />
             Publier un nouveau brief
@@ -187,8 +187,8 @@ export default async function ClientPage() {
         </div>
 
         {(company || clientName) && (
-          <div className="mt-6 flex flex-wrap items-center gap-3 rounded-2xl border border-[#2A2A2A] bg-[#141414] p-4">
-            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#E86A2C] font-display text-lg font-bold text-[#0D0D0D]">
+          <div className="mt-6 flex flex-wrap items-center gap-3 rounded-2xl border border-hairline bg-[#141414] p-4">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary font-display text-lg font-bold text-[#0D0D0D]">
               {(company || clientName).charAt(0).toUpperCase()}
             </span>
             <div className="min-w-0">
@@ -251,10 +251,10 @@ export default async function ClientPage() {
           </div>
         ) : null}
 
-        <section className="mt-8 rounded-2xl border border-[#2A2A2A] bg-[#141414] p-5 sm:p-6" aria-label="Mes Tokens">
+        <section className="mt-8 rounded-2xl border border-hairline bg-[#141414] p-5 sm:p-6" aria-label="Mes Tokens">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-start gap-4">
-              <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-[#2A1A10] text-[#E86A2C]">
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-[#2A1A10] text-primary">
                 <Coins className="size-5" aria-hidden="true" />
               </span>
               <div>
@@ -273,13 +273,13 @@ export default async function ClientPage() {
             <div className="flex items-center gap-2">
               <Link
                 href="/tokens"
-                className="inline-flex h-10 items-center justify-center rounded-xl border border-[#2A2A2A] px-5 text-sm font-medium transition-colors outline-none hover:border-[#E86A2C]/40 hover:text-[#F2F2F2] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+                className="inline-flex h-10 items-center justify-center rounded-xl border border-hairline px-5 text-sm font-medium transition-colors outline-none hover:border-primary/40 hover:text-[#F2F2F2] focus-visible:ring-2 focus-visible:ring-primary/50"
               >
                 Recharger
               </Link>
               <Link
                 href="/dev"
-                className="inline-flex h-10 items-center justify-center rounded-xl bg-[#E86A2C] px-5 text-sm font-medium text-[#0D0D0D] transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+                className="inline-flex h-10 items-center justify-center rounded-xl bg-primary px-5 text-sm font-medium text-[#0D0D0D] transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
               >
                 Trouver un développeur
               </Link>
@@ -291,7 +291,7 @@ export default async function ClientPage() {
               {tokenHistory.map((t) => (
                 <li
                   key={t.id}
-                  className="flex items-center justify-between gap-3 border-t border-[#2A2A2A] py-2.5 first:border-t-0"
+                  className="flex items-center justify-between gap-3 border-t border-hairline py-2.5 first:border-t-0"
                 >
                   <div className="min-w-0">
                     <p className="truncate text-sm">{t.label}</p>
@@ -313,7 +313,7 @@ export default async function ClientPage() {
               ))}
             </ul>
           ) : (
-            <p className="mt-5 border-t border-[#2A2A2A] pt-4 text-sm text-muted-foreground">
+            <p className="mt-5 border-t border-hairline pt-4 text-sm text-muted-foreground">
               Aucun mouvement pour le moment.
             </p>
           )}
@@ -321,7 +321,7 @@ export default async function ClientPage() {
 
         <section className="mt-10">
           <div className="flex items-center gap-2">
-            <ClipboardPen className="size-5 text-[#E86A2C]" aria-hidden="true" />
+            <ClipboardPen className="size-5 text-primary" aria-hidden="true" />
             <h2 className="text-xl font-semibold tracking-tight">Mes projets publiés</h2>
           </div>
 
@@ -345,7 +345,7 @@ export default async function ClientPage() {
 
         <section className="mt-14">
           <div className="flex items-center gap-2">
-            <MessageCircle className="size-5 text-[#E86A2C]" aria-hidden="true" />
+            <MessageCircle className="size-5 text-primary" aria-hidden="true" />
             <h2 className="text-xl font-semibold tracking-tight">Discussions reçues</h2>
           </div>
 
@@ -361,22 +361,22 @@ export default async function ClientPage() {
                   <Link
                     href={`/conversations/${c.id}`}
                     className={cn(
-                      "flex items-center gap-4 rounded-2xl border p-4 transition-colors outline-none hover:bg-[#161616] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50 sm:p-5",
+                      "flex items-center gap-4 rounded-2xl border p-4 transition-colors outline-none hover:bg-[#161616] focus-visible:ring-2 focus-visible:ring-primary/50 sm:p-5",
                       c.unreadCount > 0
-                        ? "border-[#E86A2C]/30 bg-[#1A120B]"
+                        ? "border-primary/30 bg-[#1A120B]"
                         : c.status === "awarded"
                           ? "border-[#166534]/60 bg-[#0F2E18]"
-                          : "border-[#2A2A2A] bg-[#141414]"
+                          : "border-hairline bg-[#141414]"
                     )}
                   >
                     <div
                       className={cn(
                         "flex size-11 shrink-0 items-center justify-center rounded-xl",
                         c.unreadCount > 0
-                          ? "bg-[#E86A2C] text-[#0D0D0D]"
+                          ? "bg-primary text-[#0D0D0D]"
                           : c.status === "awarded"
                             ? "bg-[#4ADE80] text-[#0D0D0D]"
-                            : "bg-[#2A2A2A] text-[#F2F2F2]"
+                            : "bg-hairline text-[#F2F2F2]"
                       )}
                       aria-hidden="true"
                     >
@@ -417,7 +417,7 @@ export default async function ClientPage() {
                       </p>
                     </div>
                     {c.unreadCount > 0 ? (
-                      <span className="ml-2 flex size-6 shrink-0 items-center justify-center rounded-full bg-[#E86A2C] text-xs font-bold text-[#0D0D0D]">
+                      <span className="ml-2 flex size-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-[#0D0D0D]">
                         {c.unreadCount}
                       </span>
                     ) : null}
@@ -431,9 +431,9 @@ export default async function ClientPage() {
         {devisToReview.length > 0 ? (
           <section className="mt-14">
             <div className="flex items-center gap-2">
-              <FileSearch className="size-5 text-[#E86A2C]" aria-hidden="true" />
+              <FileSearch className="size-5 text-primary" aria-hidden="true" />
               <h2 className="text-xl font-semibold tracking-tight">Devis à examiner</h2>
-              <span className="rounded-full bg-[#2A2A2A] px-2 py-0.5 text-xs text-muted-foreground">
+              <span className="rounded-full bg-hairline px-2 py-0.5 text-xs text-muted-foreground">
                 {totalPendingOffers}
               </span>
             </div>
@@ -445,7 +445,7 @@ export default async function ClientPage() {
               {devisToReview.map((c) => (
                 <li
                   key={c.id}
-                  className="flex flex-col gap-3 rounded-2xl border border-[#E86A2C]/30 bg-[#1A120B] p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5"
+                  className="flex flex-col gap-3 rounded-2xl border border-primary/30 bg-[#1A120B] p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5"
                 >
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold">{c.otherName}</p>
@@ -460,7 +460,7 @@ export default async function ClientPage() {
                   </div>
                   <Link
                     href={`/conversations/${c.id}`}
-                    className="inline-flex h-9 shrink-0 items-center gap-2 rounded-xl bg-[#F2F2F2] px-4 text-sm font-medium text-[#0D0D0D] transition-colors outline-none hover:bg-[#EBEBEB] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+                    className="inline-flex h-9 shrink-0 items-center gap-2 rounded-xl bg-[#F2F2F2] px-4 text-sm font-medium text-[#0D0D0D] transition-colors outline-none hover:bg-[#EBEBEB] focus-visible:ring-2 focus-visible:ring-primary/50"
                   >
                     Examiner les devis
                     <FileSearch className="size-4" aria-hidden="true" />
@@ -487,12 +487,12 @@ function StatCard({
   accent?: boolean;
 }) {
   return (
-    <div className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-4">
+    <div className="rounded-2xl border border-hairline bg-[#141414] p-4">
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
         <span
           className={cn(
             "flex size-8 items-center justify-center rounded-lg",
-            accent ? "bg-[#E86A2C] text-[#0D0D0D]" : "bg-[#2A2A2A] text-[#F2F2F2]"
+            accent ? "bg-primary text-[#0D0D0D]" : "bg-hairline text-[#F2F2F2]"
           )}
         >
           {icon}

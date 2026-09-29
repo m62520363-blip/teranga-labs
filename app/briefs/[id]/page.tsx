@@ -103,7 +103,7 @@ export default async function BriefDetailPage({
   const demo = Boolean(brief.demo);
 
   return (
-    <div className="bg-[#0F0F0F] py-14 md:py-20">
+    <div className="bg-surface py-14 md:py-20">
       <div className="container-tl">
         <div className="mx-auto max-w-3xl">
           <Link
@@ -114,7 +114,7 @@ export default async function BriefDetailPage({
             Tous les briefs
           </Link>
 
-          <div className="mt-6 rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 shadow-sm sm:p-8">
+          <div className="mt-6 rounded-2xl border border-hairline bg-[#141414] p-6 shadow-sm sm:p-8">
             <div className="flex flex-wrap items-center gap-2">
               <span className="inline-flex h-6 items-center rounded-full bg-[#1E1E1E] px-3 text-xs font-semibold uppercase tracking-wide text-foreground">
                 {PROJECT_TYPE_LABELS[brief.project_type] ?? brief.project_type}
@@ -130,7 +130,7 @@ export default async function BriefDetailPage({
                 </span>
               ) : null}
               {demo ? (
-                <span className="inline-flex h-6 items-center gap-1.5 rounded-full border border-[#E86A2C]/40 bg-[#2A1A10] px-3 text-xs font-semibold text-[#E86A2C]">
+                <span className="inline-flex h-6 items-center gap-1.5 rounded-full border border-primary/40 bg-[#2A1A10] px-3 text-xs font-semibold text-primary">
                   <Sparkles className="size-3.5" aria-hidden="true" />
                   Exemple
                 </span>
@@ -157,7 +157,7 @@ export default async function BriefDetailPage({
                 <ul className="mt-3 space-y-2">
                   {brief.features.map((feature) => (
                     <li key={feature} className="flex items-start gap-2.5 text-sm text-muted-foreground">
-                      <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-[#E86A2C]" aria-hidden="true" />
+                      <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
                       {feature}
                     </li>
                   ))}
@@ -179,8 +179,8 @@ export default async function BriefDetailPage({
               className={cn(
                 "mt-8 rounded-xl border p-4",
                 demo
-                  ? "border-[#E86A2C]/40 bg-[#2A1A10]"
-                  : "border-[#2A2A2A] bg-[#1E1E1E]"
+                  ? "border-primary/40 bg-[#2A1A10]"
+                  : "border-hairline bg-[#1E1E1E]"
               )}
             >
               {demo ? (

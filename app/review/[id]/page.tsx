@@ -27,7 +27,7 @@ export default async function ReviewPage({
   const supabase = await createClient();
   if (!supabase) {
     return (
-      <div className="bg-[#0F0F0F] py-16">
+      <div className="bg-surface py-16">
         <div className="container-tl mx-auto max-w-md text-center">
           <h1 className="text-2xl font-semibold">Configuration requise</h1>
           <p className="mt-3 text-sm text-muted-foreground">
@@ -52,9 +52,9 @@ export default async function ReviewPage({
 
   if (error || !data) {
     return (
-      <div className="bg-[#0F0F0F] py-16 md:py-24">
+      <div className="bg-surface py-16 md:py-24">
         <div className="container-tl mx-auto max-w-md">
-          <div className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 text-center">
+          <div className="rounded-2xl border border-hairline bg-[#141414] p-6 text-center">
             <h1 className="text-xl font-semibold">Accès refusé</h1>
             <p className="mt-2 text-sm text-muted-foreground">
               {errorHint ?? "Cette mission ne vous permet pas de déposer un avis."}
@@ -69,7 +69,7 @@ export default async function ReviewPage({
   }
 
   return (
-    <div className="bg-[#0F0F0F] py-12 md:py-16">
+    <div className="bg-surface py-12 md:py-16">
       <div className="container-tl max-w-2xl">
         <Link
           href="/client"

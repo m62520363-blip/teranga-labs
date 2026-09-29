@@ -33,12 +33,12 @@ export function ShareProfileButton({ url, label }: { url: string; label?: string
     <button
       type="button"
       onClick={handleShare}
-      className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-[#2A2A2A] bg-[#141414] px-5 text-sm font-medium text-[#F2F2F2] transition-colors outline-none hover:bg-[#1E1E1E] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+      className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-hairline bg-[#141414] px-5 text-sm font-medium text-[#F2F2F2] transition-colors outline-none hover:bg-[#1E1E1E] focus-visible:ring-2 focus-visible:ring-primary/50"
     >
       {copied ? (
         <Check className="size-4 text-[#4ADE80]" aria-hidden="true" />
       ) : (
-        <Share2 className="size-4 text-[#E86A2C]" aria-hidden="true" />
+        <Share2 className="size-4 text-primary" aria-hidden="true" />
       )}
       {label ?? "Partager ce profil"}
     </button>

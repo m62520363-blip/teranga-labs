@@ -134,7 +134,7 @@ export default function ConditionsUtilisationPage() {
               présentes conditions, écrivez-nous à{" "}
               <a
                 href="mailto:contact@terangalabs.sn"
-                className="font-medium text-[#E86A2C] underline underline-offset-2"
+                className="font-medium text-primary underline underline-offset-2"
               >
                 contact@terangalabs.sn
               </a>{" "}

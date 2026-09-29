@@ -134,10 +134,10 @@ function FilterChip({
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        "inline-flex h-8 items-center rounded-lg border px-2.5 text-xs font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50",
+        "inline-flex h-8 items-center rounded-lg border px-2.5 text-xs font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
         active
-          ? "border-[#E86A2C]/60 bg-[#2A1A10] text-[#F2A378]"
-          : "border-[#2A2A2A] bg-transparent text-muted-foreground hover:bg-[#1E1E1E]"
+          ? "border-primary/60 bg-[#2A1A10] text-[#F2A378]"
+          : "border-hairline bg-transparent text-muted-foreground hover:bg-[#1E1E1E]"
       )}
     >
       {children}
@@ -167,8 +167,8 @@ function DevStatusBanner({ profile }: { profile: DeveloperProfile }) {
 
   if (status === "verification_pending") {
     return (
-      <div className="mt-6 flex items-start gap-3 rounded-2xl border border-[#E86A2C]/30 bg-[#2A1A10] p-4 sm:p-5">
-        <Clock className="mt-0.5 size-5 shrink-0 text-[#E86A2C]" aria-hidden="true" />
+      <div className="mt-6 flex items-start gap-3 rounded-2xl border border-primary/30 bg-[#2A1A10] p-4 sm:p-5">
+        <Clock className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
         <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold tracking-tight">Vérification en cours</p>
           <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
@@ -178,7 +178,7 @@ function DevStatusBanner({ profile }: { profile: DeveloperProfile }) {
         </div>
         <Link
           href="/verification"
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-[#E86A2C]/40 bg-[#0F0F0F] px-3 py-2 text-xs font-medium text-foreground transition-colors outline-none hover:bg-[#1E1E1E] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-primary/40 bg-surface px-3 py-2 text-xs font-medium text-foreground transition-colors outline-none hover:bg-[#1E1E1E] focus-visible:ring-2 focus-visible:ring-primary/50"
         >
           Suivre l’état
           <ArrowRight className="size-3.5" aria-hidden="true" />
@@ -189,8 +189,8 @@ function DevStatusBanner({ profile }: { profile: DeveloperProfile }) {
 
   if (status === "active") {
     return (
-      <div className="mt-6 flex items-start gap-3 rounded-2xl border border-[#2A2A2A] bg-[#0F1B2E] p-4 sm:p-5">
-        <BadgeCheck className="mt-0.5 size-5 shrink-0 text-[#E86A2C]" aria-hidden="true" />
+      <div className="mt-6 flex items-start gap-3 rounded-2xl border border-hairline bg-[#0F1B2E] p-4 sm:p-5">
+        <BadgeCheck className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
         <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold tracking-tight">Donnez confiance avec le badge Vérifié</p>
           <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
@@ -200,7 +200,7 @@ function DevStatusBanner({ profile }: { profile: DeveloperProfile }) {
         </div>
         <Link
           href="/verification"
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-[#E86A2C] px-3 py-2 text-xs font-semibold text-[#0D0D0D] transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-[#0D0D0D] transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
         >
           Faire vérifier mon profil
           <ArrowRight className="size-3.5" aria-hidden="true" />
@@ -279,13 +279,13 @@ function DevStatusBannerShell({
         "mt-6 flex items-start gap-3 rounded-2xl border p-4 sm:p-5",
         tone === "error"
           ? "border-[var(--error)]/30 bg-[var(--error-soft)]"
-          : "border-[#E86A2C]/30 bg-[#2A1A10]"
+          : "border-primary/30 bg-[#2A1A10]"
       )}
     >
       <AlertTriangle
         className={cn(
           "mt-0.5 size-5 shrink-0",
-          tone === "error" ? "text-[var(--error)]" : "text-[#E86A2C]"
+          tone === "error" ? "text-[var(--error)]" : "text-primary"
         )}
         aria-hidden="true"
       />
@@ -299,7 +299,7 @@ function DevStatusBannerShell({
       {cta ? (
         <Link
           href={cta.href}
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-[#E86A2C] px-3 py-2 text-xs font-semibold text-[#0D0D0D] transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-[#0D0D0D] transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
         >
           {cta.label}
           <ArrowRight className="size-3.5" aria-hidden="true" />
@@ -624,7 +624,7 @@ export function DashboardContent({
   ];
 
   return (
-    <div className="bg-[#0F0F0F] py-16 md:py-24">
+    <div className="bg-surface py-16 md:py-24">
       <div className="container-tl">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -638,14 +638,14 @@ export function DashboardContent({
           <div className="flex flex-wrap gap-2">
             <Link
               href="/conversations"
-              className="inline-flex h-10 items-center gap-2 rounded-xl border border-[#2A2A2A] bg-[#141414] px-5 text-sm font-medium text-[#F2F2F2] transition-colors outline-none hover:bg-[#1E1E1E] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+              className="inline-flex h-10 items-center gap-2 rounded-xl border border-hairline bg-[#141414] px-5 text-sm font-medium text-[#F2F2F2] transition-colors outline-none hover:bg-[#1E1E1E] focus-visible:ring-2 focus-visible:ring-primary/50"
             >
               <MessageCircle className="size-4" aria-hidden="true" />
               Mes discussions
             </Link>
             <Link
               href="/tokens"
-              className="inline-flex h-10 items-center gap-2 rounded-xl bg-[#E86A2C] px-5 text-sm font-medium text-[#0D0D0D] transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+              className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-[#0D0D0D] transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
             >
               Recharger les Tokens
               <ArrowRight className="size-4" aria-hidden="true" />
@@ -664,7 +664,7 @@ export function DashboardContent({
         </div>
 
         <nav
-          className="mt-10 flex flex-wrap gap-2 border-b border-[#2A2A2A] pb-px"
+          className="mt-10 flex flex-wrap gap-2 border-b border-hairline pb-px"
           aria-label="Sections du dashboard"
         >
           {tabs.map((t) => (
@@ -673,15 +673,15 @@ export function DashboardContent({
               type="button"
               onClick={() => setTab(t.key)}
               className={cn(
-                "inline-flex h-10 items-center gap-2 rounded-t-xl px-4 text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50",
+                "inline-flex h-10 items-center gap-2 rounded-t-xl px-4 text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
                 tab === t.key
-                  ? "border border-[#2A2A2A] border-b-transparent bg-[#141414] text-[#F2F2F2]"
+                  ? "border border-hairline border-b-transparent bg-[#141414] text-[#F2F2F2]"
                   : "text-muted-foreground hover:text-[#F2F2F2]"
               )}
             >
               {t.label}
               {typeof t.count === "number" ? (
-                <span className="rounded-full bg-[#2A2A2A] px-2 py-0.5 text-xs text-muted-foreground">
+                <span className="rounded-full bg-hairline px-2 py-0.5 text-xs text-muted-foreground">
                   {t.count}
                 </span>
               ) : null}
@@ -712,7 +712,7 @@ export function DashboardContent({
                         <span
                           className={cn(
                             "size-2 rounded-full",
-                            s === "en_discussion" && "bg-[#E86A2C]",
+                            s === "en_discussion" && "bg-primary",
                             s === "gagne" && "bg-[#4ADE80]",
                             s === "perdu" && "bg-[#525252]"
                           )}
@@ -730,11 +730,11 @@ export function DashboardContent({
 
             {unlocks.length > 0 ? (
               <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
-                <div className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-4">
+                <div className="rounded-2xl border border-hairline bg-[#141414] p-4">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                       <p className="flex items-center gap-2 text-sm font-semibold tracking-tight">
-                        <Target className="size-4 text-[#E86A2C]" aria-hidden="true" />
+                        <Target className="size-4 text-primary" aria-hidden="true" />
                         Objectif du mois
                       </p>
                       <p className="mt-0.5 text-xs text-muted-foreground">
@@ -771,9 +771,9 @@ export function DashboardContent({
                       </Button>
                     </div>
                   </div>
-                  <div className="mt-3 h-2 overflow-hidden rounded-full bg-[#2A2A2A]">
+                  <div className="mt-3 h-2 overflow-hidden rounded-full bg-hairline">
                     <div
-                      className="h-full rounded-full bg-[#E86A2C] transition-all duration-500"
+                      className="h-full rounded-full bg-primary transition-all duration-500"
                       style={{
                         width: `${
                           monthlyGoal > 0
@@ -804,10 +804,10 @@ export function DashboardContent({
                     onClick={() => setCrmView("board")}
                     aria-pressed={crmView === "board"}
                     className={cn(
-                      "inline-flex h-10 items-center gap-1.5 rounded-xl border px-3.5 text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50",
+                      "inline-flex h-10 items-center gap-1.5 rounded-xl border px-3.5 text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
                       crmView === "board"
-                        ? "border-[#E86A2C]/60 bg-[#2A1A10] text-[#F2A378]"
-                        : "border-[#2A2A2A] bg-transparent text-muted-foreground hover:bg-[#1E1E1E]"
+                        ? "border-primary/60 bg-[#2A1A10] text-[#F2A378]"
+                        : "border-hairline bg-transparent text-muted-foreground hover:bg-[#1E1E1E]"
                     )}
                   >
                     <LayoutGrid className="size-4" aria-hidden="true" />
@@ -818,10 +818,10 @@ export function DashboardContent({
                     onClick={() => setCrmView("list")}
                     aria-pressed={crmView === "list"}
                     className={cn(
-                      "inline-flex h-10 items-center gap-1.5 rounded-xl border px-3.5 text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50",
+                      "inline-flex h-10 items-center gap-1.5 rounded-xl border px-3.5 text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
                       crmView === "list"
-                        ? "border-[#E86A2C]/60 bg-[#2A1A10] text-[#F2A378]"
-                        : "border-[#2A2A2A] bg-transparent text-muted-foreground hover:bg-[#1E1E1E]"
+                        ? "border-primary/60 bg-[#2A1A10] text-[#F2A378]"
+                        : "border-hairline bg-transparent text-muted-foreground hover:bg-[#1E1E1E]"
                     )}
                   >
                     <List className="size-4" aria-hidden="true" />
@@ -865,7 +865,7 @@ export function DashboardContent({
                   <button
                     type="button"
                     onClick={exportCsv}
-                    className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-[#2A2A2A] bg-[#141414] px-2.5 text-xs font-medium text-muted-foreground transition-colors outline-none hover:bg-[#1E1E1E] hover:text-[#F2F2F2] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+                    className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-hairline bg-[#141414] px-2.5 text-xs font-medium text-muted-foreground transition-colors outline-none hover:bg-[#1E1E1E] hover:text-[#F2F2F2] focus-visible:ring-2 focus-visible:ring-primary/50"
                   >
                     <Download className="size-3.5" aria-hidden="true" />
                     Export CSV
@@ -906,7 +906,7 @@ export function DashboardContent({
                   return (
                     <div
                       key={col}
-                      className="flex min-w-0 flex-col rounded-2xl border border-[#2A2A2A] bg-[#101010] p-3"
+                      className="flex min-w-0 flex-col rounded-2xl border border-hairline bg-[#101010] p-3"
                     >
                       <div className="flex items-center justify-between px-1 pb-2">
                         <span className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
@@ -914,20 +914,20 @@ export function DashboardContent({
                             className={cn(
                               "size-2 rounded-full",
                               col === "a_contacter" && "bg-[#525252]",
-                              col === "en_discussion" && "bg-[#E86A2C]",
+                              col === "en_discussion" && "bg-primary",
                               col === "gagne" && "bg-[#4ADE80]",
                               col === "perdu" && "bg-[#8E8E93]"
                             )}
                           />
                           {CRM_STATUS_LABELS[col]}
                         </span>
-                        <span className="rounded-full bg-[#2A2A2A] px-2 py-0.5 text-[11px] text-muted-foreground">
+                        <span className="rounded-full bg-hairline px-2 py-0.5 text-[11px] text-muted-foreground">
                           {colItems.length}
                         </span>
                       </div>
                       <div className="flex min-h-24 flex-col gap-2.5">
                         {colItems.length === 0 ? (
-                          <div className="rounded-xl border border-dashed border-[#2A2A2A] p-4 text-center text-xs text-muted-foreground">
+                          <div className="rounded-xl border border-dashed border-hairline p-4 text-center text-xs text-muted-foreground">
                             Aucun contact
                           </div>
                         ) : (
@@ -939,7 +939,7 @@ export function DashboardContent({
                             return (
                               <div
                                 key={item.unlock_id}
-                                className="rounded-xl border border-[#2A2A2A] bg-[#141414] p-3"
+                                className="rounded-xl border border-hairline bg-[#141414] p-3"
                               >
                                 <p className="text-sm font-medium leading-snug">
                                   {item.client_name}
@@ -951,13 +951,13 @@ export function DashboardContent({
                                   href={waLink(item.client_whatsapp)}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="mt-1 inline-block text-xs font-medium text-[#E86A2C] underline-offset-4 hover:underline"
+                                  className="mt-1 inline-block text-xs font-medium text-primary underline-offset-4 hover:underline"
                                 >
                                   {item.client_whatsapp}
                                 </a>
                                 {reminder ? (
                                   <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                                    <CalendarClock className="size-3 text-[#E86A2C]" aria-hidden="true" />
+                                    <CalendarClock className="size-3 text-primary" aria-hidden="true" />
                                     Rappel : {formatDate(reminder)}
                                   </p>
                                 ) : null}
@@ -977,7 +977,7 @@ export function DashboardContent({
                                         void saveReminder(item, reminder);
                                       }
                                     }}
-                                    className="h-8 w-full rounded-lg border border-[#2A2A2A] bg-[#0F0F0F] px-2 text-[11px] text-muted-foreground outline-none focus:border-[#E86A2C]/50 disabled:cursor-not-allowed disabled:opacity-60"
+                                    className="h-8 w-full rounded-lg border border-hairline bg-surface px-2 text-[11px] text-muted-foreground outline-none focus:border-primary/50 disabled:cursor-not-allowed disabled:opacity-60"
                                     title="Rappel (date et heure)"
                                   />
                                 </div>
@@ -988,7 +988,7 @@ export function DashboardContent({
                                       changeStatus(item, cascadeStatus(current, -1))
                                     }
                                     disabled={saving || current === "a_contacter"}
-                                    className="inline-flex size-7 items-center justify-center rounded-lg border border-[#2A2A2A] text-muted-foreground outline-none transition-colors hover:bg-[#1E1E1E] disabled:cursor-not-allowed disabled:opacity-40"
+                                    className="inline-flex size-7 items-center justify-center rounded-lg border border-hairline text-muted-foreground outline-none transition-colors hover:bg-[#1E1E1E] disabled:cursor-not-allowed disabled:opacity-40"
                                     aria-label={`Revenir à un statut précédent pour ${item.client_name}`}
                                   >
                                     <ChevronLeft className="size-3.5" aria-hidden="true" />
@@ -1014,7 +1014,7 @@ export function DashboardContent({
                                       changeStatus(item, cascadeStatus(current, 1))
                                     }
                                     disabled={saving || current === "perdu"}
-                                    className="inline-flex size-7 items-center justify-center rounded-lg border border-[#2A2A2A] text-muted-foreground outline-none transition-colors hover:bg-[#1E1E1E] disabled:cursor-not-allowed disabled:opacity-40"
+                                    className="inline-flex size-7 items-center justify-center rounded-lg border border-hairline text-muted-foreground outline-none transition-colors hover:bg-[#1E1E1E] disabled:cursor-not-allowed disabled:opacity-40"
                                     aria-label={`Avancer le statut pour ${item.client_name}`}
                                   >
                                     <ChevronRight className="size-3.5" aria-hidden="true" />
@@ -1054,14 +1054,14 @@ export function DashboardContent({
                   return (
                     <li
                       key={item.unlock_id}
-                      className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-5"
+                      className="rounded-2xl border border-hairline bg-[#141414] p-5"
                     >
                       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                         <div className="min-w-0">
                           <div className="flex flex-wrap items-center gap-2">
                             <p className="font-medium">{item.client_name}</p>
                             {refundPending ? (
-                              <span className="inline-flex items-center gap-1 rounded-full border border-[#E86A2C]/40 bg-[#2A1A10] px-2 py-0.5 text-[11px] font-medium text-[#F2A378]">
+                              <span className="inline-flex items-center gap-1 rounded-full border border-primary/40 bg-[#2A1A10] px-2 py-0.5 text-[11px] font-medium text-[#F2A378]">
                                 <Clock className="size-3" aria-hidden="true" />
                                 Remboursement en cours
                               </span>
@@ -1077,7 +1077,7 @@ export function DashboardContent({
                               href={waLink(item.client_whatsapp)}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1.5 font-medium text-[#E86A2C] underline-offset-4 hover:underline"
+                              className="inline-flex items-center gap-1.5 font-medium text-primary underline-offset-4 hover:underline"
                             >
                               {item.client_whatsapp}
                               <ExternalLink className="size-3.5" aria-hidden="true" />
@@ -1104,14 +1104,14 @@ export function DashboardContent({
                                 onClick={() => changeStatus(item, s)}
                                 disabled={savingThis}
                                 className={cn(
-                                  "inline-flex h-8 items-center gap-1.5 rounded-lg border px-2.5 text-xs font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50 disabled:cursor-not-allowed disabled:opacity-60",
+                                  "inline-flex h-8 items-center gap-1.5 rounded-lg border px-2.5 text-xs font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50 disabled:cursor-not-allowed disabled:opacity-60",
                                   currentStatus === s
                                     ? s === "gagne"
                                       ? "border-[#166534]/60 bg-[#0F2E18] text-[#4ADE80]"
                                       : s === "perdu"
                                         ? "border-[#3A3A3A] bg-[#1E1E1E] text-muted-foreground"
-                                        : "border-[#E86A2C]/60 bg-[#2A1A10] text-[#F2A378]"
-                                    : "border-[#2A2A2A] bg-transparent text-muted-foreground hover:bg-[#1E1E1E]"
+                                        : "border-primary/60 bg-[#2A1A10] text-[#F2A378]"
+                                    : "border-hairline bg-transparent text-muted-foreground hover:bg-[#1E1E1E]"
                                 )}
                               >
                                 {s === "gagne" ? (
@@ -1142,7 +1142,7 @@ export function DashboardContent({
                               )}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg bg-[#F2F2F2] px-3 text-xs font-medium text-[#0D0D0D] transition-colors outline-none hover:bg-[#EBEBEB] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+                              className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg bg-[#F2F2F2] px-3 text-xs font-medium text-[#0D0D0D] transition-colors outline-none hover:bg-[#EBEBEB] focus-visible:ring-2 focus-visible:ring-primary/50"
                             >
                               <MessagesSquare className="size-3.5" aria-hidden="true" />
                               WhatsApp
@@ -1156,7 +1156,7 @@ export function DashboardContent({
                               setRefundReason("");
                             }}
                             disabled={Boolean(refundPending)}
-                            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground underline-offset-4 transition-colors outline-none hover:text-[#F2A378] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50 disabled:cursor-not-allowed disabled:opacity-50"
+                            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground underline-offset-4 transition-colors outline-none hover:text-[#F2A378] focus-visible:ring-2 focus-visible:ring-primary/50 disabled:cursor-not-allowed disabled:opacity-50"
                           >
                             <AlertTriangle className="size-3.5" aria-hidden="true" />
                             {refundPending
@@ -1189,9 +1189,9 @@ export function DashboardContent({
                 <Link
                   href={publicUrl}
                   target="_blank"
-                  className="inline-flex h-10 items-center gap-2 rounded-xl border border-[#2A2A2A] bg-[#141414] px-5 text-sm font-medium text-[#F2F2F2] transition-colors outline-none hover:bg-[#1E1E1E] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+                  className="inline-flex h-10 items-center gap-2 rounded-xl border border-hairline bg-[#141414] px-5 text-sm font-medium text-[#F2F2F2] transition-colors outline-none hover:bg-[#1E1E1E] focus-visible:ring-2 focus-visible:ring-primary/50"
                 >
-                  <Share2 className="size-4 text-[#E86A2C]" aria-hidden="true" />
+                  <Share2 className="size-4 text-primary" aria-hidden="true" />
                   Voir mon profil public
                 </Link>
               ) : null}
@@ -1205,9 +1205,9 @@ export function DashboardContent({
             ) : null}
 
             <form onSubmit={saveProfile} className="mt-6 grid gap-6 lg:grid-cols-2">
-              <div className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 sm:p-8">
+              <div className="rounded-2xl border border-hairline bg-[#141414] p-6 sm:p-8">
                 <h3 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
-                  <Briefcase className="size-4 text-[#E86A2C]" aria-hidden="true" />
+                  <Briefcase className="size-4 text-primary" aria-hidden="true" />
                   Informations publiques
                 </h3>
                 <div className="mt-5 flex flex-col gap-4">
@@ -1306,14 +1306,14 @@ export function DashboardContent({
                       placeholder="Next.js, WordPress, WooCommerce, Mobile…"
                     />
                   </div>
-                  <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-[#2A2A2A] p-4">
+                  <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-hairline p-4">
                     <input
                       type="checkbox"
                       checked={p.notifications_enabled}
                       onChange={(e) =>
                         setP({ ...p, notifications_enabled: e.target.checked })
                       }
-                      className="mt-0.5 size-4 rounded border-[#2A2A2A] accent-[#E86A2C]"
+                      className="mt-0.5 size-4 rounded border-hairline accent-primary"
                       aria-label="Recevoir les nouveaux briefs par WhatsApp"
                     />
                     <span>
@@ -1330,10 +1330,10 @@ export function DashboardContent({
               </div>
 
               <div className="flex flex-col gap-6">
-                <div className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 sm:p-8">
+                <div className="rounded-2xl border border-hairline bg-[#141414] p-6 sm:p-8">
                   <div className="flex items-center justify-between gap-3">
                     <h3 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
-                      <Globe className="size-4 text-[#E86A2C]" aria-hidden="true" />
+                      <Globe className="size-4 text-primary" aria-hidden="true" />
                       Portfolio
                     </h3>
                     <Button
@@ -1357,7 +1357,7 @@ export function DashboardContent({
                       {portfolio.map((link, i) => (
                         <li
                           key={i}
-                          className="rounded-xl border border-[#2A2A2A] p-4"
+                          className="rounded-xl border border-hairline p-4"
                         >
                           <div className="flex flex-col gap-3">
                             <Input
@@ -1394,7 +1394,7 @@ export function DashboardContent({
                               <button
                                 type="button"
                                 onClick={() => removePortfolioLink(i)}
-                                className="inline-flex items-center gap-1.5 text-xs text-muted-foreground transition-colors outline-none hover:text-[#E86A2C] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+                                className="inline-flex items-center gap-1.5 text-xs text-muted-foreground transition-colors outline-none hover:text-primary focus-visible:ring-2 focus-visible:ring-primary/50"
                               >
                                 <Trash2 className="size-3.5" aria-hidden="true" />
                                 Supprimer
@@ -1407,7 +1407,7 @@ export function DashboardContent({
                   )}
                 </div>
 
-                <div className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 sm:p-8">
+                <div className="rounded-2xl border border-hairline bg-[#141414] p-6 sm:p-8">
                   <Button type="submit" disabled={saving} className="h-10 w-full sm:w-auto">
                     {saving ? (
                       <Loader2 className="size-4 animate-spin" aria-hidden="true" />
@@ -1429,7 +1429,7 @@ export function DashboardContent({
         {tab === "activite" ? (
           <div className="mt-8 grid gap-6 lg:grid-cols-2">
             <section
-              className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 shadow-sm sm:p-8"
+              className="rounded-2xl border border-hairline bg-[#141414] p-6 shadow-sm sm:p-8"
               aria-label="Réputation"
             >
               <h2 className="text-lg font-semibold tracking-tight">Réputation</h2>
@@ -1485,7 +1485,7 @@ export function DashboardContent({
                             className={cn(
                               "size-4",
                               n <= Math.round(reviews.average)
-                                ? "fill-[#E86A2C] text-[#E86A2C]"
+                                ? "fill-primary text-primary"
                                 : "text-[#3A3A3A]"
                             )}
                             aria-hidden="true"
@@ -1500,7 +1500,7 @@ export function DashboardContent({
 
                   <ul className="mt-4 space-y-4">
                     {reviews.reviews.map((review) => (
-                      <li key={review.id} className="rounded-xl border border-[#2A2A2A] p-4">
+                      <li key={review.id} className="rounded-xl border border-hairline p-4">
                         <div className="flex items-center justify-between gap-3">
                           <p className="text-sm font-semibold">
                             {review.client_name ?? "Client"}
@@ -1517,7 +1517,7 @@ export function DashboardContent({
                                 className={cn(
                                   "size-3.5",
                                   n <= review.rating
-                                    ? "fill-[#E86A2C] text-[#E86A2C]"
+                                    ? "fill-primary text-primary"
                                     : "text-[#3A3A3A]"
                                 )}
                                 aria-hidden="true"
@@ -1551,7 +1551,7 @@ export function DashboardContent({
             </section>
 
             <section
-              className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 shadow-sm sm:p-8"
+              className="rounded-2xl border border-hairline bg-[#141414] p-6 shadow-sm sm:p-8"
               aria-label="Commandes de Tokens"
             >
               <h2 className="text-lg font-semibold tracking-tight">Commandes</h2>
@@ -1577,7 +1577,7 @@ export function DashboardContent({
                   />
                 </div>
               ) : (
-                <ul className="mt-6 divide-y divide-[#2A2A2A]">
+                <ul className="mt-6 divide-y divide-hairline">
                   {orders.map((order) => (
                     <li key={order.id} className="flex items-start justify-between gap-3 py-4 first:pt-0 last:pb-0">
                       <div className="min-w-0">
@@ -1608,11 +1608,11 @@ export function DashboardContent({
         {tab === "devis" ? (
           <div className="mt-8 grid gap-6 lg:grid-cols-2">
             <section
-              className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 shadow-sm sm:p-8"
+              className="rounded-2xl border border-hairline bg-[#141414] p-6 shadow-sm sm:p-8"
               aria-label="Missions en cours"
             >
               <h2 className="flex items-center gap-2 text-lg font-semibold tracking-tight">
-                <Check className="size-5 text-[#E86A2C]" aria-hidden="true" />
+                <Check className="size-5 text-primary" aria-hidden="true" />
                 Missions en cours
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
@@ -1669,11 +1669,11 @@ export function DashboardContent({
             </section>
 
             <section
-              className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 shadow-sm sm:p-8"
+              className="rounded-2xl border border-hairline bg-[#141414] p-6 shadow-sm sm:p-8"
               aria-label="Devis envoyés en attente"
             >
               <h2 className="flex items-center gap-2 text-lg font-semibold tracking-tight">
-                <Send className="size-5 text-[#E86A2C]" aria-hidden="true" />
+                <Send className="size-5 text-primary" aria-hidden="true" />
                 Devis envoyés
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
@@ -1692,7 +1692,7 @@ export function DashboardContent({
                   {devisEnAttente.map((c) => (
                     <li
                       key={c.id}
-                      className="rounded-2xl border border-[#2A2A2A] bg-[#1A120B] p-5"
+                      className="rounded-2xl border border-hairline bg-[#1A120B] p-5"
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
@@ -1702,14 +1702,14 @@ export function DashboardContent({
                             {formatFCFA(c.request.budget)}
                           </p>
                         </div>
-                        <span className="shrink-0 inline-flex items-center gap-1.5 rounded-full border border-[#E86A2C]/40 bg-[#2A1A10] px-2.5 py-1 text-[11px] font-medium text-[#F2A378]">
+                        <span className="shrink-0 inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-[#2A1A10] px-2.5 py-1 text-[11px] font-medium text-[#F2A378]">
                           <Clock className="size-3" aria-hidden="true" />
                           {c.pendingOffers} devis en attente
                         </span>
                       </div>
                       <Link
                         href={`/conversations/${c.id}`}
-                        className="mt-4 inline-flex h-9 items-center gap-2 rounded-xl border border-[#2A2A2A] bg-[#141414] px-4 text-sm font-medium text-[#F2F2F2] transition-colors outline-none hover:bg-[#1E1E1E]"
+                        className="mt-4 inline-flex h-9 items-center gap-2 rounded-xl border border-hairline bg-[#141414] px-4 text-sm font-medium text-[#F2F2F2] transition-colors outline-none hover:bg-[#1E1E1E]"
                       >
                         Suivre la réponse
                         <ArrowRight className="size-4" aria-hidden="true" />

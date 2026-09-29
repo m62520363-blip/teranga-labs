@@ -132,7 +132,7 @@ export function Navbar({
         >
           <Link
             href={homeHref}
-            className="rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+            className="rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
             aria-label="TERANGA LABS — accueil"
           >
             <Logo />
@@ -158,13 +158,13 @@ export function Navbar({
               <>
                 <Link
                   href="/login"
-                  className="inline-flex h-8 items-center rounded-lg px-3 font-display text-[15px] font-medium text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+                  className="inline-flex h-8 items-center rounded-lg px-3 font-display text-[15px] font-medium text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
                 >
                   Se connecter
                 </Link>
                 <Link
                   href="/poster"
-                  className="group inline-flex h-8 items-center gap-1.5 rounded-lg bg-[#E86A2C] px-3.5 font-display text-[15px] font-semibold text-[#0D0D0D] transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+                  className="group inline-flex h-8 items-center gap-1.5 rounded-lg bg-primary px-3.5 font-display text-[15px] font-semibold text-[#0D0D0D] transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
                 >
                   Publier une demande
                   <ArrowRight
@@ -179,7 +179,7 @@ export function Navbar({
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            className="inline-flex size-9 items-center justify-center rounded-lg text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50 md:hidden"
+            className="inline-flex size-9 items-center justify-center rounded-lg text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50 md:hidden"
             aria-expanded={open}
             aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
           >
@@ -222,7 +222,7 @@ export function Navbar({
                   <MobileNavLink href="/login">Se connecter</MobileNavLink>
                   <Link
                     href="/poster"
-                    className="mt-2 inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-[#E86A2C] px-4 font-display text-[15px] font-semibold text-[#0D0D0D] outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+                    className="mt-2 inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 font-display text-[15px] font-semibold text-[#0D0D0D] outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
                   >
                     Publier une demande
                     <ArrowRight className="size-4" aria-hidden="true" />
@@ -306,7 +306,7 @@ function DesktopNavLinks({
       <span
         aria-hidden="true"
         className={cn(
-          "absolute bottom-0 h-[3px] rounded-full bg-gradient-to-r from-[#E86A2C] to-[#F59348] shadow-[0_0_12px_rgba(232,106,44,0.55)] transition-transform duration-500 will-change-transform [transition-timing-function:var(--ease-spring)]",
+          "absolute bottom-0 h-[3px] rounded-full bg-gradient-to-r from-primary to-[#F59348] shadow-[0_0_12px_rgba(232,106,44,0.55)] transition-transform duration-500 will-change-transform [transition-timing-function:var(--ease-spring)]",
           !indicator.visible && "opacity-0"
         )}
         style={{
@@ -329,7 +329,7 @@ function DesktopNavLinks({
             }}
             href={l.href}
             className={cn(
-              "inline-flex h-8 items-center rounded-lg px-3 font-display text-[15px] font-medium transition-colors duration-200 outline-none hover:bg-white/[0.06] hover:text-foreground focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50",
+              "inline-flex h-8 items-center rounded-lg px-3 font-display text-[15px] font-medium transition-colors duration-200 outline-none hover:bg-white/[0.06] hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50",
               active ? "text-foreground" : "text-muted-foreground"
             )}
           >
@@ -396,7 +396,7 @@ function MobileDock({ items, pathname }: { items: DockItem[]; pathname: string }
         <div
           aria-hidden="true"
           className={cn(
-            "pointer-events-none absolute left-0 rounded-full bg-gradient-to-br from-[#E86A2C] to-[#d95c1f] shadow-[0_0_18px_rgba(232,106,44,0.5)] ring-1 ring-white/15 transition-transform duration-500 will-change-transform [transition-timing-function:var(--ease-spring)]",
+            "pointer-events-none absolute left-0 rounded-full bg-gradient-to-br from-primary to-[#d95c1f] shadow-[0_0_18px_rgba(232,106,44,0.5)] ring-1 ring-white/15 transition-transform duration-500 will-change-transform [transition-timing-function:var(--ease-spring)]",
             !pos.active && "opacity-0"
           )}
           style={{
@@ -420,7 +420,7 @@ function MobileDock({ items, pathname }: { items: DockItem[]; pathname: string }
                   if (el) halosRef.current.set(key, el);
                   else halosRef.current.delete(key);
                 }}
-                className="group flex w-full flex-1 flex-col items-center gap-1 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-[#E86A2C]/60"
+                className="group flex w-full flex-1 flex-col items-center gap-1 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
                 style={{ touchAction: "manipulation" }}
               >
                 <span
@@ -483,7 +483,7 @@ function NavLink({
     <Link
       href={href}
       className={cn(
-        "inline-flex h-8 items-center rounded-lg px-3 font-display text-[15px] font-medium transition-colors outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50",
+        "inline-flex h-8 items-center rounded-lg px-3 font-display text-[15px] font-medium transition-colors outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50",
         active ? "text-foreground" : "text-muted-foreground"
       )}
     >
@@ -502,7 +502,7 @@ function MobileNavLink({
   return (
     <Link
       href={href}
-      className="rounded-lg px-3 py-2 font-display text-[15px] font-medium text-foreground outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+      className="rounded-lg px-3 py-2 font-display text-[15px] font-medium text-foreground outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
     >
       {children}
     </Link>

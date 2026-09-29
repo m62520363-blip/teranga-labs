@@ -64,11 +64,11 @@ const groups = [
 
 export default function PlanDuSitePage() {
   return (
-    <div className="bg-[#0F0F0F] py-16 md:py-24">
+    <div className="bg-surface py-16 md:py-24">
       <div className="container-tl">
         <div className="mx-auto max-w-3xl">
-          <span className="chip gap-2 bg-[#141414]/85 border-[#2A2A2A] backdrop-blur">
-            <MapPin className="size-3.5 text-[#E86A2C]" aria-hidden="true" />
+          <span className="chip gap-2 bg-[#141414]/85 border-hairline backdrop-blur">
+            <MapPin className="size-3.5 text-primary" aria-hidden="true" />
             TERANGA LABS
           </span>
           <h1 className="mt-6 text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
@@ -93,11 +93,11 @@ export default function PlanDuSitePage() {
                     <Link
                       key={link.label}
                       href={link.href}
-                      className="group flex items-center justify-between gap-3 rounded-xl border border-[#2A2A2A] bg-[#141414] px-5 py-4 transition-colors outline-none hover:border-[#E86A2C]/40 hover:bg-[#1E1E1E] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/60"
+                      className="group flex items-center justify-between gap-3 rounded-xl border border-hairline bg-[#141414] px-5 py-4 transition-colors outline-none hover:border-primary/40 hover:bg-[#1E1E1E] focus-visible:ring-2 focus-visible:ring-primary/60"
                     >
                       <span className="flex items-center gap-3">
                         <link.icon
-                          className="size-4 text-[#E86A2C]"
+                          className="size-4 text-primary"
                           aria-hidden="true"
                         />
                         <span className="text-[15px] font-medium tracking-tight">
@@ -116,7 +116,7 @@ export default function PlanDuSitePage() {
           </div>
 
           <p className="mt-12 flex items-center gap-2 text-sm text-muted-foreground">
-            <Send className="size-4 text-[#E86A2C]" aria-hidden="true" />
+            <Send className="size-4 text-primary" aria-hidden="true" />
             Une question ? Écrivez-nous via la page Contact.
           </p>
         </div>

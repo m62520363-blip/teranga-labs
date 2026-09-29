@@ -20,7 +20,7 @@ export function HowItWorks() {
 
       <div className="relative mt-16 grid gap-8 md:grid-cols-3 md:gap-6">
         <div
-          className="pointer-events-none absolute left-[16.66%] right-[16.66%] top-10 hidden h-px bg-gradient-to-r from-[#E86A2C]/0 via-[#E86A2C]/40 to-[#E86A2C]/0 md:block"
+          className="pointer-events-none absolute left-[16.66%] right-[16.66%] top-10 hidden h-px bg-gradient-to-r from-primary/0 via-primary/40 to-primary/0 md:block"
           aria-hidden="true"
         />
         {STEPS.map((step, index) => {
@@ -29,9 +29,9 @@ export function HowItWorks() {
             <Reveal key={step.num} delay={(index % 3) as 0 | 1 | 2}>
               <div className="card card-interactive relative h-full p-7 text-center">
                 <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-[#2A1A10]">
-                  <Icon className="size-6 text-[#E86A2C]" aria-hidden="true" />
+                  <Icon className="size-6 text-primary" aria-hidden="true" />
                 </div>
-                <p className="mt-6 font-display text-sm font-bold tracking-[0.2em] text-[#E86A2C]">
+                <p className="mt-6 font-display text-sm font-bold tracking-[0.2em] text-primary">
                   {step.num}
                 </p>
                 <h3 className="mt-2 text-lg font-semibold tracking-tight">{step.title}</h3>

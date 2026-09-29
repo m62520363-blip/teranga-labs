@@ -99,7 +99,7 @@ export function ReviewForm({ context }: { context: ReviewForRequest }) {
 
   if (context.request.status !== "terminé") {
     return (
-      <div className="mt-8 rounded-3xl border border-[#2A2A2A] bg-[#141414] p-8 text-center">
+      <div className="mt-8 rounded-3xl border border-hairline bg-[#141414] p-8 text-center">
         <h1 className="text-2xl font-semibold tracking-tight">
           Les avis arrivent après une mission terminée
         </h1>
@@ -163,9 +163,9 @@ export function ReviewForm({ context }: { context: ReviewForRequest }) {
 
   return (
     <div className="mt-6">
-      <div className="flex flex-col gap-4 rounded-3xl border border-[#2A2A2A] bg-[#141414] p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+      <div className="flex flex-col gap-4 rounded-3xl border border-hairline bg-[#141414] p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
         <div className="flex min-w-0 items-center gap-4">
-          <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-[#2A2A2A] font-display text-lg font-bold text-[#F2F2F2]">
+          <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-hairline font-display text-lg font-bold text-[#F2F2F2]">
             {(context.developer?.full_name || "?").charAt(0).toUpperCase()}
           </span>
           <div className="min-w-0">
@@ -198,7 +198,7 @@ export function ReviewForm({ context }: { context: ReviewForRequest }) {
       <div className="mt-6 flex items-center gap-2">
         {STEPS.map((s, i) => (
           <React.Fragment key={s.step}>
-            {i > 0 ? <span className="h-px flex-1 bg-[#2A2A2A]" aria-hidden="true" /> : null}
+            {i > 0 ? <span className="h-px flex-1 bg-hairline" aria-hidden="true" /> : null}
             <span
               className={cn(
                 "inline-flex items-center gap-1.5 text-xs font-medium",
@@ -209,10 +209,10 @@ export function ReviewForm({ context }: { context: ReviewForRequest }) {
                 className={cn(
                   "flex size-5 items-center justify-center rounded-full text-[10px] font-bold",
                   step === s.step
-                    ? "bg-[#E86A2C] text-[#0D0D0D]"
+                    ? "bg-primary text-[#0D0D0D]"
                     : step > s.step
                       ? "bg-[#4ADE80] text-[#0D0D0D]"
-                      : "bg-[#2A2A2A] text-muted-foreground"
+                      : "bg-hairline text-muted-foreground"
                 )}
               >
                 {step > s.step ? <Check className="size-3" aria-hidden="true" /> : s.step}
@@ -229,7 +229,7 @@ export function ReviewForm({ context }: { context: ReviewForRequest }) {
         </div>
       ) : null}
 
-      <div className="mt-5 rounded-3xl border border-[#2A2A2A] bg-[#141414] p-5 sm:p-7">
+      <div className="mt-5 rounded-3xl border border-hairline bg-[#141414] p-5 sm:p-7">
         {step === 1 ? (
           <div>
             <h2 className="text-lg font-semibold tracking-tight">
@@ -288,7 +288,7 @@ export function ReviewForm({ context }: { context: ReviewForRequest }) {
               maxLength={1500}
               rows={5}
               placeholder="Points forts, points à améliorer, conseils aux futurs clients…"
-              className="mt-3 w-full resize-y rounded-2xl border border-[#2A2A2A] bg-[#0F0F0F] px-4 py-3 text-sm outline-none placeholder:text-muted-foreground/60 focus:border-[#E86A2C]/50 focus:ring-2 focus:ring-[#E86A2C]/20"
+              className="mt-3 w-full resize-y rounded-2xl border border-hairline bg-surface px-4 py-3 text-sm outline-none placeholder:text-muted-foreground/60 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
             />
             <div className="mt-1 text-right text-xs text-muted-foreground">
               {comment.length}/1500
@@ -318,10 +318,10 @@ export function ReviewForm({ context }: { context: ReviewForRequest }) {
                             setQuestions((prev) => ({ ...prev, [q.key]: a }))
                           }
                           className={cn(
-                            "inline-flex h-9 items-center rounded-xl border px-4 text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50",
+                            "inline-flex h-9 items-center rounded-xl border px-4 text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
                             active
-                              ? "border-[#E86A2C]/60 bg-[#2A1A10] text-[#F2A378]"
-                              : "border-[#2A2A2A] text-muted-foreground hover:bg-[#1E1E1E]"
+                              ? "border-primary/60 bg-[#2A1A10] text-[#F2A378]"
+                              : "border-hairline text-muted-foreground hover:bg-[#1E1E1E]"
                           )}
                         >
                           {REVIEW_QUESTION_ANSWERS.find((x) => x.value === a)?.label}
@@ -336,8 +336,8 @@ export function ReviewForm({ context }: { context: ReviewForRequest }) {
             <h3 className="mt-8 text-lg font-semibold tracking-tight">
               Captures (facultatif)
             </h3>
-            <div className="mt-2 flex items-start gap-2.5 rounded-2xl border border-[#E86A2C]/30 bg-[#1A120B] p-4 text-sm text-muted-foreground">
-              <Info className="mt-0.5 size-4 shrink-0 text-[#E86A2C]" aria-hidden="true" />
+            <div className="mt-2 flex items-start gap-2.5 rounded-2xl border border-primary/30 bg-[#1A120B] p-4 text-sm text-muted-foreground">
+              <Info className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
               <p>
                 Vous pouvez ajouter jusqu’à 3 liens d’images (site livré,
                 échanges…) en respectant les droits d’auteur. Évitez de publier
@@ -355,7 +355,7 @@ export function ReviewForm({ context }: { context: ReviewForRequest }) {
                     setAssets((prev) => prev.map((x, j) => (j === i ? e.target.value : x)))
                   }
                   placeholder={`Capture ${i + 1} (https://…)`}
-                  className="w-full rounded-xl border border-[#2A2A2A] bg-[#0F0F0F] px-4 py-2.5 text-sm outline-none placeholder:text-muted-foreground/60 focus:border-[#E86A2C]/50 focus:ring-2 focus:ring-[#E86A2C]/20"
+                  className="w-full rounded-xl border border-hairline bg-surface px-4 py-2.5 text-sm outline-none placeholder:text-muted-foreground/60 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
                 />
               ))}
             </div>
@@ -440,7 +440,7 @@ export function ReviewForm({ context }: { context: ReviewForRequest }) {
                             href={a}
                             target="_blank"
                             rel="noreferrer"
-                            className="text-xs font-medium text-[#E86A2C] underline-offset-4 hover:underline"
+                            className="text-xs font-medium text-primary underline-offset-4 hover:underline"
                           >
                             {a}
                           </a>
@@ -530,7 +530,7 @@ function StarRating({
           aria-label={`${n} étoile${n > 1 ? "s" : ""}`}
           onClick={() => onChange(n)}
           className={cn(
-            "rounded-lg outline-none transition-transform focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50",
+            "rounded-lg outline-none transition-transform focus-visible:ring-2 focus-visible:ring-primary/50",
             size === "lg" ? "p-0.5" : "p-0.5"
           )}
         >

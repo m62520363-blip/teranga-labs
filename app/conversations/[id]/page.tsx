@@ -36,7 +36,7 @@ export default async function ConversationThreadPage({
   const request = thread.request;
 
   return (
-    <div className="bg-[#0F0F0F] py-8 md:py-12">
+    <div className="bg-surface py-8 md:py-12">
       <div className="container-tl">
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>

@@ -103,7 +103,7 @@ export function DevReviewsPanel({
         />
       </div>
 
-      <div className="mt-6 rounded-2xl border border-[#2A2A2A] bg-[#141414] p-5 sm:p-6">
+      <div className="mt-6 rounded-2xl border border-hairline bg-[#141414] p-5 sm:p-6">
         <h3 className="text-sm font-semibold tracking-tight">
           Vos moyennes par critère
         </h3>
@@ -123,9 +123,9 @@ export function DevReviewsPanel({
                     {value != null ? `${value}/5` : "—"}
                   </span>
                 </div>
-                <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-[#2A2A2A]">
+                <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-hairline">
                   <div
-                    className="h-full rounded-full bg-[#E86A2C]"
+                    className="h-full rounded-full bg-primary"
                     style={{
                       width: `${Math.max(0, Math.min(100, ((value ?? 0) / 5) * 100))}%`,
                     }}
@@ -149,7 +149,7 @@ export function DevReviewsPanel({
             key={review.id}
             className={cn(
               "rounded-2xl border p-5",
-              review.hidden ? "border-[#F87171]/25 bg-[#1A1010]" : "border-[#2A2A2A] bg-[#141414]"
+              review.hidden ? "border-[#F87171]/25 bg-[#1A1010]" : "border-hairline bg-[#141414]"
             )}
           >
             <div className="flex flex-wrap items-start justify-between gap-3">
@@ -234,10 +234,10 @@ export function DevReviewsPanel({
               </div>
             ) : null}
 
-            <div className="mt-4 border-t border-[#2A2A2A] pt-4">
+            <div className="mt-4 border-t border-hairline pt-4">
               {review.response ? (
                 <div className="flex items-start gap-2.5">
-                  <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#2A1A10] text-[#E86A2C]">
+                  <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#2A1A10] text-primary">
                     <MessageSquareReply className="size-4" aria-hidden="true" />
                   </span>
                   <div className="min-w-0 flex-1">
@@ -271,13 +271,13 @@ export function DevReviewsPanel({
                   rows={3}
                   disabled={responding === review.id}
                   placeholder="Remercier le client, préciser un point de contexte… votre réponse ne modifie jamais sa note."
-                  className="w-full flex-1 resize-y rounded-xl border border-[#2A2A2A] bg-[#0F0F0F] px-3.5 py-2.5 text-sm outline-none placeholder:text-muted-foreground/60 focus:border-[#E86A2C]/50 focus:ring-2 focus:ring-[#E86A2C]/20 disabled:opacity-60"
+                  className="w-full flex-1 resize-y rounded-xl border border-hairline bg-surface px-3.5 py-2.5 text-sm outline-none placeholder:text-muted-foreground/60 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 disabled:opacity-60"
                 />
                 <button
                   type="button"
                   onClick={() => saveResponse(review)}
                   disabled={responding === review.id}
-                  className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#F2F2F2] px-4 text-sm font-medium text-[#0D0D0D] transition-colors outline-none hover:bg-[#EBEBEB] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50 disabled:pointer-events-none disabled:opacity-60"
+                  className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#F2F2F2] px-4 text-sm font-medium text-[#0D0D0D] transition-colors outline-none hover:bg-[#EBEBEB] focus-visible:ring-2 focus-visible:ring-primary/50 disabled:pointer-events-none disabled:opacity-60"
                 >
                   {responding === review.id ? (
                     <Loader2 className="size-4 animate-spin" aria-hidden="true" />
@@ -309,9 +309,9 @@ function SummaryCard({
   label: string;
 }) {
   return (
-    <div className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-4">
+    <div className="rounded-2xl border border-hairline bg-[#141414] p-4">
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
-        <span className="flex size-8 items-center justify-center rounded-lg bg-[#2A1A10] text-[#E86A2C]">
+        <span className="flex size-8 items-center justify-center rounded-lg bg-[#2A1A10] text-primary">
           {icon}
         </span>
         {label}

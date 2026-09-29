@@ -14,7 +14,7 @@ export function MarqueeStrip({
   return (
     <div
       className={cn(
-        "relative overflow-hidden border-y border-[#2A2A2A] bg-[#0F0F0F] py-4",
+        "relative overflow-hidden border-y border-hairline bg-surface py-4",
         className
       )}
       aria-label={ariaLabel}
@@ -27,7 +27,7 @@ export function MarqueeStrip({
             className="flex shrink-0 items-center gap-3 text-sm font-medium tracking-wide text-muted-foreground"
           >
             <span
-              className="size-1.5 rounded-full bg-[#E86A2C]"
+              className="size-1.5 rounded-full bg-primary"
               aria-hidden="true"
             />
             {item}
@@ -35,11 +35,11 @@ export function MarqueeStrip({
         ))}
       </div>
       <div
-        className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#0F0F0F] to-transparent"
+        className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-surface to-transparent"
         aria-hidden="true"
       />
       <div
-        className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-[#0F0F0F] to-transparent"
+        className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-surface to-transparent"
         aria-hidden="true"
       />
     </div>

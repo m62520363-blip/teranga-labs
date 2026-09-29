@@ -43,11 +43,11 @@ const groups = [
 
 export default function FaqPage() {
   return (
-    <div className="bg-[#0F0F0F] py-16 md:py-24">
+    <div className="bg-surface py-16 md:py-24">
       <div className="container-tl">
         <div className="mx-auto max-w-3xl">
-          <span className="chip gap-2 bg-[#141414]/85 border-[#2A2A2A] backdrop-blur">
-            <HelpCircle className="size-3.5 text-[#E86A2C]" aria-hidden="true" />
+          <span className="chip gap-2 bg-[#141414]/85 border-hairline backdrop-blur">
+            <HelpCircle className="size-3.5 text-primary" aria-hidden="true" />
             FAQ
           </span>
           <h1 className="mt-6 text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
@@ -63,9 +63,9 @@ export default function FaqPage() {
           <div className="grid gap-4 sm:grid-cols-3">
             {groups.map((group) => (
               <Reveal key={group.title}>
-                <div className="card-elevate flex h-full flex-col rounded-2xl border border-[#2A2A2A] bg-[#141414] p-5">
+                <div className="card-elevate flex h-full flex-col rounded-2xl border border-hairline bg-[#141414] p-5">
                   <group.icon
-                    className="size-5 text-[#E86A2C]"
+                    className="size-5 text-primary"
                     aria-hidden="true"
                   />
                   <h2 className="mt-3 font-semibold tracking-tight">
@@ -76,7 +76,7 @@ export default function FaqPage() {
                   </p>
                   <Link
                     href={group.href}
-                    className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-[#E86A2C] hover:text-[#f59348]"
+                    className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-[#f59348]"
                   >
                     {group.cta}
                     <ArrowRight className="size-4" aria-hidden="true" />
@@ -87,7 +87,7 @@ export default function FaqPage() {
           </div>
 
           <Reveal className="mt-12">
-            <div className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 sm:p-8">
+            <div className="rounded-2xl border border-hairline bg-[#141414] p-6 sm:p-8">
               {FAQS.map((f) => (
                 <FaqItem key={f.q} question={f.q} answer={f.a} />
               ))}

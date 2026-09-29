@@ -14,12 +14,12 @@ export function FaqItem({
   const [open, setOpen] = React.useState(false);
 
   return (
-    <div className="border-b border-[#2A2A2A]">
+    <div className="border-b border-hairline">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="flex w-full items-center justify-between gap-4 py-5 text-left outline-none focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50 rounded-lg -m-1 px-1"
+        className="flex w-full items-center justify-between gap-4 py-5 text-left outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded-lg -m-1 px-1"
       >
         <span className="text-[15px] font-medium tracking-tight">
           {question}
@@ -27,7 +27,7 @@ export function FaqItem({
         <Plus
           className={cn(
             "size-4 shrink-0 text-muted-foreground transition-transform duration-300",
-            open && "rotate-45 text-[#E86A2C]"
+            open && "rotate-45 text-primary"
           )}
           aria-hidden="true"
         />

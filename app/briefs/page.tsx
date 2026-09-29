@@ -65,7 +65,7 @@ export default async function BriefsPage() {
   }
 
   return (
-    <div className="bg-[#0F0F0F] py-16 md:py-24">
+    <div className="bg-surface py-16 md:py-24">
       <div className="container-tl">
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
@@ -79,7 +79,7 @@ export default async function BriefsPage() {
           {!user && (
             <Link
               href="/login?mode=signup"
-              className="inline-flex h-10 shrink-0 items-center gap-2 rounded-xl bg-[#F2F2F2] px-5 text-sm font-medium text-[#0D0D0D] transition-colors outline-none hover:bg-[#EBEBEB] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50"
+              className="inline-flex h-10 shrink-0 items-center gap-2 rounded-xl bg-[#F2F2F2] px-5 text-sm font-medium text-[#0D0D0D] transition-colors outline-none hover:bg-[#EBEBEB] focus-visible:ring-2 focus-visible:ring-primary/50"
             >
               Créer un compte développeur
             </Link>

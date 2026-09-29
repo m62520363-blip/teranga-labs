@@ -5,7 +5,7 @@ import { Section, SectionHeader } from "@/components/landing/section";
 
 export function FaqSection() {
   return (
-    <Section id="faq" className="border-y border-[#2A2A2A] bg-[#0F0F0F]" ariaLabel="Questions fréquentes">
+    <Section id="faq" className="border-y border-hairline bg-surface" ariaLabel="Questions fréquentes">
       <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
         <Reveal>
           <SectionHeader

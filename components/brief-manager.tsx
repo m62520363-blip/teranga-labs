@@ -79,7 +79,7 @@ export function BriefManager({
 
   return (
     <div className="flex flex-col gap-8">
-      <section className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-6 shadow-sm sm:p-8">
+      <section className="rounded-2xl border border-hairline bg-[#141414] p-6 shadow-sm sm:p-8">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
@@ -102,7 +102,7 @@ export function BriefManager({
 
         <div className="mt-6 rounded-xl bg-[#1E1E1E] p-4">
           <p className="flex items-center gap-2 text-sm font-medium">
-            <Lock className="size-4 text-[#E86A2C]" aria-hidden="true" />
+            <Lock className="size-4 text-primary" aria-hidden="true" />
             {statusHint} développeur{statusHint > 1 ? "s" : ""} a ouvert une
             discussion
           </p>
@@ -163,7 +163,7 @@ export function BriefManager({
             {brief.unlocks.map((dev) => (
               <li
                 key={dev.developer_id}
-                className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-5 shadow-sm"
+                className="rounded-2xl border border-hairline bg-[#141414] p-5 shadow-sm"
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="min-w-0">
@@ -181,7 +181,7 @@ export function BriefManager({
                   </div>
                   {dev.whatsapp ? (
                     <span
-                      className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-[#2A2A2A] bg-[#1E1E1E] px-3 text-xs font-medium text-muted-foreground"
+                      className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-hairline bg-[#1E1E1E] px-3 text-xs font-medium text-muted-foreground"
                       title="Contact privé partagé après accord"
                     >
                       <Phone className="size-3.5" aria-hidden="true" />
@@ -243,7 +243,7 @@ function ReviewForm({
   };
 
   return (
-    <div className="mt-5 rounded-xl border border-[#2A2A2A] bg-[#1E1E1E] p-4">
+    <div className="mt-5 rounded-xl border border-hairline bg-[#1E1E1E] p-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           {currentRating ? "Modifier votre avis" : "Laisser une note"}
@@ -264,14 +264,14 @@ function ReviewForm({
             onClick={() => setRating(n)}
             onMouseEnter={() => setHover(n)}
             onMouseLeave={() => setHover(0)}
-            className="rounded outline-none focus-visible:ring-2 focus-visible:ring-[#E86A2C]/60"
+            className="rounded outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
             aria-label={`${n} étoile${n > 1 ? "s" : ""}`}
           >
             <Star
               className={cn(
                 "size-6 transition-colors",
                 n <= (hover || rating)
-                  ? "fill-[#E86A2C] text-[#E86A2C]"
+                  ? "fill-primary text-primary"
                   : "text-[#3A3A3A]",
                 disabled && "opacity-60"
               )}

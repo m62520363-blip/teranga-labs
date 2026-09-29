@@ -90,10 +90,10 @@ export function ClientProjects({ items }: { items: ClientProjectItem[] }) {
               onClick={() => setFilter(t.key)}
               aria-pressed={filter === t.key}
               className={cn(
-                "inline-flex h-8 items-center rounded-lg border px-2.5 text-xs font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50",
+                "inline-flex h-8 items-center rounded-lg border px-2.5 text-xs font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
                 filter === t.key
-                  ? "border-[#E86A2C]/60 bg-[#2A1A10] text-[#F2A378]"
-                  : "border-[#2A2A2A] bg-transparent text-muted-foreground hover:bg-[#1E1E1E]"
+                  ? "border-primary/60 bg-[#2A1A10] text-[#F2A378]"
+                  : "border-hairline bg-transparent text-muted-foreground hover:bg-[#1E1E1E]"
               )}
             >
               {t.label}
@@ -119,8 +119,8 @@ export function ClientProjects({ items }: { items: ClientProjectItem[] }) {
                 className={cn(
                   "flex flex-col gap-4 rounded-2xl border p-5",
                   filter === "archived"
-                    ? "border-[#2A2A2A]/60 bg-[#101010]"
-                    : "border-[#2A2A2A] bg-[#141414]"
+                    ? "border-hairline/60 bg-[#101010]"
+                    : "border-hairline bg-[#141414]"
                 )}
               >
                 <div className="flex items-start justify-between gap-3">
@@ -166,7 +166,7 @@ export function ClientProjects({ items }: { items: ClientProjectItem[] }) {
                           (r.daysLeft ?? 0) < 0
                             ? "bg-[#3B1A1A] text-[#F87171]"
                             : (r.daysLeft ?? 0) <= 7
-                              ? "bg-[#2A1A10] text-[#E86A2C]"
+                              ? "bg-[#2A1A10] text-primary"
                               : "bg-[#1A1A2E] text-muted-foreground"
                         )}
                       >
@@ -207,14 +207,14 @@ export function ClientProjects({ items }: { items: ClientProjectItem[] }) {
                     className={cn(
                       "flex items-start gap-3 rounded-xl border p-3.5 sm:items-center",
                       r.review
-                        ? "border-[#2A2A2A] bg-[#101010]"
-                        : "border-[#E86A2C]/30 bg-[#1A120B]"
+                        ? "border-hairline bg-[#101010]"
+                        : "border-primary/30 bg-[#1A120B]"
                     )}
                   >
                     <span
                       className={cn(
                         "flex size-9 shrink-0 items-center justify-center rounded-lg",
-                        r.review ? "bg-[#F5C26B]/15 text-[#F5C26B]" : "bg-[#E86A2C] text-[#0D0D0D]"
+                        r.review ? "bg-[#F5C26B]/15 text-[#F5C26B]" : "bg-primary text-[#0D0D0D]"
                       )}
                     >
                       <Star className="size-4" aria-hidden="true" />
@@ -239,9 +239,9 @@ export function ClientProjects({ items }: { items: ClientProjectItem[] }) {
                     <Link
                       href={`/review/${r.id}`}
                       className={cn(
-                        "shrink-0 rounded-lg px-3 py-2 text-xs font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50",
+                        "shrink-0 rounded-lg px-3 py-2 text-xs font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
                         r.review
-                          ? "border border-[#2A2A2A] text-[#F2F2F2] hover:bg-[#1E1E1E]"
+                          ? "border border-hairline text-[#F2F2F2] hover:bg-[#1E1E1E]"
                           : "bg-[#F2F2F2] text-[#0D0D0D] hover:bg-[#EBEBEB]"
                       )}
                     >
@@ -250,7 +250,7 @@ export function ClientProjects({ items }: { items: ClientProjectItem[] }) {
                   </div>
                 ) : null}
 
-                <div className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-[#2A2A2A] pt-4">
+                <div className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-hairline pt-4">
                   <div className="flex items-center gap-3 text-xs text-muted-foreground">
                     <span className="inline-flex items-center gap-1.5">
                       <Inbox className="size-3.5" aria-hidden="true" />
@@ -264,7 +264,7 @@ export function ClientProjects({ items }: { items: ClientProjectItem[] }) {
                   {r.pendingOffers > 0 ? (
                     <Link
                       href={r.firstConvId ? `/conversations/${r.firstConvId}` : "/client"}
-                      className="inline-flex items-center gap-1.5 text-xs font-medium text-[#E86A2C] hover:text-[#f59348]"
+                      className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:text-[#f59348]"
                     >
                       <Sparkles className="size-3.5" aria-hidden="true" />
                       {r.pendingOffers} devis à examiner
@@ -285,7 +285,7 @@ export function ClientProjects({ items }: { items: ClientProjectItem[] }) {
                     type="button"
                     onClick={() => archiveProject(r)}
                     disabled={archiving === r.id}
-                    className="inline-flex h-8 items-center gap-1.5 self-start rounded-lg border border-[#2A2A2A] px-2.5 text-xs font-medium text-muted-foreground transition-colors outline-none hover:border-[#F87171]/40 hover:text-[#F87171] focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50 disabled:pointer-events-none disabled:opacity-50"
+                    className="inline-flex h-8 items-center gap-1.5 self-start rounded-lg border border-hairline px-2.5 text-xs font-medium text-muted-foreground transition-colors outline-none hover:border-[#F87171]/40 hover:text-[#F87171] focus-visible:ring-2 focus-visible:ring-primary/50 disabled:pointer-events-none disabled:opacity-50"
                   >
                     {archiving === r.id ? (
                       <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
@@ -326,8 +326,8 @@ function PhaseIndicator({
             n <= phase.step
               ? phase.step === 3
                 ? "bg-[#4ADE80]"
-                : "bg-[#E86A2C]"
-              : "bg-[#2A2A2A]"
+                : "bg-primary"
+              : "bg-hairline"
           )}
           aria-hidden="true"
         />

@@ -15,7 +15,7 @@ export const dynamic = "force-dynamic";
 
 function notConfigured() {
   return (
-    <div className="bg-[#0F0F0F] py-16">
+    <div className="bg-surface py-16">
       <div className="container-tl mx-auto max-w-md text-center">
         <h1 className="text-2xl font-semibold">Configuration requise</h1>
         <p className="mt-3 text-sm text-muted-foreground">
@@ -59,7 +59,7 @@ function AlreadyValidated() {
 function VerificationInProgress() {
   return (
     <div className="container-tl mx-auto max-w-lg py-20">
-      <div className="rounded-2xl border border-[#2A2A2A] bg-[#141414] p-8 text-center shadow-sm">
+      <div className="rounded-2xl border border-hairline bg-[#141414] p-8 text-center shadow-sm">
         <span className="mx-auto inline-flex size-14 items-center justify-center rounded-full bg-[#2A1A10]">
           <Clock3 className="size-7 text-[#E8A33D]" aria-hidden="true" />
         </span>
@@ -91,11 +91,11 @@ export default async function InscriptionDeveloppeurPage() {
   const status = data?.status ?? null;
 
   return (
-    <div className="bg-[#0F0F0F] py-14">
+    <div className="bg-surface py-14">
       <div className="container-tl">
         <header className="mx-auto max-w-3xl">
-          <span className="chip gap-2 border-[#2A2A2A] bg-[#141414]">
-            <span className="size-1.5 rounded-full bg-[#E86A2C]" aria-hidden="true" />
+          <span className="chip gap-2 border-hairline bg-[#141414]">
+            <span className="size-1.5 rounded-full bg-primary" aria-hidden="true" />
             INSCRIPTION DÉVELOPPEUR
           </span>
           <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
@@ -120,18 +120,18 @@ export default async function InscriptionDeveloppeurPage() {
 
         <footer className="mx-auto mt-12 max-w-3xl">
           <div className="grid gap-3 sm:grid-cols-2">
-            <div className="flex items-start gap-3 rounded-2xl border border-[#2A2A2A] bg-[#141414] p-5">
+            <div className="flex items-start gap-3 rounded-2xl border border-hairline bg-[#141414] p-5">
               <span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#2A1A10]">
-                <CheckCircle2 className="size-4 text-[#E86A2C]" aria-hidden="true" />
+                <CheckCircle2 className="size-4 text-primary" aria-hidden="true" />
               </span>
               <p className="text-sm leading-relaxed text-muted-foreground">
                 <span className="font-medium text-foreground">Approbation manuelle.</span>{" "}
                 Chaque dossier est lu par notre équipe avant d’activer le compte.
               </p>
             </div>
-            <div className="flex items-start gap-3 rounded-2xl border border-[#2A2A2A] bg-[#141414] p-5">
+            <div className="flex items-start gap-3 rounded-2xl border border-hairline bg-[#141414] p-5">
               <span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#2A1A10]">
-                <BadgeCheck className="size-4 text-[#E86A2C]" aria-hidden="true" />
+                <BadgeCheck className="size-4 text-primary" aria-hidden="true" />
               </span>
               <p className="text-sm leading-relaxed text-muted-foreground">
                 <span className="font-medium text-foreground">Badge Vérifié.</span>{" "}

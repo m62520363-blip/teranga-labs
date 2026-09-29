@@ -95,19 +95,19 @@ export function TokenCard({ pkg }: { pkg: TokenPackage }) {
       className={cn(
         "relative flex h-full flex-col rounded-2xl border bg-[#141414] p-6 transition-all duration-300",
         pkg.popular
-          ? "border-[#E86A2C]/50 shadow-md"
-          : "border-[#2A2A2A] shadow-sm hover:border-[#E86A2C]/30"
+          ? "border-primary/50 shadow-md"
+          : "border-hairline shadow-sm hover:border-primary/30"
       )}
     >
       {pkg.popular && (
-        <span className="absolute -top-3 left-6 inline-flex h-6 items-center rounded-full bg-[#E86A2C] px-3 text-[11px] font-semibold uppercase tracking-wide text-white">
+        <span className="absolute -top-3 left-6 inline-flex h-6 items-center rounded-full bg-primary px-3 text-[11px] font-semibold uppercase tracking-wide text-white">
           Populaire
         </span>
       )}
 
       <div className="flex items-center justify-between">
         <h3 className="text-[15px] font-semibold tracking-tight">{pkg.name}</h3>
-        <Coins className="size-5 text-[#E86A2C]" aria-hidden="true" />
+        <Coins className="size-5 text-primary" aria-hidden="true" />
       </div>
 
       <div className="mt-4 flex items-baseline gap-1">
@@ -161,7 +161,7 @@ export function TokenCard({ pkg }: { pkg: TokenPackage }) {
 
               <div className="flex flex-col gap-3 rounded-xl bg-[#1E1E1E] p-4">
                 <div className="flex items-center gap-2 text-sm font-medium">
-                  <ShieldCheck className="size-4 text-[#E86A2C]" aria-hidden="true" />
+                  <ShieldCheck className="size-4 text-primary" aria-hidden="true" />
                   Commande validée par notre équipe
                 </div>
                 <ol className="list-inside list-decimal space-y-1.5 text-sm leading-relaxed text-muted-foreground">
@@ -169,7 +169,7 @@ export function TokenCard({ pkg }: { pkg: TokenPackage }) {
                   <li>Vous payez sur votre mobile money habituel (Wave ou Max It).</li>
                   <li>Notre équipe vérifie le paiement et crédite vos Tokens.</li>
                 </ol>
-                <p className="border-t border-[#2A2A2A] pt-3 text-xs leading-relaxed text-muted-foreground">
+                <p className="border-t border-hairline pt-3 text-xs leading-relaxed text-muted-foreground">
                   Le paiement en ligne automatique (Wave ou Max It)
                   arrive bientôt. En attendant, l’achat se fait à la commande,
                   confirmée une fois l’encaissement vérifié.
@@ -221,7 +221,7 @@ export function TokenCard({ pkg }: { pkg: TokenPackage }) {
                 <DialogTitle>Création de la commande…</DialogTitle>
               </DialogHeader>
               <div className="flex justify-center py-6">
-                <Loader2 className="size-8 animate-spin text-[#E86A2C]" aria-hidden="true" />
+                <Loader2 className="size-8 animate-spin text-primary" aria-hidden="true" />
               </div>
             </>
           ) : null}
@@ -235,12 +235,12 @@ export function TokenCard({ pkg }: { pkg: TokenPackage }) {
                 </DialogTitle>
               </DialogHeader>
 
-              <div className="rounded-xl border border-[#2A2A2A] p-4">
+              <div className="rounded-xl border border-hairline p-4">
                 <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   Commande
                 </p>
                 <p className="mt-1 font-mono text-sm">#{order.id}</p>
-                <div className="mt-3 border-t border-[#2A2A2A] pt-3 text-sm">
+                <div className="mt-3 border-t border-hairline pt-3 text-sm">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">{order.package_name}</span>
                     <span>{order.tokens} token{order.tokens > 1 ? "s" : ""}</span>

@@ -4,7 +4,7 @@ import { Section, SectionHeader } from "@/components/landing/section";
 
 export function CategoriesSection() {
   return (
-    <Section className="border-y border-[#2A2A2A] bg-[#0F0F0F]" ariaLabel="Catégories">
+    <Section className="border-y border-hairline bg-surface" ariaLabel="Catégories">
       <SectionHeader
         eyebrow="Catégories"
         title="Ce que vous pouvez chercher"
@@ -16,7 +16,7 @@ export function CategoriesSection() {
           <Reveal key={category.title} delay={(index % 3) as 0 | 1 | 2}>
             <div className="card card-interactive h-full p-5">
               <span className="flex size-11 items-center justify-center rounded-xl bg-[#2A1A10]">
-                <category.icon className="size-5 text-[#E86A2C]" aria-hidden="true" />
+                <category.icon className="size-5 text-primary" aria-hidden="true" />
               </span>
               <h3 className="mt-4 text-[15px] font-semibold tracking-tight">
                 {category.title}

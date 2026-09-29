@@ -24,11 +24,11 @@ export function SellersSection() {
 
             <div className="mt-4 space-y-2.5 rounded-xl bg-[#1E1E1E] p-4">
               <p className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Wallet className="size-4 text-[#E86A2C]" aria-hidden="true" />
+                <Wallet className="size-4 text-primary" aria-hidden="true" />
                 {SELLERS.notification.budget}
               </p>
               <p className="flex items-center gap-2 text-sm text-muted-foreground">
-                <MapPin className="size-4 text-[#E86A2C]" aria-hidden="true" />
+                <MapPin className="size-4 text-primary" aria-hidden="true" />
                 {SELLERS.notification.location}
               </p>
             </div>
@@ -37,7 +37,7 @@ export function SellersSection() {
               <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Coût du contact
               </label>
-              <div className="mt-2 rounded-xl border border-[#2A2A2A] bg-[#141414] px-4 py-3 text-[15px] font-medium text-foreground">
+              <div className="mt-2 rounded-xl border border-hairline bg-[#141414] px-4 py-3 text-[15px] font-medium text-foreground">
                 1 Token = 2 500 F
               </div>
             </div>
@@ -59,8 +59,8 @@ export function SellersSection() {
           <ul className="mt-8 space-y-3.5">
             {SELLERS.benefits.map((benefit) => (
               <li key={benefit} className="flex items-start gap-3">
-                <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-[#E86A2C]/12">
-                  <span className="size-1.5 rounded-full bg-[#E86A2C]" aria-hidden="true" />
+                <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-primary/12">
+                  <span className="size-1.5 rounded-full bg-primary" aria-hidden="true" />
                 </span>
                 <span className="text-[15px] text-muted-foreground">{benefit}</span>
               </li>

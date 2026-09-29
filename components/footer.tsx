@@ -63,7 +63,7 @@ const columns = [
 
 export function Footer() {
   return (
-    <footer className="bg-[#0F0F0F] text-white border-t border-[#2A2A2A]">
+    <footer className="bg-surface text-white border-t border-hairline">
       <div className="container-tl grid gap-12 py-16 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div className="max-w-xs">
           <span className="inline-flex">
@@ -86,7 +86,7 @@ export function Footer() {
                 <a
                   href={social.href}
                   aria-label={social.label}
-                  className="flex size-10 items-center justify-center rounded-xl border border-white/10 transition-colors outline-none hover:border-[#E86A2C]/60 hover:bg-[#E86A2C]/10 focus-visible:ring-2 focus-visible:ring-[#E86A2C]/60"
+                  className="flex size-10 items-center justify-center rounded-xl border border-white/10 transition-colors outline-none hover:border-primary/60 hover:bg-primary/10 focus-visible:ring-2 focus-visible:ring-primary/60"
                 >
                   <svg
                     viewBox="0 0 24 24"

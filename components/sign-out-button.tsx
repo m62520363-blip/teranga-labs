@@ -63,7 +63,7 @@ export function SignOutButton({
         type="button"
         onClick={() => setOpen(true)}
         disabled={signingOut}
-        className="inline-flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-sm font-medium text-muted-foreground transition-colors outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-[#E86A2C]/50 disabled:opacity-60"
+        className="inline-flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-sm font-medium text-muted-foreground transition-colors outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50 disabled:opacity-60"
       >
         <LogOut className="size-4" aria-hidden="true" />
         <span className="hidden lg:inline">Déconnexion</span>
