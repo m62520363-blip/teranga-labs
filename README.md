@@ -81,6 +81,70 @@ npm run dev                  # http://localhost:3000
 Ces règles sont **testées**, pas seulement documentées : voir
 `supabase/tests/permissions.sql`.
 
+## En-têtes de sécurité
+
+`middleware.ts` pose sur chaque réponse HTML (vérifié en HTTP réel) :
+
+| En-tête | Valeur |
+| --- | --- |
+| `X-Frame-Options` | `DENY` |
+| `Content-Security-Policy` | `frame-ancestors 'none'` |
+| `X-Content-Type-Options` | `nosniff` |
+| `Referrer-Policy` | `strict-origin-when-cross-origin` |
+| `Permissions-Policy` | `camera=(), microphone=(), geolocation=(), interest-cohort=()` |
+| `Strict-Transport-Security` | `max-age=63072000; includeSubDomains; preload` |
+
+Une CSP complète n'est **pas** posée volontairement : Next.js injecte des
+scripts en ligne, une CSP statique casserait l'application, et elle réclame
+des nonces par requête (à faire si le point devient critique).
+
+## Performance
+
+- Les appels d'authentification serveur (`createClient`, `getCurrentUser`,
+  `getCurrentDeveloper`, `getCurrentRole`) sont enrobés dans `cache()` React :
+  **un seul** aller-retour Supabase Auth par requête au lieu de 3-4. Sans
+  `cache()`, le layout racine faisait déjà 2 appels, puis chaque page répétait
+  `getCurrentUser()`.
+- `getCurrentRole()` court-circuite pour les visiteurs anonymes : le RPC
+  `get_my_role` exige une session, appeler le réseau pour rien était perdu
+  (le visiteur anonyme est le cas majoritaire en lecture).
+- **Principe** : ces pages sont dynamiques volontairement — les données
+  dépendent de l'utilisateur et la RLS se résout avec ses cookies. Toute
+  tentative de cache ISR/statique sur `app/briefs/*`, `/client`, `/dashboard`
+  est une **fuite de données** latente. Les pages publiques le sont aussi via
+  `createClient()` (qui lit les cookies) — c'est le coût d'un SSR correct.
+- ⚠️ **`loading.tsx` et les gardes serveur** : un `loading.tsx` crée une
+  boundary Suspense qui se résout *avant* que le page ne termine de streamer.
+  Si la page appelle `redirect()` ou `notFound()` (brief inexistant, profil
+  inconnu, accès non autorisé), le statut/code n'est plus transmissible et le
+  squelette reste affiché à vie. C'est ce piège qui avait d'abord cassé les
+  404 de `/briefs/[id]`, `/dev/[username]` et les redirections `/dashboard` et
+  `/client`. Le projet n'utilise donc **aucun** `loading.tsx` de route. Si un
+  squelette est nécessaire plus tard, le faire dans un composant client avec
+  un état `loading` explicite, jamais via un `loading.tsx` au-dessus d'une
+  page avec `redirect()`/`notFound()`.
+
+## SEO
+
+- `metadata` complet dans `app/layout.tsx` : OpenGraph, Twitter Card
+  (`summary_large_image`), `robots`, icônes, `manifest.json` (PWA avec
+  icônes 192/512 maskable).
+- `/sitemap.xml`, `/robots.txt`, JSON-LD (Organization) sur la page d'accueil.
+- **13 pages privées** (dashboard, client, tokens, notifications,
+  conversations, paramètres, login/signup, vérification, inscription,
+  poster, avis) sont en `robots: noindex` : sans cela Google indexait des
+  rendus vides de `/dashboard` anonyme.
+- La 404 définit son propre titre et `noindex`.
+
+## Stabilité & gestion d'erreur
+
+- `app/error.tsx` : boundary d'erreur racine avec bouton **Réessayer**
+  (`reset`), message rassurant et affichage du `digest` Next.js pour les
+  signalements.
+- `app/global-error.tsx` : prend le relais si le layout racine lui-même a
+  échoué (styles inline obligatoires), retry via `reset` et retour à l'accueil
+  par navigation complète.
+
 ## Design system
 
 Toutes les couleurs passent par les tokens de `app/globals.css` — plus aucune

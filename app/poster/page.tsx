@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Poster un brief",
   description:
     "Publiez votre besoin de site web pour 1 Token. Les développeurs viennent à vous.",
+  robots: { index: false, follow: false },
 };
 
 export default async function PosterPage() {

@@ -26,6 +26,7 @@ export const metadata: Metadata = {
   title: "Mon espace client",
   description:
     "Vos briefs publiés, les devis reçus, vos discussions et le suivi de vos missions.",
+  robots: { index: false, follow: false },
 };
 
 export const dynamic = "force-dynamic";

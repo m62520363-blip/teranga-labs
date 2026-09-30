@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Créer un compte",
   description:
     "Inscrivez-vous sur TERANGA LABS : publiez un projet (client) ou débloquez les briefs et contactez les clients (développeur).",
+  robots: { index: false, follow: false },
 };
 
 export const dynamic = "force-dynamic";

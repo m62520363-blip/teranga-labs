@@ -6,6 +6,7 @@ import { SettingsContent } from "@/components/settings-content";
 export const metadata: Metadata = {
   title: "Paramètres",
   description: "Gérez votre compte et votre mot de passe TERANGA LABS.",
+  robots: { index: false, follow: false },
 };
 
 export const dynamic = "force-dynamic";

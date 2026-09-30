@@ -6,6 +6,7 @@ import { getCurrentUser } from "@/lib/supabase/server";
 export const metadata: Metadata = {
   title: "Notifications",
   description: "Vos messages, devis et alertes sur TERANGA LABS.",
+  robots: { index: false, follow: false },
 };
 
 export const dynamic = "force-dynamic";

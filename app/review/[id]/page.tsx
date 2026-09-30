@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   title: "Évaluez votre expérience",
   description:
     "Partagez votre avis et votre note après une mission TERANGA LABS.",
+  robots: { index: false, follow: false },
 };
 
 export const dynamic = "force-dynamic";

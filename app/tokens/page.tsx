@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Tokens",
   description:
     "Rechargez vos Tokens et débloquez les coordonnées des clients qui cherchent un développeur.",
+  robots: { index: false, follow: false },
 };
 
 export const dynamic = "force-dynamic";

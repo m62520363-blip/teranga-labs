@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   title: "Dashboard développeur",
   description:
     "Votre solde de Tokens, vos déblocages, vos devis envoyés et vos missions.",
+  robots: { index: false, follow: false },
 };
 
 export const dynamic = "force-dynamic";

@@ -13,6 +13,7 @@ import {
 export const metadata: Metadata = {
   title: "Discussion",
   description: "Votre conversation privée autour d’un brief.",
+  robots: { index: false, follow: false },
 };
 
 export const dynamic = "force-dynamic";

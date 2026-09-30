@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Se connecter",
   description:
     "Connectez-vous à TERANGA LABS, en tant que client ou développeur.",
+  robots: { index: false, follow: false },
 };
 
 export const dynamic = "force-dynamic";

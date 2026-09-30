@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "Inscription développeur",
   description:
     "Complétez votre profil développeur en deux étapes : vos coordonnées, puis votre profil professionnel. TERANGA LABS valide chaque dossier avant activation.",
+  robots: { index: false, follow: false },
 };
 
 export const dynamic = "force-dynamic";

@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { cache } from "react";
 import type { Database } from "@/types/database";
 import { cookieOptionsWithAge } from "@/lib/supabase/cookies";
 
@@ -10,7 +11,7 @@ export function isSupabaseConfigured() {
   );
 }
 
-export async function createClient() {
+export const createClient = cache(async () => {
   if (!isSupabaseConfigured()) return null;
 
   const cookieStore = await cookies();
@@ -38,18 +39,18 @@ export async function createClient() {
       },
     }
   );
-}
+});
 
-export async function getCurrentUser() {
+export const getCurrentUser = cache(async () => {
   const supabase = await createClient();
   if (!supabase) return null;
   const {
     data: { user },
   } = await supabase.auth.getUser();
   return user;
-}
+});
 
-export async function getCurrentDeveloper() {
+export const getCurrentDeveloper = cache(async () => {
   const user = await getCurrentUser();
   if (!user) return null;
   const supabase = await createClient();
@@ -60,11 +61,16 @@ export async function getCurrentDeveloper() {
     .eq("id", user.id)
     .maybeSingle();
   return data;
-}
+});
 
-export async function getCurrentRole(): Promise<string | null> {
+export const getCurrentRole = cache(async (): Promise<string | null> => {
+  // get_my_role exige une session : inutile d'aller au réseau pour un
+  // visiteur anonyme, qui est le cas majoritaire sur les pages publiques.
+  const user = await getCurrentUser();
+  if (!user) return null;
+
   const supabase = await createClient();
   if (!supabase) return null;
   const { data } = await supabase.rpc("get_my_role");
   return typeof data === "string" ? data : null;
-}
+});

@@ -2,6 +2,34 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { cookieOptionsWithAge } from "@/lib/supabase/cookies";
 
+/**
+ * En-tetes de securite appliques a chaque reponse HTML.
+ *
+ * Content-Security-Policy n'est pas pose ici volontairement : Next.js injecte
+ * des scripts en ligne et une CSP statique casse l'application sans etre
+ * testable en amont. Elle demanderait des nonces par requete.
+ */
+function applySecurityHeaders(response: NextResponse): NextResponse {
+  //.clickjacking : aucun site tiers ne peut afficher l'app dans un iframe
+  response.headers.set("X-Frame-Options", "DENY");
+  response.headers.set("Content-Security-Policy", "frame-ancestors 'none'");
+  // un fichier ne doit jamais etre interprete dans un autre format
+  response.headers.set("X-Content-Type-Options", "nosniff");
+  // l'URL complete ne doit pas partir vers WhatsApp, Google, etc.
+  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  // aucune de ces API n'est utilisee par l'app
+  response.headers.set(
+    "Permissions-Policy",
+    "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+  );
+  // HTTPS obligatoire pendant 2 ans, sous-domaine inclus
+  response.headers.set(
+    "Strict-Transport-Security",
+    "max-age=63072000; includeSubDomains; preload"
+  );
+  return response;
+}
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
@@ -9,7 +37,7 @@ export async function updateSession(request: NextRequest) {
     !process.env.NEXT_PUBLIC_SUPABASE_URL ||
     !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   ) {
-    return supabaseResponse;
+    return applySecurityHeaders(supabaseResponse);
   }
 
   const supabase = createServerClient(
@@ -39,7 +67,9 @@ export async function updateSession(request: NextRequest) {
 
   await supabase.auth.getUser();
 
-  return supabaseResponse;
+  // applique apres le rafraichissement de session : setAll remplace
+  // supabaseResponse, donc les en-tetes doivent partir sur l'objet final
+  return applySecurityHeaders(supabaseResponse);
 }
 
 export const middleware = updateSession;

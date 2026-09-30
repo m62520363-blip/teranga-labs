@@ -8,6 +8,7 @@ import { ConversationsList } from "@/components/conversations-list";
 export const metadata: Metadata = {
   title: "Mes discussions",
   description: "Vos conversations privées autour des briefs Teranga Labs.",
+  robots: { index: false, follow: false },
 };
 
 export const dynamic = "force-dynamic";
