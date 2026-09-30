@@ -110,7 +110,7 @@ select is(
       from pg_policies
      where schemaname = 'public'
        and cmd <> 'SELECT'
-       and (roles = '{anon}' or roles = '{public}')
+       and (roles && array['anon', 'public']::name[])
        and coalesce(with_check, qual, '') !~ 'auth\.uid\(\)'
   ),
   0,

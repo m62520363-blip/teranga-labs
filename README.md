@@ -30,8 +30,8 @@ components/         UI métier (unlock-dialog, brief-filters, admin-dashboard…
 lib/supabase/       clients browser/server null-safe
 scripts/            db-test.mjs (runner pgtap)
 supabase/
-  migrations/       31 migrations SQL (0001 → 0031)
-  tests/            tests pgtap (permissions.sql, reviews.sql)
+  migrations/       32 migrations SQL (0001 → 0032)
+  tests/            tests pgtap (permissions.sql, reviews.sql, contact_spam.sql)
   config.toml       stack locale (supabase start / supabase test db)
 ```
 
@@ -72,6 +72,15 @@ npm run dev                  # http://localhost:3000
 - **Surface SQL figée** : seules 19 fonctions de `public` sont atteignables par
   un visiteur non connecté (briefs, avis publics, annuaire, formulaire de
   contact). Tout le reste exige une session ou `service_role`.
+- **Écriture : RPC uniquement** — un visiteur n'a plus *aucun* privilège
+  `INSERT` direct sur `requests` ni `contact_messages` : publier passe par
+  `publish_brief` (session + 1 Token), écrire au support par
+  `submit_contact_message` (validation + limite). Deux politiques RLS
+  `with check (true)` ouvertes à `anon` subsistaient depuis 0002/0023 et
+  permettaient de court-circuiter ces deux chemins (migration 0032).
+- **Anti-spam formulaire de contact** : 3 messages maximum par adresse email sur
+  fenêtre glissante de 24 h (`SQLSTATE TLLIM`), indexé sur `(email, created_at)`.
+  Sans ce verrou, chaque envoi notifiait tous les administrateurs.
 - ⚠️ **PostgreSQL** : une fonction hérite d'EXECUTE via `PUBLIC`. `revoke …
   from anon` seul ne protège donc rien — chaque révocation porte aussi sur
   `PUBLIC` (cf. migration 0031). Ce piège avait laissé 88 fonctions
@@ -189,7 +198,7 @@ Trois niveaux, tous exécutés automatiquement par `.github/workflows/ci.yml` :
 
 ```bash
 npm run check     # typecheck + lint + tests unitaires (68)
-npm run test:db   # tests pgtap sur la base (69 assertions)
+npm run test:db   # tests pgtap sur la base (81 assertions)
 npm run build     # build de production
 ```
 
@@ -197,8 +206,9 @@ npm run build     # build de production
 
 | Fichier | Couverture |
 | --- | --- |
-| `supabase/tests/permissions.sql` | RLS de toutes les tables, surface publique figée (liste exacte des fonctions accessibles à `anon`), fonctions internes inaccessibles, `search_path` des `SECURITY DEFINER`, absence de fuite de secrets / d'e-mails non masqués |
+| `supabase/tests/permissions.sql` | RLS de toutes les tables, surface publique figée (liste exacte des fonctions accessibles à `anon`), fonctions internes inaccessibles, `search_path` des `SECURITY DEFINER`, absence de fuite de secrets / d'e-mails non masqués, **aucune politique d'écriture atteignable par `anon`** (test durci : recherche par appartenance `roles && '{anon}'`, ce qui couvre aussi les politiques `{anon, authenticated}`) |
 | `supabase/tests/reviews.sql` | Cycle de vie complet des avis : notification « mission terminée », 11 garde-fous (SQLSTATE `TLNAU`/`TLFOR`/`TLTMP`/`TLBAD`), publication, déduction du développeur, upsert, notes et réputation, lecture client/développeur/public, réponse publique, signalement, modération admin sans altération de la note |
+| `supabase/tests/contact_spam.sql` | Fermeture de la surface d'écriture (zéro politique d'insertion visiteur, zéro privilège `INSERT` direct pour `anon`/`authenticated` sur `requests` et `contact_messages`) et fenêtre anti-spam du formulaire de contact (3 messages / email / 24 h, `SQLSTATE TLLIM`, sans effet de bord sur une autre adresse) |
 
 Exécution :
 
@@ -230,7 +240,6 @@ npm run build       # build de production
 ## Roadmap (limites actuelles)
 
 - Paiement réel Wave (actif) / Max It (hors service pour le moment) à brancher (webhook → `credit_tokens`).
-- Pagination des briefs, rate limiting de `create_brief` (le plus court chemin
-  vers le spam de notifications), modération auto.
+- Pagination des briefs, modération auto.
 - Suppression définitive de `token_refund_requests` (table vide, verrouillée
   par la migration 0031) si la fonctionnalité n'est pas reprise.
