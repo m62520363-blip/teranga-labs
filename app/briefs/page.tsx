@@ -5,6 +5,7 @@ import {
   createClient,
   getCurrentUser,
 } from "@/lib/supabase/server";
+import { BRIEFS_COLUMNS, BRIEFS_PAGE_SIZE } from "@/lib/briefs-pagination";
 import type { PublicRequest } from "@/types/database";
 
 export const metadata: Metadata = {
@@ -20,21 +21,22 @@ export default async function BriefsPage() {
   const user = await getCurrentUser();
 
   let briefs: PublicRequest[] = [];
+  let total = 0;
   const unlocks: Record<string, { conversation_id?: string; whatsapp?: string }> = {};
   let balance: number | null = null;
 
   if (supabase) {
-    const { data } = await supabase
+    const { data, count } = await supabase
       .from("requests")
-      .select(
-        "id, client_name, client_city, project_type, budget, description, status, hidden, budget_verified, demo, created_at"
-      )
+      .select(BRIEFS_COLUMNS, { count: "exact" })
       .eq("status", "ouvert")
       .eq("hidden", false)
       .order("created_at", { ascending: false })
-      .limit(50);
+      .order("id", { ascending: false })
+      .limit(BRIEFS_PAGE_SIZE);
 
     briefs = (data ?? []) as PublicRequest[];
+    total = count ?? briefs.length;
 
     if (user) {
       const { data: unlocksData } = await supabase.rpc("get_my_unlocks");
@@ -70,7 +72,7 @@ export default async function BriefsPage() {
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
             <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
-              {briefs.length} briefs disponibles au Sénégal
+              {total} brief{total > 1 ? "s" : ""} disponible{total > 1 ? "s" : ""} au Sénégal
             </h1>
             <p className="mt-3 text-base leading-relaxed text-muted-foreground">
               1 Token ouvre une discussion privée avec le client, en direct.
@@ -92,6 +94,7 @@ export default async function BriefsPage() {
         <div className="mt-4">
           <BriefFilters
             briefs={briefs}
+            total={total}
             user={user ? { id: user.id } : null}
             balance={balance}
             unlocks={unlocks}

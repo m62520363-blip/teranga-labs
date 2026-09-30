@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Search } from "lucide-react";
+import { Loader2, Search } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -15,6 +15,8 @@ import { BriefGrid } from "@/components/brief-grid";
 import { UnlockDialog } from "@/components/unlock-dialog";
 import { ReportButton } from "@/components/report-button";
 import { EmptyState } from "@/components/empty-state";
+import { createClient } from "@/lib/supabase/client";
+import { BRIEFS_COLUMNS, BRIEFS_PAGE_SIZE } from "@/lib/briefs-pagination";
 import type { PublicRequest } from "@/types/database";
 import { PROJECT_TYPES, PROJECT_TYPE_LABELS, SENEGAL_REGIONS } from "@/lib/tokens";
 
@@ -35,19 +37,53 @@ const BUDGET_BANDS: BudgetBand[] = [
 
 export function BriefFilters({
   briefs,
+  total,
   user,
   balance,
   unlocks,
 }: {
   briefs: PublicRequest[];
+  total: number;
   user: { id: string } | null;
   balance: number | null;
   unlocks: UnlockInfo;
 }) {
+  const [all, setAll] = React.useState<PublicRequest[]>(briefs);
+  const [loading, setLoading] = React.useState(false);
+  const [loadError, setLoadError] = React.useState<string | null>(null);
   const [query, setQuery] = React.useState("");
   const [city, setCity] = React.useState("all");
   const [type, setType] = React.useState("all");
   const [budget, setBudget] = React.useState("all");
+
+  const knownTotal = Math.max(total, all.length);
+  const hasMore = all.length < knownTotal;
+
+  const loadMore = React.useCallback(async () => {
+    setLoading(true);
+    setLoadError(null);
+    try {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from("requests")
+        .select(BRIEFS_COLUMNS)
+        .eq("status", "ouvert")
+        .eq("hidden", false)
+        .order("created_at", { ascending: false })
+        .order("id", { ascending: false })
+        .range(all.length, all.length + BRIEFS_PAGE_SIZE - 1);
+      if (error) throw error;
+      const rows = (data ?? []) as PublicRequest[];
+      setAll((prev) => {
+        const seen = new Set(prev.map((b) => b.id));
+        return [...prev, ...rows.filter((b) => !seen.has(b.id))];
+      });
+    } catch {
+      setLoadError("Impossible de charger d'autres briefs. Reessayez dans un instant.");
+    } finally {
+      setLoading(false);
+    }
+  }, [all.length]);
 
   const budgetBand = React.useMemo(
     () => BUDGET_BANDS.find((b) => b.value === budget) ?? BUDGET_BANDS[0],
@@ -56,7 +92,7 @@ export function BriefFilters({
 
   const filtered = React.useMemo(() => {
     const q = query.trim().toLowerCase();
-    return briefs.filter((brief) => {
+    return all.filter((brief) => {
       if (q) {
         const label = PROJECT_TYPE_LABELS[brief.project_type] ?? brief.project_type;
         const haystack = `${brief.client_name} ${brief.description} ${brief.client_city} ${brief.project_type} ${label}`.toLowerCase();
@@ -67,7 +103,7 @@ export function BriefFilters({
       if (!budgetBand.matches(brief.budget)) return false;
       return true;
     });
-  }, [briefs, query, city, type, budgetBand]);
+  }, [all, query, city, type, budgetBand]);
 
   const cityItems = React.useMemo(() => {
     const items: Record<string, string> = { all: "Toutes les régions" };
@@ -149,6 +185,12 @@ export function BriefFilters({
       <p className="mt-6 text-sm font-medium text-muted-foreground">
         {filtered.length} brief{filtered.length > 1 ? "s" : ""} disponible
         {filtered.length > 1 ? "s" : ""} au Sénégal
+        {hasMore ? (
+          <span className="font-normal">
+            {" "}
+            · {knownTotal} au total, affinez vos filtres ou affichez-en plus
+          </span>
+        ) : null}
       </p>
 
       <BriefGrid className="mt-6">
@@ -177,6 +219,31 @@ export function BriefFilters({
             title="Aucun brief ne correspond à ces critères"
             description="Modifiez vos filtres ou revenez plus tard : de nouveaux projets sont publiés régulièrement."
           />
+        </div>
+      )}
+
+      {hasMore && (
+        <div className="mt-10 flex flex-col items-center gap-3">
+          <button
+            type="button"
+            onClick={loadMore}
+            disabled={loading}
+            className="inline-flex h-10 items-center gap-2 rounded-xl border border-hairline bg-card px-5 text-sm font-medium text-foreground transition-colors hover:border-border-strong hover:bg-surface-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {loading ? (
+              <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+            ) : null}
+            {loading ? "Chargement…" : "Afficher plus de briefs"}
+          </button>
+          <p className="text-xs text-muted-foreground">
+            {all.length} sur {knownTotal} brief{knownTotal > 1 ? "s" : ""} chargé
+            {all.length > 1 ? "s" : ""}
+          </p>
+          {loadError ? (
+            <p role="alert" className="text-xs text-error">
+              {loadError}
+            </p>
+          ) : null}
         </div>
       )}
     </div>

@@ -257,6 +257,25 @@ npm run build       # build de production
 ## Roadmap (limites actuelles)
 
 - Paiement réel Wave (actif) / Max It (hors service pour le moment) à brancher (webhook → `credit_tokens`).
-- Pagination des briefs, modération auto.
+- Modération auto des briefs.
 - Suppression définitive de `token_refund_requests` (table vide, verrouillée
   par la migration 0031) si la fonctionnalité n'est pas reprise.
+
+## Pagination des briefs
+
+La liste charge 50 briefs par lot : les 50 plus récents sont rendus côté
+serveur (`/briefs`), puis chaque clic sur « Afficher plus de briefs » ajoute le
+lot suivant via la clé publique, les filtres recherche/région/type/budget
+restant appliqués côté client sur l'ensemble chargé.
+
+- Le titre et le compteur affichent le total exact renvoyé par PostgREST
+  (`count: "exact"`), pas la taille de la fenêtre : le nombre ne peut plus
+  mentir même au-delà de 50 briefs.
+- Tri `created_at desc, id desc` : deux briefs créés dans la même seconde
+  n'échangent pas de place entre deux lots, donc aucun brief n'est sauté ni
+  affiché deux fois.
+- Sélecteur de colonnes et taille de lot partagés entre serveur et client
+  (`lib/briefs-pagination.ts`), pour que le lot ajouté soit identique au
+  premier rendu.
+- Le bouton disparaît une fois tout chargé ; un échec réseau affiche un message
+  et laisse les briefs déjà affichés en place.
