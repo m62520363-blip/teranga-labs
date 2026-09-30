@@ -438,8 +438,8 @@ export function ReviewForm({ context }: { context: ReviewForRequest }) {
                         <li key={a}>
                           <a
                             href={a}
-                            target="_blank"
-                            rel="noreferrer"
+              target="_blank"
+              rel="noopener noreferrer"
                             className="text-xs font-medium text-primary underline-offset-4 hover:underline"
                           >
                             {a}

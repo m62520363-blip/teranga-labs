@@ -1189,6 +1189,7 @@ export function DashboardContent({
                 <Link
                   href={publicUrl}
                   target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex h-10 items-center gap-2 rounded-xl border border-hairline bg-[#141414] px-5 text-sm font-medium text-foreground transition-colors outline-none hover:bg-[#1E1E1E] focus-visible:ring-2 focus-visible:ring-primary/50"
                 >
                   <Share2 className="size-4 text-primary" aria-hidden="true" />
