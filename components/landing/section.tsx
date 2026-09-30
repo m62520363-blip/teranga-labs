@@ -15,8 +15,8 @@ export function Eyebrow({
       className={cn(
         "inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em]",
         tone === "light"
-          ? "border border-hairline bg-[#141414] text-muted-foreground"
-          : "border border-white/15 bg-[#FFFFFF]/8 text-white/80 backdrop-blur",
+          ? "border border-hairline bg-card text-muted-foreground"
+          : "border border-white/15 bg-white/8 text-white/80 backdrop-blur",
         className
       )}
     >

@@ -36,7 +36,7 @@ export function BuyerSection() {
               <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 {BUYER.form.questionLabel}
               </label>
-              <div className="mt-2 rounded-xl border border-hairline bg-[#141414] px-4 py-3 text-[15px] font-medium text-foreground">
+              <div className="mt-2 rounded-xl border border-hairline bg-card px-4 py-3 text-[15px] font-medium text-foreground">
                 {BUYER.form.questionValue}
               </div>
             </div>
@@ -45,7 +45,7 @@ export function BuyerSection() {
               <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 {BUYER.form.budgetLabel}
               </label>
-              <div className="mt-2 rounded-xl border border-hairline bg-[#141414] px-4 py-3 text-[15px] font-medium text-foreground">
+              <div className="mt-2 rounded-xl border border-hairline bg-card px-4 py-3 text-[15px] font-medium text-foreground">
                 {BUYER.form.budgetValue}
               </div>
             </div>
@@ -54,7 +54,7 @@ export function BuyerSection() {
               <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 {BUYER.form.cityLabel}
               </label>
-              <div className="mt-2 rounded-xl border border-hairline bg-[#141414] px-4 py-3 text-[15px] font-medium text-foreground">
+              <div className="mt-2 rounded-xl border border-hairline bg-card px-4 py-3 text-[15px] font-medium text-foreground">
                 {BUYER.form.cityValue}
               </div>
             </div>
@@ -63,7 +63,7 @@ export function BuyerSection() {
               <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 {BUYER.form.contactLabel}
               </label>
-              <div className="mt-2 flex items-center justify-between gap-2 rounded-xl border border-hairline bg-[#141414] px-4 py-3">
+              <div className="mt-2 flex items-center justify-between gap-2 rounded-xl border border-hairline bg-card px-4 py-3">
                 <span className="text-[15px] font-medium text-foreground">{BUYER.form.contactValue}</span>
                 <span className="badge badge-muted">1 Token</span>
               </div>

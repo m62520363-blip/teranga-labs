@@ -70,8 +70,8 @@ export function ReviewForm({ context }: { context: ReviewForRequest }) {
 
   if (done) {
     return (
-      <div className="mt-8 rounded-3xl border border-[#166534]/60 bg-[#0F2E18] p-8 text-center sm:p-12">
-        <span className="mx-auto flex size-16 items-center justify-center rounded-full bg-[#4ADE80]/15 text-[#4ADE80]">
+      <div className="mt-8 rounded-3xl border border-success/40 bg-success-soft p-8 text-center sm:p-12">
+        <span className="mx-auto flex size-16 items-center justify-center rounded-full bg-success/15 text-success">
           <CheckCircle2 className="size-8" aria-hidden="true" />
         </span>
         <h1 className="mt-5 text-2xl font-semibold tracking-tight">
@@ -99,7 +99,7 @@ export function ReviewForm({ context }: { context: ReviewForRequest }) {
 
   if (context.request.status !== "terminé") {
     return (
-      <div className="mt-8 rounded-3xl border border-hairline bg-[#141414] p-8 text-center">
+      <div className="mt-8 rounded-3xl border border-hairline bg-card p-8 text-center">
         <h1 className="text-2xl font-semibold tracking-tight">
           Les avis arrivent après une mission terminée
         </h1>
@@ -163,7 +163,7 @@ export function ReviewForm({ context }: { context: ReviewForRequest }) {
 
   return (
     <div className="mt-6">
-      <div className="flex flex-col gap-4 rounded-3xl border border-hairline bg-[#141414] p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+      <div className="flex flex-col gap-4 rounded-3xl border border-hairline bg-card p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
         <div className="flex min-w-0 items-center gap-4">
           <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-hairline font-display text-lg font-bold text-foreground">
             {(context.developer?.full_name || "?").charAt(0).toUpperCase()}
@@ -180,15 +180,15 @@ export function ReviewForm({ context }: { context: ReviewForRequest }) {
             </p>
           </div>
         </div>
-        <span className="inline-flex shrink-0 items-center gap-1.5 self-start rounded-full border border-[#166534]/60 bg-[#0F2E18] px-3 py-1.5 text-xs font-medium text-[#4ADE80] sm:self-center">
+        <span className="inline-flex shrink-0 items-center gap-1.5 self-start rounded-full border border-success/40 bg-success-soft px-3 py-1.5 text-xs font-medium text-success sm:self-center">
           <ShieldCheck className="size-3.5" aria-hidden="true" />
           Avis vérifié lié à cette mission
         </span>
       </div>
 
       {isPublished ? (
-        <div className="mt-4 flex items-start gap-2.5 rounded-2xl border border-[#166534]/60 bg-[#0F2E18] p-4 text-sm">
-          <Check className="mt-0.5 size-4 shrink-0 text-[#4ADE80]" aria-hidden="true" />
+        <div className="mt-4 flex items-start gap-2.5 rounded-2xl border border-success/40 bg-success-soft p-4 text-sm">
+          <Check className="mt-0.5 size-4 shrink-0 text-success" aria-hidden="true" />
           <p className="text-muted-foreground">
             Un avis est déjà publié pour cette mission. Vous pouvez le modifier.
           </p>
@@ -211,7 +211,7 @@ export function ReviewForm({ context }: { context: ReviewForRequest }) {
                   step === s.step
                     ? "bg-primary text-ink"
                     : step > s.step
-                      ? "bg-[#4ADE80] text-ink"
+                      ? "bg-success text-ink"
                       : "bg-hairline text-muted-foreground"
                 )}
               >
@@ -224,12 +224,12 @@ export function ReviewForm({ context }: { context: ReviewForRequest }) {
       </div>
 
       {error ? (
-        <div className="mt-5 rounded-2xl border border-[#F87171]/30 bg-[#2A1212] p-4 text-sm text-[#F87171]">
+        <div className="mt-5 rounded-2xl border border-error/30 bg-error-soft p-4 text-sm text-error">
           {error}
         </div>
       ) : null}
 
-      <div className="mt-5 rounded-3xl border border-hairline bg-[#141414] p-5 sm:p-7">
+      <div className="mt-5 rounded-3xl border border-hairline bg-card p-5 sm:p-7">
         {step === 1 ? (
           <div>
             <h2 className="text-lg font-semibold tracking-tight">
@@ -320,8 +320,8 @@ export function ReviewForm({ context }: { context: ReviewForRequest }) {
                           className={cn(
                             "inline-flex h-9 items-center rounded-xl border px-4 text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
                             active
-                              ? "border-primary/60 bg-[#2A1A10] text-[#F2A378]"
-                              : "border-hairline text-muted-foreground hover:bg-[#1E1E1E]"
+                              ? "border-primary/60 bg-primary-soft text-primary-light"
+                              : "border-hairline text-muted-foreground hover:bg-muted"
                           )}
                         >
                           {REVIEW_QUESTION_ANSWERS.find((x) => x.value === a)?.label}
@@ -336,7 +336,7 @@ export function ReviewForm({ context }: { context: ReviewForRequest }) {
             <h3 className="mt-8 text-lg font-semibold tracking-tight">
               Captures (facultatif)
             </h3>
-            <div className="mt-2 flex items-start gap-2.5 rounded-2xl border border-primary/30 bg-[#1A120B] p-4 text-sm text-muted-foreground">
+            <div className="mt-2 flex items-start gap-2.5 rounded-2xl border border-primary/30 bg-primary-soft p-4 text-sm text-muted-foreground">
               <Info className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
               <p>
                 Vous pouvez ajouter jusqu’à 3 liens d’images (site livré,
@@ -394,7 +394,7 @@ export function ReviewForm({ context }: { context: ReviewForRequest }) {
                         <span>{c.label}</span>
                         <span className="inline-flex items-center gap-1 text-muted-foreground">
                           {criteria[c.key] ?? 0}
-                          <Star className="size-3 fill-current text-[#F5C26B]" aria-hidden="true" />
+                          <Star className="size-3 fill-current text-warning" aria-hidden="true" />
                           /5
                         </span>
                       </li>
@@ -454,7 +454,7 @@ export function ReviewForm({ context }: { context: ReviewForRequest }) {
             </dl>
 
             <p className="mt-6 flex items-center gap-2 text-xs text-muted-foreground">
-              <ShieldCheck className="size-4 shrink-0 text-[#4ADE80]" aria-hidden="true" />
+              <ShieldCheck className="size-4 shrink-0 text-success" aria-hidden="true" />
               Cet avis est lié à votre mission et ne peut être déposé qu’une
               seule fois par mission. Il sera affiché comme « avis vérifié ».
             </p>
@@ -539,8 +539,8 @@ function StarRating({
               "transition-colors",
               size === "lg" ? "size-8" : "size-6",
               n <= value
-                ? "fill-current text-[#F5C26B]"
-                : "text-[#3A3A3A] hover:text-[#5A5A5A]"
+                ? "fill-current text-warning"
+                : "text-border-strong hover:text-muted-foreground"
             )}
             aria-hidden="true"
           />
@@ -558,7 +558,7 @@ function Stars({ value }: { value: number }) {
           key={n}
           className={cn(
             "size-4",
-            n <= value ? "fill-current text-[#F5C26B]" : "text-[#3A3A3A]"
+            n <= value ? "fill-current text-warning" : "text-border-strong"
           )}
           aria-hidden="true"
         />
@@ -575,7 +575,7 @@ function SummaryRow({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-[#232323] bg-[#101010] p-4">
+    <div className="rounded-2xl border border-muted bg-surface p-4">
       <dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
         {label}
       </dt>

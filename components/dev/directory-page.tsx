@@ -158,7 +158,7 @@ export function DirectoryPage({
           <button
             type="button"
             onClick={() => setShowFilters((v) => !v)}
-            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-hairline bg-[#141414] px-4 text-sm font-medium text-muted-foreground transition-colors outline-none hover:border-primary/40 hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
+            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-hairline bg-card px-4 text-sm font-medium text-muted-foreground transition-colors outline-none hover:border-primary/40 hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
             aria-expanded={showFilters}
           >
             <SlidersHorizontal className="size-4" aria-hidden="true" />
@@ -172,7 +172,7 @@ export function DirectoryPage({
         </div>
 
         {showFilters ? (
-          <div className="grid grid-cols-1 gap-3 rounded-2xl border border-hairline bg-[#141414] p-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-3 rounded-2xl border border-hairline bg-card p-4 sm:grid-cols-2 lg:grid-cols-4">
             <FilterSelect
               label="Spécialité"
               value={specialty}
@@ -233,8 +233,8 @@ export function DirectoryPage({
                     className={cn(
                       "rounded-lg border px-2 py-1 text-xs transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
                       techs.includes(tag)
-                        ? "border-primary bg-[#2A1A10] text-primary"
-                        : "border-hairline bg-[#1E1E1E] text-muted-foreground hover:border-primary/40"
+                        ? "border-primary bg-primary-soft text-primary"
+                        : "border-hairline bg-muted text-muted-foreground hover:border-primary/40"
                     )}
                   >
                     {tag}
@@ -321,7 +321,7 @@ export function DirectoryPage({
                 type="button"
                 onClick={() => void loadMore()}
                 disabled={loading}
-                className="inline-flex h-11 items-center gap-2 rounded-xl border border-hairline bg-[#141414] px-6 text-sm font-medium transition-colors outline-none hover:border-primary/40 hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50 disabled:opacity-50"
+                className="inline-flex h-11 items-center gap-2 rounded-xl border border-hairline bg-card px-6 text-sm font-medium transition-colors outline-none hover:border-primary/40 hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50 disabled:opacity-50"
               >
                 {loading ? (
                   <Loader2 className="size-4 animate-spin" aria-hidden="true" />

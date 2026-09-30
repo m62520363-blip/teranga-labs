@@ -243,8 +243,8 @@ export function PosterForm() {
 
     return (
       <div className="flex flex-col gap-5">
-        <div className="flex items-start gap-3 rounded-2xl border border-[#3DD68C]/25 bg-[#122A1C] p-4 sm:p-5">
-          <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-[#3DD68C]" aria-hidden="true" />
+        <div className="flex items-start gap-3 rounded-2xl border border-success/25 bg-success-soft p-4 sm:p-5">
+          <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-success" aria-hidden="true" />
           <div>
             <p className="font-semibold tracking-tight">Brief publié avec succès</p>
             <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
@@ -268,7 +268,7 @@ export function PosterForm() {
             />
             <Button type="button" variant="outline" className="h-10 shrink-0 rounded-xl" onClick={copy}>
               {copied ? (
-                <CheckCircle2 className="size-4 text-[#3DD68C]" aria-hidden="true" />
+                <CheckCircle2 className="size-4 text-success" aria-hidden="true" />
               ) : (
                 <Clipboard className="size-4" aria-hidden="true" />
               )}
@@ -310,7 +310,7 @@ export function PosterForm() {
         />
       </div>
 
-      <div className="rounded-2xl border border-primary/20 bg-[#2A1A10] p-4 sm:p-5">
+      <div className="rounded-2xl border border-primary/20 bg-primary-soft p-4 sm:p-5">
         <p className="flex items-start gap-3 text-sm leading-relaxed text-foreground/90">
           <Sparkles className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
           Publier un brief coûte <strong>1 Token</strong>. Un assistant calcule
@@ -334,8 +334,8 @@ export function PosterForm() {
                 className={cn(
                   "relative flex flex-col items-start gap-2 rounded-2xl border p-4 text-left transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
                   selected
-                    ? "border-primary/60 bg-[#2A1A10]"
-                    : "border-hairline bg-[#141414] hover:bg-[#1E1E1E]"
+                    ? "border-primary/60 bg-primary-soft"
+                    : "border-hairline bg-card hover:bg-muted"
                 )}
               >
                 {selected ? (
@@ -369,8 +369,8 @@ export function PosterForm() {
               className={cn(
                 "rounded-xl border px-4 py-2 text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
                 watch("budget") === val
-                  ? "border-primary/60 bg-[#2A1A10] text-foreground"
-                  : "border-hairline bg-[#141414] text-muted-foreground hover:bg-[#1E1E1E]"
+                  ? "border-primary/60 bg-primary-soft text-foreground"
+                  : "border-hairline bg-card text-muted-foreground hover:bg-muted"
               )}
             >
               {val.toLocaleString("fr-FR")}
@@ -380,7 +380,7 @@ export function PosterForm() {
         <p className="text-xs leading-relaxed text-muted-foreground">
           {BUDGET_HINTS[projectType]}
         </p>
-        <div className="mt-1 flex items-center gap-3 rounded-xl border border-hairline bg-[#141414] px-4 py-2.5">
+        <div className="mt-1 flex items-center gap-3 rounded-xl border border-hairline bg-card px-4 py-2.5">
           <Wallet className="size-4 shrink-0 text-primary" aria-hidden="true" />
           <Input
             type="number"
@@ -406,14 +406,14 @@ export function PosterForm() {
                 key={feat}
                 className={cn(
                   "flex cursor-pointer items-start gap-3 rounded-xl border px-4 py-3 transition-colors",
-                  checked ? "border-[#3DD68C]/40 bg-[#122A1C]" : "border-hairline bg-[#141414] hover:bg-[#1E1E1E]"
+                  checked ? "border-success/40 bg-success-soft" : "border-hairline bg-card hover:bg-muted"
                 )}
               >
                 <input
                   type="checkbox"
                   checked={checked}
                   onChange={(e) => toggleFeature(feat, e.target.checked)}
-                  className="mt-0.5 size-4 shrink-0 accent-[#3DD68C]"
+                  className="mt-0.5 size-4 shrink-0 accent-success"
                 />
                 <span className="text-sm">{feat}</span>
               </label>
@@ -448,7 +448,7 @@ export function PosterForm() {
             {features.map((feat) => (
               <span
                 key={feat}
-                className="inline-flex items-center gap-1 rounded-full bg-[#122A1C] px-2.5 py-1 text-xs text-[#3DD68C]"
+                className="inline-flex items-center gap-1 rounded-full bg-success-soft px-2.5 py-1 text-xs text-success"
               >
                 <Gift className="size-3" aria-hidden="true" />
                 {feat}
@@ -456,7 +456,7 @@ export function PosterForm() {
                   type="button"
                   aria-label={`Retirer ${feat}`}
                   onClick={() => toggleFeature(feat, false)}
-                  className="ml-0.5 text-[#3DD68C]/60 hover:text-[#3DD68C]"
+                  className="ml-0.5 text-success/60 hover:text-success"
                 >
                   ×
                 </button>
@@ -539,19 +539,19 @@ export function PosterForm() {
       </FieldGroup>
 
       {formError && (
-        <div className="rounded-xl border border-hairline bg-[#1E1E1E] px-4 py-3 text-sm">
+        <div className="rounded-xl border border-hairline bg-muted px-4 py-3 text-sm">
           <p role="alert" className="text-destructive">
             {formError}
           </p>
           {formError.includes("Tokens insuffisants") && (
-            <Link href="/tokens" className="mt-2 inline-flex font-medium text-primary underline underline-offset-4 hover:text-[#f59348]">
+            <Link href="/tokens" className="mt-2 inline-flex font-medium text-primary underline underline-offset-4 hover:text-primary-light">
               Recharger mes Tokens
             </Link>
           )}
         </div>
       )}
 
-      <p className="flex items-center gap-2 rounded-xl border border-primary/20 bg-[#2A1A10] px-4 py-3 text-sm text-foreground/90">
+      <p className="flex items-center gap-2 rounded-xl border border-primary/20 bg-primary-soft px-4 py-3 text-sm text-foreground/90">
         <ShieldCheck className="size-4 shrink-0 text-primary" aria-hidden="true" />
         La publication consomme <strong>1 Token</strong> sur votre solde.
       </p>

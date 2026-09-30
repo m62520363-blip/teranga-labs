@@ -51,7 +51,7 @@ export default async function ConversationsPage() {
               {totalUnread} message{totalUnread > 1 ? "s" : ""} non lu{totalUnread > 1 ? "s" : ""}
             </span>
           ) : (
-            <span className="flex items-center gap-1.5 text-xs text-[#3DD68C]">
+            <span className="flex items-center gap-1.5 text-xs text-success">
               <Check className="size-4" aria-hidden="true" />
               Tout est lu
             </span>

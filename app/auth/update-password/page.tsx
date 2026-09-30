@@ -18,7 +18,7 @@ export default function UpdatePasswordPage() {
             Choisissez un nouveau mot de passe pour votre compte.
           </p>
 
-          <div className="mt-8 rounded-2xl border border-hairline bg-[#141414] p-6 shadow-sm sm:p-8">
+          <div className="mt-8 rounded-2xl border border-hairline bg-card p-6 shadow-sm sm:p-8">
             <UpdatePasswordForm />
           </div>
         </div>

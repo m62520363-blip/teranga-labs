@@ -93,7 +93,7 @@ export default async function RootLayout({
   return (
     <html lang="fr">
       <body
-        className={`${outfit.variable} ${dmSans.variable} ${geistMono.variable} bg-[#0A0A0A] font-sans text-foreground antialiased`}
+        className={`${outfit.variable} ${dmSans.variable} ${geistMono.variable} bg-background font-sans text-foreground antialiased`}
       >
         <Providers isAuthed={Boolean(user)}>
           <div className="flex min-h-screen flex-col">

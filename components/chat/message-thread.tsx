@@ -278,7 +278,7 @@ export function MessageThread({
   const awardedOffer = offers.find((o) => o.status === "accepted");
 
   return (
-    <div className="flex h-full min-h-[60vh] flex-col overflow-hidden rounded-2xl border border-hairline bg-[#141414]">
+    <div className="flex h-full min-h-[60vh] flex-col overflow-hidden rounded-2xl border border-hairline bg-card">
       <div className="flex items-center justify-between gap-3 border-b border-hairline px-5 py-4">
         <div className="min-w-0">
           <p className="truncate font-semibold tracking-tight">{otherName}</p>
@@ -289,8 +289,8 @@ export function MessageThread({
         {locked ? (
           <span className="badge badge-warning">Projet attribué</span>
         ) : (
-          <span className="flex items-center gap-1.5 text-xs text-[#3DD68C]">
-            <span className="size-2 rounded-full bg-[#3DD68C]" aria-hidden="true" />
+          <span className="flex items-center gap-1.5 text-xs text-success">
+            <span className="size-2 rounded-full bg-success" aria-hidden="true" />
             Temps réel
           </span>
         )}
@@ -323,7 +323,7 @@ export function MessageThread({
                 key={msg.id}
                 className="flex justify-center"
               >
-                <p className="max-w-sm rounded-full border border-hairline bg-[#1E1E1E] px-4 py-1.5 text-center text-xs text-muted-foreground">
+                <p className="max-w-sm rounded-full border border-hairline bg-muted px-4 py-1.5 text-center text-xs text-muted-foreground">
                   {msg.content}
                 </p>
               </div>
@@ -337,7 +337,7 @@ export function MessageThread({
                   "max-w-[78%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed shadow-sm",
                   mine
                     ? "rounded-br-sm bg-primary text-ink"
-                    : "rounded-bl-sm border border-hairline bg-[#1E1E1E]"
+                    : "rounded-bl-sm border border-hairline bg-muted"
                 )}
               >
                 <p className="whitespace-pre-wrap break-words">{msg.content}</p>
@@ -361,7 +361,7 @@ export function MessageThread({
         })}
 
         {awardedOffer ? (
-          <div className="rounded-2xl border border-[#3DD68C]/30 bg-[#122A1C] p-4 text-sm text-[#3DD68C]">
+          <div className="rounded-2xl border border-success/30 bg-success-soft p-4 text-sm text-success">
             <p className="font-semibold">Projet attribué</p>
             <p className="mt-1 text-xs">
               Le devis de {formatFCFA(awardedOffer.total_price_fcfa)} en{" "}
@@ -387,7 +387,7 @@ export function MessageThread({
               <Button
                 variant="secondary"
                 size="sm"
-                className="self-start border-primary/30 bg-[#2A1A10] text-primary hover:bg-[#FBE3D2]"
+                className="self-start border-primary/30 bg-primary-soft text-primary hover:bg-primary/20"
                 onClick={() => setOfferOpen(true)}
               >
                 <Sparkles className="size-3.5" aria-hidden="true" />
@@ -542,10 +542,10 @@ function OfferCard({
       className={cn(
         "rounded-2xl border p-4 shadow-sm",
         offer.status === "accepted"
-          ? "border-[#3DD68C]/40 bg-[#122A1C]"
+          ? "border-success/40 bg-success-soft"
           : offer.status === "rejected"
-            ? "border-hairline bg-[#1E1E1E] opacity-70"
-            : "border-primary/30 bg-[#1E1E1E]"
+            ? "border-hairline bg-muted opacity-70"
+            : "border-primary/30 bg-muted"
       )}
     >
       <div className="flex flex-wrap items-center justify-between gap-2">

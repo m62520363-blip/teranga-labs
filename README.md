@@ -165,8 +165,14 @@ valeur hexadécimale en dur dans les composants.
 | `--primary-foreground` | `--ink` `#0d0d0d` | texte **sur** un aplat orange |
 | `--ink` | `#0d0d0d` | texte sur fond clair (secondaires inversés) |
 | `--hairline` | `#2a2a2a` | filet de séparation des cartes |
+| `--border-strong` | `#3a3a3a` | filet appuyé (traits de svg, barre de défilement) |
 | `--border` | `#262626` | bordure de champ et de carte |
 | `--surface` / `--surface-secondary` | `#0f0f0f` / `#141414` | fond de section et de carte |
+| `--primary-soft` | `#2a1a10` | fond des encarts de marque (pastilles, bulles) |
+| `--primary-light` | `#f2a378` | texte d'accent sur fond sombre (9:1) |
+| `--primary-hover` | `#d95c1f` | survol des aplats orange |
+| `--success` / `--warning` / `--error` | `#34d399` / `#fbbf24` / `#f87171` | statut : le trio est lisible en texte sur les surfaces sombres (≥ 9:1) |
+| `--destructive` | `#b91c1c` | fond des boutons destructifs (libellé blanc 6.4:1) |
 
 Les teintes translucides (`--accent-glow`, `--*-soft`) sont exprimées en
 `color-mix()` sur ces tokens : plus de `rgba()` à dupliquer.
@@ -177,12 +183,23 @@ Les teintes translucides (`--accent-glow`, `--*-soft`) sont exprimées en
 > `.btn-primary`, `<Button>`, `<Badge>`, boutons de formulaire, badges —
 > passe par `--primary-foreground`, donc le choix correct est appliqué une
 > seule fois. Le reste de la palette est vérifié : texte principal 17.7:1,
-> texte secondaire 7.9:1, succès 10.3:1, warning 11.9:1, erreur 5.1:1.
+> texte secondaire 7.9:1, succès 10.3:1, warning 11.9:1, erreur 6.3:1.
 
 > Ajouter une couleur = ajouter un token dans `:root` **et** son alias
 > `--color-*` dans `@theme inline`, puis n'utiliser que l'utilitaire
 > (`bg-primary`, `text-ink`, `border-hairline`). Ne jamais réintroduire de
 > hexadécimal dans un composant.
+
+**Règle d'or vérifiable** : un utilitaire de couleur qui n'est pas exposé via
+`@theme inline` n'est tout simplement pas généré par Tailwind — le fond
+disparaît sans qu'aucun lint ne bronche (piège rencontré sur `*-soft`). Après
+un build, les classes utilisées doivent exister dans `.next/static/chunks/*.css`.
+
+**Exceptions assumées** (le CSS peut ne pas être chargé) :
+`app/global-error.tsx` utilise des styles inline avec des littéraux hex, et
+`viewport.themeColor` de `app/layout.tsx` reste un littéral — dans les deux cas
+un `var(--token)` rendrait la page illisible. Ce sont les 10 seuls
+hexadécimaux restants du code (hors adresse factice d'un témoignage).
 
 ## Économie des Tokens
 

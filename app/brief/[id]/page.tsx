@@ -64,7 +64,7 @@ export default async function BriefManagementPage({
               </div>
             </div>
           ) : (
-            <div className="rounded-2xl border border-hairline bg-[#141414] p-8 text-center shadow-sm">
+            <div className="rounded-2xl border border-hairline bg-card p-8 text-center shadow-sm">
               <h1 className="text-2xl font-semibold tracking-tight">
                 {errorMessage ?? "Lien invalide"}
               </h1>

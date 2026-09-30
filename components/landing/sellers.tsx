@@ -22,7 +22,7 @@ export function SellersSection() {
               {SELLERS.notification.text}
             </p>
 
-            <div className="mt-4 space-y-2.5 rounded-xl bg-[#1E1E1E] p-4">
+            <div className="mt-4 space-y-2.5 rounded-xl bg-muted p-4">
               <p className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Wallet className="size-4 text-primary" aria-hidden="true" />
                 {SELLERS.notification.budget}
@@ -37,7 +37,7 @@ export function SellersSection() {
               <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Coût du contact
               </label>
-              <div className="mt-2 rounded-xl border border-hairline bg-[#141414] px-4 py-3 text-[15px] font-medium text-foreground">
+              <div className="mt-2 rounded-xl border border-hairline bg-card px-4 py-3 text-[15px] font-medium text-foreground">
                 1 Token = 2 500 F
               </div>
             </div>

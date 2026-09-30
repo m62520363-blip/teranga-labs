@@ -112,7 +112,7 @@ export default async function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <div className="bg-[#0A0A0A]">
+      <div className="bg-background">
         <Hero />
         <PortalSection />
         <MarqueeStrip

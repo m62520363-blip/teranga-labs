@@ -236,7 +236,7 @@ export function SettingsContent({
 
         <div className="mt-10 grid gap-6 lg:grid-cols-2">
           <section
-            className="rounded-2xl border border-hairline bg-[#141414] p-6 sm:p-8"
+            className="rounded-2xl border border-hairline bg-card p-6 sm:p-8"
             aria-label="Mon espace"
           >
             <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
@@ -275,7 +275,7 @@ export function SettingsContent({
 
           <div className="flex flex-col gap-6">
             <section
-              className="rounded-2xl border border-hairline bg-[#141414] p-6 sm:p-8"
+              className="rounded-2xl border border-hairline bg-card p-6 sm:p-8"
               aria-label="Informations du compte"
             >
               <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
@@ -312,7 +312,7 @@ export function SettingsContent({
             </section>
 
             <section
-              className="rounded-2xl border border-hairline bg-[#141414] p-6 sm:p-8"
+              className="rounded-2xl border border-hairline bg-card p-6 sm:p-8"
               aria-label="Changer le mot de passe"
             >
               <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
@@ -366,7 +366,7 @@ export function SettingsContent({
                   </p>
                 ) : null}
                 {success ? (
-                  <p role="status" className="text-sm text-[#4ADE80]">
+                  <p role="status" className="text-sm text-success">
                     Mot de passe mis à jour.
                   </p>
                 ) : null}
@@ -382,7 +382,7 @@ export function SettingsContent({
             </section>
 
             <section
-              className="rounded-2xl border border-hairline bg-[#141414] p-6 sm:p-8"
+              className="rounded-2xl border border-hairline bg-card p-6 sm:p-8"
               aria-label="Changer l'adresse email"
             >
               <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
@@ -415,7 +415,7 @@ export function SettingsContent({
                   </p>
                 ) : null}
                 {emailDone ? (
-                  <p role="status" className="text-sm text-[#4ADE80]">
+                  <p role="status" className="text-sm text-success">
                     Demande envoyée. Confirmez le changement depuis vos boîtes
                     mail (ancienne et nouvelle adresse).
                   </p>
@@ -436,7 +436,7 @@ export function SettingsContent({
             </section>
 
             <section
-              className="rounded-2xl border border-hairline bg-[#141414] p-6 sm:p-8"
+              className="rounded-2xl border border-hairline bg-card p-6 sm:p-8"
               aria-label="Préférences"
             >
               <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
@@ -472,7 +472,7 @@ export function SettingsContent({
             </section>
 
             <section
-              className="rounded-2xl border border-hairline bg-[#141414] p-6 sm:p-8"
+              className="rounded-2xl border border-hairline bg-card p-6 sm:p-8"
               aria-label="Mes données"
             >
               <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
@@ -503,7 +503,7 @@ export function SettingsContent({
             </section>
 
             <section
-              className="rounded-2xl border border-hairline bg-[#141414] p-6 sm:p-8"
+              className="rounded-2xl border border-hairline bg-card p-6 sm:p-8"
               aria-label="Aide et légal"
             >
               <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
@@ -520,7 +520,7 @@ export function SettingsContent({
             </section>
 
             <section
-              className="rounded-2xl border border-hairline bg-[#141414] p-6 sm:p-8"
+              className="rounded-2xl border border-hairline bg-card p-6 sm:p-8"
               aria-label="Zone de danger"
             >
               <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight text-destructive">

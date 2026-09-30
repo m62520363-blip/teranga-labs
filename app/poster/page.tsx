@@ -63,7 +63,7 @@ export default async function PosterPage() {
             </p>
           </div>
 
-          <div className="mt-10 rounded-2xl border border-hairline bg-[#141414] p-6 shadow-sm sm:p-8">
+          <div className="mt-10 rounded-2xl border border-hairline bg-card p-6 shadow-sm sm:p-8">
             <PosterForm />
           </div>
 
@@ -74,7 +74,7 @@ export default async function PosterPage() {
             {["1 Token par brief", "2 minutes", "Sans engagement"].map((item) => (
               <li
                 key={item}
-                className="rounded-xl border border-hairline bg-[#141414] px-4 py-3 text-center text-sm font-medium"
+                className="rounded-xl border border-hairline bg-card px-4 py-3 text-center text-sm font-medium"
               >
                 {item}
               </li>

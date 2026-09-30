@@ -46,7 +46,7 @@ export default function FaqPage() {
     <div className="bg-surface py-16 md:py-24">
       <div className="container-tl">
         <div className="mx-auto max-w-3xl">
-          <span className="chip gap-2 bg-[#141414]/85 border-hairline backdrop-blur">
+          <span className="chip gap-2 bg-card/85 border-hairline backdrop-blur">
             <HelpCircle className="size-3.5 text-primary" aria-hidden="true" />
             FAQ
           </span>
@@ -63,7 +63,7 @@ export default function FaqPage() {
           <div className="grid gap-4 sm:grid-cols-3">
             {groups.map((group) => (
               <Reveal key={group.title}>
-                <div className="card-elevate flex h-full flex-col rounded-2xl border border-hairline bg-[#141414] p-5">
+                <div className="card-elevate flex h-full flex-col rounded-2xl border border-hairline bg-card p-5">
                   <group.icon
                     className="size-5 text-primary"
                     aria-hidden="true"
@@ -76,7 +76,7 @@ export default function FaqPage() {
                   </p>
                   <Link
                     href={group.href}
-                    className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-[#f59348]"
+                    className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary-light"
                   >
                     {group.cta}
                     <ArrowRight className="size-4" aria-hidden="true" />
@@ -87,14 +87,14 @@ export default function FaqPage() {
           </div>
 
           <Reveal className="mt-12">
-            <div className="rounded-2xl border border-hairline bg-[#141414] p-6 sm:p-8">
+            <div className="rounded-2xl border border-hairline bg-card p-6 sm:p-8">
               {FAQS.map((f) => (
                 <FaqItem key={f.q} question={f.q} answer={f.a} />
               ))}
             </div>
           </Reveal>
 
-          <div className="mt-12 flex flex-col items-start justify-between gap-4 rounded-2xl bg-[#1C1C1C] p-6 sm:flex-row sm:items-center sm:p-8">
+          <div className="mt-12 flex flex-col items-start justify-between gap-4 rounded-2xl bg-muted p-6 sm:flex-row sm:items-center sm:p-8">
             <div>
               <h2 className="text-lg font-semibold tracking-tight">
                 Vous n’avez pas trouvé votre réponse ?

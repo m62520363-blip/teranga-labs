@@ -180,7 +180,7 @@ export default async function ClientPage() {
           </div>
           <Link
             href="/poster"
-            className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
+            className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50"
           >
             <Plus className="size-4" aria-hidden="true" />
             Publier un nouveau brief
@@ -188,7 +188,7 @@ export default async function ClientPage() {
         </div>
 
         {(company || clientName) && (
-          <div className="mt-6 flex flex-wrap items-center gap-3 rounded-2xl border border-hairline bg-[#141414] p-4">
+          <div className="mt-6 flex flex-wrap items-center gap-3 rounded-2xl border border-hairline bg-card p-4">
             <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary font-display text-lg font-bold text-ink">
               {(company || clientName).charAt(0).toUpperCase()}
             </span>
@@ -201,7 +201,7 @@ export default async function ClientPage() {
                 {[city, whatsapp].filter(Boolean).join(" · ") || "Profil client"}
               </p>
             </div>
-            <span className="ml-auto inline-flex items-center gap-1.5 rounded-full border border-[#166534]/60 bg-[#0F2E18] px-3 py-1 text-xs font-medium text-[#4ADE80]">
+            <span className="ml-auto inline-flex items-center gap-1.5 rounded-full border border-success/40 bg-success-soft px-3 py-1 text-xs font-medium text-success">
               <ShieldCheck className="size-3.5" aria-hidden="true" />
               WhatsApp masqué pour les développeurs
             </span>
@@ -234,8 +234,8 @@ export default async function ClientPage() {
         </div>
 
         {missionsAwarded.length > 0 ? (
-          <div className="mt-8 flex items-start gap-3 rounded-2xl border border-[#166534]/60 bg-[#0F2E18] p-4 sm:p-5">
-            <Check className="mt-0.5 size-5 shrink-0 text-[#4ADE80]" aria-hidden="true" />
+          <div className="mt-8 flex items-start gap-3 rounded-2xl border border-success/40 bg-success-soft p-4 sm:p-5">
+            <Check className="mt-0.5 size-5 shrink-0 text-success" aria-hidden="true" />
             <div className="min-w-0">
               <p className="text-sm font-semibold tracking-tight">
                 Vous avez une mission en cours
@@ -252,10 +252,10 @@ export default async function ClientPage() {
           </div>
         ) : null}
 
-        <section className="mt-8 rounded-2xl border border-hairline bg-[#141414] p-5 sm:p-6" aria-label="Mes Tokens">
+        <section className="mt-8 rounded-2xl border border-hairline bg-card p-5 sm:p-6" aria-label="Mes Tokens">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-start gap-4">
-              <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-[#2A1A10] text-primary">
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary-soft text-primary">
                 <Coins className="size-5" aria-hidden="true" />
               </span>
               <div>
@@ -280,7 +280,7 @@ export default async function ClientPage() {
               </Link>
               <Link
                 href="/dev"
-                className="inline-flex h-10 items-center justify-center rounded-xl bg-primary px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
+                className="inline-flex h-10 items-center justify-center rounded-xl bg-primary px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50"
               >
                 Trouver un développeur
               </Link>
@@ -304,7 +304,7 @@ export default async function ClientPage() {
                   <span
                     className={cn(
                       "shrink-0 text-sm font-semibold",
-                      (t.amount ?? 0) > 0 ? "text-[#4ADE80]" : "text-[#F87171]"
+                      (t.amount ?? 0) > 0 ? "text-success" : "text-error"
                     )}
                   >
                     {(t.amount ?? 0) > 0 ? "+" : ""}
@@ -362,12 +362,12 @@ export default async function ClientPage() {
                   <Link
                     href={`/conversations/${c.id}`}
                     className={cn(
-                      "flex items-center gap-4 rounded-2xl border p-4 transition-colors outline-none hover:bg-[#161616] focus-visible:ring-2 focus-visible:ring-primary/50 sm:p-5",
+                      "flex items-center gap-4 rounded-2xl border p-4 transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50 sm:p-5",
                       c.unreadCount > 0
-                        ? "border-primary/30 bg-[#1A120B]"
+                        ? "border-primary/30 bg-primary-soft"
                         : c.status === "awarded"
-                          ? "border-[#166534]/60 bg-[#0F2E18]"
-                          : "border-hairline bg-[#141414]"
+                          ? "border-success/40 bg-success-soft"
+                          : "border-hairline bg-card"
                     )}
                   >
                     <div
@@ -376,7 +376,7 @@ export default async function ClientPage() {
                         c.unreadCount > 0
                           ? "bg-primary text-ink"
                           : c.status === "awarded"
-                            ? "bg-[#4ADE80] text-ink"
+                            ? "bg-success text-ink"
                             : "bg-hairline text-foreground"
                       )}
                       aria-hidden="true"
@@ -446,7 +446,7 @@ export default async function ClientPage() {
               {devisToReview.map((c) => (
                 <li
                   key={c.id}
-                  className="flex flex-col gap-3 rounded-2xl border border-primary/30 bg-[#1A120B] p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5"
+                  className="flex flex-col gap-3 rounded-2xl border border-primary/30 bg-primary-soft p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5"
                 >
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold">{c.otherName}</p>
@@ -461,7 +461,7 @@ export default async function ClientPage() {
                   </div>
                   <Link
                     href={`/conversations/${c.id}`}
-                    className="inline-flex h-9 shrink-0 items-center gap-2 rounded-xl bg-foreground px-4 text-sm font-medium text-ink transition-colors outline-none hover:bg-[#EBEBEB] focus-visible:ring-2 focus-visible:ring-primary/50"
+                    className="inline-flex h-9 shrink-0 items-center gap-2 rounded-xl bg-foreground px-4 text-sm font-medium text-ink transition-colors outline-none hover:bg-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
                   >
                     Examiner les devis
                     <FileSearch className="size-4" aria-hidden="true" />
@@ -488,7 +488,7 @@ function StatCard({
   accent?: boolean;
 }) {
   return (
-    <div className="rounded-2xl border border-hairline bg-[#141414] p-4">
+    <div className="rounded-2xl border border-hairline bg-card p-4">
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
         <span
           className={cn(

@@ -51,7 +51,7 @@ export default async function TokensPage() {
         )}
 
         <div className="mx-auto mt-8 max-w-2xl">
-          <div className="rounded-2xl border border-hairline bg-[#141414] p-5 shadow-sm">
+          <div className="rounded-2xl border border-hairline bg-card p-5 shadow-sm">
             <h2 className="text-[15px] font-semibold tracking-tight">
               Moyens de paiement
             </h2>
@@ -61,11 +61,11 @@ export default async function TokensPage() {
               Tokens. Le paiement en ligne automatique est en préparation.
             </p>
             <div className="mt-3 grid gap-2 sm:grid-cols-2">
-              <div className="flex items-center justify-between rounded-xl bg-[#1E1E1E] px-4 py-3 text-sm">
+              <div className="flex items-center justify-between rounded-xl bg-muted px-4 py-3 text-sm">
                 <span className="font-medium">Wave</span>
                 <span className="text-xs text-muted-foreground">Bientôt</span>
               </div>
-              <div className="flex items-center justify-between rounded-xl bg-[#1E1E1E] px-4 py-3 text-sm">
+              <div className="flex items-center justify-between rounded-xl bg-muted px-4 py-3 text-sm">
                 <span className="font-medium">Max It</span>
                 <span className="text-xs text-muted-foreground">Bientôt</span>
               </div>
@@ -74,9 +74,9 @@ export default async function TokensPage() {
         </div>
 
         <div className="mx-auto mt-8 max-w-2xl">
-          <div className="rounded-2xl border border-hairline bg-[#141414] p-6 shadow-sm">
+          <div className="rounded-2xl border border-hairline bg-card p-6 shadow-sm">
             <div className="flex items-start gap-3">
-              <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#2A1A10]">
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary-soft">
                 <CheckCircle2 className="size-4 text-primary" aria-hidden="true" />
               </span>
               <div>

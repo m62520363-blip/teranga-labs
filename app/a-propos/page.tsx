@@ -46,7 +46,7 @@ export default function AProposPage() {
             {values.map((value) => (
               <div
                 key={value.title}
-                className="rounded-2xl border border-hairline bg-[#141414] p-6"
+                className="rounded-2xl border border-hairline bg-card p-6"
               >
                 <value.icon className="size-5 text-primary" aria-hidden="true" />
                 <h2 className="mt-4 font-semibold tracking-tight">{value.title}</h2>
@@ -57,7 +57,7 @@ export default function AProposPage() {
             ))}
           </div>
 
-          <div className="mt-12 rounded-2xl bg-[#1C1C1C] p-8 text-white sm:p-10">
+          <div className="mt-12 rounded-2xl bg-muted p-8 text-white sm:p-10">
             <h2 className="text-xl font-semibold tracking-tight">
               Prêt à essayer ?
             </h2>

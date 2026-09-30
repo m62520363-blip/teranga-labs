@@ -40,11 +40,11 @@ export function DashboardStats({
         <div
           key={stat.label}
           className={cn(
-            "flex flex-col rounded-2xl border bg-[#141414] p-6 shadow-sm",
+            "flex flex-col rounded-2xl border bg-card p-6 shadow-sm",
             stat.highlight ? "border-primary/40" : "border-hairline"
           )}
         >
-          <span className="flex size-9 items-center justify-center rounded-lg bg-[#2A1A10]">
+          <span className="flex size-9 items-center justify-center rounded-lg bg-primary-soft">
             <stat.icon className="size-4 text-primary" aria-hidden="true" />
           </span>
           <p className="mt-4 text-2xl font-semibold tracking-tight">

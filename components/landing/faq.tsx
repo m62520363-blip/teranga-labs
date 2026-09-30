@@ -17,7 +17,7 @@ export function FaqSection() {
         </Reveal>
 
         <Reveal delay={1}>
-          <div className="card rounded-2xl bg-[#141414] p-6 sm:p-8">
+          <div className="card rounded-2xl bg-card p-6 sm:p-8">
             {FAQS.map((f) => (
               <FaqItem key={f.q} question={f.q} answer={f.a} />
             ))}

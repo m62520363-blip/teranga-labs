@@ -13,12 +13,12 @@ export function DemoSection() {
       </div>
 
       <Reveal delay={1} className="mx-auto mt-16 w-full max-w-3xl">
-        <div className="card-elevated relative overflow-hidden rounded-3xl border bg-[#141414]">
+        <div className="card-elevated relative overflow-hidden rounded-3xl border bg-card">
           <div className="flex items-center justify-between border-b border-hairline px-6 py-4">
             <div className="flex gap-1.5" aria-hidden="true">
-              <span className="size-3 rounded-full bg-[#3A3A3A]" />
-              <span className="size-3 rounded-full bg-[#3A3A3A]" />
-              <span className="size-3 rounded-full bg-[#3A3A3A]" />
+              <span className="size-3 rounded-full bg-border-strong" />
+              <span className="size-3 rounded-full bg-border-strong" />
+              <span className="size-3 rounded-full bg-border-strong" />
             </div>
             <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
               Démo — interface illustrative
@@ -26,7 +26,7 @@ export function DemoSection() {
           </div>
 
           <div className="grid md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
-            <div className="border-b border-hairline bg-gradient-to-br from-[#1C1C1C] to-[#141414] p-6 md:border-b-0 md:border-r">
+            <div className="border-b border-hairline bg-gradient-to-br from-muted to-card p-6 md:border-b-0 md:border-r">
               <p className="text-[15px] font-semibold leading-snug tracking-tight">
                 {DEMO.request.title}
               </p>
@@ -51,7 +51,7 @@ export function DemoSection() {
                 {DEMO.flow.map((step, index) => (
                   <div
                     key={step.step}
-                    className="tl-drift flex items-center justify-between gap-3 rounded-xl border border-hairline bg-[#141414] px-4 py-3.5"
+                    className="tl-drift flex items-center justify-between gap-3 rounded-xl border border-hairline bg-card px-4 py-3.5"
                     style={{ animationDelay: `${0.3 + index * 0.45}s` }}
                   >
                     <div className="min-w-0">
@@ -68,8 +68,8 @@ export function DemoSection() {
                       className={cn(
                         "shrink-0 whitespace-nowrap rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
                         step.badgeTone === "success"
-                          ? "bg-[#122A1C] text-[#3DD68C]"
-                          : "bg-[#2A1A10] text-primary"
+                          ? "bg-success-soft text-success"
+                          : "bg-primary-soft text-primary"
                       )}
                     >
                       {step.badgeTone === "success" ? "Direct" : "1 Token"}

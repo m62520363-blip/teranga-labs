@@ -70,12 +70,12 @@ export function ContactForm() {
   };
 
   return (
-    <div className="rounded-2xl border border-hairline bg-[#141414] p-6 shadow-sm sm:p-8">
+    <div className="rounded-2xl border border-hairline bg-card p-6 shadow-sm sm:p-8">
       {status === "success" ? (
         <div className="flex flex-col items-start gap-4">
           <div className="flex items-center gap-3">
-            <span className="flex size-11 items-center justify-center rounded-xl bg-[#122A1C]">
-              <CheckCircle2 className="size-5 text-[#3DD68C]" aria-hidden="true" />
+            <span className="flex size-11 items-center justify-center rounded-xl bg-success-soft">
+              <CheckCircle2 className="size-5 text-success" aria-hidden="true" />
             </span>
             <div>
               <p className="text-sm font-semibold">Message envoyé</p>

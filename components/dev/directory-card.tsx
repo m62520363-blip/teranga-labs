@@ -46,7 +46,7 @@ export function DirectoryCard({
         : null;
 
   return (
-    <article className="flex h-full flex-col rounded-2xl border border-hairline bg-[#141414] p-5 transition-colors hover:border-primary/40">
+    <article className="flex h-full flex-col rounded-2xl border border-hairline bg-card p-5 transition-colors hover:border-primary/40">
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
           <div className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-hairline">
@@ -131,7 +131,7 @@ export function DirectoryCard({
           {skills.map((s) => (
             <span
               key={s}
-              className="rounded-lg border border-hairline bg-[#1E1E1E] px-2 py-1 text-xs text-muted-foreground"
+              className="rounded-lg border border-hairline bg-muted px-2 py-1 text-xs text-muted-foreground"
             >
               {s}
             </span>
@@ -207,7 +207,7 @@ function Stat({
   hint: string;
 }) {
   return (
-    <div className="flex items-center gap-2 rounded-xl border border-hairline bg-[#1E1E1E] px-3 py-2">
+    <div className="flex items-center gap-2 rounded-xl border border-hairline bg-muted px-3 py-2">
       <span className="text-primary">{icon}</span>
       <span className="min-w-0">
         <span className="block truncate text-sm font-semibold leading-tight">{label}</span>

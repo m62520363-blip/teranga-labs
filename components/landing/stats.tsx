@@ -82,7 +82,7 @@ function Tile({
   return (
     <div className="relative">
       {live && (
-        <span className="absolute left-1/2 top-[-8px] -translate-x-1/2 rounded-full bg-[#FFFFFF]/12 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-white/60">
+        <span className="absolute left-1/2 top-[-8px] -translate-x-1/2 rounded-full bg-white/12 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-white/60">
           En direct
         </span>
       )}

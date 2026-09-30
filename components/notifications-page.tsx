@@ -150,7 +150,7 @@ export function NotificationsPage({ userId }: { userId: string }) {
             <button
               type="button"
               onClick={markAll}
-              className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-hairline bg-[#141414] px-5 text-sm font-medium text-foreground transition-colors outline-none hover:bg-[#1E1E1E] focus-visible:ring-2 focus-visible:ring-primary/50"
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-hairline bg-card px-5 text-sm font-medium text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
             >
               <CheckCircle2 className="size-4 text-primary" aria-hidden="true" />
               Tout marquer lu
@@ -160,7 +160,7 @@ export function NotificationsPage({ userId }: { userId: string }) {
 
         <div className="mt-10">
           {loading ? (
-            <div className="flex items-center justify-center gap-2 rounded-2xl border border-hairline bg-[#141414] p-10 text-sm text-muted-foreground">
+            <div className="flex items-center justify-center gap-2 rounded-2xl border border-hairline bg-card p-10 text-sm text-muted-foreground">
               <Loader2 className="size-4 animate-spin" aria-hidden="true" />
               Chargement…
             </div>
@@ -171,7 +171,7 @@ export function NotificationsPage({ userId }: { userId: string }) {
               action={
                 <Link
                   href="/conversations"
-                  className="inline-flex h-10 items-center gap-2 rounded-xl bg-foreground px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-[#EBEBEB]"
+                  className="inline-flex h-10 items-center gap-2 rounded-xl bg-foreground px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-foreground"
                 >
                   Ouvrir mes discussions
                   <ArrowRight className="size-4" aria-hidden="true" />
@@ -190,11 +190,11 @@ export function NotificationsPage({ userId }: { userId: string }) {
                       className={cn(
                         "flex w-full items-start gap-3 rounded-2xl border p-4 text-left outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50 sm:p-5",
                         item.read
-                          ? "border-hairline bg-[#141414] hover:bg-[#171717]"
-                          : "border-primary/40 bg-[#1A120B] hover:bg-[#1E160F]"
+                          ? "border-hairline bg-card hover:bg-muted"
+                          : "border-primary/40 bg-primary-soft hover:bg-primary-soft"
                       )}
                     >
-                      <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#2A1A10]">
+                      <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary-soft">
                         <Icon className="size-5 text-primary" aria-hidden="true" />
                       </span>
                       <span className="min-w-0 flex-1">

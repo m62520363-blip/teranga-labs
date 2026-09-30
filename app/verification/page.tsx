@@ -78,7 +78,7 @@ export default async function VerificationPage({
     <div className="bg-surface py-14">
       <div className="container-tl">
         <header className="mx-auto max-w-3xl">
-          <span className="chip gap-2 border-hairline bg-[#141414]">
+          <span className="chip gap-2 border-hairline bg-card">
             <span className="size-1.5 rounded-full bg-primary" aria-hidden="true" />
             VÉRIFICATION DE PROFIL
           </span>
@@ -115,8 +115,8 @@ export default async function VerificationPage({
 
         <footer className="mx-auto mt-12 max-w-3xl">
           <div className="grid gap-3 sm:grid-cols-2">
-            <div className="flex items-start gap-3 rounded-2xl border border-hairline bg-[#141414] p-5">
-              <span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#2A1A10]">
+            <div className="flex items-start gap-3 rounded-2xl border border-hairline bg-card p-5">
+              <span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary-soft">
                 <BadgeCheck className="size-4 text-primary" aria-hidden="true" />
               </span>
               <p className="text-sm leading-relaxed text-muted-foreground">
@@ -124,8 +124,8 @@ export default async function VerificationPage({
                 Max It, en toute sécurité.
               </p>
             </div>
-            <div className="flex items-start gap-3 rounded-2xl border border-hairline bg-[#141414] p-5">
-              <span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#2A1A10]">
+            <div className="flex items-start gap-3 rounded-2xl border border-hairline bg-card p-5">
+              <span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary-soft">
                 <ShieldCheck className="size-4 text-primary" aria-hidden="true" />
               </span>
               <p className="text-sm leading-relaxed text-muted-foreground">
@@ -144,9 +144,9 @@ function NotApproved({ status }: { status: string }) {
   const pendingReview = status === "pending" || status === "verification_pending";
   return (
     <div className="mx-auto max-w-lg">
-      <div className="rounded-2xl border border-hairline bg-[#141414] p-8 text-center shadow-sm">
-        <span className="mx-auto inline-flex size-14 items-center justify-center rounded-full bg-[#2A1A10]">
-          <ShieldCheck className="size-7 text-[#E8A33D]" aria-hidden="true" />
+      <div className="rounded-2xl border border-hairline bg-card p-8 text-center shadow-sm">
+        <span className="mx-auto inline-flex size-14 items-center justify-center rounded-full bg-primary-soft">
+          <ShieldCheck className="size-7 text-warning" aria-hidden="true" />
         </span>
         <h2 className="mt-5 text-xl font-bold tracking-tight">
           {pendingReview ? "En attente d’approbation" : "Compte non éligible"}

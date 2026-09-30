@@ -67,7 +67,7 @@ export default function PlanDuSitePage() {
     <div className="bg-surface py-16 md:py-24">
       <div className="container-tl">
         <div className="mx-auto max-w-3xl">
-          <span className="chip gap-2 bg-[#141414]/85 border-hairline backdrop-blur">
+          <span className="chip gap-2 bg-card/85 border-hairline backdrop-blur">
             <MapPin className="size-3.5 text-primary" aria-hidden="true" />
             TERANGA LABS
           </span>
@@ -93,7 +93,7 @@ export default function PlanDuSitePage() {
                     <Link
                       key={link.label}
                       href={link.href}
-                      className="group flex items-center justify-between gap-3 rounded-xl border border-hairline bg-[#141414] px-5 py-4 transition-colors outline-none hover:border-primary/40 hover:bg-[#1E1E1E] focus-visible:ring-2 focus-visible:ring-primary/60"
+                      className="group flex items-center justify-between gap-3 rounded-xl border border-hairline bg-card px-5 py-4 transition-colors outline-none hover:border-primary/40 hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/60"
                     >
                       <span className="flex items-center gap-3">
                         <link.icon

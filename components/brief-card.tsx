@@ -20,12 +20,12 @@ export function BriefCard({
   return (
     <article
       className={cn(
-        "group flex h-full flex-col rounded-2xl border border-hairline bg-[#141414] p-6 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md",
+        "group flex h-full flex-col rounded-2xl border border-hairline bg-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md",
         compact && "p-5"
       )}
     >
       <div className="flex items-center justify-between gap-3">
-        <span className="inline-flex h-5 items-center rounded-full bg-[#1E1E1E] px-2.5 text-[11px] font-semibold uppercase tracking-wide text-foreground">
+        <span className="inline-flex h-5 items-center rounded-full bg-muted px-2.5 text-[11px] font-semibold uppercase tracking-wide text-foreground">
           {PROJECT_TYPE_LABELS[brief.project_type] ?? brief.project_type}
         </span>
         <span className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground">
@@ -36,24 +36,24 @@ export function BriefCard({
 
       <div className="mt-3 flex flex-wrap items-center gap-1.5">
         {brief.demo ? (
-          <span className="inline-flex h-5 items-center rounded-full border border-primary/40 bg-[#2A1A10] px-2.5 text-[11px] font-semibold text-primary">
+          <span className="inline-flex h-5 items-center rounded-full border border-primary/40 bg-primary-soft px-2.5 text-[11px] font-semibold text-primary">
             Exemple
           </span>
         ) : null}
         {freshness === "h24" ? (
-          <span className="inline-flex h-5 items-center gap-1 rounded-full bg-[#2A1A10] px-2.5 text-[11px] font-semibold text-primary">
+          <span className="inline-flex h-5 items-center gap-1 rounded-full bg-primary-soft px-2.5 text-[11px] font-semibold text-primary">
             <Timer className="size-3" aria-hidden="true" />
             Moins de 24h
           </span>
         ) : null}
         {freshness === "new" ? (
-          <span className="inline-flex h-5 items-center gap-1 rounded-full bg-[#122A1C] px-2.5 text-[11px] font-semibold text-[#3DD68C]">
+          <span className="inline-flex h-5 items-center gap-1 rounded-full bg-success-soft px-2.5 text-[11px] font-semibold text-success">
             <Sparkles className="size-3" aria-hidden="true" />
             Nouveau
           </span>
         ) : null}
         {brief.budget_verified ? (
-          <span className="inline-flex h-5 items-center gap-1 rounded-full border border-[#3DD68C]/25 bg-[#141414] px-2.5 text-[11px] font-semibold text-[#3DD68C]">
+          <span className="inline-flex h-5 items-center gap-1 rounded-full border border-success/25 bg-card px-2.5 text-[11px] font-semibold text-success">
             <BadgeCheck className="size-3" aria-hidden="true" />
             Budget vérifié
           </span>

@@ -219,7 +219,7 @@ export function ContactButton({
             </DialogHeader>
 
             <div className="flex flex-col gap-3">
-              <div className="rounded-xl border border-hairline bg-[#1E1E1E] p-4">
+              <div className="rounded-xl border border-hairline bg-muted p-4">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Coût du contact</span>
                   <span className="font-semibold">
@@ -290,7 +290,7 @@ function NotAllowed({
 }) {
   return (
     <div className="flex flex-col items-center gap-3 py-6 text-center">
-      <span className="flex size-12 items-center justify-center rounded-2xl bg-[#2A1A10] text-primary">
+      <span className="flex size-12 items-center justify-center rounded-2xl bg-primary-soft text-primary">
         {icon}
       </span>
       <h2 className="text-lg font-semibold tracking-tight">{title}</h2>

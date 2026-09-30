@@ -196,12 +196,12 @@ export function NotificationBell({ userId }: { userId: string }) {
       </button>
 
       {open ? (
-        <div className="absolute right-0 top-11 z-50 w-80 overflow-hidden rounded-2xl border border-hairline bg-[#111111] shadow-2xl shadow-black/60 sm:w-96">
+        <div className="absolute right-0 top-11 z-50 w-80 overflow-hidden rounded-2xl border border-hairline bg-surface shadow-2xl shadow-black/60 sm:w-96">
           <div className="flex items-center justify-between border-b border-hairline px-4 py-3">
             <p className="text-sm font-semibold tracking-tight">
               Notifications
               {unread > 0 ? (
-                <span className="ml-2 rounded-full bg-[#2A1A10] px-2 py-0.5 text-[11px] font-medium text-[#F2A378]">
+                <span className="ml-2 rounded-full bg-primary-soft px-2 py-0.5 text-[11px] font-medium text-primary-light">
                   {unread} nouvelle{unread > 1 ? "s" : ""}
                 </span>
               ) : null}
@@ -245,11 +245,11 @@ export function NotificationBell({ userId }: { userId: string }) {
                         onClick={() => openItem(item)}
                         role="menuitem"
                         className={cn(
-                          "flex w-full items-start gap-3 px-4 py-3 text-left outline-none transition-colors hover:bg-[#1E1E1E] focus-visible:bg-[#1E1E1E]",
-                          !item.read && "bg-[#171310]"
+                          "flex w-full items-start gap-3 px-4 py-3 text-left outline-none transition-colors hover:bg-muted focus-visible:bg-muted",
+                          !item.read && "bg-primary-soft"
                         )}
                       >
-                        <span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#2A1A10]">
+                        <span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary-soft">
                           <Icon className="size-4 text-primary" aria-hidden="true" />
                         </span>
                         <span className="min-w-0 flex-1">
@@ -288,7 +288,7 @@ export function NotificationBell({ userId }: { userId: string }) {
                 setOpen(false);
                 router.push("/notifications");
               }}
-              className="w-full rounded-lg px-3 py-2 text-center text-sm font-medium text-foreground outline-none transition-colors hover:bg-[#1E1E1E] focus-visible:ring-2 focus-visible:ring-primary/50"
+              className="w-full rounded-lg px-3 py-2 text-center text-sm font-medium text-foreground outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
             >
               Voir tout l&apos;historique
             </button>

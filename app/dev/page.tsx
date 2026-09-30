@@ -52,7 +52,7 @@ export default async function DirectoryPageRoute() {
       <div className="container-tl">
         <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div className="max-w-2xl">
-            <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-[#2A1A10] px-3 py-1 text-xs font-semibold text-primary">
+            <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary-soft px-3 py-1 text-xs font-semibold text-primary">
               <UsersRound className="size-3.5" aria-hidden="true" />
               Annuaire des développeurs
             </p>

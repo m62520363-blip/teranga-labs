@@ -55,7 +55,7 @@ export default async function ReviewPage({
     return (
       <div className="bg-surface py-16 md:py-24">
         <div className="container-tl mx-auto max-w-md">
-          <div className="rounded-2xl border border-hairline bg-[#141414] p-6 text-center">
+          <div className="rounded-2xl border border-hairline bg-card p-6 text-center">
             <h1 className="text-xl font-semibold">Accès refusé</h1>
             <p className="mt-2 text-sm text-muted-foreground">
               {errorHint ?? "Cette mission ne vous permet pas de déposer un avis."}

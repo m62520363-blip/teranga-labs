@@ -93,7 +93,7 @@ export function TokenCard({ pkg }: { pkg: TokenPackage }) {
   return (
     <div
       className={cn(
-        "relative flex h-full flex-col rounded-2xl border bg-[#141414] p-6 transition-all duration-300",
+        "relative flex h-full flex-col rounded-2xl border bg-card p-6 transition-all duration-300",
         pkg.popular
           ? "border-primary/50 shadow-md"
           : "border-hairline shadow-sm hover:border-primary/30"
@@ -159,7 +159,7 @@ export function TokenCard({ pkg }: { pkg: TokenPackage }) {
                 </DialogDescription>
               </DialogHeader>
 
-              <div className="flex flex-col gap-3 rounded-xl bg-[#1E1E1E] p-4">
+              <div className="flex flex-col gap-3 rounded-xl bg-muted p-4">
                 <div className="flex items-center gap-2 text-sm font-medium">
                   <ShieldCheck className="size-4 text-primary" aria-hidden="true" />
                   Commande validée par notre équipe
@@ -230,7 +230,7 @@ export function TokenCard({ pkg }: { pkg: TokenPackage }) {
             <>
               <DialogHeader>
                 <DialogTitle className="flex items-center gap-2">
-                  <CheckCircle2 className="size-5 text-[#3DD68C]" aria-hidden="true" />
+                  <CheckCircle2 className="size-5 text-success" aria-hidden="true" />
                   Commande créée
                 </DialogTitle>
               </DialogHeader>
@@ -252,7 +252,7 @@ export function TokenCard({ pkg }: { pkg: TokenPackage }) {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-2 rounded-xl bg-[#1E1E1E] p-4 text-sm leading-relaxed text-muted-foreground">
+              <div className="flex flex-col gap-2 rounded-xl bg-muted p-4 text-sm leading-relaxed text-muted-foreground">
                 <p>
                   Envoyez <strong className="font-semibold">{formatFCFA(order.price_fcfa)}</strong> sur
                   votre moyen de paiement habituel (Wave ou Max It) en

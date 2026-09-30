@@ -103,7 +103,7 @@ export function DevReviewsPanel({
         />
       </div>
 
-      <div className="mt-6 rounded-2xl border border-hairline bg-[#141414] p-5 sm:p-6">
+      <div className="mt-6 rounded-2xl border border-hairline bg-card p-5 sm:p-6">
         <h3 className="text-sm font-semibold tracking-tight">
           Vos moyennes par critère
         </h3>
@@ -138,7 +138,7 @@ export function DevReviewsPanel({
       </div>
 
       {error ? (
-        <div className="mt-5 rounded-2xl border border-[#F87171]/30 bg-[#2A1212] p-4 text-sm text-[#F87171]">
+        <div className="mt-5 rounded-2xl border border-error/30 bg-error-soft p-4 text-sm text-error">
           {error}
         </div>
       ) : null}
@@ -149,7 +149,7 @@ export function DevReviewsPanel({
             key={review.id}
             className={cn(
               "rounded-2xl border p-5",
-              review.hidden ? "border-[#F87171]/25 bg-[#1A1010]" : "border-hairline bg-[#141414]"
+              review.hidden ? "border-error/25 bg-error-soft" : "border-hairline bg-card"
             )}
           >
             <div className="flex flex-wrap items-start justify-between gap-3">
@@ -170,8 +170,8 @@ export function DevReviewsPanel({
                     className={cn(
                       "size-4",
                       n <= review.rating
-                        ? "fill-current text-[#F5C26B]"
-                        : "text-[#3A3A3A]"
+                        ? "fill-current text-warning"
+                        : "text-border-strong"
                     )}
                     aria-hidden="true"
                   />
@@ -192,7 +192,7 @@ export function DevReviewsPanel({
                 {REVIEW_CRITERIA.filter((c) => review.criteria?.[c.key]).map((c) => (
                   <span
                     key={c.key}
-                    className="inline-flex items-center gap-1 rounded-full bg-[#1E1E1E] px-2.5 py-1 text-xs text-muted-foreground"
+                    className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground"
                     title={reviewCriteriaLabel(c.key)}
                   >
                     {c.label}
@@ -205,7 +205,7 @@ export function DevReviewsPanel({
             ) : null}
 
             {Object.keys(review.questions ?? {}).length > 0 ? (
-              <dl className="mt-3 flex flex-col gap-1 rounded-xl bg-[#101010] p-3 text-xs">
+              <dl className="mt-3 flex flex-col gap-1 rounded-xl bg-surface p-3 text-xs">
                 {REVIEW_QUESTIONS.map((q) =>
                   review.questions?.[q.key] ? (
                     <div key={q.key} className="flex items-start justify-between gap-3">
@@ -224,8 +224,8 @@ export function DevReviewsPanel({
             ) : null}
 
             {review.hidden ? (
-              <div className="mt-3 flex items-start gap-2 rounded-xl border border-[#F87171]/25 bg-[#2A1212] p-3 text-xs text-muted-foreground">
-                <EyeOff className="mt-0.5 size-4 shrink-0 text-[#F87171]" aria-hidden="true" />
+              <div className="mt-3 flex items-start gap-2 rounded-xl border border-error/25 bg-error-soft p-3 text-xs text-muted-foreground">
+                <EyeOff className="mt-0.5 size-4 shrink-0 text-error" aria-hidden="true" />
                 <p>
                   Avis masqué par la modération.
                   {review.admin_note ? ` Motif : ${review.admin_note}.` : ""}{" "}
@@ -237,7 +237,7 @@ export function DevReviewsPanel({
             <div className="mt-4 border-t border-hairline pt-4">
               {review.response ? (
                 <div className="flex items-start gap-2.5">
-                  <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#2A1A10] text-primary">
+                  <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary-soft text-primary">
                     <MessageSquareReply className="size-4" aria-hidden="true" />
                   </span>
                   <div className="min-w-0 flex-1">
@@ -277,7 +277,7 @@ export function DevReviewsPanel({
                   type="button"
                   onClick={() => saveResponse(review)}
                   disabled={responding === review.id}
-                  className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-foreground px-4 text-sm font-medium text-ink transition-colors outline-none hover:bg-[#EBEBEB] focus-visible:ring-2 focus-visible:ring-primary/50 disabled:pointer-events-none disabled:opacity-60"
+                  className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-foreground px-4 text-sm font-medium text-ink transition-colors outline-none hover:bg-foreground focus-visible:ring-2 focus-visible:ring-primary/50 disabled:pointer-events-none disabled:opacity-60"
                 >
                   {responding === review.id ? (
                     <Loader2 className="size-4 animate-spin" aria-hidden="true" />
@@ -309,9 +309,9 @@ function SummaryCard({
   label: string;
 }) {
   return (
-    <div className="rounded-2xl border border-hairline bg-[#141414] p-4">
+    <div className="rounded-2xl border border-hairline bg-card p-4">
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
-        <span className="flex size-8 items-center justify-center rounded-lg bg-[#2A1A10] text-primary">
+        <span className="flex size-8 items-center justify-center rounded-lg bg-primary-soft text-primary">
           {icon}
         </span>
         {label}

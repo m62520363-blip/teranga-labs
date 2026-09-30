@@ -57,7 +57,7 @@ export function ConversationsList({
             action={
               <Link
                 href="/briefs"
-                className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
+                className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50"
               >
                 Voir les briefs
                 <ArrowRight className="size-4" aria-hidden="true" />
@@ -73,10 +73,10 @@ export function ConversationsList({
               <Link
                 href={`/conversations/${c.id}`}
                 className={cn(
-                  "flex items-center gap-4 rounded-2xl border p-4 transition-colors outline-none hover:bg-[#161616] focus-visible:ring-2 focus-visible:ring-primary/50 sm:p-5",
+                  "flex items-center gap-4 rounded-2xl border p-4 transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50 sm:p-5",
                   c.unreadCount > 0
-                    ? "border-primary/30 bg-[#1A120B]"
-                    : "border-hairline bg-[#141414]"
+                    ? "border-primary/30 bg-primary-soft"
+                    : "border-hairline bg-card"
                 )}
               >
                 <div

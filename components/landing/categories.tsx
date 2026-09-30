@@ -15,7 +15,7 @@ export function CategoriesSection() {
         {CATEGORIES.map((category, index) => (
           <Reveal key={category.title} delay={(index % 3) as 0 | 1 | 2}>
             <div className="card card-interactive h-full p-5">
-              <span className="flex size-11 items-center justify-center rounded-xl bg-[#2A1A10]">
+              <span className="flex size-11 items-center justify-center rounded-xl bg-primary-soft">
                 <category.icon className="size-5 text-primary" aria-hidden="true" />
               </span>
               <h3 className="mt-4 text-[15px] font-semibold tracking-tight">

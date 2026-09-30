@@ -55,7 +55,7 @@ export default function CookiesPage() {
               {cookieGroups.map((group) => (
                 <div
                   key={group.name}
-                  className="rounded-xl border border-hairline bg-[#141414] p-4"
+                  className="rounded-xl border border-hairline bg-card p-4"
                 >
                   <h3 className="text-sm font-semibold tracking-tight text-foreground">
                     {group.name}

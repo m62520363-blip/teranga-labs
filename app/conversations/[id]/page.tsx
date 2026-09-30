@@ -56,7 +56,7 @@ export default async function ConversationThreadPage({
           </div>
 
           {conversation.status === "awarded" ? (
-            <div className="flex items-center gap-2 rounded-xl border border-[#3DD68C]/30 bg-[#122A1C] px-4 py-2.5 text-sm text-[#3DD68C]">
+            <div className="flex items-center gap-2 rounded-xl border border-success/30 bg-success-soft px-4 py-2.5 text-sm text-success">
               <Phone className="size-4" aria-hidden="true" />
               Contact partagé : échangez en direct hors plateforme
             </div>

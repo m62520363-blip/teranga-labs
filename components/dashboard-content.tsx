@@ -136,8 +136,8 @@ function FilterChip({
       className={cn(
         "inline-flex h-8 items-center rounded-lg border px-2.5 text-xs font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
         active
-          ? "border-primary/60 bg-[#2A1A10] text-[#F2A378]"
-          : "border-hairline bg-transparent text-muted-foreground hover:bg-[#1E1E1E]"
+          ? "border-primary/60 bg-primary-soft text-primary-light"
+          : "border-hairline bg-transparent text-muted-foreground hover:bg-muted"
       )}
     >
       {children}
@@ -153,8 +153,8 @@ function DevStatusBanner({ profile }: { profile: DeveloperProfile }) {
 
   if (verified) {
     return (
-      <div className="mt-6 flex items-start gap-3 rounded-2xl border border-[#166534]/60 bg-[#0F2E18] p-4 sm:p-5">
-        <BadgeCheck className="mt-0.5 size-5 shrink-0 text-[#4ADE80]" aria-hidden="true" />
+      <div className="mt-6 flex items-start gap-3 rounded-2xl border border-success/40 bg-success-soft p-4 sm:p-5">
+        <BadgeCheck className="mt-0.5 size-5 shrink-0 text-success" aria-hidden="true" />
         <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold tracking-tight">Profil vérifié par TERANGA LABS</p>
           <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
@@ -167,7 +167,7 @@ function DevStatusBanner({ profile }: { profile: DeveloperProfile }) {
 
   if (status === "verification_pending") {
     return (
-      <div className="mt-6 flex items-start gap-3 rounded-2xl border border-primary/30 bg-[#2A1A10] p-4 sm:p-5">
+      <div className="mt-6 flex items-start gap-3 rounded-2xl border border-primary/30 bg-primary-soft p-4 sm:p-5">
         <Clock className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
         <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold tracking-tight">Vérification en cours</p>
@@ -178,7 +178,7 @@ function DevStatusBanner({ profile }: { profile: DeveloperProfile }) {
         </div>
         <Link
           href="/verification"
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-primary/40 bg-surface px-3 py-2 text-xs font-medium text-foreground transition-colors outline-none hover:bg-[#1E1E1E] focus-visible:ring-2 focus-visible:ring-primary/50"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-primary/40 bg-surface px-3 py-2 text-xs font-medium text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
         >
           Suivre l’état
           <ArrowRight className="size-3.5" aria-hidden="true" />
@@ -189,7 +189,7 @@ function DevStatusBanner({ profile }: { profile: DeveloperProfile }) {
 
   if (status === "active") {
     return (
-      <div className="mt-6 flex items-start gap-3 rounded-2xl border border-hairline bg-[#0F1B2E] p-4 sm:p-5">
+      <div className="mt-6 flex items-start gap-3 rounded-2xl border border-hairline bg-primary-soft p-4 sm:p-5">
         <BadgeCheck className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
         <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold tracking-tight">Donnez confiance avec le badge Vérifié</p>
@@ -200,7 +200,7 @@ function DevStatusBanner({ profile }: { profile: DeveloperProfile }) {
         </div>
         <Link
           href="/verification"
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-ink transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-ink transition-colors outline-none hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50"
         >
           Faire vérifier mon profil
           <ArrowRight className="size-3.5" aria-hidden="true" />
@@ -279,7 +279,7 @@ function DevStatusBannerShell({
         "mt-6 flex items-start gap-3 rounded-2xl border p-4 sm:p-5",
         tone === "error"
           ? "border-[var(--error)]/30 bg-[var(--error-soft)]"
-          : "border-primary/30 bg-[#2A1A10]"
+          : "border-primary/30 bg-primary-soft"
       )}
     >
       <AlertTriangle
@@ -299,7 +299,7 @@ function DevStatusBannerShell({
       {cta ? (
         <Link
           href={cta.href}
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-ink transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-ink transition-colors outline-none hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50"
         >
           {cta.label}
           <ArrowRight className="size-3.5" aria-hidden="true" />
@@ -638,14 +638,14 @@ export function DashboardContent({
           <div className="flex flex-wrap gap-2">
             <Link
               href="/conversations"
-              className="inline-flex h-10 items-center gap-2 rounded-xl border border-hairline bg-[#141414] px-5 text-sm font-medium text-foreground transition-colors outline-none hover:bg-[#1E1E1E] focus-visible:ring-2 focus-visible:ring-primary/50"
+              className="inline-flex h-10 items-center gap-2 rounded-xl border border-hairline bg-card px-5 text-sm font-medium text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
             >
               <MessageCircle className="size-4" aria-hidden="true" />
               Mes discussions
             </Link>
             <Link
               href="/tokens"
-              className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
+              className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50"
             >
               Recharger les Tokens
               <ArrowRight className="size-4" aria-hidden="true" />
@@ -675,7 +675,7 @@ export function DashboardContent({
               className={cn(
                 "inline-flex h-10 items-center gap-2 rounded-t-xl px-4 text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
                 tab === t.key
-                  ? "border border-hairline border-b-transparent bg-[#141414] text-foreground"
+                  ? "border border-hairline border-b-transparent bg-card text-foreground"
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
@@ -713,15 +713,15 @@ export function DashboardContent({
                           className={cn(
                             "size-2 rounded-full",
                             s === "en_discussion" && "bg-primary",
-                            s === "gagne" && "bg-[#4ADE80]",
-                            s === "perdu" && "bg-[#525252]"
+                            s === "gagne" && "bg-success",
+                            s === "perdu" && "bg-muted"
                           )}
                         />
                       )}
                       {CRM_STATUS_LABELS[s]} : {statusCounts[s] ?? 0}
                     </span>
                   ))}
-                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#4ADE80]">
+                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-success">
                     Conversion : {conversionPct}%
                   </span>
                 </div>
@@ -730,7 +730,7 @@ export function DashboardContent({
 
             {unlocks.length > 0 ? (
               <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
-                <div className="rounded-2xl border border-hairline bg-[#141414] p-4">
+                <div className="rounded-2xl border border-hairline bg-card p-4">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                       <p className="flex items-center gap-2 text-sm font-semibold tracking-tight">
@@ -784,7 +784,7 @@ export function DashboardContent({
                     />
                   </div>
                   <p className="mt-2 text-xs text-muted-foreground">
-                    <span className="font-medium text-[#4ADE80]">{wonThisMonth}</span> gagné
+                    <span className="font-medium text-success">{wonThisMonth}</span> gagné
                     {wonThisMonth > 1 ? "s" : ""} ce mois
                     {monthlyGoal > 0 ? ` sur ${monthlyGoal}` : " — renseignez un objectif"} (
                     {monthlyGoal > 0
@@ -806,8 +806,8 @@ export function DashboardContent({
                     className={cn(
                       "inline-flex h-10 items-center gap-1.5 rounded-xl border px-3.5 text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
                       crmView === "board"
-                        ? "border-primary/60 bg-[#2A1A10] text-[#F2A378]"
-                        : "border-hairline bg-transparent text-muted-foreground hover:bg-[#1E1E1E]"
+                        ? "border-primary/60 bg-primary-soft text-primary-light"
+                        : "border-hairline bg-transparent text-muted-foreground hover:bg-muted"
                     )}
                   >
                     <LayoutGrid className="size-4" aria-hidden="true" />
@@ -820,8 +820,8 @@ export function DashboardContent({
                     className={cn(
                       "inline-flex h-10 items-center gap-1.5 rounded-xl border px-3.5 text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
                       crmView === "list"
-                        ? "border-primary/60 bg-[#2A1A10] text-[#F2A378]"
-                        : "border-hairline bg-transparent text-muted-foreground hover:bg-[#1E1E1E]"
+                        ? "border-primary/60 bg-primary-soft text-primary-light"
+                        : "border-hairline bg-transparent text-muted-foreground hover:bg-muted"
                     )}
                   >
                     <List className="size-4" aria-hidden="true" />
@@ -865,7 +865,7 @@ export function DashboardContent({
                   <button
                     type="button"
                     onClick={exportCsv}
-                    className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-hairline bg-[#141414] px-2.5 text-xs font-medium text-muted-foreground transition-colors outline-none hover:bg-[#1E1E1E] hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
+                    className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-hairline bg-card px-2.5 text-xs font-medium text-muted-foreground transition-colors outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
                   >
                     <Download className="size-3.5" aria-hidden="true" />
                     Export CSV
@@ -882,7 +882,7 @@ export function DashboardContent({
                   action={
                     <Link
                       href="/briefs"
-                      className="inline-flex h-10 items-center gap-2 rounded-xl bg-foreground px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-[#EBEBEB]"
+                      className="inline-flex h-10 items-center gap-2 rounded-xl bg-foreground px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-foreground"
                     >
                       Voir les briefs
                       <ArrowRight className="size-4" aria-hidden="true" />
@@ -906,17 +906,17 @@ export function DashboardContent({
                   return (
                     <div
                       key={col}
-                      className="flex min-w-0 flex-col rounded-2xl border border-hairline bg-[#101010] p-3"
+                      className="flex min-w-0 flex-col rounded-2xl border border-hairline bg-surface p-3"
                     >
                       <div className="flex items-center justify-between px-1 pb-2">
                         <span className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                           <span
                             className={cn(
                               "size-2 rounded-full",
-                              col === "a_contacter" && "bg-[#525252]",
+                              col === "a_contacter" && "bg-muted",
                               col === "en_discussion" && "bg-primary",
-                              col === "gagne" && "bg-[#4ADE80]",
-                              col === "perdu" && "bg-[#8E8E93]"
+                              col === "gagne" && "bg-success",
+                              col === "perdu" && "bg-muted-foreground"
                             )}
                           />
                           {CRM_STATUS_LABELS[col]}
@@ -939,7 +939,7 @@ export function DashboardContent({
                             return (
                               <div
                                 key={item.unlock_id}
-                                className="rounded-xl border border-hairline bg-[#141414] p-3"
+                                className="rounded-xl border border-hairline bg-card p-3"
                               >
                                 <p className="text-sm font-medium leading-snug">
                                   {item.client_name}
@@ -988,7 +988,7 @@ export function DashboardContent({
                                       changeStatus(item, cascadeStatus(current, -1))
                                     }
                                     disabled={saving || current === "a_contacter"}
-                                    className="inline-flex size-7 items-center justify-center rounded-lg border border-hairline text-muted-foreground outline-none transition-colors hover:bg-[#1E1E1E] disabled:cursor-not-allowed disabled:opacity-40"
+                                    className="inline-flex size-7 items-center justify-center rounded-lg border border-hairline text-muted-foreground outline-none transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-40"
                                     aria-label={`Revenir à un statut précédent pour ${item.client_name}`}
                                   >
                                     <ChevronLeft className="size-3.5" aria-hidden="true" />
@@ -998,13 +998,13 @@ export function DashboardContent({
                                       type="button"
                                       onClick={() => changeStatus(item, "gagne")}
                                       disabled={saving}
-                                      className="inline-flex h-7 flex-1 items-center justify-center gap-1 rounded-lg border border-[#166534]/60 bg-[#0F2E18] text-[11px] font-medium text-[#4ADE80] outline-none transition-colors hover:bg-[#133823] disabled:cursor-not-allowed disabled:opacity-60"
+                                      className="inline-flex h-7 flex-1 items-center justify-center gap-1 rounded-lg border border-success/40 bg-success-soft text-[11px] font-medium text-success outline-none transition-colors hover:bg-success-soft disabled:cursor-not-allowed disabled:opacity-60"
                                     >
                                       <Check className="size-3" aria-hidden="true" />
                                       Gagné
                                     </button>
                                   ) : (
-                                    <span className="inline-flex h-7 flex-1 items-center justify-center gap-1 rounded-lg border border-[#166534]/60 bg-[#0F2E18] text-[11px] font-medium text-[#4ADE80]">
+                                    <span className="inline-flex h-7 flex-1 items-center justify-center gap-1 rounded-lg border border-success/40 bg-success-soft text-[11px] font-medium text-success">
                                       🎉
                                     </span>
                                   )}
@@ -1014,7 +1014,7 @@ export function DashboardContent({
                                       changeStatus(item, cascadeStatus(current, 1))
                                     }
                                     disabled={saving || current === "perdu"}
-                                    className="inline-flex size-7 items-center justify-center rounded-lg border border-hairline text-muted-foreground outline-none transition-colors hover:bg-[#1E1E1E] disabled:cursor-not-allowed disabled:opacity-40"
+                                    className="inline-flex size-7 items-center justify-center rounded-lg border border-hairline text-muted-foreground outline-none transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-40"
                                     aria-label={`Avancer le statut pour ${item.client_name}`}
                                   >
                                     <ChevronRight className="size-3.5" aria-hidden="true" />
@@ -1054,14 +1054,14 @@ export function DashboardContent({
                   return (
                     <li
                       key={item.unlock_id}
-                      className="rounded-2xl border border-hairline bg-[#141414] p-5"
+                      className="rounded-2xl border border-hairline bg-card p-5"
                     >
                       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                         <div className="min-w-0">
                           <div className="flex flex-wrap items-center gap-2">
                             <p className="font-medium">{item.client_name}</p>
                             {refundPending ? (
-                              <span className="inline-flex items-center gap-1 rounded-full border border-primary/40 bg-[#2A1A10] px-2 py-0.5 text-[11px] font-medium text-[#F2A378]">
+                              <span className="inline-flex items-center gap-1 rounded-full border border-primary/40 bg-primary-soft px-2 py-0.5 text-[11px] font-medium text-primary-light">
                                 <Clock className="size-3" aria-hidden="true" />
                                 Remboursement en cours
                               </span>
@@ -1107,11 +1107,11 @@ export function DashboardContent({
                                   "inline-flex h-8 items-center gap-1.5 rounded-lg border px-2.5 text-xs font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50 disabled:cursor-not-allowed disabled:opacity-60",
                                   currentStatus === s
                                     ? s === "gagne"
-                                      ? "border-[#166534]/60 bg-[#0F2E18] text-[#4ADE80]"
+                                      ? "border-success/40 bg-success-soft text-success"
                                       : s === "perdu"
-                                        ? "border-[#3A3A3A] bg-[#1E1E1E] text-muted-foreground"
-                                        : "border-primary/60 bg-[#2A1A10] text-[#F2A378]"
-                                    : "border-hairline bg-transparent text-muted-foreground hover:bg-[#1E1E1E]"
+                                        ? "border-border-strong bg-muted text-muted-foreground"
+                                        : "border-primary/60 bg-primary-soft text-primary-light"
+                                    : "border-hairline bg-transparent text-muted-foreground hover:bg-muted"
                                 )}
                               >
                                 {s === "gagne" ? (
@@ -1142,7 +1142,7 @@ export function DashboardContent({
                               )}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg bg-foreground px-3 text-xs font-medium text-ink transition-colors outline-none hover:bg-[#EBEBEB] focus-visible:ring-2 focus-visible:ring-primary/50"
+                              className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg bg-foreground px-3 text-xs font-medium text-ink transition-colors outline-none hover:bg-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
                             >
                               <MessagesSquare className="size-3.5" aria-hidden="true" />
                               WhatsApp
@@ -1156,7 +1156,7 @@ export function DashboardContent({
                               setRefundReason("");
                             }}
                             disabled={Boolean(refundPending)}
-                            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground underline-offset-4 transition-colors outline-none hover:text-[#F2A378] focus-visible:ring-2 focus-visible:ring-primary/50 disabled:cursor-not-allowed disabled:opacity-50"
+                            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground underline-offset-4 transition-colors outline-none hover:text-primary-light focus-visible:ring-2 focus-visible:ring-primary/50 disabled:cursor-not-allowed disabled:opacity-50"
                           >
                             <AlertTriangle className="size-3.5" aria-hidden="true" />
                             {refundPending
@@ -1190,7 +1190,7 @@ export function DashboardContent({
                   href={publicUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex h-10 items-center gap-2 rounded-xl border border-hairline bg-[#141414] px-5 text-sm font-medium text-foreground transition-colors outline-none hover:bg-[#1E1E1E] focus-visible:ring-2 focus-visible:ring-primary/50"
+                  className="inline-flex h-10 items-center gap-2 rounded-xl border border-hairline bg-card px-5 text-sm font-medium text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
                 >
                   <Share2 className="size-4 text-primary" aria-hidden="true" />
                   Voir mon profil public
@@ -1199,14 +1199,14 @@ export function DashboardContent({
             </div>
 
             {profile?.is_verified ? (
-              <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-[#166534]/60 bg-[#0F2E18] px-3 py-1 text-xs font-medium text-[#4ADE80]">
+              <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-success/40 bg-success-soft px-3 py-1 text-xs font-medium text-success">
                 <BadgeCheck className="size-3.5" aria-hidden="true" />
                 Compte vérifié par Teranga Labs
               </div>
             ) : null}
 
             <form onSubmit={saveProfile} className="mt-6 grid gap-6 lg:grid-cols-2">
-              <div className="rounded-2xl border border-hairline bg-[#141414] p-6 sm:p-8">
+              <div className="rounded-2xl border border-hairline bg-card p-6 sm:p-8">
                 <h3 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
                   <Briefcase className="size-4 text-primary" aria-hidden="true" />
                   Informations publiques
@@ -1331,7 +1331,7 @@ export function DashboardContent({
               </div>
 
               <div className="flex flex-col gap-6">
-                <div className="rounded-2xl border border-hairline bg-[#141414] p-6 sm:p-8">
+                <div className="rounded-2xl border border-hairline bg-card p-6 sm:p-8">
                   <div className="flex items-center justify-between gap-3">
                     <h3 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
                       <Globe className="size-4 text-primary" aria-hidden="true" />
@@ -1408,7 +1408,7 @@ export function DashboardContent({
                   )}
                 </div>
 
-                <div className="rounded-2xl border border-hairline bg-[#141414] p-6 sm:p-8">
+                <div className="rounded-2xl border border-hairline bg-card p-6 sm:p-8">
                   <Button type="submit" disabled={saving} className="h-10 w-full sm:w-auto">
                     {saving ? (
                       <Loader2 className="size-4 animate-spin" aria-hidden="true" />
@@ -1430,7 +1430,7 @@ export function DashboardContent({
         {tab === "activite" ? (
           <div className="mt-8 grid gap-6 lg:grid-cols-2">
             <section
-              className="rounded-2xl border border-hairline bg-[#141414] p-6 shadow-sm sm:p-8"
+              className="rounded-2xl border border-hairline bg-card p-6 shadow-sm sm:p-8"
               aria-label="Réputation"
             >
               <h2 className="text-lg font-semibold tracking-tight">Réputation</h2>
@@ -1439,19 +1439,19 @@ export function DashboardContent({
                 reçus, moins les pénalités de modération.
               </p>
 
-              <div className="mt-6 flex items-center gap-3 rounded-xl bg-[#1E1E1E] p-4">
+              <div className="mt-6 flex items-center gap-3 rounded-xl bg-muted p-4">
                 <span className="text-3xl font-semibold tracking-tight">
                   {profile?.reputation_score ?? 0}
                 </span>
                 <div className="min-w-0">
                   <p className="text-sm font-medium">
                     sur 100 ·{" "}
-                    <span className="text-[#4ADE80]">
+                    <span className="text-success">
                       {profile?.reputation_level ?? "Nouveau"}
                     </span>
                   </p>
                   {profile && profile.penalty > 0 ? (
-                    <p className="mt-0.5 text-xs font-medium text-[#F87171]">
+                    <p className="mt-0.5 text-xs font-medium text-error">
                       Pénalité de modération appliquée : -{profile.penalty} pts
                     </p>
                   ) : (
@@ -1474,7 +1474,7 @@ export function DashboardContent({
                 </div>
               ) : (
                 <div className="mt-6">
-                  <div className="flex items-center gap-3 rounded-xl bg-[#1E1E1E] p-4">
+                  <div className="flex items-center gap-3 rounded-xl bg-muted p-4">
                     <span className="text-3xl font-semibold tracking-tight">
                       {reviews.average}
                     </span>
@@ -1487,7 +1487,7 @@ export function DashboardContent({
                               "size-4",
                               n <= Math.round(reviews.average)
                                 ? "fill-primary text-primary"
-                                : "text-[#3A3A3A]"
+                                : "text-border-strong"
                             )}
                             aria-hidden="true"
                           />
@@ -1519,7 +1519,7 @@ export function DashboardContent({
                                   "size-3.5",
                                   n <= review.rating
                                     ? "fill-primary text-primary"
-                                    : "text-[#3A3A3A]"
+                                    : "text-border-strong"
                                 )}
                                 aria-hidden="true"
                               />
@@ -1532,7 +1532,7 @@ export function DashboardContent({
                           </p>
                         ) : null}
                         {review.response ? (
-                          <div className="mt-2 rounded-lg bg-[#1E1E1E] p-3">
+                          <div className="mt-2 rounded-lg bg-muted p-3">
                             <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                               Votre réponse publique
                             </p>
@@ -1552,7 +1552,7 @@ export function DashboardContent({
             </section>
 
             <section
-              className="rounded-2xl border border-hairline bg-[#141414] p-6 shadow-sm sm:p-8"
+              className="rounded-2xl border border-hairline bg-card p-6 shadow-sm sm:p-8"
               aria-label="Commandes de Tokens"
             >
               <h2 className="text-lg font-semibold tracking-tight">Commandes</h2>
@@ -1569,7 +1569,7 @@ export function DashboardContent({
                     action={
                       <Link
                         href="/tokens"
-                        className="inline-flex h-10 items-center gap-2 rounded-xl bg-foreground px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-[#EBEBEB]"
+                        className="inline-flex h-10 items-center gap-2 rounded-xl bg-foreground px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-foreground"
                       >
                         Voir les packs
                         <ArrowRight className="size-4" aria-hidden="true" />
@@ -1609,7 +1609,7 @@ export function DashboardContent({
         {tab === "devis" ? (
           <div className="mt-8 grid gap-6 lg:grid-cols-2">
             <section
-              className="rounded-2xl border border-hairline bg-[#141414] p-6 shadow-sm sm:p-8"
+              className="rounded-2xl border border-hairline bg-card p-6 shadow-sm sm:p-8"
               aria-label="Missions en cours"
             >
               <h2 className="flex items-center gap-2 text-lg font-semibold tracking-tight">
@@ -1628,7 +1628,7 @@ export function DashboardContent({
                     action={
                       <Link
                         href="/briefs"
-                        className="inline-flex h-10 items-center gap-2 rounded-xl bg-foreground px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-[#EBEBEB]"
+                        className="inline-flex h-10 items-center gap-2 rounded-xl bg-foreground px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-foreground"
                       >
                         Chercher de nouveaux briefs
                         <ArrowRight className="size-4" aria-hidden="true" />
@@ -1641,7 +1641,7 @@ export function DashboardContent({
                   {missions.map((c) => (
                     <li
                       key={c.id}
-                      className="rounded-2xl border border-[#166534]/60 bg-[#0F2E18] p-5"
+                      className="rounded-2xl border border-success/40 bg-success-soft p-5"
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
@@ -1651,14 +1651,14 @@ export function DashboardContent({
                             {formatFCFA(c.request.budget)}
                           </p>
                         </div>
-                        <span className="shrink-0 inline-flex items-center gap-1.5 rounded-full border border-[#166534]/60 bg-[#122A1C] px-2.5 py-1 text-[11px] font-medium text-[#4ADE80]">
+                        <span className="shrink-0 inline-flex items-center gap-1.5 rounded-full border border-success/40 bg-success-soft px-2.5 py-1 text-[11px] font-medium text-success">
                           <Check className="size-3" aria-hidden="true" />
                           Mission
                         </span>
                       </div>
                       <Link
                         href={`/conversations/${c.id}`}
-                        className="mt-4 inline-flex h-9 items-center gap-2 rounded-xl bg-foreground px-4 text-sm font-medium text-ink transition-colors outline-none hover:bg-[#EBEBEB]"
+                        className="mt-4 inline-flex h-9 items-center gap-2 rounded-xl bg-foreground px-4 text-sm font-medium text-ink transition-colors outline-none hover:bg-foreground"
                       >
                         Poursuivre la discussion
                         <MessageCircle className="size-4" aria-hidden="true" />
@@ -1670,7 +1670,7 @@ export function DashboardContent({
             </section>
 
             <section
-              className="rounded-2xl border border-hairline bg-[#141414] p-6 shadow-sm sm:p-8"
+              className="rounded-2xl border border-hairline bg-card p-6 shadow-sm sm:p-8"
               aria-label="Devis envoyés en attente"
             >
               <h2 className="flex items-center gap-2 text-lg font-semibold tracking-tight">
@@ -1693,7 +1693,7 @@ export function DashboardContent({
                   {devisEnAttente.map((c) => (
                     <li
                       key={c.id}
-                      className="rounded-2xl border border-hairline bg-[#1A120B] p-5"
+                      className="rounded-2xl border border-hairline bg-primary-soft p-5"
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
@@ -1703,14 +1703,14 @@ export function DashboardContent({
                             {formatFCFA(c.request.budget)}
                           </p>
                         </div>
-                        <span className="shrink-0 inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-[#2A1A10] px-2.5 py-1 text-[11px] font-medium text-[#F2A378]">
+                        <span className="shrink-0 inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-primary-soft px-2.5 py-1 text-[11px] font-medium text-primary-light">
                           <Clock className="size-3" aria-hidden="true" />
                           {c.pendingOffers} devis en attente
                         </span>
                       </div>
                       <Link
                         href={`/conversations/${c.id}`}
-                        className="mt-4 inline-flex h-9 items-center gap-2 rounded-xl border border-hairline bg-[#141414] px-4 text-sm font-medium text-foreground transition-colors outline-none hover:bg-[#1E1E1E]"
+                        className="mt-4 inline-flex h-9 items-center gap-2 rounded-xl border border-hairline bg-card px-4 text-sm font-medium text-foreground transition-colors outline-none hover:bg-muted"
                       >
                         Suivre la réponse
                         <ArrowRight className="size-4" aria-hidden="true" />

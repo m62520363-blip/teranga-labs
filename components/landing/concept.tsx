@@ -11,7 +11,7 @@ export function ConceptSection() {
 
       <div className="relative mt-16 grid items-stretch gap-6 lg:grid-cols-[1fr_auto_1fr] lg:gap-10">
         <Reveal>
-          <div className="card h-full bg-[#1E1E1E] p-7 sm:p-9">
+          <div className="card h-full bg-muted p-7 sm:p-9">
             <h3 className="text-sm font-semibold uppercase tracking-[0.14em] text-muted-foreground">
               Marketplace classique
             </h3>
@@ -63,7 +63,7 @@ function FlowSteps({
                 "absolute left-[11px] top-8 h-[calc(100%-1.25rem)] w-px",
                 tone === "accent"
                   ? "bg-gradient-to-b from-primary/50 to-transparent"
-                  : "bg-[#3A3A3A]"
+                  : "bg-border-strong"
               )}
               aria-hidden="true"
             />
@@ -72,8 +72,8 @@ function FlowSteps({
             className={cn(
               "relative z-10 mt-1 flex size-6 shrink-0 items-center justify-center rounded-full border text-[10px] font-bold",
               tone === "accent"
-                ? "border-primary bg-[#2A1A10] text-primary"
-                : "border-hairline bg-[#141414] text-muted-foreground"
+                ? "border-primary bg-primary-soft text-primary"
+                : "border-hairline bg-card text-muted-foreground"
             )}
             aria-hidden="true"
           >

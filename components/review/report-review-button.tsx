@@ -77,8 +77,8 @@ export function ReportReviewButton({
       className={cn(
         "inline-flex cursor-pointer items-center gap-1.5 text-xs outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
         variant === "button"
-          ? "rounded-lg border border-hairline bg-[#141414] px-3 py-1.5 text-muted-foreground transition-colors hover:border-[#F87171]/40 hover:text-[#F87171]"
-          : "text-muted-foreground transition-colors hover:text-[#F87171]"
+          ? "rounded-lg border border-hairline bg-card px-3 py-1.5 text-muted-foreground transition-colors hover:border-error/40 hover:text-error"
+          : "text-muted-foreground transition-colors hover:text-error"
       )}
     >
       <Flag className="size-3.5" aria-hidden="true" />
@@ -138,8 +138,8 @@ export function ReportReviewButton({
                   className={cn(
                     "flex cursor-pointer items-center gap-3 rounded-xl border px-3.5 py-2.5 text-sm transition-colors",
                     reason === r.value
-                      ? "border-primary/60 bg-[#2A1A10] text-foreground"
-                      : "border-hairline bg-surface text-muted-foreground hover:border-[#3A3A3A]"
+                      ? "border-primary/60 bg-primary-soft text-foreground"
+                      : "border-hairline bg-surface text-muted-foreground hover:border-border-strong"
                   )}
                 >
                   <input

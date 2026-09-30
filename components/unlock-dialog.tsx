@@ -132,7 +132,7 @@ export function UnlockDialog({
       <Button
         variant="secondary"
         size="sm"
-        className="h-8 border-[#3DD68C]/30 bg-[#122A1C] text-[#3DD68C] hover:bg-[#F0FBF5]"
+        className="h-8 border-success/30 bg-success-soft text-success hover:bg-success/20"
         render={
           <Link href={`/conversations/${conversationId}`}>
             <MessageCircle className="size-3.5" aria-hidden="true" />
@@ -156,14 +156,14 @@ export function UnlockDialog({
               </DialogDescription>
             </DialogHeader>
 
-            <div className="rounded-xl border border-hairline bg-[#1E1E1E] p-4">
+            <div className="rounded-xl border border-hairline bg-muted p-4">
               <p className="text-sm font-medium">{brief.client_name}</p>
               <p className="mt-0.5 text-sm text-muted-foreground">
                 {brief.client_city} · {formatFCFA(brief.budget)} ·{" "}
                 {brief.project_type}
               </p>
               {brief.demo ? (
-                <p className="mt-2 inline-flex items-center gap-1 rounded-full border border-primary/40 bg-[#2A1A10] px-2.5 py-0.5 text-[11px] font-semibold text-primary">
+                <p className="mt-2 inline-flex items-center gap-1 rounded-full border border-primary/40 bg-primary-soft px-2.5 py-0.5 text-[11px] font-semibold text-primary">
                   <Sparkles className="size-3" aria-hidden="true" />
                   Brief d’exemple · déblocage gratuit
                 </p>
@@ -276,7 +276,7 @@ export function UnlockDialog({
               </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col gap-4 py-2">
-              <div className="flex items-center gap-3 rounded-xl bg-[#2A1A10] p-3.5">
+              <div className="flex items-center gap-3 rounded-xl bg-primary-soft p-3.5">
                 <Coins className="size-5 shrink-0 text-primary" aria-hidden="true" />
                 <p className="text-sm text-foreground">
                   <span className="font-medium">Vous n’avez plus de Tokens.</span>{" "}
@@ -284,7 +284,7 @@ export function UnlockDialog({
                 </p>
               </div>
               <Button
-                className="h-10 bg-primary hover:bg-[#d95c1f]"
+                className="h-10 bg-primary hover:bg-primary-hover"
                 render={
                   <Link href="/tokens">
                     <Coins className="size-4" aria-hidden="true" />

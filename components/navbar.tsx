@@ -122,7 +122,7 @@ export function Navbar({
         className={cn(
           "fixed inset-x-0 top-0 z-40 transition-all duration-300",
           scrolled || open
-            ? "border-b border-white/10 bg-[#0A0A0A]/85 shadow-[0_10px_36px_-18px_rgba(0,0,0,0.8)] backdrop-blur-md"
+            ? "border-b border-white/10 bg-background/85 shadow-[0_10px_36px_-18px_rgba(0,0,0,0.8)] backdrop-blur-md"
             : "border-b border-transparent bg-transparent"
         )}
       >
@@ -164,7 +164,7 @@ export function Navbar({
                 </Link>
                 <Link
                   href="/poster"
-                  className="group inline-flex h-8 items-center gap-1.5 rounded-lg bg-primary px-3.5 font-display text-[15px] font-semibold text-ink transition-colors outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
+                  className="group inline-flex h-8 items-center gap-1.5 rounded-lg bg-primary px-3.5 font-display text-[15px] font-semibold text-ink transition-colors outline-none hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50"
                 >
                   Publier une demande
                   <ArrowRight
@@ -188,7 +188,7 @@ export function Navbar({
         </nav>
 
         {open && (
-          <div className="border-t border-white/10 bg-[#0B0B0B]/95 px-5 pb-6 pt-3 backdrop-blur-md md:hidden">
+          <div className="border-t border-white/10 bg-surface/95 px-5 pb-6 pt-3 backdrop-blur-md md:hidden">
             <div className="flex flex-col gap-1">
               {authed ? (
                 <>
@@ -200,7 +200,7 @@ export function Navbar({
                   <MobileNavLink href="/notifications">
                     Notifications
                   </MobileNavLink>
-                  <div className="my-2 h-px bg-[#3A3A3A]" />
+                  <div className="my-2 h-px bg-border-strong" />
                   <MobileNavLink href={homeHref}>
                     {displayName ?? "Mon espace"}
                   </MobileNavLink>
@@ -218,11 +218,11 @@ export function Navbar({
                   <MobileNavLink href="/poster">Pour les clients</MobileNavLink>
                   <MobileNavLink href="/briefs">Pour les développeurs</MobileNavLink>
                   <MobileNavLink href="/faq">FAQ</MobileNavLink>
-                  <div className="my-2 h-px bg-[#3A3A3A]" />
+                  <div className="my-2 h-px bg-border-strong" />
                   <MobileNavLink href="/login">Se connecter</MobileNavLink>
                   <Link
                     href="/poster"
-                    className="mt-2 inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 font-display text-[15px] font-semibold text-ink outline-none hover:bg-[#d95c1f] focus-visible:ring-2 focus-visible:ring-primary/50"
+                    className="mt-2 inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 font-display text-[15px] font-semibold text-ink outline-none hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50"
                   >
                     Publier une demande
                     <ArrowRight className="size-4" aria-hidden="true" />
@@ -306,7 +306,7 @@ function DesktopNavLinks({
       <span
         aria-hidden="true"
         className={cn(
-          "absolute bottom-0 h-[3px] rounded-full bg-gradient-to-r from-primary to-[#F59348] shadow-[0_0_12px_rgba(232,106,44,0.55)] transition-transform duration-500 will-change-transform [transition-timing-function:var(--ease-spring)]",
+          "absolute bottom-0 h-[3px] rounded-full bg-gradient-to-r from-primary to-primary-light shadow-[0_0_12px_rgba(232,106,44,0.55)] transition-transform duration-500 will-change-transform [transition-timing-function:var(--ease-spring)]",
           !indicator.visible && "opacity-0"
         )}
         style={{
@@ -391,12 +391,12 @@ function MobileDock({ items, pathname }: { items: DockItem[]; pathname: string }
     >
       <div
         ref={rowRef}
-        className="relative mx-auto w-full max-w-md rounded-[1.75rem] border border-white/10 bg-[#0B0B0B]/85 px-2 py-2 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.9)] backdrop-blur-xl"
+        className="relative mx-auto w-full max-w-md rounded-[1.75rem] border border-white/10 bg-surface/85 px-2 py-2 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.9)] backdrop-blur-xl"
       >
         <div
           aria-hidden="true"
           className={cn(
-            "pointer-events-none absolute left-0 rounded-full bg-gradient-to-br from-primary to-[#d95c1f] shadow-[0_0_18px_rgba(232,106,44,0.5)] ring-1 ring-white/15 transition-transform duration-500 will-change-transform [transition-timing-function:var(--ease-spring)]",
+            "pointer-events-none absolute left-0 rounded-full bg-gradient-to-br from-primary to-primary-hover shadow-[0_0_18px_rgba(232,106,44,0.5)] ring-1 ring-white/15 transition-transform duration-500 will-change-transform [transition-timing-function:var(--ease-spring)]",
             !pos.active && "opacity-0"
           )}
           style={{
@@ -441,7 +441,7 @@ function MobileDock({ items, pathname }: { items: DockItem[]; pathname: string }
                 <span
                   className={cn(
                     "z-10 text-[10px] font-semibold tracking-tight transition-colors duration-200",
-                    active ? "text-[#F59348]" : "text-muted-foreground"
+                    active ? "text-primary-light" : "text-muted-foreground"
                   )}
                 >
                   {item.label}

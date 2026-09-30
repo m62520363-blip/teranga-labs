@@ -119,9 +119,9 @@ export default async function DeveloperProfilePage({
         : null;
 
   return (
-    <div className="bg-[#0A0A0A] py-14 md:py-20">
+    <div className="bg-background py-14 md:py-20">
       <div className="container-tl">
-        <div className="rounded-3xl border border-hairline bg-gradient-to-b from-[#141414] via-[#131210] to-surface p-6 md:p-10">
+        <div className="rounded-3xl border border-hairline bg-gradient-to-b from-card via-surface to-surface-secondary p-6 md:p-10">
           <header className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div className="flex items-start gap-5">
               <div className="relative shrink-0">
@@ -133,16 +133,16 @@ export default async function DeveloperProfilePage({
                     className="size-20 rounded-2xl border border-hairline object-cover md:size-24"
                   />
                 ) : (
-                  <div className="flex size-20 items-center justify-center rounded-2xl border border-hairline bg-gradient-to-br from-primary to-[#B34A14] text-2xl font-bold text-ink md:size-24">
+                  <div className="flex size-20 items-center justify-center rounded-2xl border border-hairline bg-gradient-to-br from-primary to-primary-hover text-2xl font-bold text-ink md:size-24">
                     {initialsOf(name)}
                   </div>
                 )}
                 {profile.is_verified ? (
                   <span
-                    className="absolute -bottom-1.5 -right-1.5 flex size-7 items-center justify-center rounded-full border border-[#0A0A0A] bg-[#14532D]"
+                    className="absolute -bottom-1.5 -right-1.5 flex size-7 items-center justify-center rounded-full border border-background bg-success-soft"
                     title="Développeur vérifié"
                   >
-                    <BadgeCheck className="size-4 text-[#4ADE80]" aria-hidden="true" />
+                    <BadgeCheck className="size-4 text-success" aria-hidden="true" />
                   </span>
                 ) : null}
               </div>
@@ -153,7 +153,7 @@ export default async function DeveloperProfilePage({
                     {name}
                   </h1>
                   {profile.is_verified ? (
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-[#166534]/60 bg-[#0F2E18] px-2.5 py-1 text-xs font-medium text-[#4ADE80]">
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-success/40 bg-success-soft px-2.5 py-1 text-xs font-medium text-success">
                       <BadgeCheck className="size-3.5" aria-hidden="true" />
                       Développeur vérifié
                     </span>
@@ -186,7 +186,7 @@ export default async function DeveloperProfilePage({
                 <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-sm">
                   {profile.response_rate != null && profile.response_rate > 0 ? (
                     <span className="inline-flex items-center gap-1.5 text-muted-foreground">
-                      <span className="size-1.5 rounded-full bg-[#4ADE80]" aria-hidden="true" />
+                      <span className="size-1.5 rounded-full bg-success" aria-hidden="true" />
                       Répond en moyenne à {profile.response_rate}% des demandes
                       {profile.avg_response_minutes != null && profile.avg_response_minutes > 0
                         ? ` sous ${formatResponse(profile.avg_response_minutes)}`
@@ -202,7 +202,7 @@ export default async function DeveloperProfilePage({
                             "size-4",
                             n <= roundAverage
                               ? "fill-primary text-primary"
-                              : "fill-none text-[#3A3A3A]"
+                              : "fill-none text-border-strong"
                           )}
                           aria-hidden="true"
                         />
@@ -216,12 +216,12 @@ export default async function DeveloperProfilePage({
                     </span>
                   </span>
                   <span className="inline-flex items-center gap-1.5 text-muted-foreground">
-                    <ShieldCheck className="size-4 text-[#4ADE80]" aria-hidden="true" />
+                    <ShieldCheck className="size-4 text-success" aria-hidden="true" />
                     Réputation{" "}
-                    <span className="font-semibold text-[#E8E8E8]">
+                    <span className="font-semibold text-foreground">
                       {profile.reputation_score}/100
                     </span>
-                    <span className="rounded-full border border-[#166534]/60 bg-[#0F2E18] px-2 py-0.5 text-[11px] font-medium text-[#4ADE80]">
+                    <span className="rounded-full border border-success/40 bg-success-soft px-2 py-0.5 text-[11px] font-medium text-success">
                       {profile.reputation_level}
                     </span>
                   </span>
@@ -231,8 +231,8 @@ export default async function DeveloperProfilePage({
                     {profile.completed_projects_count > 1 ? "s terminés" : " terminé"}
                   </span>
                   {profile.penalty > 0 ? (
-                    <span className="inline-flex items-center gap-1.5 text-[#F87171]">
-                      <span className="size-1.5 rounded-full bg-[#F87171]" aria-hidden="true" />
+                    <span className="inline-flex items-center gap-1.5 text-error">
+                      <span className="size-1.5 rounded-full bg-error" aria-hidden="true" />
                       Pénalité de modération : -{profile.penalty} pts
                     </span>
                   ) : null}
@@ -270,7 +270,7 @@ export default async function DeveloperProfilePage({
               Contact
             </h2>
             <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <div className="max-w-md rounded-2xl border border-hairline bg-[#141414] p-4 text-sm">
+              <div className="max-w-md rounded-2xl border border-hairline bg-card p-4 text-sm">
                 <p className="text-muted-foreground">
                   Coordonnées masquées — elles ne sont révélées qu’après attribution
                   d’un projet. Ouvrez un contact direct (
@@ -289,7 +289,7 @@ export default async function DeveloperProfilePage({
                 ) : null}
               </div>
               {rate ? (
-                <div className="rounded-2xl border border-hairline bg-[#141414] p-4 text-sm">
+                <div className="rounded-2xl border border-hairline bg-card p-4 text-sm">
                   <p className="text-muted-foreground">Tarifs indicatifs</p>
                   <p className="mt-1 font-semibold">{rate}</p>
                 </div>
@@ -302,7 +302,7 @@ export default async function DeveloperProfilePage({
               <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
                 À propos
               </h2>
-              <p className="mt-3 max-w-2xl text-base leading-relaxed text-[#E8E8E8]">
+              <p className="mt-3 max-w-2xl text-base leading-relaxed text-foreground">
                 {profile.bio}
               </p>
             </section>
@@ -317,7 +317,7 @@ export default async function DeveloperProfilePage({
                 {profile.skills.map((skill) => (
                   <span
                     key={skill}
-                    className="rounded-full border border-[#3A2A20] bg-[#1C1210] px-3 py-1 text-sm text-[#F2D8C6]"
+                    className="rounded-full border border-primary/25 bg-primary-soft px-3 py-1 text-sm text-primary-light"
                   >
                     {skill}
                   </span>
@@ -338,7 +338,7 @@ export default async function DeveloperProfilePage({
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group rounded-2xl border border-hairline bg-[#141414] p-5 transition-colors hover:border-primary/50"
+                    className="group rounded-2xl border border-hairline bg-card p-5 transition-colors hover:border-primary/50"
                   >
                     {link.image_url ? (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -349,7 +349,7 @@ export default async function DeveloperProfilePage({
                         className="mb-4 h-32 w-full rounded-xl border border-hairline object-cover"
                       />
                     ) : (
-                      <div className="mb-4 flex h-32 w-full items-center justify-center rounded-xl border border-hairline bg-[#1E1E1E]">
+                      <div className="mb-4 flex h-32 w-full items-center justify-center rounded-xl border border-hairline bg-muted">
                         <Globe className="size-8 text-primary" aria-hidden="true" />
                       </div>
                     )}
@@ -389,7 +389,7 @@ export default async function DeveloperProfilePage({
                   return (
                     <article
                       key={mission.id}
-                      className="flex flex-col rounded-2xl border border-hairline bg-[#141414] p-5"
+                      className="flex flex-col rounded-2xl border border-hairline bg-card p-5"
                     >
                       {shot ? (
                         // eslint-disable-next-line @next/next/no-img-element
@@ -400,7 +400,7 @@ export default async function DeveloperProfilePage({
                           className="mb-4 h-32 w-full rounded-xl border border-hairline object-cover"
                         />
                       ) : (
-                        <div className="mb-4 flex h-32 w-full items-center justify-center rounded-xl border border-hairline bg-[#1E1E1E]">
+                        <div className="mb-4 flex h-32 w-full items-center justify-center rounded-xl border border-hairline bg-muted">
                           {confidential ? (
                             <Lock className="size-8 text-primary" aria-hidden="true" />
                           ) : (
@@ -410,7 +410,7 @@ export default async function DeveloperProfilePage({
                       )}
                       <div className="flex items-center justify-between gap-2">
                         <h3 className="font-medium leading-snug">{mission.name}</h3>
-                        <span className="shrink-0 rounded-full border border-[#3A2A20] bg-[#1C1210] px-2.5 py-0.5 text-xs text-[#F2D8C6]">
+                        <span className="shrink-0 rounded-full border border-primary/25 bg-primary-soft px-2.5 py-0.5 text-xs text-primary-light">
                           {projectTypeLabel(mission.project_type)}
                         </span>
                       </div>
@@ -442,17 +442,17 @@ export default async function DeveloperProfilePage({
                       </p>
                       <div className="mt-3 flex flex-wrap items-center gap-2">
                         {mission.via_teranga_labs ? (
-                          <span className="inline-flex items-center gap-1.5 rounded-full border border-[#166534]/60 bg-[#0F2E18] px-2.5 py-1 text-[11px] font-medium text-[#4ADE80]">
+                          <span className="inline-flex items-center gap-1.5 rounded-full border border-success/40 bg-success-soft px-2.5 py-1 text-[11px] font-medium text-success">
                             <CheckCircle2 className="size-3" aria-hidden="true" />
                             Réalisée via TERANGA LABS
                           </span>
                         ) : confidential ? (
-                          <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-[#2A1A10] px-2.5 py-1 text-[11px] font-medium text-[#F2A378]">
+                          <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-primary-soft px-2.5 py-1 text-[11px] font-medium text-primary-light">
                             <Lock className="size-3" aria-hidden="true" />
                             Projet confidentiel
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1.5 rounded-full border border-[#166534]/60 bg-[#0F2E18] px-2.5 py-1 text-[11px] font-medium text-[#4ADE80]">
+                          <span className="inline-flex items-center gap-1.5 rounded-full border border-success/40 bg-success-soft px-2.5 py-1 text-[11px] font-medium text-success">
                             <CheckCircle2 className="size-3" aria-hidden="true" />
                             Mission vérifiée par TERANGA LABS
                           </span>
@@ -488,11 +488,11 @@ export default async function DeveloperProfilePage({
               </h2>
               {reviewStats && reviewStats.total > 0 ? (
                 <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-hairline bg-[#141414] px-2.5 py-1">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-hairline bg-card px-2.5 py-1">
                     <Star className="size-3.5 fill-primary text-primary" aria-hidden="true" />
                     {reviewStats.average}/5 · {reviewStats.total} avis
                   </span>
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-[#166534]/60 bg-[#0F2E18] px-2.5 py-1 text-[#4ADE80]">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-success/40 bg-success-soft px-2.5 py-1 text-success">
                     {reviewStats.satisfaction} % de clients satisfaits
                   </span>
                 </div>
@@ -500,7 +500,7 @@ export default async function DeveloperProfilePage({
             </div>
 
             {reviewStats && reviewStats.total > 0 ? (
-              <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2.5 rounded-2xl border border-hairline bg-[#141414] p-4 sm:grid-cols-4">
+              <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2.5 rounded-2xl border border-hairline bg-card p-4 sm:grid-cols-4">
                 {REVIEW_CRITERIA.map((c) => {
                   const value = reviewStats.average_criteria?.[c.key];
                   return (
@@ -536,7 +536,7 @@ export default async function DeveloperProfilePage({
                 {visibleReviews.map((review) => (
                   <li
                     key={review.id}
-                    className="flex flex-col rounded-2xl border border-hairline bg-[#141414] p-5"
+                    className="flex flex-col rounded-2xl border border-hairline bg-card p-5"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
@@ -558,7 +558,7 @@ export default async function DeveloperProfilePage({
                               "size-3.5",
                               n <= review.rating
                                 ? "fill-primary text-primary"
-                                : "fill-none text-[#3A3A3A]"
+                                : "fill-none text-border-strong"
                             )}
                             aria-hidden="true"
                           />
@@ -573,7 +573,7 @@ export default async function DeveloperProfilePage({
                         ).map((c) => (
                           <span
                             key={c.key}
-                            className="inline-flex items-center gap-1 rounded-full bg-[#1E1E1E] px-2.5 py-1 text-xs text-muted-foreground"
+                            className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground"
                             title={reviewCriteriaLabel(c.key)}
                           >
                             {reviewCriteriaLabel(c.key)}
@@ -592,7 +592,7 @@ export default async function DeveloperProfilePage({
                     ) : null}
 
                     {Object.keys(review.questions ?? {}).length > 0 ? (
-                      <dl className="mt-3 flex flex-col gap-1 rounded-xl bg-[#101010] p-3 text-xs">
+                      <dl className="mt-3 flex flex-col gap-1 rounded-xl bg-surface p-3 text-xs">
                         {REVIEW_QUESTIONS.map((q) =>
                           review.questions?.[q.key] ? (
                             <div
@@ -622,7 +622,7 @@ export default async function DeveloperProfilePage({
                             href={url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="rounded-lg border border-hairline bg-[#1E1E1E] px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
+                            className="rounded-lg border border-hairline bg-muted px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
                           >
                             Preuve {i + 1}
                           </a>
@@ -631,8 +631,8 @@ export default async function DeveloperProfilePage({
                     ) : null}
 
                     {review.response ? (
-                      <div className="mt-3 flex items-start gap-2.5 rounded-xl bg-[#1E1E1E] p-3">
-                        <span className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-lg bg-[#2A1A10] text-primary">
+                      <div className="mt-3 flex items-start gap-2.5 rounded-xl bg-muted p-3">
+                        <span className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-lg bg-primary-soft text-primary">
                           <ShieldCheck className="size-3.5" aria-hidden="true" />
                         </span>
                         <div className="min-w-0 flex-1">

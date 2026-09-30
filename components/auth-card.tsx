@@ -84,7 +84,7 @@ export function AuthCard({ initialMode = "login" }: { initialMode?: AuthMode }) 
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#0B0B0B]/90 shadow-[0_50px_120px_-40px_rgba(0,0,0,0.9)] backdrop-blur-xl",
+        "overflow-hidden rounded-[1.75rem] border border-white/10 bg-surface/90 shadow-[0_50px_120px_-40px_rgba(0,0,0,0.9)] backdrop-blur-xl",
         "ring-1 ring-black/40"
       )}
     >
@@ -187,7 +187,7 @@ function LoginPane({
     >
       {/* Intro mobile compacte */}
       <div className="px-6 pt-8 md:hidden">
-        <span className="chip gap-2 bg-[#141414]/80 border-hairline backdrop-blur">
+        <span className="chip gap-2 bg-card/80 border-hairline backdrop-blur">
           <span className="size-1.5 rounded-full bg-emerald-400" aria-hidden="true" />
           TERANGA LABS
         </span>
@@ -249,7 +249,7 @@ function LoginPane({
                       type="email"
                       autoComplete="email"
                       {...register("email")}
-                      className="h-11 rounded-xl border-hairline bg-[#0A0A0A]/70 pl-10 transition-[border-color,box-shadow] duration-200 focus-visible:border-primary/60 focus-visible:shadow-[0_0_0_3px_rgba(232,106,44,0.14)]"
+                      className="h-11 rounded-xl border-hairline bg-background/70 pl-10 transition-[border-color,box-shadow] duration-200 focus-visible:border-primary/60 focus-visible:shadow-[0_0_0_3px_rgba(232,106,44,0.14)]"
                       placeholder="vous@exemple.com"
                       aria-invalid={Boolean(errors.email)}
                     />
@@ -268,7 +268,7 @@ function LoginPane({
                       type={showPw ? "text" : "password"}
                       autoComplete="current-password"
                       {...register("password")}
-                      className="h-11 rounded-xl border-hairline bg-[#0A0A0A]/70 pl-10 pr-10 transition-[border-color,box-shadow] duration-200 focus-visible:border-primary/60 focus-visible:shadow-[0_0_0_3px_rgba(232,106,44,0.14)]"
+                      className="h-11 rounded-xl border-hairline bg-background/70 pl-10 pr-10 transition-[border-color,box-shadow] duration-200 focus-visible:border-primary/60 focus-visible:shadow-[0_0_0_3px_rgba(232,106,44,0.14)]"
                       placeholder="••••••••"
                       aria-invalid={Boolean(errors.password)}
                     />
@@ -308,7 +308,7 @@ function LoginPane({
                   <button
                     type="button"
                     onClick={onModeChange}
-                    className="font-semibold text-primary underline-offset-4 outline-none hover:text-[#f59348] hover:underline focus-visible:ring-2 focus-visible:ring-primary/50"
+                    className="font-semibold text-primary underline-offset-4 outline-none hover:text-primary-light hover:underline focus-visible:ring-2 focus-visible:ring-primary/50"
                   >
                     Créer un compte
                   </button>
@@ -442,7 +442,7 @@ function SignupPane({
     >
       {/* Intro mobile compacte */}
       <div className="px-6 pt-8 md:hidden">
-        <span className="chip gap-2 bg-[#141414]/80 border-hairline backdrop-blur">
+        <span className="chip gap-2 bg-card/80 border-hairline backdrop-blur">
           <span className="size-1.5 rounded-full bg-emerald-400" aria-hidden="true" />
           TERANGA LABS
         </span>
@@ -515,7 +515,7 @@ function SignupPane({
                   id="signup-name"
                   {...register("full_name")}
                   autoComplete="name"
-                  className="h-11 rounded-xl border-hairline bg-[#0A0A0A]/70 pl-10 transition-[border-color,box-shadow] duration-200 focus-visible:border-primary/60 focus-visible:shadow-[0_0_0_3px_rgba(232,106,44,0.14)]"
+                  className="h-11 rounded-xl border-hairline bg-background/70 pl-10 transition-[border-color,box-shadow] duration-200 focus-visible:border-primary/60 focus-visible:shadow-[0_0_0_3px_rgba(232,106,44,0.14)]"
                   placeholder={role === "client" ? "Awa Ndiaye" : "Awa Diop"}
                   aria-invalid={Boolean(errors.full_name)}
                 />
@@ -534,7 +534,7 @@ function SignupPane({
                     id="signup-company"
                     {...register("company_name")}
                     autoComplete="organization"
-                    className="h-11 rounded-xl border-hairline bg-[#0A0A0A]/70 pl-10 transition-[border-color,box-shadow] duration-200 focus-visible:border-primary/60 focus-visible:shadow-[0_0_0_3px_rgba(232,106,44,0.14)]"
+                    className="h-11 rounded-xl border-hairline bg-background/70 pl-10 transition-[border-color,box-shadow] duration-200 focus-visible:border-primary/60 focus-visible:shadow-[0_0_0_3px_rgba(232,106,44,0.14)]"
                     placeholder="Boutique Bazin HLM"
                     aria-invalid={Boolean(errors.company_name)}
                   />
@@ -559,7 +559,7 @@ function SignupPane({
                   >
                     <SelectTrigger
                       id="signup-city"
-                      className="h-11 w-full rounded-xl border-hairline bg-[#0A0A0A]/70 pl-10 transition-[border-color,box-shadow] duration-200 focus-visible:border-primary/60 focus-visible:shadow-[0_0_0_3px_rgba(232,106,44,0.14)]"
+                      className="h-11 w-full rounded-xl border-hairline bg-background/70 pl-10 transition-[border-color,box-shadow] duration-200 focus-visible:border-primary/60 focus-visible:shadow-[0_0_0_3px_rgba(232,106,44,0.14)]"
                     >
                       <SelectValue />
                     </SelectTrigger>
@@ -587,7 +587,7 @@ function SignupPane({
                   type="email"
                   {...register("email")}
                   autoComplete="email"
-                  className="h-11 rounded-xl border-hairline bg-[#0A0A0A]/70 pl-10 transition-[border-color,box-shadow] duration-200 focus-visible:border-primary/60 focus-visible:shadow-[0_0_0_3px_rgba(232,106,44,0.14)]"
+                  className="h-11 rounded-xl border-hairline bg-background/70 pl-10 transition-[border-color,box-shadow] duration-200 focus-visible:border-primary/60 focus-visible:shadow-[0_0_0_3px_rgba(232,106,44,0.14)]"
                   placeholder="vous@exemple.com"
                   aria-invalid={Boolean(errors.email)}
                 />
@@ -606,7 +606,7 @@ function SignupPane({
                   type={showPw ? "text" : "password"}
                   {...register("password")}
                   autoComplete="new-password"
-                  className="h-11 rounded-xl border-hairline bg-[#0A0A0A]/70 pl-10 pr-10 transition-[border-color,box-shadow] duration-200 focus-visible:border-primary/60 focus-visible:shadow-[0_0_0_3px_rgba(232,106,44,0.14)]"
+                  className="h-11 rounded-xl border-hairline bg-background/70 pl-10 pr-10 transition-[border-color,box-shadow] duration-200 focus-visible:border-primary/60 focus-visible:shadow-[0_0_0_3px_rgba(232,106,44,0.14)]"
                   placeholder="••••••••"
                   aria-invalid={Boolean(errors.password)}
                 />
@@ -652,7 +652,7 @@ function SignupPane({
                     validate: (v) => !v || v === watch("password") || "Les mots de passe ne correspondent pas.",
                   })}
                   autoComplete="new-password"
-                  className="h-11 rounded-xl border-hairline bg-[#0A0A0A]/70 pl-10 pr-10 transition-[border-color,box-shadow] duration-200 focus-visible:border-primary/60 focus-visible:shadow-[0_0_0_3px_rgba(232,106,44,0.14)]"
+                  className="h-11 rounded-xl border-hairline bg-background/70 pl-10 pr-10 transition-[border-color,box-shadow] duration-200 focus-visible:border-primary/60 focus-visible:shadow-[0_0_0_3px_rgba(232,106,44,0.14)]"
                   placeholder="••••••••"
                   aria-invalid={Boolean(errors.confirm_password)}
                 />
@@ -674,7 +674,7 @@ function SignupPane({
                   type="tel"
                   {...register("whatsapp")}
                   autoComplete="tel"
-                  className="h-11 rounded-xl border-hairline bg-[#0A0A0A]/70 pl-10 transition-[border-color,box-shadow] duration-200 focus-visible:border-primary/60 focus-visible:shadow-[0_0_0_3px_rgba(232,106,44,0.14)]"
+                  className="h-11 rounded-xl border-hairline bg-background/70 pl-10 transition-[border-color,box-shadow] duration-200 focus-visible:border-primary/60 focus-visible:shadow-[0_0_0_3px_rgba(232,106,44,0.14)]"
                   placeholder="+221 7X XX XX XX"
                   aria-invalid={Boolean(errors.whatsapp)}
                 />
@@ -687,7 +687,7 @@ function SignupPane({
                 <Input
                   id="signup-skills"
                   {...register("skills")}
-                  className="h-11 rounded-xl border-hairline bg-[#0A0A0A]/70 transition-[border-color,box-shadow] duration-200 focus-visible:border-primary/60 focus-visible:shadow-[0_0_0_3px_rgba(232,106,44,0.14)]"
+                  className="h-11 rounded-xl border-hairline bg-background/70 transition-[border-color,box-shadow] duration-200 focus-visible:border-primary/60 focus-visible:shadow-[0_0_0_3px_rgba(232,106,44,0.14)]"
                   placeholder="Next.js, Supabase, UI/UX"
                 />
               </Field>
@@ -708,7 +708,7 @@ function SignupPane({
               <button
                 type="button"
                 onClick={onModeChange}
-                className="font-semibold text-primary underline-offset-4 outline-none hover:text-[#f59348] hover:underline focus-visible:ring-2 focus-visible:ring-primary/50"
+                className="font-semibold text-primary underline-offset-4 outline-none hover:text-primary-light hover:underline focus-visible:ring-2 focus-visible:ring-primary/50"
               >
                 Se connecter
               </button>
@@ -749,7 +749,7 @@ function ResetForm({
       </div>
 
       {sent ? (
-        <div className="mt-6 flex items-start gap-3 rounded-xl border border-hairline bg-[#151515] p-4">
+        <div className="mt-6 flex items-start gap-3 rounded-xl border border-hairline bg-muted p-4">
           <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-[var(--success)]" aria-hidden="true" />
           <div className="text-sm leading-relaxed text-foreground">
             Si un compte existe pour cette adresse, un lien de réinitialisation
@@ -778,7 +778,7 @@ function ResetForm({
                 required
                 value={resetEmail}
                 onChange={(e) => onEmailChange(e.target.value)}
-                className="h-11 rounded-xl border-hairline bg-[#0A0A0A]/70 pl-10 transition-[border-color,box-shadow] duration-200 focus-visible:border-primary/60 focus-visible:shadow-[0_0_0_3px_rgba(232,106,44,0.14)]"
+                className="h-11 rounded-xl border-hairline bg-background/70 pl-10 transition-[border-color,box-shadow] duration-200 focus-visible:border-primary/60 focus-visible:shadow-[0_0_0_3px_rgba(232,106,44,0.14)]"
                 placeholder="vous@exemple.com"
               />
             </div>
@@ -882,8 +882,8 @@ function RoleCard({
       className={cn(
         "flex flex-col items-start gap-2 rounded-2xl border p-4 text-left transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
         selected
-          ? "border-primary/60 bg-[#2A1A10]"
-          : "border-hairline bg-[#141414] hover:bg-[#1E1E1E]"
+          ? "border-primary/60 bg-primary-soft"
+          : "border-hairline bg-card hover:bg-muted"
       )}
     >
       <span
@@ -935,7 +935,7 @@ function AuthAlert({ kind, message }: { kind: "error" | "notice"; message: strin
         "flex items-start gap-2 rounded-xl border px-4 py-3 text-sm leading-relaxed",
         kind === "error"
           ? "border-[var(--error)]/30 bg-[var(--error-soft)] text-[var(--error)]"
-          : "border-hairline bg-[#151515] text-foreground"
+          : "border-hairline bg-muted text-foreground"
       )}
     >
       {kind === "error" ? (

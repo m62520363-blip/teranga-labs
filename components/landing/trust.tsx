@@ -18,7 +18,7 @@ export function TrustSection() {
           <Reveal key={feature.title} delay={(index % 3) as 0 | 1 | 2}>
             <div className="card card-interactive h-full p-7">
               <div className="flex items-start justify-between gap-3">
-                <span className="flex size-10 items-center justify-center rounded-xl bg-[#2A1A10]">
+                <span className="flex size-10 items-center justify-center rounded-xl bg-primary-soft">
                   <ShieldCheck className="size-5 text-primary" aria-hidden="true" />
                 </span>
                 <span

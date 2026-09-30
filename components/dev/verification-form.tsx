@@ -118,7 +118,7 @@ export function VerificationForm({
 
   if (isVerified) {
     return (
-      <Panel tone="success" icon={<BadgeCheck className="size-7 text-[#4ADE80]" />}>
+      <Panel tone="success" icon={<BadgeCheck className="size-7 text-success" />}>
         <h2 className="text-xl font-bold tracking-tight">Badge Vérifié obtenu</h2>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
           Votre profil a été vérifié par TERANGA LABS. Votre fiche publique affiche
@@ -143,7 +143,7 @@ export function VerificationForm({
     lastRequest.verification_status === "pending"
   ) {
     return (
-      <Panel tone="info" icon={<Clock3 className="size-7 text-[#E8A33D]" />}>
+      <Panel tone="info" icon={<Clock3 className="size-7 text-warning" />}>
         <h2 className="text-xl font-bold tracking-tight">Vérification en cours</h2>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
           Paiement confirmé le{" "}
@@ -185,7 +185,7 @@ export function VerificationForm({
         </p>
 
         {paymentReturned ? (
-          <p className="mt-4 flex items-start gap-2 rounded-xl border border-[#E8A33D]/30 bg-[#2A1A10] px-4 py-3 text-sm text-[#E8A33D]">
+          <p className="mt-4 flex items-start gap-2 rounded-xl border border-warning/30 bg-primary-soft px-4 py-3 text-sm text-warning">
             <Clock3 className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
             Votre paiement est en cours de confirmation — cela peut prendre quelques instants.
             Rechargez la page dans un instant.
@@ -266,14 +266,14 @@ export function VerificationForm({
   return (
     <div className="flex flex-col gap-6">
       {!waveConfigured ? (
-        <p className="flex items-start gap-2 rounded-xl border border-[#E8A33D]/30 bg-[#2A1A10] px-4 py-3 text-sm leading-relaxed text-[#E8A33D]">
+        <p className="flex items-start gap-2 rounded-xl border border-warning/30 bg-primary-soft px-4 py-3 text-sm leading-relaxed text-warning">
           <Phone className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
           Le paiement en ligne n’est pas encore activé : envoyez votre paiement par
           mobile money puis suivez les instructions affichées pour la confirmation manuelle.
         </p>
       ) : null}
 
-      <div className="rounded-2xl border border-hairline bg-[#141414] p-6 shadow-sm sm:p-8">
+      <div className="rounded-2xl border border-hairline bg-card p-6 shadow-sm sm:p-8">
         <div className="flex items-center gap-2">
           <ShieldCheck className="size-5 text-primary" aria-hidden="true" />
           <h2 className="text-lg font-semibold tracking-tight">Vérification de votre profil</h2>
@@ -313,8 +313,8 @@ export function VerificationForm({
                   className={cn(
                     "flex items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-left text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
                     active
-                      ? "border-primary/60 bg-[#2A1A10] text-foreground"
-                      : "border-hairline bg-surface text-muted-foreground hover:bg-[#1E1E1E]"
+                      ? "border-primary/60 bg-primary-soft text-foreground"
+                      : "border-hairline bg-surface text-muted-foreground hover:bg-muted"
                   )}
                 >
                   <span className="inline-flex items-center gap-2.5">
@@ -383,8 +383,8 @@ export function VerificationForm({
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
-        <div className="flex items-start gap-3 rounded-2xl border border-hairline bg-[#141414] p-5">
-          <span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#2A1A10]">
+        <div className="flex items-start gap-3 rounded-2xl border border-hairline bg-card p-5">
+          <span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary-soft">
             <BadgeCheck className="size-4 text-primary" aria-hidden="true" />
           </span>
           <p className="text-sm leading-relaxed text-muted-foreground">
@@ -392,8 +392,8 @@ export function VerificationForm({
             votre fiche publique et dans vos candidatures.
           </p>
         </div>
-        <div className="flex items-start gap-3 rounded-2xl border border-hairline bg-[#141414] p-5">
-          <span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#2A1A10]">
+        <div className="flex items-start gap-3 rounded-2xl border border-hairline bg-card p-5">
+          <span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary-soft">
             <ShieldCheck className="size-4 text-primary" aria-hidden="true" />
           </span>
           <p className="text-sm leading-relaxed text-muted-foreground">
@@ -420,10 +420,10 @@ function Panel({
       className={cn(
         "mx-auto max-w-lg rounded-2xl border p-8 text-center shadow-sm",
         tone === "success"
-          ? "border-[#166534]/60 bg-[#0F2E18]"
+          ? "border-success/40 bg-success-soft"
           : tone === "error"
-            ? "border-[var(--error)]/40 bg-[#1A0F0F]"
-            : "border-hairline bg-[#141414]"
+            ? "border-[var(--error)]/40 bg-error-soft"
+            : "border-hairline bg-card"
       )}
     >
       <span
@@ -433,7 +433,7 @@ function Panel({
             ? "bg-emerald-500/15"
             : tone === "error"
               ? "bg-[var(--error)]/10"
-              : "bg-[#2A1A10]"
+              : "bg-primary-soft"
         )}
       >
         {icon}

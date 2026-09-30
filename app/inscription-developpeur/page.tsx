@@ -34,9 +34,9 @@ function notConfigured() {
 function AlreadyValidated() {
   return (
     <div className="container-tl mx-auto max-w-lg py-20">
-      <div className="rounded-2xl border border-[#166534]/60 bg-[#0F2E18] p-8 text-center shadow-sm">
+      <div className="rounded-2xl border border-success/40 bg-success-soft p-8 text-center shadow-sm">
         <span className="mx-auto inline-flex size-14 items-center justify-center rounded-full bg-emerald-500/15">
-          <BadgeCheck className="size-7 text-[#4ADE80]" aria-hidden="true" />
+          <BadgeCheck className="size-7 text-success" aria-hidden="true" />
         </span>
         <h1 className="mt-5 text-xl font-bold tracking-tight">Votre dossier est validé</h1>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
@@ -60,9 +60,9 @@ function AlreadyValidated() {
 function VerificationInProgress() {
   return (
     <div className="container-tl mx-auto max-w-lg py-20">
-      <div className="rounded-2xl border border-hairline bg-[#141414] p-8 text-center shadow-sm">
-        <span className="mx-auto inline-flex size-14 items-center justify-center rounded-full bg-[#2A1A10]">
-          <Clock3 className="size-7 text-[#E8A33D]" aria-hidden="true" />
+      <div className="rounded-2xl border border-hairline bg-card p-8 text-center shadow-sm">
+        <span className="mx-auto inline-flex size-14 items-center justify-center rounded-full bg-primary-soft">
+          <Clock3 className="size-7 text-warning" aria-hidden="true" />
         </span>
         <h1 className="mt-5 text-xl font-bold tracking-tight">Vérification en cours</h1>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
@@ -95,7 +95,7 @@ export default async function InscriptionDeveloppeurPage() {
     <div className="bg-surface py-14">
       <div className="container-tl">
         <header className="mx-auto max-w-3xl">
-          <span className="chip gap-2 border-hairline bg-[#141414]">
+          <span className="chip gap-2 border-hairline bg-card">
             <span className="size-1.5 rounded-full bg-primary" aria-hidden="true" />
             INSCRIPTION DÉVELOPPEUR
           </span>
@@ -121,8 +121,8 @@ export default async function InscriptionDeveloppeurPage() {
 
         <footer className="mx-auto mt-12 max-w-3xl">
           <div className="grid gap-3 sm:grid-cols-2">
-            <div className="flex items-start gap-3 rounded-2xl border border-hairline bg-[#141414] p-5">
-              <span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#2A1A10]">
+            <div className="flex items-start gap-3 rounded-2xl border border-hairline bg-card p-5">
+              <span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary-soft">
                 <CheckCircle2 className="size-4 text-primary" aria-hidden="true" />
               </span>
               <p className="text-sm leading-relaxed text-muted-foreground">
@@ -130,8 +130,8 @@ export default async function InscriptionDeveloppeurPage() {
                 Chaque dossier est lu par notre équipe avant d’activer le compte.
               </p>
             </div>
-            <div className="flex items-start gap-3 rounded-2xl border border-hairline bg-[#141414] p-5">
-              <span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#2A1A10]">
+            <div className="flex items-start gap-3 rounded-2xl border border-hairline bg-card p-5">
+              <span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary-soft">
                 <BadgeCheck className="size-4 text-primary" aria-hidden="true" />
               </span>
               <p className="text-sm leading-relaxed text-muted-foreground">

@@ -11,7 +11,7 @@ const ICONS = {
 
 export function HowItWorks() {
   return (
-    <Section id="comment-ca-marche" className="bg-[#141414]" ariaLabel="Comment ça marche">
+    <Section id="comment-ca-marche" className="bg-card" ariaLabel="Comment ça marche">
       <SectionHeader
         eyebrow="Comment ça marche"
         title="Simple. Rapide. Direct."
@@ -28,7 +28,7 @@ export function HowItWorks() {
           return (
             <Reveal key={step.num} delay={(index % 3) as 0 | 1 | 2}>
               <div className="card card-interactive relative h-full p-7 text-center">
-                <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-[#2A1A10]">
+                <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-primary-soft">
                   <Icon className="size-6 text-primary" aria-hidden="true" />
                 </div>
                 <p className="mt-6 font-display text-sm font-bold tracking-[0.2em] text-primary">

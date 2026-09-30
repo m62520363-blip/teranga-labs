@@ -29,10 +29,17 @@
   --color-surface: var(--surface);
   --color-surface-secondary: var(--surface-secondary);
   --color-hairline: var(--hairline);
+  --color-border-strong: var(--border-strong);
   --color-ink: var(--ink);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-light: var(--primary-light);
+  --color-primary-hover: var(--primary-hover);
   --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
   --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
   --color-error: var(--error);
+  --color-error-soft: var(--error-soft);
 }
 
 :root {
@@ -48,19 +55,28 @@
   /* texte pose sur un aplat de marque : le noir ressort a 6.04:1 (AA) alors
      que le blanc plafonne a 3.22:1 et echoue WCAG AA sur les boutons */
   --primary-foreground: var(--ink);
+  /* declensions de la marque : fond tinted des encarts, texte d'accent
+     lisible sur fond sombre (9:1) et teinte de survol des aplats pleins */
+  --primary-soft: #2a1a10;
+  --primary-light: #f2a378;
+  --primary-hover: #d95c1f;
   --secondary: #1c1c1c;
   --secondary-foreground: #f2f2f2;
   --muted: #1c1c1c;
   --muted-foreground: #a3a3a3;
   --accent: #241712;
   --accent-foreground: #f2f2f2;
-  --destructive: #e5484d;
+  /* rouge profond : le libelle blanc ressort a 6.4:1 (AA) sur les boutons
+     destructifs, contre 3.9:1 avec un rouge plus clair */
+  --destructive: #b91c1c;
   --destructive-foreground: #ffffff;
   --border: #262626;
   --input: #2e2e2e;
   --ring: var(--primary);
   /* filet de séparation réellement utilisé dans les cartes */
   --hairline: #2a2a2a;
+  /* filet appuyé : traits de svg decoratifs, pouce de barre de defilement */
+  --border-strong: #3a3a3a;
 
   /* TERANGA design system */
   --surface: #0f0f0f;
@@ -72,7 +88,7 @@
   --success-soft: color-mix(in oklab, var(--success) 12%, transparent);
   --warning: #fbbf24;
   --warning-soft: color-mix(in oklab, var(--warning) 12%, transparent);
-  --error: #e5484d;
+  --error: #f87171;
   --error-soft: color-mix(in oklab, var(--error) 12%, transparent);
   --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -202,13 +218,13 @@ h6 {
 }
 
 .tl-dark {
-  background-color: #111111;
+  background-color: var(--surface);
   background-image: radial-gradient(
     55rem 26rem at 78% 0%,
     rgba(232, 106, 44, 0.38),
     transparent 62%
   );
-  color: #ffffff;
+  color: var(--foreground);
 }
 
 .card-elevate {
@@ -438,12 +454,12 @@ h6 {
   background: var(--background);
 }
 ::-webkit-scrollbar-thumb {
-  background: #2a2a2a;
+  background: var(--hairline);
   border-radius: 999px;
   border: 2px solid var(--background);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3a3a3a;
+  background: var(--border-strong);
 }
 
 /* ----------------------------- Design system ------------------------------- */
@@ -496,7 +512,7 @@ h6 {
 .btn-invert {
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.18);
-  color: #ffffff;
+  color: var(--foreground);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
@@ -510,13 +526,6 @@ h6 {
 }
 .btn-ghost:hover {
   background: var(--muted);
-}
-.btn-error {
-  background: var(--error);
-  color: #ffffff;
-}
-.btn-error:hover {
-  background: #a13124;
 }
 .btn-lg {
   height: 3.125rem;

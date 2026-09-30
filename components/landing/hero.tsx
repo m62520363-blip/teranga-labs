@@ -18,7 +18,7 @@ export function Hero() {
 
       <div className="container-tl relative grid items-center gap-16 pb-20 pt-24 md:pt-32 lg:grid-cols-[1.02fr_0.98fr] lg:gap-14">
         <div className="max-w-2xl">
-          <span className="tl-blur-in chip gap-2 bg-[#141414]/85 border-hairline backdrop-blur">
+          <span className="tl-blur-in chip gap-2 bg-card/85 border-hairline backdrop-blur">
             <span className="relative flex size-2">
               <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary opacity-60" aria-hidden="true" />
               <span className="relative inline-flex size-2 rounded-full bg-primary" aria-hidden="true" />
@@ -62,7 +62,7 @@ export function Hero() {
             {["1 Token = 1 brief publié", "1 Token = 1 contact débloqué", "0 commission"].map((s) => (
               <span
                 key={s}
-                className="inline-flex items-center gap-1.5 rounded-full border border-hairline bg-[#141414]/85 px-3 py-1.5 text-[13px] font-medium text-muted-foreground"
+                className="inline-flex items-center gap-1.5 rounded-full border border-hairline bg-card/85 px-3 py-1.5 text-[13px] font-medium text-muted-foreground"
               >
                 <Check className="size-3.5 text-primary" aria-hidden="true" />
                 {s}
@@ -82,7 +82,7 @@ function HeroVisual() {
     <div className="tl-blur-in relative mx-auto w-full max-w-md" style={{ animationDelay: "0.32s" }} aria-hidden="true">
       <div className="absolute -inset-10 -z-10 rounded-full bg-[radial-gradient(closest-side,rgba(232,106,44,0.16),transparent)]" />
 
-      <div className="card-elevated relative rounded-2xl border border-hairline bg-[#141414] p-6 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.6)]">
+      <div className="card-elevated relative rounded-2xl border border-hairline bg-card p-6 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.6)]">
         <div className="flex items-center justify-between">
           <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
             {HERO_DEMO.label}
@@ -93,7 +93,7 @@ function HeroVisual() {
           </span>
         </div>
 
-        <div className="mt-5 rounded-xl border border-hairline bg-gradient-to-br from-[#1C1C1C] to-[#141414] p-5">
+        <div className="mt-5 rounded-xl border border-hairline bg-gradient-to-br from-muted to-card p-5">
           <p className="text-[15px] font-semibold leading-snug tracking-tight">
             {HERO_DEMO.request.title}
           </p>
@@ -113,7 +113,7 @@ function HeroVisual() {
           {HERO_DEMO.flow.map((item) => (
             <div
               key={item.step}
-              className="tl-drift relative flex items-center justify-between gap-3 rounded-xl border border-hairline bg-[#141414] px-4 py-3 shadow-sm"
+              className="tl-drift relative flex items-center justify-between gap-3 rounded-xl border border-hairline bg-card px-4 py-3 shadow-sm"
               style={{ animationDelay: `${item.delay}s`, animationDuration: "5s" }}
             >
               <span className="text-sm font-semibold tracking-tight text-foreground">
@@ -125,7 +125,7 @@ function HeroVisual() {
         </div>
       </div>
 
-      <div className="tl-float absolute -right-4 -top-5 rounded-full border border-hairline bg-[#141414] px-4 py-2.5 text-xs font-semibold shadow-lg shadow-black/5">
+      <div className="tl-float absolute -right-4 -top-5 rounded-full border border-hairline bg-card px-4 py-2.5 text-xs font-semibold shadow-lg shadow-black/5">
         Brief publié · 1 Token
       </div>
       <div

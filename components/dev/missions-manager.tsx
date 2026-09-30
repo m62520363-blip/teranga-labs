@@ -262,7 +262,7 @@ export function MissionsManager({
             return (
               <li
                 key={m.id}
-                className="rounded-2xl border border-hairline bg-[#141414] p-5"
+                className="rounded-2xl border border-hairline bg-card p-5"
               >
                 <div className="flex flex-col gap-4 md:flex-row md:items-start">
                   {shot ? (
@@ -274,7 +274,7 @@ export function MissionsManager({
                       className="h-24 w-full shrink-0 rounded-xl border border-hairline object-cover md:w-36"
                     />
                   ) : (
-                    <div className="flex h-24 w-full shrink-0 items-center justify-center rounded-xl border border-hairline bg-[#1E1E1E] md:w-36">
+                    <div className="flex h-24 w-full shrink-0 items-center justify-center rounded-xl border border-hairline bg-muted md:w-36">
                       {m.client_authorization === "confidential" ? (
                         <Lock className="size-6 text-primary" aria-hidden="true" />
                       ) : (
@@ -287,7 +287,7 @@ export function MissionsManager({
                     <div className="flex flex-wrap items-center gap-2">
                       <p className="font-medium">{m.name}</p>
                       {m.via_teranga_labs ? (
-                        <span className="inline-flex items-center gap-1 rounded-full border border-[#166534]/60 bg-[#0F2E18] px-2 py-0.5 text-[11px] font-medium text-[#4ADE80]">
+                        <span className="inline-flex items-center gap-1 rounded-full border border-success/40 bg-success-soft px-2 py-0.5 text-[11px] font-medium text-success">
                           <ShieldCheck className="size-3" aria-hidden="true" />
                           TERANGA LABS
                         </span>
@@ -308,13 +308,13 @@ export function MissionsManager({
                         {MISSION_STATUS_LABELS[status] ?? status}
                       </Badge>
                       {m.is_hidden ? (
-                        <span className="inline-flex items-center gap-1 rounded-full border border-[#B91C1C]/40 bg-[#3A1014] px-2 py-0.5 text-[11px] font-medium text-[#F87171]">
+                        <span className="inline-flex items-center gap-1 rounded-full border border-error/40 bg-error-soft px-2 py-0.5 text-[11px] font-medium text-error">
                           <X className="size-3" aria-hidden="true" />
                           Masquée
                         </span>
                       ) : null}
                       {m.client_authorization === "confidential" ? (
-                        <span className="inline-flex items-center gap-1 rounded-full border border-primary/40 bg-[#2A1A10] px-2 py-0.5 text-[11px] font-medium text-[#F2A378]">
+                        <span className="inline-flex items-center gap-1 rounded-full border border-primary/40 bg-primary-soft px-2 py-0.5 text-[11px] font-medium text-primary-light">
                           <Lock className="size-3" aria-hidden="true" />
                           Confidentiel
                         </span>
@@ -326,7 +326,7 @@ export function MissionsManager({
                       </p>
                     ) : null}
                     {m.status === "corrections" || m.status === "rejected" ? (
-                      <p className="mt-2 flex items-start gap-1.5 rounded-lg border border-primary/30 bg-[#2A1A10] px-3 py-2 text-xs text-[#F2A378]">
+                      <p className="mt-2 flex items-start gap-1.5 rounded-lg border border-primary/30 bg-primary-soft px-3 py-2 text-xs text-primary-light">
                         <AlertTriangle className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
                         {m.admin_note ?? "Notre équipe vous expliquera les ajustements."}
                       </p>
@@ -357,7 +357,7 @@ export function MissionsManager({
                         variant="ghost"
                         size="sm"
                         onClick={() => setConfirmDelete(m)}
-                        className="text-[#F87171] hover:bg-[#3A1014]"
+                        className="text-error hover:bg-error-soft"
                       >
                         <Trash2 className="size-3.5" aria-hidden="true" />
                       </Button>
@@ -384,7 +384,7 @@ export function MissionsManager({
 
           <form onSubmit={save} className="flex flex-col gap-4">
             {locked ? (
-              <div className="rounded-xl border border-[#166534]/60 bg-[#0F2E18] px-3 py-2.5 text-xs text-[#4ADE80]">
+              <div className="rounded-xl border border-success/40 bg-success-soft px-3 py-2.5 text-xs text-success">
                 Mission officielle TERANGA LABS : le nom, le type et la date sont
                 issus de la mission enregistrée et ne peuvent pas être modifiés.
               </div>
@@ -617,7 +617,7 @@ export function MissionsManager({
             </div>
 
             {form.client_authorization === "confidential" ? (
-              <div className="rounded-xl border border-hairline bg-[#101010] p-4">
+              <div className="rounded-xl border border-hairline bg-surface p-4">
                 <p className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
                   <HelpCircle className="size-3.5" aria-hidden="true" />
                   Aperçu masqué (projet confidentiel)
