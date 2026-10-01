@@ -129,7 +129,7 @@ export function decodeUnlockError(
     case "TLDUP":
       return "Vous avez déjà débloqué ce contact.";
     case "TLLOW":
-      return "Tokens insuffisants. Rechargez vos Tokens.";
+      return "Tokens insuffisants. Commandez vos Tokens auprès de l’équipe.";
     case "TLAAC":
       return "Accès non autorisé.";
     case "TLNOP":

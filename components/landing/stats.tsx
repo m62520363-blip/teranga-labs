@@ -48,7 +48,7 @@ export function StatsSection({ stats }: { stats: Stats | null }) {
           />
           <Tile
             value={
-              stats ? (
+              stats && stats.avgBudget > 0 ? (
                 <AnimatedCounter value={stats.avgBudget} format={formatFCFA} />
               ) : (
                 <span className="font-display text-5xl">—</span>

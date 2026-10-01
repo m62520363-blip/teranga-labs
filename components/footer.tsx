@@ -2,34 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { BRAND } from "@/components/landing/content";
 
-const socials = [
-  {
-    label: "Facebook",
-    href: "/",
-    path: (
-      <path d="M13.5 8.5V7c0-.8.3-1.3 1.4-1.3H16V3.2C15.5 3.1 14.6 3 13.7 3c-2.2 0-3.7 1.4-3.7 3.9v1.6H7v2.7h3V22h3.5v-10.8h2.8l.4-2.7h-3.2z" />
-    ),
-  },
-  {
-    label: "Instagram",
-    href: "/",
-    path: (
-      <>
-        <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" fill="none" stroke="currentColor" strokeWidth="1.8" />
-        <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" strokeWidth="1.8" />
-        <circle cx="17.2" cy="6.8" r="1.2" fill="currentColor" />
-      </>
-    ),
-  },
-  {
-    label: "X (Twitter)",
-    href: "/",
-    path: (
-      <path d="M17.9 3H21l-6.8 7.8L22.3 21h-6.3l-4.9-6.4L5.5 21H2.4l7.3-8.3L2 3h6.4l4.5 6L17.9 3zm-1.1 16.2h1.7L7.5 4.7H5.7l11.1 14.5z" />
-    ),
-  },
-];
-
 const columns = [
   {
     title: "Navigation",
@@ -80,26 +52,6 @@ export function Footer() {
             Le marketplace inversé du Sénégal.{" "}
             <span className="text-white/90">« Vous cherchez. Le marché répond. »</span>
           </p>
-          <ul className="mt-6 flex gap-2">
-            {socials.map((social) => (
-              <li key={social.label}>
-                <a
-                  href={social.href}
-                  aria-label={social.label}
-                  className="flex size-10 items-center justify-center rounded-xl border border-white/10 transition-colors outline-none hover:border-primary/60 hover:bg-primary/10 focus-visible:ring-2 focus-visible:ring-primary/60"
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    className="size-4"
-                    fill="currentColor"
-                    aria-hidden="true"
-                  >
-                    {social.path}
-                  </svg>
-                </a>
-              </li>
-            ))}
-          </ul>
         </div>
 
         {columns.map((column) => (

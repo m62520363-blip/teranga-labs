@@ -59,7 +59,7 @@ export function Hero() {
             className="tl-blur-in mt-8 flex flex-wrap items-center gap-2"
             style={{ animationDelay: "0.48s" }}
           >
-            {["1 Token = 1 brief publié", "1 Token = 1 contact débloqué", "0 commission"].map((s) => (
+            {["Client : 1 Token pour publier", "Développeur : 1 Token pour débloquer le contact", "0 commission"].map((s) => (
               <span
                 key={s}
                 className="inline-flex items-center gap-1.5 rounded-full border border-hairline bg-card/85 px-3 py-1.5 text-[13px] font-medium text-muted-foreground"

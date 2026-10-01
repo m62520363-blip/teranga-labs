@@ -7,7 +7,7 @@ import { EmptyState } from "@/components/empty-state";
 export const metadata: Metadata = {
   title: "Tokens",
   description:
-    "Rechargez vos Tokens et débloquez les coordonnées des clients qui cherchent un développeur.",
+    "Commandez vos Tokens auprès de l’équipe (règlement Wave ou Max It) et débloquez les coordonnées des clients qui cherchent un développeur.",
   robots: { index: false, follow: false },
 };
 
@@ -28,7 +28,7 @@ export default async function TokensPage() {
       <div className="container-tl">
         <div className="mx-auto max-w-2xl text-center">
           <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
-            Rechargez vos Tokens
+            Commandez vos Tokens
           </h1>
           <p className="mt-3 text-base leading-relaxed text-muted-foreground">
             Débloquez les coordonnées des clients qui cherchent un développeur.
@@ -63,13 +63,18 @@ export default async function TokensPage() {
             <div className="mt-3 grid gap-2 sm:grid-cols-2">
               <div className="flex items-center justify-between rounded-xl bg-muted px-4 py-3 text-sm">
                 <span className="font-medium">Wave</span>
-                <span className="text-xs text-muted-foreground">Bientôt</span>
+                <span className="text-xs text-muted-foreground">Mobile money</span>
               </div>
               <div className="flex items-center justify-between rounded-xl bg-muted px-4 py-3 text-sm">
                 <span className="font-medium">Max It</span>
-                <span className="text-xs text-muted-foreground">Bientôt</span>
+                <span className="text-xs text-muted-foreground">Mobile money</span>
               </div>
             </div>
+            <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+              Wave et Max It sont déjà acceptés : c’est notre équipe qui encaisse
+              et crédite. Le paiement en ligne directement sur le site reste
+              « bientôt disponible ».
+            </p>
           </div>
         </div>
 

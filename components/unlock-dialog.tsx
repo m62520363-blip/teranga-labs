@@ -272,7 +272,7 @@ export function UnlockDialog({
             <DialogHeader>
               <DialogTitle>Plus de Tokens</DialogTitle>
               <DialogDescription className="sr-only">
-                Rechargez vos Tokens pour démarrer une discussion.
+                Commandez vos Tokens auprès de l’équipe pour démarrer une discussion.
               </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col gap-4 py-2">

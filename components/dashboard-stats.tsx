@@ -15,7 +15,7 @@ export function DashboardStats({
       icon: Coins,
       label: "Tokens disponibles",
       value: String(balance),
-      sub: balance === 0 ? "Rechargez pour débloquer" : "Prêts à l'emploi",
+      sub: balance === 0 ? "Commandez pour débloquer" : "Prêts à l'emploi",
       highlight: true,
     },
     {

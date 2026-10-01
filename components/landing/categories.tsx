@@ -8,7 +8,7 @@ export function CategoriesSection() {
       <SectionHeader
         eyebrow="Catégories"
         title="Ce que vous pouvez chercher"
-        lead="Du MacBook à la location d’appartement : quel que soit votre besoin, tout commence par une demande."
+        lead="Vitrine, e-commerce, application : quel que soit votre projet web, tout commence par un brief."
       />
 
       <div className="mt-14 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">

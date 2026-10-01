@@ -187,7 +187,7 @@ export function ContactButton({
           <NotAllowed
             icon={<Coins className="size-5" aria-hidden="true" />}
             title="Solde de Tokens insuffisant"
-            body={`Contacter ${developer.full_name ?? "ce développeur"} coûte ${cost} Token${cost > 1 ? "s" : ""} et votre solde est de ${balance ?? 0}. Rechargez pour ouvrir le contact.`}
+            body={`Contacter ${developer.full_name ?? "ce développeur"} coûte ${cost} Token${cost > 1 ? "s" : ""} et votre solde est de ${balance ?? 0}. Commandez vos Tokens auprès de l’équipe pour ouvrir le contact.`}
             action={
               <Link href="/tokens">
                 <Button className="w-full">Obtenir des Tokens</Button>

@@ -20,7 +20,6 @@ import { CategoriesSection } from "@/components/landing/categories";
 import { BenefitsSection } from "@/components/landing/benefits";
 import { TrustSection } from "@/components/landing/trust";
 import { StatsSection } from "@/components/landing/stats";
-import { TestimonialsSection } from "@/components/landing/testimonials";
 import { FaqSection } from "@/components/landing/faq";
 import { FinalCta } from "@/components/landing/cta";
 import { PortalSection } from "@/components/landing/portal";
@@ -72,39 +71,66 @@ const structuredData = {
   ],
 };
 
+export type HomeStats = {
+  count: number;
+  cities: number;
+  avgBudget: number;
+};
+
 async function getHomeData() {
   const supabase = await createClient();
-  if (!supabase) return { briefs: [] as PublicRequest[] };
+  if (!supabase) return { briefs: [] as PublicRequest[], stats: null as HomeStats | null };
 
-  const briefsRes = await supabase
-    .from("requests")
-    .select(
-      "id, client_name, client_city, project_type, budget, description, status, hidden, budget_verified, created_at"
-    )
-    .eq("status", "ouvert")
-    .eq("hidden", false)
-    .order("created_at", { ascending: false })
-    .limit(6);
+  // Les compteurs « En direct » portent sur TOUS les briefs publiés, pas seulement
+  // les 6 affichés plus bas : on demande donc le total exact et les agrégats
+  // séparément de la grille récente.
+  const [briefsRes, statsRes] = await Promise.all([
+    supabase
+      .from("requests")
+      .select(
+        "id, client_name, client_city, project_type, budget, description, status, hidden, budget_verified, created_at"
+      )
+      .eq("status", "ouvert")
+      .eq("hidden", false)
+      .order("created_at", { ascending: false })
+      .limit(6),
+    supabase
+      .from("requests")
+      .select("client_city, budget", { count: "exact" })
+      .eq("status", "ouvert")
+      .eq("hidden", false),
+  ]);
 
-  return { briefs: (briefsRes.data ?? []) as PublicRequest[] };
+  const briefs = (briefsRes.data ?? []) as PublicRequest[];
+  const rows = statsRes.data ?? [];
+  const total = statsRes.count ?? 0;
+
+  if (rows.length === 0) {
+    return { briefs, stats: null };
+  }
+
+  const cities = new Set(
+    rows
+      .map((row) => (row.client_city ?? "").trim())
+      .filter((city) => city.length > 0)
+  );
+  const totalBudget = rows.reduce((sum, row) => sum + (row.budget ?? 0), 0);
+
+  return {
+    briefs,
+    stats: {
+      count: Math.max(total, rows.length),
+      cities: cities.size,
+      avgBudget: Math.round(totalBudget / rows.length),
+    },
+  };
 }
 
 export default async function HomePage() {
   const [user, role] = await Promise.all([getCurrentUser(), getCurrentRole()]);
   if (user) redirect(role === "client" ? "/client" : "/dashboard");
 
-  const { briefs } = await getHomeData();
-
-  const realStats =
-    briefs.length > 0
-      ? {
-          count: briefs.length,
-          cities: new Set(briefs.map((b) => b.client_city)).size,
-          avgBudget: Math.round(
-            briefs.reduce((sum, b) => sum + b.budget, 0) / briefs.length
-          ),
-        }
-      : null;
+  const { briefs, stats } = await getHomeData();
 
   return (
     <>
@@ -131,9 +157,8 @@ export default async function HomePage() {
         <CategoriesSection />
         <BenefitsSection />
         <TrustSection />
-        <StatsSection stats={realStats} />
+        <StatsSection stats={stats} />
         <RecentRequests briefs={briefs} />
-        <TestimonialsSection />
         <FaqSection />
         <FinalCta />
       </div>

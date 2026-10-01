@@ -47,7 +47,7 @@ export const HERO_DEMO = {
   label: "Comment ça marche",
   request: {
     title: "Je veux un site e-commerce pour ma boutique",
-    budget: "Budget : 1 500 000 FCFA",
+    budget: "Budget : 150 000 FCFA",
     location: "Dakar · Discussion privée",
   },
   flow: [
@@ -134,7 +134,7 @@ export const BUYER = {
     questionLabel: "Quel type de site ?",
     questionValue: "Ex. Site e-commerce",
     budgetLabel: "Votre budget",
-    budgetValue: "Ex. 1 500 000 FCFA",
+    budgetValue: "Ex. 150 000 FCFA",
     cityLabel: "Votre région",
     cityValue: "Ex. Dakar",
 contactLabel: "Votre WhatsApp (reste privé)",
@@ -150,7 +150,7 @@ export const SELLERS = {
   lead:
     "Les clients viennent à vous tous les jours. Et vous ne payez que pour les briefs qui vous intéressent.",
   benefits: [
-    "1 Token = 1 contact client : 2 500 F, sans commission de 20 %",
+    "Développeur : 1 Token = 1 contact client (2 500 F), sans commission de 20 %",
     "Fini de vendre sur Facebook : les briefs arrivent tout seuls",
     "Vous ne payez que pour ce qui vous intéresse",
     "Contact via la messagerie interne sécurisée",
@@ -160,7 +160,7 @@ export const SELLERS = {
   notification: {
     title: "Brief intéressant",
     text: "Site e-commerce pour boutique — Thiès",
-    budget: "Budget : 1 500 000 FCFA",
+    budget: "Budget : 150 000 FCFA",
     location: "Région : Thiès · Discussion privée",
     reply: "Démarrer la discussion — 1 Token",
   },
@@ -175,7 +175,7 @@ export const DEMO = {
     "Un brief publié pour 1 Token, un développeur sérieux qui ouvre la discussion, un échange en direct.",
   request: {
     title: "Brief : site e-commerce pour boutique de vêtements",
-    budget: "Budget : 1 500 000 FCFA",
+    budget: "Budget : 150 000 FCFA",
     location: "Thiès · Discussion privée",
   },
   flow: [
@@ -220,10 +220,10 @@ export const BENEFITS = {
   cards: [
     {
       title: "1 Token par brief",
-      text: "Publier son brief ne coûte rien. Seuls les développeurs sérieux contactent.",
+      text: "L’inscription est gratuite, la publication d’un brief coûte 1 Token (2 500 FCFA). Seuls les développeurs sérieux contactent.",
     },
-    {
-      title: "1 Token = 1 contact",
+{
+      title: "Développeur : 1 Token = 1 contact",
       text: "Les développeurs paient 2 500 F pour débloquer un contact qui les intéresse.",
     },
     {
@@ -246,7 +246,7 @@ export const TRUST_FEATURES = [
     status: "Disponible" as const,
   },
   {
-    title: "1 Token = 1 contact",
+title: "Développeur : 1 Token = 1 contact",
     text: "Habituellement 2 500 F : vous débloquez le contact client d’un brief qui vous intéresse.",
     status: "Disponible" as const,
   },
@@ -256,8 +256,8 @@ export const TRUST_FEATURES = [
     status: "Disponible" as const,
   },
   {
-    title: "Paiement en ligne des tokens",
-    text: "L’achat de tokens se fait actuellement auprès de l’équipe. Le paiement en ligne arrive bientôt.",
+    title: "Paiement des Tokens",
+    text: "Commandez vos Tokens auprès de l’équipe, réglés sur Wave ou Max It. Le paiement en ligne arrive bientôt.",
     status: "Bientôt disponible" as const,
   },
   {
@@ -278,30 +278,10 @@ export const STATS_PLACEHOLDER_LEGEND =
   "Les chiffres ci-dessous s’affichent en direct dès la connexion de la base de données.";
 
 /* -------------------------------  TÉMOIGNAGES  ----------------------------- */
-
-export const TESTIMONIALS = [
-  {
-    initials: "AD",
-    name: "Aïssatou D. — Dakar",
-    activity: "Exemple de témoignage client",
-    quote:
-      "« J’ai publié mon brief un dimanche soir. Le lundi, trois développeurs sérieux m’avaient déjà répondu dans la messagerie. »",
-  },
-  {
-    initials: "MW",
-    name: "Malick W. — Thiès",
-    activity: "Exemple de témoignage développeur",
-    quote:
-      "« Fini de courir après les clients sur Facebook. Je débloque 1 contact, je sais que le client est réel et sérieux. »",
-  },
-  {
-    initials: "FD",
-    name: "Fatou D. — Saint-Louis",
-    activity: "Exemple de témoignage développeur",
-    quote:
-      "« Je ne paie que pour les briefs qui m’intéressent. Pas de commission sur mon projet, c’est clair et direct. »",
-  },
-];
+/* La section témoignages a été retirée tant qu'aucun avis réel n'existe.      */
+/* Les trois profils d'exemple (Aïssatou D., Malick W., Fatou D.) ont été    */
+/* supprimés : de faux témoignages décrédibilisent plus qu'ils ne convainquent.*/
+/* Les réintroduire uniquement avec de vrais avis vérifiés.                    */
 
 /* -----------------------------------  FAQ  --------------------------------- */
 
@@ -316,7 +296,11 @@ export const FAQS = [
   },
   {
     q: "Combien coûte la publication d’un brief ?",
-    a: "1 Token (≈ 2 500 F). Créez un compte, chargez vos Tokens, puis publiez votre brief en 2 minutes. Le développeur, lui, paie 1 Token de plus pour démarrer la discussion avec vous.",
+    a: "1 Token (2 500 FCFA). La création du compte est gratuite. Vous commandez vos Tokens auprès de l’équipe, puis vous publiez votre brief en 2 minutes. Le développeur, lui, paie 1 Token de plus pour démarrer la discussion avec vous.",
+  },
+  {
+    q: "Comment acheter des Tokens ?",
+    a: "Les Tokens se commandent auprès de l’équipe : vous nous écrivez, vous réglez par Wave ou Max It, et nous créditons vos Tokens une fois le paiement confirmé. Le paiement en ligne directement sur le site arrive bientôt.",
   },
   {
     q: "Combien coûte un Token ?",

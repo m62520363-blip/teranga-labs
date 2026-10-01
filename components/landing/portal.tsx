@@ -58,7 +58,7 @@ export function PortalSection() {
               <UserRound className="size-4 text-primary" aria-hidden="true" />
               Univers client
             </span>
-            <span className="badge badge-muted">Gratuit d’inscription</span>
+            <span className="badge badge-muted">Inscription gratuite</span>
           </div>
 
           <h3 className="mt-6 text-2xl font-semibold tracking-tight">

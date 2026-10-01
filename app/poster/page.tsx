@@ -23,8 +23,9 @@ export default async function PosterPage() {
             </h1>
             <p className="mt-3 text-base leading-relaxed text-muted-foreground">
               La publication d’un brief coûte <strong className="text-foreground">1 Token</strong>.
-              Créez un compte, chargez vos Tokens, puis décrivez votre projet :
-              les développeurs vous contactent dans la messagerie interne.
+              Créez un compte, commandez vos Tokens auprès de l’équipe (Wave ou
+              Max It), puis décrivez votre projet : les développeurs vous contactent
+              dans la messagerie interne.
             </p>
 
             <div className="mt-10 flex flex-wrap gap-3">
