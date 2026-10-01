@@ -1,0 +1,41 @@
+# Gitleaks : extends la config par defaut et ajoute les secrets Supabase
+# qui n'y figurent pas (les PAT `sbp_...` et les API keys projet).
+#
+# Aucun vrai secret ne doit etre commitE ici : uniquement des motifs.
+# Voir .env.example pour la liste des variables attendues.
+
+[extend]
+useDefault = true
+
+# Personal Access Token Supabase (Management API, prefixe sbp_)
+[[rules]]
+  id = "supabase-pat"
+  description = "Supabase Personal Access Token (Management API)"
+  regex = '''\bsbp_[A-Za-z0-9]{20,}'''
+  keywords = ["sbp_"]
+
+  # Cles projet Supabase (anon / service_role) : JWT supabase
+  [[rules]]
+  id = "supabase-api-key"
+  description = "Cles API Supabase (anon key, service_role key)"
+  regex = '''\beyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}'''
+  keywords = ["eyJ"]
+
+  # Secrets projet Supabase (dashboard > project settings > api)
+  [[rules]]
+  id = "supabase-secret"
+  description = "Secret projet Supabase (sb_secret_...)"
+  regex = '''\bsb_secret_[A-Za-z0-9_-]{20,}'''
+  keywords = ["sb_secret_"]
+
+[allowlist]
+  description = "Faux positifs attendus : fichiers d'exemple et dependances"
+  paths = [
+    '''(^|/)node_modules/''',
+    '''(^|/)\.next/''',
+    '''(^|/)\.vercel/''',
+    '''(^|/)pnpm-lock\.yaml$''',
+    '''(^|/)package-lock\.json$''',
+    '''(^|/)\.env\.example$''',
+    '''^\.gitleaks\.toml$''',
+  ]

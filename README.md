@@ -55,6 +55,27 @@ npm run dev                  # http://localhost:3000
 
 > **Après toute migration** : `npm run test:db` valide en base (voir Tests).
 
+### Gestion des secrets
+
+Règle unique : **un secret ne quitte jamais le fichier `.env.local` de ta machine.**
+
+- `.env*` est ignoré par git (`.gitignore`), et `.env.example` ne contient que des
+  noms de variables, jamais de valeurs.
+- **Ne jamais coller un secret dans une conversation, une issue, un ticket ou un
+  commit** — même « juste pour tester ». Une fois écrit quelque part, il faut le
+  considérer comme compromis et le faire tourner.
+- Un Personal Access Token Supabase (`sbp_…`) se crée sur
+  <https://supabase.com/dashboard/account/tokens> : choisir un token **scopé** sur
+  ce seul projet, avec une expiration courte. Il se révoque au même endroit. La
+  production n'en dépend pas (elle n'utilise que l'URL + l'anon key), donc la
+  révocation n'a aucun impact sur le site en ligne.
+- `gitleaks` (job CI « Détection de secrets ») bloque les commits contenant une
+  fuite. La config `.gitleaks.toml` étend les règles par défaut et ajoute
+  explicitement les secrets Supabase, absents des règles par défaut :
+  - `sbp_…` (Personal Access Token) ;
+  - JWT Supabase (anon key / service_role key) ;
+  - `sb_secret_…` (secret projet).
+
 ## Modèle de sécurité
 
 - **RLS** : les briefs sont lisibles par tous mais `client_whatsapp` n'est pas
