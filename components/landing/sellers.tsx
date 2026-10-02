@@ -15,11 +15,15 @@ export function SellersSection() {
                 <BadgeCheck className="size-3" aria-hidden="true" />
                 {SELLERS.notification.title}
               </span>
-              <span className="text-[11px] text-muted-foreground">il y a 5 min</span>
+              <span className="text-[11px] text-muted-foreground">exemple</span>
             </div>
 
             <p className="mt-5 text-base font-semibold tracking-tight">
               {SELLERS.notification.text}
+            </p>
+            <p className="mt-1.5 text-xs text-muted-foreground">
+              Exemple de notification — les briefs réels sont listés plus bas avec
+              leur date de publication.
             </p>
 
             <div className="mt-4 space-y-2.5 rounded-xl bg-muted p-4">

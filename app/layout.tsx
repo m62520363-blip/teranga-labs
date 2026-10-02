@@ -62,7 +62,7 @@ export const metadata: Metadata = {
         url: absoluteUrl("/og.png"),
         width: 1200,
         height: 630,
-        alt: "TERANGA LABS — Des clients qui veulent des sites, tous les jours au Sénégal.",
+        alt: "TERANGA LABS — Le marketplace inversé des projets web au Sénégal.",
       },
     ],
   },

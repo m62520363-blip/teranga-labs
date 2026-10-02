@@ -75,6 +75,15 @@ export default async function TokensPage() {
               et crédite. Le paiement en ligne directement sur le site reste
               « bientôt disponible ».
             </p>
+            <p className="mt-4 rounded-xl border border-hairline bg-muted/60 px-4 py-3 text-xs leading-relaxed text-muted-foreground">
+              <span className="font-medium text-foreground">
+                Remboursement.
+              </span>{" "}
+              Un Token consommé sur un contact n’est pas remboursable. En cas de
+              contact frauduleux ou de brief fictif, signalez-le dans les{" "}
+              <strong>48 heures</strong> suivant le déblocage : l’équipe vérifie
+              la messagerie et rembourse en Tokens si le litige est confirmé.
+            </p>
           </div>
         </div>
 

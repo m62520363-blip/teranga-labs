@@ -94,13 +94,19 @@ export default function ConditionsUtilisationPage() {
         {
           heading: "Remboursements et litiges",
           body: (
-            <p>
-              Un Token consommé sur un contact ne peut pas être remboursé, sauf
-              litige avéré (contact frauduleux, brief fictif) signalé dans un
-              délai raisonnable via le formulaire de signalement. La décision
-              est prise à la discrétion de l’équipe, après vérification des
-              échanges.
-            </p>
+            <>
+              <p>
+                Un Token consommé sur un contact ne peut pas être remboursé. En
+                cas de contact frauduleux ou de brief fictif, le signalement doit
+                être émis dans les{" "}
+                <strong>48 heures</strong> suivant le déblocage du contact.
+              </p>
+              <p>
+                Le signalement se fait depuis la conversation via le bouton
+                « Signaler ». L’équipe vérifie les échanges et rembourse en
+                Tokens si le litige est confirmé.
+              </p>
+            </>
           ),
         },
         {

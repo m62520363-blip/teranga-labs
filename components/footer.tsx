@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { BRAND } from "@/components/landing/content";
+import { BRAND, LEGAL_PUBLISHER } from "@/components/landing/content";
 
 const columns = [
   {
@@ -74,8 +74,9 @@ export function Footer() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="container-tl flex flex-col items-start justify-between gap-2 py-6 text-sm text-white/50 sm:flex-row sm:items-center">
-          <p>© {BRAND} — Tous droits réservés.</p>
+        <div className="container-tl flex flex-col items-center gap-1.5 py-6 text-center text-sm text-white/60">
+          <p>© {new Date().getFullYear()} {BRAND}. Tous droits réservés.</p>
+          <p>{BRAND} est édité par {LEGAL_PUBLISHER}.</p>
           <p>Dakar, Sénégal</p>
         </div>
       </div>

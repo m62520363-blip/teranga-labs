@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LegalPage } from "@/components/legal-page";
+import { BRAND, LEGAL_PUBLISHER } from "@/components/landing/content";
 
 export const metadata: Metadata = {
   title: "Mentions légales",
@@ -18,9 +19,9 @@ export default function MentionsLegalesPage() {
           body: (
             <>
               <p>
-                Le site TERANGA LABS est édité par <strong>TERANGA LABS</strong>,
-                une structure de services numériques basée à{" "}
-                <strong>Dakar, Sénégal</strong>.
+                Le site {BRAND} est édité par <strong>{LEGAL_PUBLISHER}</strong>,
+                société de services numériques basée à <strong>Dakar, Sénégal</strong>.
+                La marque {BRAND} est la dénomination commerciale du service.
               </p>
               <p>
                 Email de contact :{" "}
@@ -38,8 +39,8 @@ export default function MentionsLegalesPage() {
           heading: "Directeur de la publication",
           body: (
             <p>
-              Le directeur de la publication est le représentant légal de
-              TERANGA LABS.
+              Le directeur de la publication est le représentant légal de{" "}
+              {LEGAL_PUBLISHER}.
             </p>
           ),
         },
@@ -47,9 +48,12 @@ export default function MentionsLegalesPage() {
           heading: "Identité légale",
           body: (
             <p>
-              Les numéros d’identification de la structure (NINEA et RCCM)
-              seront publiés dès que l’immatriculation administrative sera
-              finalisée. En attendant, pour toute demande, écrivez à{" "}
+              Adresse du siège, NINEA et RCCM de {LEGAL_PUBLISHER} :{" "}
+              <span className="italic text-muted-foreground">
+                [à compléter]
+              </span>
+              . Ces informations sont publiées dès réception de l’immatriculation
+              administrative. En attendant, pour toute demande, écrivez à{" "}
               <a
                 href="mailto:contact@terangalabs.sn"
                 className="font-medium text-primary underline underline-offset-2"

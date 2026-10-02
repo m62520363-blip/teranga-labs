@@ -19,8 +19,11 @@
 
 export const BRAND = "TERANGA LABS";
 
+/** Structure juridique qui édite la marque, affichée dans le footer et les pages légales. */
+export const LEGAL_PUBLISHER = "Walty Group-SUARL";
+
 export const META = {
-  title: "Des clients qui veulent des sites. Tous les jours au Sénégal. — TERANGA LABS",
+  title: "Le marketplace inversé du Sénégal — briefs web et developers — TERANGA LABS",
   description:
     "TERANGA LABS, le marketplace inversé du Sénégal. Les clients publient le brief de leur site web pour 1 Token ; les développeurs sérieux débloquent le contact avec 1 Token (2 500 F) et écrivent directement. Sans commission.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://teranga-labs.vercel.app",
@@ -32,8 +35,8 @@ export const META = {
 
 export const HERO = {
   badge: "LE MARKETPLACE INVERSÉ DU SÉNÉGAL",
-  titleA: "Des clients qui veulent des sites.",
-  titleB: "Tous les jours au Sénégal.",
+  titleA: "Des clients qui cherchent",
+  titleB: "un développeur web.",
   subtitle:
     "Une boutique à Thiès, un resto à Dakar, une école à Saint-Louis : ils publient leur brief pour 1 Token. Les développeurs sérieux débloquent leur contact avec 1 Token et écrivent directement.",
   ctaPrimary: { label: "Publier un brief", href: "/poster" },
@@ -65,10 +68,10 @@ export const PROBLEM = {
   lead:
     "Le modèle classique (Upwork, ComeUp) marche à l’envers — et ça marche mal. Le client est spammé, les développeurs gaspillent leur temps, et tout le monde perd.",
   points: [
-    { stat: "1 besoin", label: "posté, pour des dizaines de contacts" },
-    { stat: "50 devs", label: "qui se battent pour un petit budget" },
+    { stat: "1 besoin", label: "posté, pour des dizaines de réponses" },
     { stat: "0 filtre", label: "le client est noyé sous les messages" },
-    { stat: "0 %", label: "de temps réellement gagné" },
+    { stat: "0 délai", label: "de tri du côté des développeurs" },
+    { stat: "0 garantie", label: "que le contact soit sérieux" },
   ],
   transition: "On a inversé le modèle.",
   transitionSub:
@@ -84,15 +87,15 @@ export const CONCEPT = {
     "1 Token = 2 500 F = 1 contact client. Vous ne payez que pour ce qui vous intéresse. Le client, lui, paie 1 Token pour publier son brief.",
   classic: [
     { label: "Le client poste un besoin" },
-    { label: "50 devs se battent" },
+    { label: "Des dizaines de devs se battent" },
     { label: "Le client est spammé" },
     { label: "Les devs perdent leur temps" },
-    { label: "Commission de 20 % sur le projet" },
+    { label: "Commission prélevée sur le projet" },
   ],
   inverted: [
     { label: "Le client poste son brief pour 1 Token", highlight: true },
     { label: "Le brief entre dans /briefs" },
-    { label: "Le dev paie 1 Token = 2 500 F" },
+    { label: "Le dev paie 1 Token" },
     { label: "Discussion interne ouverte en direct" },
     { label: "Zéro commission, zéro intermédiaire", highlight: true },
   ],
@@ -148,9 +151,9 @@ export const SELLERS = {
   eyebrow: "POUR LES DÉVELOPPEURS",
   title: "Arrêtez de courir après les clients.",
   lead:
-    "Les clients viennent à vous tous les jours. Et vous ne payez que pour les briefs qui vous intéressent.",
+    "Les briefs publiés vous attendent, avec leur budget et leur région. Et vous ne payez que pour ceux qui vous intéressent.",
   benefits: [
-    "Développeur : 1 Token = 1 contact client (2 500 F), sans commission de 20 %",
+    "Développeur : 1 Token = 1 contact client, sans commission sur le projet",
     "Fini de vendre sur Facebook : les briefs arrivent tout seuls",
     "Vous ne payez que pour ce qui vous intéresse",
     "Contact via la messagerie interne sécurisée",
@@ -228,7 +231,7 @@ export const BENEFITS = {
     },
     {
       title: "Zéro commission",
-      text: "Pas de 20 % prélevés sur votre projet. Vous payez l’accès, pas la vente.",
+      text: "Aucune commission prélevée sur votre projet. Vous payez l’accès, pas la vente.",
     },
     {
       title: "Pensé pour le Sénégal",
@@ -311,6 +314,10 @@ export const FAQS = [
     a: "Non. TERANGA LABS ne prélève aucune commission sur les projets. Le modèle repose uniquement sur la vente de Tokens : vous vendez l’accès, pas la vente.",
   },
   {
+    q: "Un Token est-il remboursable ?",
+    a: "Un Token consommé sur un contact n’est pas remboursable. En cas de contact frauduleux ou de brief fictif, signalez-le dans les 48 heures suivant le déblocage : après vérification de la messagerie, l’équipe rembourse en Tokens.",
+  },
+  {
     q: "TERANGA LABS est-il disponible au Sénégal ?",
     a: "Oui. Tout est pensé pour le marché local : briefs en français, budgets en FCFA, régions partout au pays, et messagerie interne en temps réel.",
   },
@@ -319,8 +326,8 @@ export const FAQS = [
 /* ---------------------------------  CTA FINAL  ------------------------------ */
 
 export const CTA = {
-  titleA: "Quelqu’un cherche votre prochain projet",
-  titleB: "en ce moment même.",
+  titleA: "Un projet vous attend peut-être",
+  titleB: "sur TERANGA LABS.",
   text: "Publiez le brief de votre site pour 1 Token. Ou découvrez les briefs qui recherchent déjà un développeur.",
   ctaPrimary: { label: "Publier mon brief", href: "/poster" },
   ctaSecondary: { label: "Je suis développeur", href: "/briefs" },

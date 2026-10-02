@@ -135,8 +135,11 @@ export default async function InscriptionDeveloppeurPage() {
                 <BadgeCheck className="size-4 text-primary" aria-hidden="true" />
               </span>
               <p className="text-sm leading-relaxed text-muted-foreground">
-                <span className="font-medium text-foreground">Badge Vérifié.</span>{" "}
-                Une fois actif, vous pouvez faire vérifier votre profil pour gagner la confiance des clients.
+                <span className="font-medium text-foreground">
+                  Badge Vérifié — bientôt.
+                </span>{" "}
+                La vérification d’identité et les avis arrivent bientôt sur les
+                profils.
               </p>
             </div>
           </div>

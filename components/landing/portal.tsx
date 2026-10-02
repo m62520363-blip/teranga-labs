@@ -11,17 +11,17 @@ import {
 import { Section, SectionHeader } from "@/components/landing/section";
 
 const CLIENT_POINTS = [
-  "Publiez votre brief en 5 minutes pour 1 Token (2 500 FCFA)",
-  "Recevez les propositions des développeurs vérifiés",
+  "Publiez votre brief en 2 minutes pour 1 Token (2 500 FCFA)",
+  "Les développeurs vous répondent en direct",
   "Discutez en temps réel sans exposer votre WhatsApp",
-  "Suivez l’avancement et laissez un avis après livraison",
+  "Signalez un abus en un clic depuis la conversation",
 ];
 
 const DEV_POINTS = [
   "Consultez les briefs réels avec budget, région et cahier des charges",
   "Débloquez le contact du client avec 1 Token",
   "Envoyez une proposition chiffrée et discutez en direct",
-  "Construisez votre réputation : avis, badge vérifié, carte de visite",
+  "Avis et badge vérifié arrivent bientôt sur les profils",
 ];
 
 const SENEGAL_POINTS = [
@@ -37,8 +37,8 @@ const SENEGAL_POINTS = [
   },
   {
     icon: ShieldCheck,
-    title: "Confiance vérifiée",
-    text: "Profils validés, avis réels après livraison et remboursement si le contact est inactif.",
+    title: "Comptes validés",
+    text: "Chaque dossier développeur est lu par l’équipe avant activation. Remboursement en Tokens en cas de contact frauduleux signalé sous 48 h.",
   },
 ];
 
