@@ -1,0 +1,64 @@
+import { describe, expect, it } from "vitest";
+import {
+  allRegionSlugs,
+  findRegionBySlug,
+  slugifyRegion,
+} from "@/lib/region-slugs";
+import { SENEGAL_REGIONS } from "@/lib/tokens";
+
+describe("slugifyRegion", () => {
+  it("supprime les accents", () => {
+    expect(slugifyRegion("Kédougou")).toBe("kedougou");
+    expect(slugifyRegion("Sédhiou")).toBe("sedhiou");
+  });
+
+  it("conserve les regions sans accent", () => {
+    expect(slugifyRegion("Dakar")).toBe("dakar");
+  });
+
+  it("minusculise et remplace les separateurs", () => {
+    expect(slugifyRegion("Saint-Louis")).toBe("saint-louis");
+  });
+
+  it("ne produit ni tiret en tete ni en fin", () => {
+    const slug = slugifyRegion("  Thiès  ");
+    expect(slug).toBe("thies");
+    expect(slug.startsWith("-")).toBe(false);
+    expect(slug.endsWith("-")).toBe(false);
+  });
+});
+
+describe("findRegionBySlug", () => {
+  it("resout une region accentuee depuis son slug", () => {
+    expect(findRegionBySlug("kedougou")).toBe("Kédougou");
+  });
+
+  it("resout une region composee", () => {
+    expect(findRegionBySlug("saint-louis")).toBe("Saint-Louis");
+  });
+
+  it("retourne null pour un slug inconnu", () => {
+    expect(findRegionBySlug("paris")).toBeNull();
+  });
+
+  it("ne confond pas deux regions aux slugs proches", () => {
+    expect(findRegionBySlug("thies")).not.toBe(findRegionBySlug("tivaouane"));
+  });
+});
+
+describe("allRegionSlugs", () => {
+  it("couvre toutes les regions du Senegal", () => {
+    expect(allRegionSlugs()).toHaveLength(SENEGAL_REGIONS.length);
+  });
+
+  it("produit des slugs uniques, donc pas de collision d URL", () => {
+    const slugs = allRegionSlugs().map((r) => r.slug);
+    expect(new Set(slugs).size).toBe(slugs.length);
+  });
+
+  it("fait l aller-retour slug -> region pour chaque region", () => {
+    for (const { slug } of allRegionSlugs()) {
+      expect(findRegionBySlug(slug)).toBeTruthy();
+    }
+  });
+});

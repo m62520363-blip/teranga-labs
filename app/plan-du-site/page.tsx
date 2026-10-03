@@ -40,6 +40,7 @@ const groups = [
       { label: "À propos", href: "/a-propos", icon: Info },
       { label: "FAQ", href: "/faq", icon: HelpCircle },
       { label: "Contact", href: "/contact", icon: Mail },
+      { label: "Développeurs par région", href: "/ville", icon: MapPin },
       { label: "Plan du site", href: "/plan-du-site", icon: MapPin },
     ],
   },

@@ -83,6 +83,43 @@ export const viewport: Viewport = {
   themeColor: "#0A0A0A",
 };
 
+/**
+ * Données structurées pour les moteurs de recherche.
+ *
+ * Volontairement minimal : aucune note moyenne, aucun effectif et aucune
+ * donnée d'immatriculation, qui seraient invérifiables. Les coordonnées
+ * légales complètes restent à renseigner dans app/mentions-legales/page.tsx.
+ */
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "TERANGA LABS",
+  url: absoluteUrl("/").origin,
+  logo: absoluteUrl("/icon.png"),
+  description:
+    "Marketplace qui met en relation les entreprises sénégalaises et des développeurs web, sur un modèle inversé où les clients publient leurs besoins.",
+  areaServed: { "@type": "Country", name: "Sénégal" },
+  knowsLanguage: "fr-SN",
+  contactPoint: {
+    "@type": "ContactPoint",
+    contactType: "customer support",
+    availableLanguage: ["fr"],
+    areaServed: "SN",
+  },
+};
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "TERANGA LABS",
+  url: absoluteUrl("/").origin,
+  inLanguage: "fr-SN",
+  publisher: { "@type": "Organization", name: "TERANGA LABS" },
+  // Pas de SearchAction : la recherche des briefs est faite côté client
+  // et n'est pas adressable par une URL (?q=), donc la déclarer ici
+  // serait une promesse que le site ne tient pas.
+};
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -95,6 +132,15 @@ export default async function RootLayout({
       <body
         className={`${outfit.variable} ${dmSans.variable} ${geistMono.variable} bg-background font-sans text-foreground antialiased`}
       >
+        <script
+          type="application/ld+json"
+          // Contenu statique défini ici, aucune donnée utilisateur ni saisie.
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
         <Providers isAuthed={Boolean(user)}>
           <div className="flex min-h-screen flex-col">
             <Navbar
