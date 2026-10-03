@@ -35,7 +35,12 @@ type OrderResult = {
 
 function useBuyFlow(pkg: TokenPackage) {
   const [step, setStep] = React.useState<
-    "confirm" | "login" | "placing" | "placed" | "error"
+    | "confirm"
+    | "login"
+    | "placing"
+    | "placed"
+    | "redirecting"
+    | "error"
   >("confirm");
   const [order, setOrder] = React.useState<OrderResult | null>(null);
   const [errorMessage, setErrorMessage] = React.useState<string>("");
@@ -44,6 +49,56 @@ function useBuyFlow(pkg: TokenPackage) {
     setStep("confirm");
     setOrder(null);
     setErrorMessage("");
+  };
+
+  /**
+   * Paiement en ligne via /api/payments/checkout.
+   *
+   * Distinction importante avec `createOrder` : ici on ne crée aucune
+   * commande manuelle, on demande une facture au prestataire et on
+   * redirige. Le crédit se fait à l'arrivée de l'IPN, jamais ici.
+   *
+   * `window.location.assign` et non un <Link> : l'URL est une page externe
+   * (app.paydunya.com) et doit quitter le site, pas être routée par Next.
+   */
+  const payOnline = async () => {
+    setErrorMessage("");
+    setStep("placing");
+
+    try {
+      const response = await fetch("/api/payments/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ packageId: pkg.id }),
+      });
+      const payload = (await response.json().catch(() => null)) as {
+        launchUrl?: string;
+        code?: string;
+        message?: string;
+      } | null;
+
+      if (response.status === 401) {
+        setStep("login");
+        return;
+      }
+
+      if (!response.ok || !payload?.launchUrl) {
+        setErrorMessage(
+          payload?.message ??
+            "Le paiement en ligne est indisponible. Utilisez la commande manuelle."
+        );
+        setStep("error");
+        return;
+      }
+
+      setStep("redirecting");
+      window.location.assign(payload.launchUrl);
+    } catch {
+      setErrorMessage(
+        "Connexion impossible. Utilisez la commande manuelle ci-dessous."
+      );
+      setStep("error");
+    }
   };
 
   const createOrder = async () => {
@@ -82,12 +137,13 @@ function useBuyFlow(pkg: TokenPackage) {
     }
   };
 
-  return { step, order, errorMessage, createOrder, resetStep };
+  return { step, order, errorMessage, createOrder, payOnline, resetStep };
 }
 
 export function TokenCard({ pkg }: { pkg: TokenPackage }) {
   const [open, setOpen] = React.useState(false);
-  const { step, order, errorMessage, createOrder, resetStep } = useBuyFlow(pkg);
+  const { step, order, errorMessage, createOrder, payOnline, resetStep } =
+    useBuyFlow(pkg);
   const pricePerToken = pkg.tokens > 0 ? Math.round(pkg.price_fcfa / pkg.tokens) : 0;
 
   return (
@@ -162,24 +218,29 @@ export function TokenCard({ pkg }: { pkg: TokenPackage }) {
               <div className="flex flex-col gap-3 rounded-xl bg-muted p-4">
                 <div className="flex items-center gap-2 text-sm font-medium">
                   <ShieldCheck className="size-4 text-primary" aria-hidden="true" />
-                  Commande validée par notre équipe
+                  Paiement sécurisé, Tokens crédités automatiquement
                 </div>
                 <ol className="list-inside list-decimal space-y-1.5 text-sm leading-relaxed text-muted-foreground">
-                  <li>Vous créez une commande (numéro de suivi).</li>
-                  <li>Vous payez sur votre mobile money habituel (Wave ou Max It).</li>
-                  <li>Notre équipe vérifie le paiement et crédite vos Tokens.</li>
+                  <li>Vous réglez sur la page de paiement (carte, Wave, Orange Money).</li>
+                  <li>Vos Tokens sont crédités dès que le paiement est confirmé.</li>
                 </ol>
                 <p className="border-t border-hairline pt-3 text-xs leading-relaxed text-muted-foreground">
-                  Le paiement en ligne automatique (Wave ou Max It)
-                  arrive bientôt. En attendant, l’achat se fait à la commande,
-                  confirmée une fois l’encaissement vérifié.
+                  Une facture PDF vous est envoyée par email après confirmation.
+                  Vous pouvez aussi passer par commande classique ci-dessous.
                 </p>
               </div>
 
               <DialogFooter className="gap-2">
-                <Button className="h-9 w-full" onClick={createOrder}>
+                <Button className="h-9 w-full" onClick={payOnline}>
                   <CreditCard className="size-4" aria-hidden="true" />
-                  Créer la commande
+                  Payer maintenant
+                </Button>
+                <Button
+                  variant="outline"
+                  className="h-9 w-full"
+                  onClick={createOrder}
+                >
+                  Commander sans payer en ligne
                 </Button>
               </DialogFooter>
             </>
@@ -215,14 +276,24 @@ export function TokenCard({ pkg }: { pkg: TokenPackage }) {
             </>
           ) : null}
 
-          {step === "placing" ? (
+          {step === "placing" || step === "redirecting" ? (
             <>
               <DialogHeader>
-                <DialogTitle>Création de la commande…</DialogTitle>
+                <DialogTitle>
+                  {step === "redirecting"
+                    ? "Redirection vers le paiement…"
+                    : "Préparation du paiement…"}
+                </DialogTitle>
               </DialogHeader>
               <div className="flex justify-center py-6">
                 <Loader2 className="size-8 animate-spin text-primary" aria-hidden="true" />
               </div>
+              {step === "redirecting" ? (
+                <p className="text-center text-xs leading-relaxed text-muted-foreground">
+                  Vous allez quitter TERANGA LABS pour la page de paiement
+                  sécurisée. Ne fermez pas cet onglet.
+                </p>
+              ) : null}
             </>
           ) : null}
 
@@ -231,7 +302,7 @@ export function TokenCard({ pkg }: { pkg: TokenPackage }) {
               <DialogHeader>
                 <DialogTitle className="flex items-center gap-2">
                   <CheckCircle2 className="size-5 text-success" aria-hidden="true" />
-                  Commande créée
+                  Commande manuelle créée
                 </DialogTitle>
               </DialogHeader>
 

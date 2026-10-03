@@ -7,7 +7,7 @@ import { EmptyState } from "@/components/empty-state";
 export const metadata: Metadata = {
   title: "Tokens",
   description:
-    "Commandez vos Tokens auprès de l’équipe (règlement Wave ou Max It) et débloquez les coordonnées des clients qui cherchent un développeur.",
+    "Commandez vos Tokens en ligne (carte, Wave, Orange Money) et débloquez les coordonnées des clients qui cherchent un développeur.",
   robots: { index: false, follow: false },
 };
 
@@ -56,9 +56,8 @@ export default async function TokensPage() {
               Moyens de paiement
             </h2>
             <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-              L’achat se fait par commande : créez une commande, payez sur votre
-              mobile money habituel, notre équipe confirme et crédite vos
-              Tokens. Le paiement en ligne automatique est en préparation.
+              Réglez en ligne sur une page sécurisée : vos Tokens sont crédités
+              automatiquement dès confirmation du paiement, sans attendre.
             </p>
             <div className="mt-3 grid gap-2 sm:grid-cols-2">
               <div className="flex items-center justify-between rounded-xl bg-muted px-4 py-3 text-sm">
@@ -66,14 +65,23 @@ export default async function TokensPage() {
                 <span className="text-xs text-muted-foreground">Mobile money</span>
               </div>
               <div className="flex items-center justify-between rounded-xl bg-muted px-4 py-3 text-sm">
+                <span className="font-medium">Orange Money</span>
+                <span className="text-xs text-muted-foreground">Mobile money</span>
+              </div>
+              <div className="flex items-center justify-between rounded-xl bg-muted px-4 py-3 text-sm">
+                <span className="font-medium">Carte bancaire</span>
+                <span className="text-xs text-muted-foreground">Visa, Mastercard</span>
+              </div>
+              <div className="flex items-center justify-between rounded-xl bg-muted px-4 py-3 text-sm">
                 <span className="font-medium">Max It</span>
                 <span className="text-xs text-muted-foreground">Mobile money</span>
               </div>
             </div>
             <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-              Wave et Max It sont déjà acceptés : c’est notre équipe qui encaisse
-              et crédite. Le paiement en ligne directement sur le site reste
-              « bientôt disponible ».
+              Le règlement passe par PayDunya, prestataire de paiement agréé
+              au Sénégal. Vous recevez une facture PDF par email. Si le paiement
+              en ligne échoue, vous pouvez aussi commander sans payer en ligne :
+              notre équipe encaisse et crédite manuellement.
             </p>
             <p className="mt-4 rounded-xl border border-hairline bg-muted/60 px-4 py-3 text-xs leading-relaxed text-muted-foreground">
               <span className="font-medium text-foreground">
@@ -98,9 +106,10 @@ export default async function TokensPage() {
                   Des Tokens crédités après confirmation de paiement
                 </h2>
                 <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-                  Un paiement n’est jamais simulé : les Tokens ne sont crédités
-                  qu’après réception effective de l’argent par notre équipe,
-                  qui valide manuellement chaque commande.
+                  Un paiement n’est jamais simulé : les Tokens sont crédités
+                  qu’après réception effective de l’argent, automatiquement
+                  pour un règlement en ligne, ou après vérification manuelle
+                  pour une commande classique.
                 </p>
               </div>
             </div>
