@@ -5,6 +5,7 @@ import {
   developerIdentitySchema,
   loginSchema,
   parseSkills,
+  phoneOtpSchema,
   signupSchema,
 } from "@/lib/validations";
 
@@ -234,5 +235,44 @@ describe("developerApplicationSchema", () => {
         links: [{ kind: "github", label: "", url: "pas-une-url" }],
       }).success
     ).toBe(false);
+  });
+});
+describe("phoneOtpSchema", () => {
+  it("accepte un E.164 senegalais", () => {
+    expect(phoneOtpSchema.safeParse({ phone: "+221771234567" }).success).toBe(true);
+  });
+
+  it("normalise les espaces, tirets et parenthetes", () => {
+    const parsed = phoneOtpSchema.safeParse({ phone: "+221 77 123-45 (67)" });
+    expect(parsed.success).toBe(true);
+    if (parsed.success) expect(parsed.data.phone).toBe("+221771234567");
+  });
+
+  it("accepte un indicatif pays different de 221", () => {
+    expect(phoneOtpSchema.safeParse({ phone: "+33612345678" }).success).toBe(true);
+  });
+
+  it("refuse un numero sans indicatif pays", () => {
+    expect(phoneOtpSchema.safeParse({ phone: "771234567" }).success).toBe(false);
+  });
+
+  it("refuse un numero trop court", () => {
+    expect(phoneOtpSchema.safeParse({ phone: "+22177" }).success).toBe(false);
+  });
+
+  it("refuse un champ vide", () => {
+    expect(phoneOtpSchema.safeParse({ phone: "" }).success).toBe(false);
+  });
+
+it("refuse un indicatif pays qui commence par zero", () => {
+    expect(phoneOtpSchema.safeParse({ phone: "+0771234567" }).success).toBe(false);
+  });
+
+  it("refuse un numero trop long", () => {
+    expect(phoneOtpSchema.safeParse({ phone: "+221771234567890123" }).success).toBe(false);
+  });
+
+  it("refuse une lettre meleee au numero", () => {
+    expect(phoneOtpSchema.safeParse({ phone: "+22177abc4567" }).success).toBe(false);
   });
 });

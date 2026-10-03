@@ -51,6 +51,23 @@ enable_signup = true
 double_confirm_changes = true
 enable_confirmations = false
 
+# Connexion par SMS (option complementaire de l'email, cf.
+# components/phone-otp-form.tsx). Le SMS sert UNIQUEMENT a la connexion :
+# aucun compte n'est cree depuis un numero seul (`shouldCreateUser: false`
+# cote front), car handle_new_user() construit le profil de role a partir
+# des metadata d'inscription.
+#
+# En local, aucun provider n'est configure : le bouton affiche alors un
+# message d'indisponibilite et renvoie vers l'email. En production, renseigner
+# le provider dans le dashboard Supabase (Auth > Providers > SMS), ou definir
+# les variables ci-dessous.
+[auth.phone]
+enable = true
+# `false` : aucun signup par telephone cote serveur. Un compte doit exister.
+enable_signup = false
+# Auto-verification impossible sans provider : on garde le code a saisir.
+enable_confirmations = false
+
 # Les tests pgtap de supabase/tests/*.sql sont exécutés par
 # `supabase test db` (base locale) et par le job `db-tests` de
 # .github/workflows/ci.yml. Voir scripts/db-test.mjs.

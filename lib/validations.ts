@@ -292,6 +292,25 @@ export const clientSignupSchema = z.object({
 
 export type ClientSignupFormValues = z.infer<typeof clientSignupSchema>;
 
+/**
+ * Numero de telephone pour la connexion par SMS.
+ *
+ * On exige le format international : Supabase a besoin d'un E.164 sans
+ * espace (`+221771234567`) pour envoyer le code, et un identifiant local
+ * ambigu est la principale cause d'echec d'envoi.
+ */
+export const phoneOtpSchema = z.object({
+  phone: z
+    .string()
+    .trim()
+    .min(1, "Saisissez votre numéro de téléphone.")
+    .transform((v) => v.replace(/[\s\-().]/g, ""))
+    .refine(
+      (v) => /^\+[1-9]\d{7,14}$/.test(v),
+      "Numéro invalide. Ex : +221771234567"
+    ),
+});
+
 export function parseSkills(raw: string): string[] {
   return raw
     .split(",")

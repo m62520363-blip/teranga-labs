@@ -31,6 +31,7 @@ import {
 } from "@/lib/validations";
 import { SENEGAL_REGIONS } from "@/lib/tokens";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
+import { PhoneOtpForm } from "@/components/phone-otp-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -128,6 +129,8 @@ function LoginPane({
   const [sendingReset, setSendingReset] = React.useState(false);
   const [resetSent, setResetSent] = React.useState(false);
   const [showPw, setShowPw] = React.useState(false);
+  // Le SMS est une option COMPLEMENTAIRE : l'email reste le chemin par défaut.
+  const [usePhone, setUsePhone] = React.useState(false);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema) as Resolver<LoginFormValues>,
@@ -223,6 +226,8 @@ function LoginPane({
                 setFormError(null);
               }}
             />
+          ) : usePhone ? (
+            <PhoneOtpForm onBack={() => setUsePhone(false)} />
           ) : (
             <>
               <div>
@@ -301,6 +306,24 @@ function LoginPane({
                     <Loader2 className="size-4 animate-spin" aria-hidden="true" />
                   ) : null}
                   {isSubmitting ? "Connexion en cours…" : "Se connecter"}
+                </button>
+
+                <div className="flex items-center gap-3" aria-hidden="true">
+                  <span className="h-px flex-1 bg-hairline" />
+                  <span className="text-xs text-muted-foreground">ou</span>
+                  <span className="h-px flex-1 bg-hairline" />
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setUsePhone(true);
+                    setFormError(null);
+                  }}
+                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-hairline bg-background/70 text-sm font-medium transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
+                >
+                  <Phone className="size-4 text-primary" aria-hidden="true" />
+                  Recevoir un code par SMS
                 </button>
 
                 <p className="text-center text-sm text-muted-foreground">
