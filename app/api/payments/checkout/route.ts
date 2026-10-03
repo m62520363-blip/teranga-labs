@@ -82,26 +82,42 @@ export async function POST(request: Request) {
     );
   }
 
-  const { data: developer } = await supabase
+  const { data: profile } = await supabase
     .from("developers")
     .select("id, status")
     .eq("id", user.id)
     .maybeSingle();
 
-  if (!developer) {
+  const { data: roleRow } = await supabase
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (!profile) {
     return NextResponse.json(
-      { code: "NO_PROFILE", message: "Créez d'abord un compte développeur." },
+      { code: "NO_PROFILE", message: "Créez d'abord un compte." },
       { status: 403 }
     );
   }
-  if (developer.status !== "active") {
+
+  // Le rôle `client` est autorisé SANS avoir un profil développeur validé :
+  // un client paie 1 Token par brief publié, il doit donc pouvoir acheter.
+  // La migration 0028 (create_token_order) applique déjà cette règle côté
+  // commande manuelle ; ce checkout était resté sur l'ancienne version
+  // développeur-only, ce qui bloquait les clients à l'achat.
+  const role = roleRow?.role ?? null;
+  const isClient = role === "client";
+  const status = profile.status;
+
+  if (!isClient && status !== "active" && status !== "verified") {
     return NextResponse.json(
       {
         code: "ACCOUNT_NOT_ACTIVE",
         message:
-          developer.status === "pending"
-            ? "Votre compte développeur est en attente de validation."
-            : "Votre compte développeur ne permet pas d'acheter des Tokens.",
+          status === "pending" || status === "verification_pending"
+            ? "Votre compte est en attente de validation."
+            : "Votre compte ne permet pas d'acheter des Tokens.",
       },
       { status: 403 }
     );
