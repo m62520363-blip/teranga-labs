@@ -3,19 +3,32 @@ import { getCurrentUser, createClient, isSupabaseConfigured } from "@/lib/supaba
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createCheckoutSession, isWaveApiError } from "@/lib/payments/wave";
 import { isWaveConfigured } from "@/lib/payments/config";
+import { createPaydunyaCheckout, isPaydunyaApiError } from "@/lib/payments/paydunya";
+import { isPaydunyaConfigured } from "@/lib/payments/paydunya-config";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /**
  * POST /api/payments/checkout
- * Initialise une session de paiement Wave pour le pack demandé par
- * le développeur connecté. Crée d'abord une "intention de paiement"
- * (montant gelé côté serveur), puis redirige vers Wave.
- * Aucun crédit ici : seul le webhook signé crédite les Tokens.
+ * Initialise une session de paiement pour le pack demandé par le
+ * développeur connecté. Crée d'abord une "intention de paiement"
+ * (montant gelé côté serveur), puis redirige vers le prestataire.
+ * Aucun crédit ici : seul le webhook/IPN signé crédite les Tokens.
+ *
+ * Deux prestataires sont gérés, choisis via `provider` :
+ *   - `wave`     : Checkout Session + webhook HMAC.
+ *   - `paydunya` : facture PAR + IPN par hash SHA-512 de la MasterKey.
+ *
+ * `provider` est résolu côté serveur à partir de la configuration : le
+ * client ne choisit pas librement son prestataire, il ne fait que
+ * demander. Incohérent, il retombe sur celui qui est configuré.
  */
 export async function POST(request: Request) {
-  if (!isWaveConfigured()) {
+  const paydunyaReady = isPaydunyaConfigured();
+  const waveReady = isWaveConfigured();
+
+  if (!paydunyaReady && !waveReady) {
     return NextResponse.json(
       {
         code: "PAYMENT_NOT_CONFIGURED",
@@ -35,7 +48,7 @@ export async function POST(request: Request) {
     );
   }
 
-  let body: { packageId?: string };
+  let body: { packageId?: string; provider?: string };
   try {
     body = await request.json();
   } catch {
@@ -128,8 +141,57 @@ export async function POST(request: Request) {
   }
 
   const origin = process.env.NEXT_PUBLIC_APP_URL ?? new URL(request.url).origin;
+  const admin = createAdminClient();
+
+    // Prestataire effectif : PayDunya prioritaire (Mobile Money et carte déjà
+    // activés côté compte), Wave en repli.
+  const requested = body.provider;
+  const usePaydunya =
+    requested === "paydunya" ? paydunyaReady : requested === "wave" ? false : paydunyaReady;
+  const provider = usePaydunya ? "paydunya" : "wave";
+
+  if (!usePaydunya && !waveReady) {
+    return NextResponse.json(
+      {
+        code: "PAYMENT_NOT_CONFIGURED",
+        message: "Le paiement en ligne n'est pas encore activé sur ce serveur.",
+      },
+      { status: 503 }
+    );
+  }
 
   try {
+    if (usePaydunya) {
+      const checkout = await createPaydunyaCheckout({
+        amountFcfa: pkg.price_fcfa,
+        description: `Pack ${pkg.name} - ${pkg.tokens} Token(s) TERANGA LABS`,
+        itemName: pkg.name,
+        itemQuantity: pkg.tokens,
+        // L'IPN ne renvoie pas de référence client Wave : l'id d'intention
+        // transite par custom_data, seul moyen de le retrouver à l'arrivée.
+        customData: { intent_id: intent.id },
+        returnUrl: `${origin}/tokens?intent=${intent.id}`,
+        cancelUrl: `${origin}/tokens?intent=${intent.id}&cancelled=1`,
+      });
+
+      if (admin) {
+        await admin
+          .from("payment_intents")
+          .update({
+            provider: "paydunya",
+            provider_session_id: checkout.token,
+          })
+          .eq("id", intent.id);
+      }
+
+      return NextResponse.json({
+        intentId: intent.id,
+        launchUrl: checkout.redirectUrl,
+        sessionId: checkout.token,
+        provider: "paydunya",
+      });
+    }
+
     const session = await createCheckoutSession({
       amount: String(pkg.price_fcfa),
       currency: "XOF",
@@ -139,11 +201,13 @@ export async function POST(request: Request) {
     });
 
     // Mémorise la session Wave côté serveur (pour la concordance webhook).
-    const admin = createAdminClient();
     if (admin) {
       await admin
         .from("payment_intents")
-        .update({ provider_session_id: session.id })
+        .update({
+          provider: "wave",
+          provider_session_id: session.id,
+        })
         .eq("id", intent.id);
     }
 
@@ -151,8 +215,16 @@ export async function POST(request: Request) {
       intentId: intent.id,
       launchUrl: session.wave_launch_url,
       sessionId: session.id,
+      provider,
     });
   } catch (err) {
+    if (isPaydunyaApiError(err)) {
+      console.error("[payments] PayDunya checkout error:", err.message);
+      return NextResponse.json(
+        { code: "PROVIDER_ERROR", message: "Le prestataire de paiement a refusé la demande." },
+        { status: 502 }
+      );
+    }
     if (isWaveApiError(err)) {
       console.error("[payments] Wave checkout error:", err.message);
       return NextResponse.json(
