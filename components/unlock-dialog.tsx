@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import {
   Check,
   Coins,
+  Gift,
   Loader2,
   Lock,
   MessageCircle,
@@ -54,11 +55,17 @@ export function UnlockDialog({
   user,
   balance,
   conversationId,
+  welcomeFree = false,
 }: {
   brief: BriefPayload;
   user: { id: string } | null;
   balance: number | null;
   conversationId: string | null;
+  /**
+   * Le compte n'a encore jamais débloqué de contact et n'a jamais consommé
+   * l'offre de bienvenue : ce déblocage ne coûtera aucun Token (migration 0033).
+   */
+  welcomeFree?: boolean;
 }) {
   const [open, setOpen] = React.useState(false);
   const [phase, setPhase] = React.useState<Phase>({ kind: "closed" });
@@ -68,9 +75,13 @@ export function UnlockDialog({
   const { setBalance } = useBalance();
   const router = useRouter();
 
+  // Un brief de démonstration ou le 1er contact d'un compte éligible sont
+  // gratuits : dans ces deux cas, 0 Token ne bloque pas l'utilisateur.
+  const isFree = brief.demo === true || (welcomeFree && !brief.demo);
+
   const start = () => {
     setOpen(true);
-    if (!brief.demo && (balance ?? 0) < 1) setPhase({ kind: "no-tokens" });
+    if (!isFree && (balance ?? 0) < 1) setPhase({ kind: "no-tokens" });
     else setPhase({ kind: "confirm" });
   };
 
@@ -100,6 +111,7 @@ export function UnlockDialog({
     const result = data as {
       conversation_id?: string;
       balance?: number;
+      gift?: boolean;
     } | null;
 
     if (typeof result?.balance === "number") setBalance(result.balance);
@@ -145,7 +157,7 @@ export function UnlockDialog({
 
   return (
     <Dialog open={open} onOpenChange={(o) => setOpen(o)}>
-      <UnlockTriggerButton onClick={start} balance={balance} demo={brief.demo} />
+      <UnlockTriggerButton onClick={start} balance={balance} isFree={isFree} />
       <DialogContent className="max-w-sm">
         {phase.kind === "confirm" || phase.kind === "submitting" ? (
           <React.Fragment>
@@ -166,6 +178,11 @@ export function UnlockDialog({
                 <p className="mt-2 inline-flex items-center gap-1 rounded-full border border-primary/40 bg-primary-soft px-2.5 py-0.5 text-[11px] font-semibold text-primary">
                   <Sparkles className="size-3" aria-hidden="true" />
                   Brief d’exemple · déblocage gratuit
+                </p>
+              ) : welcomeFree ? (
+                <p className="mt-2 inline-flex items-center gap-1 rounded-full border border-success/30 bg-success-soft px-2.5 py-0.5 text-[11px] font-semibold text-success">
+                  <Gift className="size-3" aria-hidden="true" />
+                  Votre 1er contact est offert
                 </p>
               ) : null}
             </div>
@@ -215,7 +232,7 @@ export function UnlockDialog({
               </div>
 
               <div className="flex items-center justify-between rounded-xl border border-hairline px-4 py-2.5">
-                {brief.demo ? (
+                {isFree ? (
                   <span className="flex items-center gap-1.5 text-sm font-semibold">
                     <Sparkles className="size-4 text-primary" aria-hidden="true" />
                     Déblocage gratuit
@@ -235,6 +252,12 @@ export function UnlockDialog({
                     C’est un exemple de démonstration : aucun Token ne sera
                     débité. Le client reçoit votre message dans sa messagerie
                     interne, leur WhatsApp reste privé.
+                  </>
+                ) : welcomeFree ? (
+                  <>
+                    C’est votre premier contact : il est offert, aucun Token ne
+                    sera débité. Le client reçoit votre message dans sa
+                    messagerie interne, leur WhatsApp reste privé.
                   </>
                 ) : (
                   <>
@@ -259,7 +282,7 @@ export function UnlockDialog({
                 )}
                 {phase.kind === "submitting"
                   ? "Envoi en cours…"
-                  : brief.demo
+                  : isFree
                     ? "Envoyer gratuitement"
                     : "Envoyer · 1 Token"}
               </Button>
@@ -283,6 +306,11 @@ export function UnlockDialog({
                   Démarrer une discussion coûte 1 Token.
                 </p>
               </div>
+
+              <p className="text-xs leading-relaxed text-muted-foreground">
+                Votre 1er contact a été offert, les suivants sont facturés 1
+                Token chacun. C’est une seule fois par compte.
+              </p>
               <Button
                 className="h-10 bg-primary hover:bg-primary-hover"
                 render={
@@ -336,13 +364,13 @@ export function UnlockDialog({
 function UnlockTriggerButton({
   onClick,
   balance,
-  demo = false,
+  isFree,
 }: {
   onClick: () => void;
   balance: number | null;
-  demo?: boolean;
+  isFree: boolean;
 }) {
-  const insufficient = !demo && (balance ?? 0) < 1;
+  const insufficient = !isFree && (balance ?? 0) < 1;
   return (
     <Button
       variant="default"
@@ -354,7 +382,7 @@ function UnlockTriggerButton({
         className={cn("size-3.5", insufficient && "opacity-70")}
         aria-hidden="true"
       />
-      Démarrer la discussion · {demo ? "Gratuit" : "1 Token"}
+      Démarrer la discussion · {isFree ? "Gratuit" : "1 Token"}
     </Button>
   );
 }

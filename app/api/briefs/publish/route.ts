@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const result = data as { id?: string; management_key?: string } | null;
+  const result = data as { id?: string; management_key?: string; gift?: boolean } | null;
   if (!result?.id || !result?.management_key) {
     return NextResponse.json({ error: "Une erreur est survenue. Réessayez." }, { status: 422 });
   }
@@ -92,5 +92,10 @@ export async function POST(request: NextRequest) {
     /* silencieux : la file conserve les jobs pending */
   });
 
-  return NextResponse.json({ id: result.id, management_key: result.management_key });
+  return NextResponse.json({
+    id: result.id,
+    management_key: result.management_key,
+    // 1re publication du compte = offerte (migration 0033).
+    gift: result.gift === true,
+  });
 }

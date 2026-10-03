@@ -77,8 +77,11 @@ export default async function BriefDetailPage({
 
   let brief: BriefDetail | null = null;
 
-  let conversationId: string | null = null;
-  let balance: number | null = null;
+let conversationId: string | null = null;
+let balance: number | null = null;
+// 1er contact offert si le compte n'a jamais débloqué et n'a jamais
+// consommé l'offre de bienvenue (migration 0033).
+let welcomeContactFree = false;
 
   if (supabase) {
     const { data } = await supabase
@@ -109,6 +112,13 @@ export default async function BriefDetailPage({
       }
       const { data: balanceData } = await supabase.rpc("get_token_balance");
       if (typeof balanceData === "number") balance = balanceData;
+
+      const { data: welcome } = await supabase
+        .from("welcome_offer_status")
+        .select("has_unlocked_contact, gift_consumed")
+        .maybeSingle();
+      const w = welcome as { has_unlocked_contact?: boolean; gift_consumed?: boolean } | null;
+      welcomeContactFree = w?.has_unlocked_contact === false && w?.gift_consumed === false;
     }
   }
 
@@ -235,7 +245,9 @@ export default async function BriefDetailPage({
                       Débloquer le contact pour proposer votre service
                     </p>
                     <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
-                      {TOKEN_LABEL_PRICED}. Le client garde son WhatsApp privé.
+                      {welcomeContactFree
+                        ? "Votre 1er contact est offert. Le client garde son WhatsApp privé."
+                        : `${TOKEN_LABEL_PRICED}. Le client garde son WhatsApp privé.`}
                     </p>
                   </div>
                   <DeveloperPreview
@@ -257,6 +269,7 @@ export default async function BriefDetailPage({
                     user={user ? { id: user.id } : null}
                     balance={balance}
                     conversationId={conversationId}
+                    welcomeFree={welcomeContactFree}
                   />
                 </div>
               )}

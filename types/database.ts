@@ -657,7 +657,15 @@ export interface Database {
       };
     };
     Views: {
-      [_ in never]: never;
+      welcome_offer_status: {
+        Row: {
+          user_id: string;
+          has_published_brief: boolean;
+          has_unlocked_contact: boolean;
+          gift_consumed: boolean;
+        };
+        Relationships: [];
+      };
     };
     Functions: {
       get_token_balance: {

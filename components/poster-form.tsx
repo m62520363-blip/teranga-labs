@@ -26,6 +26,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -116,6 +124,10 @@ export function PosterForm() {
   } | null>(null);
   const [copied, setCopied] = React.useState(false);
   const [customFeatures, setCustomFeatures] = React.useState("");
+  // Dernière étape : récapitulatif avant le débit du Token.
+  const [confirmOpen, setConfirmOpen] = React.useState(false);
+  const [isPublishing, setIsPublishing] = React.useState(false);
+  const [pending, setPending] = React.useState<BriefFormValues | null>(null);
 
   const form = useForm<BriefFormValues>({
     resolver: zodResolver(briefSchema) as Resolver<BriefFormValues>,
@@ -164,7 +176,16 @@ export function PosterForm() {
   today.setDate(today.getDate() + 1);
   const minDate = today.toISOString().split("T")[0];
 
-  const onSubmit = async (values: BriefFormValues) => {
+  // L'utilisateur valide d'abord le formulaire, puis CONFIRME dans la
+  // modale. Aucun appel réseau et aucun débit avant cette confirmation :
+  // c'est le dernier écran avant l'engagement de 1 Token.
+  const onSubmit = (values: BriefFormValues) => {
+    setFormError(null);
+    setPending(values);
+    setConfirmOpen(true);
+  };
+
+  const publishBrief = async (values: BriefFormValues) => {
     setFormError(null);
 
     if (honeypot) {
@@ -186,7 +207,13 @@ export function PosterForm() {
       return;
     }
 
-    let payload: { id?: string; management_key?: string; accepted?: boolean; error?: string } | null = null;
+    let payload: {
+      id?: string;
+      management_key?: string;
+      accepted?: boolean;
+      gift?: boolean;
+      error?: string;
+    } | null = null;
     try {
       payload = await res.json();
     } catch {
@@ -221,11 +248,31 @@ export function PosterForm() {
       return;
     }
 
+    setConfirmOpen(false);
     setCreated({ id: payload.id, managementKey: payload.management_key });
-    toast.success("Brief publié !", {
-      description: "1 Token a été déduit de votre solde. Conservez votre lien de suivi : il vous sert à gérer votre projet.",
-    });
+    if (payload.gift) {
+      toast.success("Brief publié !", {
+        description:
+          "Votre première publication est offerte : aucun Token n’a été débité.",
+      });
+    } else {
+      toast.success("Brief publié !", {
+        description: "1 Token a été déduit de votre solde. Conservez votre lien de suivi : il vous sert à gérer votre projet.",
+      });
+    }
     void refreshBalance();
+  };
+
+  const onConfirm = handleSubmit(async (values) => {
+    setIsPublishing(true);
+    await publishBrief(values);
+    setIsPublishing(false);
+  });
+
+  const onCancel = () => {
+    if (isPublishing) return;
+    setConfirmOpen(false);
+    setPending(null);
   };
 
   if (created) {
@@ -562,9 +609,90 @@ export function PosterForm() {
         ) : (
           <Send className="size-4" aria-hidden="true" />
         )}
-        Publier mon brief
+        Vérifier mon brief
       </Button>
+
+      <Dialog open={confirmOpen} onOpenChange={(open) => (open ? setConfirmOpen(true) : onCancel())}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Confirmer la publication</DialogTitle>
+            <DialogDescription>
+              Vérifiez les informations ci-dessous. Elles seront visibles par les
+              développeurs une fois le brief publié.
+            </DialogDescription>
+          </DialogHeader>
+
+          {pending ? (
+            <dl className="flex flex-col gap-3 rounded-xl border border-border bg-muted/40 p-4 text-sm">
+              <ReviewRow label="Type de projet" value={pending.project_type} />
+              <ReviewRow label="Budget" value={`${pending.budget?.toLocaleString("fr-FR")} FCFA`} />
+              <ReviewRow label="Région" value={pending.client_city} />
+              <ReviewRow label="Deadline" value={pending.deadline || "Non précisée"} />
+              <ReviewRow label="Description" value={pending.description} multiline />
+              {pending.features.length > 0 ? (
+                <ReviewRow label="Fonctionnalités" value={pending.features.join(", ")} multiline />
+              ) : null}
+              <ReviewRow label="Contact" value={`${pending.client_name} · ${pending.client_whatsapp}`} />
+            </dl>
+          ) : null}
+
+          <p className="flex items-center gap-2 text-xs text-muted-foreground">
+            <ShieldCheck className="size-4 shrink-0 text-primary" aria-hidden="true" />
+            {formError ? (
+              <span role="alert" className="text-destructive">
+                {formError}
+              </span>
+            ) : (
+              "La publication consomme 1 Token sur votre solde."
+            )}
+          </p>
+
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              className="h-10 rounded-xl"
+              onClick={onCancel}
+              disabled={isPublishing}
+            >
+              Modifier
+            </Button>
+            <Button
+              type="button"
+              className="h-10 rounded-xl"
+              onClick={onConfirm}
+              disabled={isPublishing}
+            >
+              {isPublishing ? (
+                <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+              ) : (
+                <Send className="size-4" aria-hidden="true" />
+              )}
+              Publier et déduire 1 Token
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </form>
+  );
+}
+
+function ReviewRow({
+  label,
+  value,
+  multiline,
+}: {
+  label: string;
+  value: string;
+  multiline?: boolean;
+}) {
+  return (
+    <div className="flex flex-col gap-0.5">
+      <dt className="text-xs font-medium text-muted-foreground">{label}</dt>
+      <dd className={cn("text-foreground", multiline ? "whitespace-pre-wrap" : "truncate")}>
+        {value}
+      </dd>
+    </div>
   );
 }
 

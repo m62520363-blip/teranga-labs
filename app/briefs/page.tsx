@@ -24,6 +24,9 @@ export default async function BriefsPage() {
   let total = 0;
   const unlocks: Record<string, { conversation_id?: string; whatsapp?: string }> = {};
   let balance: number | null = null;
+  // true si le compte n'a jamais débloqué de contact ET n'a jamais consommé
+  // l'offre de bienvenue : son 1er contact sera donc gratuit (migration 0033).
+  let welcomeContactFree = false;
 
   if (supabase) {
     const { data, count } = await supabase
@@ -63,6 +66,13 @@ export default async function BriefsPage() {
       }
       const { data: balanceData } = await supabase.rpc("get_token_balance");
       if (typeof balanceData === "number") balance = balanceData;
+
+      const { data: welcome } = await supabase
+        .from("welcome_offer_status")
+        .select("has_unlocked_contact, gift_consumed")
+        .maybeSingle();
+      const w = welcome as { has_unlocked_contact?: boolean; gift_consumed?: boolean } | null;
+      welcomeContactFree = w?.has_unlocked_contact === false && w?.gift_consumed === false;
     }
   }
 
@@ -98,6 +108,7 @@ export default async function BriefsPage() {
             user={user ? { id: user.id } : null}
             balance={balance}
             unlocks={unlocks}
+            welcomeContactFree={welcomeContactFree}
           />
         </div>
       </div>

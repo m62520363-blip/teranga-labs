@@ -41,12 +41,14 @@ export function BriefFilters({
   user,
   balance,
   unlocks,
+  welcomeContactFree = false,
 }: {
   briefs: PublicRequest[];
   total: number;
   user: { id: string } | null;
   balance: number | null;
   unlocks: UnlockInfo;
+  welcomeContactFree?: boolean;
 }) {
   const [all, setAll] = React.useState<PublicRequest[]>(briefs);
   const [loading, setLoading] = React.useState(false);
@@ -206,6 +208,7 @@ export function BriefFilters({
                   user={user}
                   balance={balance}
                   conversationId={unlocks[brief.id]?.conversation_id ?? null}
+                  welcomeFree={welcomeContactFree}
                 />
               </div>
             }
