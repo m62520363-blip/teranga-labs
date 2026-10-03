@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Coins, FileSearch, ShieldCheck } from "lucide-react";
+import { TOKEN_RULE } from "@/lib/formatting";
 
 export const metadata: Metadata = {
   title: "À propos",
@@ -17,7 +18,7 @@ const values = [
   {
     icon: Coins,
     title: "Le développeur paie juste",
-    text: "1 Token = 2 500 F = 1 contact. Vous ne payez que pour les briefs qui vous intéressent vraiment, sans commission sur le projet.",
+    text: `${TOKEN_RULE} = 1 contact. Vous ne payez que pour les briefs qui vous intéressent vraiment, sans commission sur le projet.`,
   },
   {
     icon: ShieldCheck,

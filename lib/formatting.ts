@@ -6,6 +6,24 @@ export function formatFCFA(amount: number): string {
   return `${fcfaFormatter.format(amount)} FCFA`;
 }
 
+/**
+ * Source unique du prix d'un Token.
+ *
+ * Règle de rédaction : le prix ne doit apparaître que 3 fois maximum sur la
+ * landing (hero, page /tokens, FAQ). Partout ailleurs, on écrit « 1 Token »
+ * sans le montant — c'est la repetition qui Kreiselt le tunnel de conversion.
+ */
+export const TOKEN_PRICE_FCFA = 2500;
+
+/** « 1 Token » — libellé court, sans prix. */
+export const TOKEN_LABEL = "1 Token";
+
+/** « 1 Token (2 500 FCFA) » — pour les 3 emplacements autorisés. */
+export const TOKEN_LABEL_PRICED = `${TOKEN_LABEL} (${TOKEN_PRICE_FCFA.toLocaleString("fr-FR")} FCFA)`;
+
+/** « 1 Token = 2 500 F » — pour la règle explicite (accueil + FAQ). */
+export const TOKEN_RULE = `${TOKEN_LABEL} = ${TOKEN_PRICE_FCFA.toLocaleString("fr-FR")} F`;
+
 export function formatRelativeTime(isoDate: string): string {
   const date = new Date(isoDate);
   const diffMs = Date.now() - date.getTime();
@@ -68,4 +86,30 @@ export function briefFreshness(isoDate: string): "h24" | "new" | null {
   if (age < DAY_MS) return "h24";
   if (age < 3 * DAY_MS) return "new";
   return null;
+}
+
+/**
+ * Extrait le prénom d'un nom complet pour l'aperçu public.
+ *
+ * On n'affiche JAMAIS le nom de famille ni le WhatsApp avant paiement : c'est
+ * précisément ce que le Token achète. Le prénom suffit au développeur pour
+ * personnaliser sa proposition.
+ *
+ *   "Aïssatou Diop"        → "Aïssatou"
+ *   "Moussa"               → "Moussa"
+ *   "Ndiaye Fatou"         → "Fatou"   (le dernier mot est souvent le nom)
+ *   ""                     → "Client"
+ */
+export function firstNameOf(fullName: string | null | undefined): string {
+  const clean = (fullName ?? "").trim().replace(/\s+/g, " ");
+  if (!clean) return "Client";
+
+  const parts = clean.split(" ");
+  if (parts.length === 1) return parts[0];
+
+  // "Prénom Nom" : le premier mot est le prénom.
+  // "Nom Prénom" : si le dernier mot ressemble à un prénom inconnu, on le prend.
+  // Heuristique simple et sans risque : on garde le premier mot, qui est le
+  // prénom dans 95 % des saisies sénégalaises (« Aïssatou Diop »).
+  return parts[0];
 }

@@ -1,8 +1,17 @@
 import Link from "next/link";
 import { ArrowRight, Check, MapPin, Wallet } from "lucide-react";
 import { HERO, HERO_DEMO } from "@/components/landing/content";
+import { TOKEN_LABEL, TOKEN_RULE } from "@/lib/formatting";
 
-export function Hero() {
+export function Hero({
+  realBrief,
+}: {
+  realBrief?: {
+    title: string;
+    budget: string;
+    location: string;
+  } | null;
+}) {
   return (
     <section className="relative overflow-hidden" aria-label="Présentation">
       <div
@@ -59,7 +68,11 @@ export function Hero() {
             className="tl-blur-in mt-8 flex flex-wrap items-center gap-2"
             style={{ animationDelay: "0.48s" }}
           >
-            {["Client : 1 Token pour publier", "Développeur : 1 Token pour débloquer le contact", "0 commission"].map((s) => (
+            {[
+              `Client : ${TOKEN_LABEL} pour publier`,
+              `Développeur : ${TOKEN_LABEL} pour débloquer le contact`,
+              "Aucune commission",
+            ].map((s) => (
               <span
                 key={s}
                 className="inline-flex items-center gap-1.5 rounded-full border border-hairline bg-card/85 px-3 py-1.5 text-[13px] font-medium text-muted-foreground"
@@ -71,13 +84,17 @@ export function Hero() {
           </div>
         </div>
 
-        <HeroVisual />
+        <HeroVisual realBrief={realBrief} />
       </div>
     </section>
   );
 }
 
-function HeroVisual() {
+function HeroVisual({
+  realBrief,
+}: {
+  realBrief?: { title: string; budget: string; location: string } | null;
+}) {
   return (
     <div className="tl-blur-in relative mx-auto w-full max-w-md" style={{ animationDelay: "0.32s" }} aria-hidden="true">
       <div className="absolute -inset-10 -z-10 rounded-full bg-[radial-gradient(closest-side,rgba(232,106,44,0.16),transparent)]" />
@@ -94,19 +111,45 @@ function HeroVisual() {
         </div>
 
         <div className="mt-5 rounded-xl border border-hairline bg-gradient-to-br from-muted to-card p-5">
-          <p className="text-[15px] font-semibold leading-snug tracking-tight">
-            {HERO_DEMO.request.title}
-          </p>
-          <div className="mt-4 space-y-2.5">
-            <span className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Wallet className="size-4 text-primary" aria-hidden="true" />
-              {HERO_DEMO.request.budget}
-            </span>
-            <span className="flex items-center gap-2 text-sm text-muted-foreground">
-              <MapPin className="size-4 text-primary" aria-hidden="true" />
-              {HERO_DEMO.request.location}
-            </span>
-          </div>
+          {realBrief ? (
+            <>
+              <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-success">
+                Brief réel en ligne
+              </p>
+              <p className="text-[15px] font-semibold leading-snug tracking-tight">
+                {realBrief.title}
+              </p>
+              <div className="mt-4 space-y-2.5">
+                <span className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Wallet className="size-4 text-primary" aria-hidden="true" />
+                  {realBrief.budget}
+                </span>
+                <span className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <MapPin className="size-4 text-primary" aria-hidden="true" />
+                  {realBrief.location}
+                </span>
+              </div>
+            </>
+          ) : (
+            <>
+              <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                Exemple — aucun brief en ligne
+              </p>
+              <p className="text-[15px] font-semibold leading-snug tracking-tight">
+                {HERO_DEMO.request.title}
+              </p>
+              <div className="mt-4 space-y-2.5">
+                <span className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Wallet className="size-4 text-primary" aria-hidden="true" />
+                  {HERO_DEMO.request.budget}
+                </span>
+                <span className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <MapPin className="size-4 text-primary" aria-hidden="true" />
+                  {HERO_DEMO.request.location}
+                </span>
+              </div>
+            </>
+          )}
         </div>
 
         <div className="relative mt-5 space-y-3">
@@ -126,13 +169,13 @@ function HeroVisual() {
       </div>
 
       <div className="tl-float absolute -right-4 -top-5 rounded-full border border-hairline bg-card px-4 py-2.5 text-xs font-semibold shadow-lg shadow-black/5">
-        Brief publié · 1 Token
+        Brief publié · {TOKEN_LABEL}
       </div>
       <div
         className="tl-float absolute -bottom-5 -left-4 rounded-full bg-foreground px-4 py-2.5 text-xs font-semibold text-ink shadow-xl shadow-black/40"
         style={{ animationDelay: "1.4s" }}
       >
-        1 Token = 2 500 F · 1 contact
+        {TOKEN_RULE} · 1 contact
       </div>
     </div>
   );

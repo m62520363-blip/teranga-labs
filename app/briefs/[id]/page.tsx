@@ -1,13 +1,27 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, BadgeCheck, MapPin, Sparkles, Timer } from "lucide-react";
+import {
+  ArrowLeft,
+  BadgeCheck,
+  Lock,
+  MapPin,
+  Sparkles,
+  Timer,
+  UserRound,
+  Wallet,
+} from "lucide-react";
 import {
   createClient,
   getCurrentUser,
 } from "@/lib/supabase/server";
 import { UnlockDialog } from "@/components/unlock-dialog";
-import { formatFCFA, formatDate } from "@/lib/formatting";
+import {
+  formatFCFA,
+  formatDate,
+  firstNameOf,
+  TOKEN_LABEL_PRICED,
+} from "@/lib/formatting";
 import { PROJECT_TYPE_LABELS } from "@/lib/tokens";
 import { cn } from "cn";
 
@@ -188,9 +202,15 @@ export default async function BriefDetailPage({
                   <div>
                     <p className="text-sm font-semibold">Brief d’exemple</p>
                     <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
-                      Déblocage gratuit : testez la messagerie sans dépenser de
-                      Token.
-                    </p>
+                  Déblocage gratuit : testez la messagerie sans dépenser de
+                  Token.
+                </p>
+                <DeveloperPreview
+                  clientName={brief.client_name}
+                  city={brief.client_city}
+                  budget={brief.budget}
+                  demo
+                />
                   </div>
                   <UnlockDialog
                     brief={{
@@ -209,15 +229,20 @@ export default async function BriefDetailPage({
                   />
                 </div>
               ) : (
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                   <div>
                     <p className="text-sm font-semibold">
                       Débloquer le contact pour proposer votre service
                     </p>
                     <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
-                      1 Token (2 500 F). Le client garde son WhatsApp privé.
+                      {TOKEN_LABEL_PRICED}. Le client garde son WhatsApp privé.
                     </p>
                   </div>
+                  <DeveloperPreview
+                    clientName={brief.client_name}
+                    city={brief.client_city}
+                    budget={brief.budget}
+                  />
                   <UnlockDialog
                     brief={{
                       id: brief.id,
@@ -239,6 +264,66 @@ export default async function BriefDetailPage({
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+/**
+ * Ce que le développeur voit AVANT de payer son Token.
+ *
+ * Objectif : qu'il puisse décider en 5 secondes si le brief vaut 1 Token. On
+ * donne le prénom, la région, le budget et l'engagement de réponse — mais
+ * jamais le WhatsApp, qui est précisément ce que le Token achète.
+ */
+function DeveloperPreview({
+  clientName,
+  city,
+  budget,
+  demo = false,
+}: {
+  clientName: string;
+  city: string;
+  budget: number;
+  demo?: boolean;
+}) {
+  const prenom = firstNameOf(clientName);
+
+  const facts = [
+    { icon: UserRound, label: "Prénom", value: prenom },
+    { icon: MapPin, label: "Région", value: city },
+    { icon: Wallet, label: "Budget", value: formatFCFA(budget) },
+    { icon: Timer, label: "Réponse", value: "sous 48 h" },
+  ];
+
+  return (
+    <div className="w-full shrink-0 rounded-xl border border-hairline bg-card/60 p-4 lg:max-w-md">
+      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        Ce que vous savez avant de payer
+      </p>
+      <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-3">
+        {facts.map((fact) => (
+          <div key={fact.label} className="flex items-start gap-2">
+            <fact.icon
+              className="mt-0.5 size-3.5 shrink-0 text-primary"
+              aria-hidden="true"
+            />
+            <div className="min-w-0">
+              <dt className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                {fact.label}
+              </dt>
+              <dd className="truncate text-sm font-semibold text-foreground">
+                {fact.value}
+              </dd>
+            </div>
+          </div>
+        ))}
+      </dl>
+      <p className="mt-3 flex items-start gap-2 border-t border-hairline pt-3 text-[11px] leading-relaxed text-muted-foreground">
+        <Lock className="mt-0.5 size-3 shrink-0" aria-hidden="true" />
+        {demo
+          ? "Le WhatsApp du client s’ouvre dans la messagerie interne, jamais ici."
+          : "Le WhatsApp et le nom complet s’ouvrent après paiement : c’est ce que le Token débloque."}
+      </p>
     </div>
   );
 }

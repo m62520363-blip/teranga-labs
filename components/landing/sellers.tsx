@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, BadgeCheck, MapPin, Send, Wallet } from "lucide-react";
 import { SELLERS } from "@/components/landing/content";
+import { TOKEN_RULE } from "@/lib/formatting";
 import { Reveal } from "@/components/reveal";
 import { Section, SectionHeader } from "@/components/landing/section";
 
@@ -42,7 +43,7 @@ export function SellersSection() {
                 Coût du contact
               </label>
               <div className="mt-2 rounded-xl border border-hairline bg-card px-4 py-3 text-[15px] font-medium text-foreground">
-                1 Token = 2 500 F
+                {TOKEN_RULE}
               </div>
             </div>
 

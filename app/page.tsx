@@ -8,23 +8,28 @@ import { BriefCard } from "@/components/brief-card";
 import { BriefGrid } from "@/components/brief-grid";
 import { EmptyState } from "@/components/empty-state";
 import { MarqueeStrip } from "@/components/marquee-strip";
-import { SENEGAL_REGIONS } from "@/lib/tokens";
+import {
+  PROJECT_TYPE_LABELS,
+  SENEGAL_REGIONS,
+} from "@/lib/tokens";
+import { formatFCFA } from "@/lib/formatting";
+
+/** Bandeau défilant : les types de projets réellement acceptés + les régions. */
+const PROJECT_TYPE_LABELS_LIST = [
+  ...Object.values(PROJECT_TYPE_LABELS),
+  ...SENEGAL_REGIONS,
+];
 import { Hero } from "@/components/landing/hero";
-import { ProblemSection } from "@/components/landing/problem";
 import { ConceptSection } from "@/components/landing/concept";
 import { HowItWorks } from "@/components/landing/how-it-works";
 import { BuyerSection } from "@/components/landing/buyer";
 import { SellersSection } from "@/components/landing/sellers";
-import { DemoSection } from "@/components/landing/demo";
-import { CategoriesSection } from "@/components/landing/categories";
-import { BenefitsSection } from "@/components/landing/benefits";
 import { TrustSection } from "@/components/landing/trust";
 import { StatsSection } from "@/components/landing/stats";
 import { FaqSection } from "@/components/landing/faq";
 import { FinalCta } from "@/components/landing/cta";
-import { PortalSection } from "@/components/landing/portal";
 import { Section, SectionHeader } from "@/components/landing/section";
-import { CATEGORIES, META } from "@/components/landing/content";
+import { META } from "@/components/landing/content";
 
 export const metadata: Metadata = {
   title: META.title,
@@ -63,7 +68,7 @@ const structuredData = {
           name: "Qu’est-ce que TERANGA LABS ?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "TERANGA LABS est le marketplace inversé du Sénégal : les clients publient le brief de leur site web pour 1 Token, et les développeurs sérieux viennent vers eux en débloquant le contact avec 1 Token (2 500 F).",
+            text: "TERANGA LABS est le marketplace inversé du Sénégal : les clients publient le brief de leur site web pour 1 Token, et les développeurs sérieux viennent vers eux en débloquant le contact avec 1 Token.",
           },
         },
       ],
@@ -109,6 +114,7 @@ async function getHomeData() {
     return { briefs, stats: null };
   }
 
+
   const cities = new Set(
     rows
       .map((row) => (row.client_city ?? "").trim())
@@ -132,6 +138,18 @@ export default async function HomePage() {
 
   const { briefs, stats } = await getHomeData();
 
+  // Le visuel du hero montre un VRAI brief quand il y en a un : c'est la preuve
+  // la plus forte qu'on puisse afficher sans recruiter de faux témoignages.
+  const heroBrief = briefs[0]
+    ? {
+        title: briefs[0].description.length > 90
+          ? `${briefs[0].description.slice(0, 90)}…`
+          : briefs[0].description,
+        budget: formatFCFA(briefs[0].budget),
+        location: `${briefs[0].client_city} · Discussion privée`,
+      }
+    : null;
+
   return (
     <>
       <script
@@ -139,23 +157,15 @@ export default async function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
       <div className="bg-background">
-        <Hero />
-        <PortalSection />
+        <Hero realBrief={heroBrief} />
+        <ConceptSection />
         <MarqueeStrip
-          items={[
-            ...CATEGORIES.map((c) => c.title),
-            ...SENEGAL_REGIONS,
-          ]}
+          items={PROJECT_TYPE_LABELS_LIST}
           ariaLabel="Catégories et régions couvertes"
         />
-        <ProblemSection />
-        <ConceptSection />
         <HowItWorks />
         <BuyerSection />
         <SellersSection />
-        <DemoSection />
-        <CategoriesSection />
-        <BenefitsSection />
         <TrustSection />
         <StatsSection stats={stats} />
         <RecentRequests briefs={briefs} />

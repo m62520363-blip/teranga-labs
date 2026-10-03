@@ -1,14 +1,5 @@
-﻿import {
-  Boxes,
-  Code2,
-  Globe,
-  Layout,
-  RefreshCw,
-  Rocket,
-  ShoppingCart,
-  TrendingUp,
-  Wrench,
-} from "lucide-react";
+﻿import { TOKEN_LABEL_PRICED, TOKEN_RULE } from "@/lib/formatting";
+
 
 /* --------------------------------------------------------------------------- */
 /*  Données éditables de la landing page — TERANGA LABS.                        */
@@ -23,9 +14,9 @@ export const BRAND = "TERANGA LABS";
 export const LEGAL_PUBLISHER = "Walty Group-SUARL";
 
 export const META = {
-  title: "Le marketplace inversé du Sénégal — briefs web et developers — TERANGA LABS",
+  title: "Le marketplace inversé du Sénégal — briefs web et développeurs — TERANGA LABS",
   description:
-    "TERANGA LABS, le marketplace inversé du Sénégal. Les clients publient le brief de leur site web pour 1 Token ; les développeurs sérieux débloquent le contact avec 1 Token (2 500 F) et écrivent directement. Sans commission.",
+    "TERANGA LABS, le marketplace inversé du Sénégal. Les clients publient le brief de leur site web pour 1 Token ; les développeurs débloquent le contact avec 1 Token et écrivent directement. Aucune commission.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://teranga-labs.vercel.app",
   keywords:
     "marketplace Sénégal, développeurs Sénégal, freelance Sénégal, brief web, trouver des clients web, acheter des tokens, site e-commerce Dakar, développeur web Thiès, marketplace inversée",
@@ -39,9 +30,9 @@ export const HERO = {
   titleB: "un développeur web.",
   subtitle:
     "Une boutique à Thiès, un resto à Dakar, une école à Saint-Louis : ils publient leur brief pour 1 Token. Les développeurs sérieux débloquent leur contact avec 1 Token et écrivent directement.",
-  ctaPrimary: { label: "Publier un brief", href: "/poster" },
+  ctaPrimary: { label: "Je cherche un développeur", href: "/poster" },
   ctaSecondary: {
-    label: "Je cherche une mission",
+    label: "Je cherche des missions",
     href: "/briefs",
   },
 };
@@ -55,27 +46,9 @@ export const HERO_DEMO = {
   },
   flow: [
     { step: "01 · Brief publié", detail: "1 Token — 2 minutes", delay: 0.6 },
-    { step: "02 · 1 Token = 2 500 F", detail: "Le dev démarre la discussion", delay: 1.6 },
+    { step: "02 · Le dev paie 1 Token", detail: "Il démarre la discussion", delay: 1.6 },
     { step: "03 · Discussion sécurisée", detail: "Messagerie interne en direct", delay: 2.6 },
   ],
-};
-
-/* -------------------------------  PROBLÈME  -------------------------------- */
-
-export const PROBLEM = {
-  eyebrow: "LE PROBLÈME",
-  title: "Pourquoi chercher pendant des heures ?",
-  lead:
-    "Le modèle classique (Upwork, ComeUp) marche à l’envers — et ça marche mal. Le client est spammé, les développeurs gaspillent leur temps, et tout le monde perd.",
-  points: [
-    { stat: "1 besoin", label: "posté, pour des dizaines de réponses" },
-    { stat: "0 filtre", label: "le client est noyé sous les messages" },
-    { stat: "0 délai", label: "de tri du côté des développeurs" },
-    { stat: "0 garantie", label: "que le contact soit sérieux" },
-  ],
-  transition: "On a inversé le modèle.",
-  transitionSub:
-    "Seuls les développeurs sérieux — ceux qui ont investi un Token — contactent un client.",
 };
 
 /* --------------------------------  CONCEPT  -------------------------------- */
@@ -83,8 +56,7 @@ export const PROBLEM = {
 export const CONCEPT = {
   eyebrow: "LE CONCEPT",
   title: "On ne vend pas des sites. On vend l’accès aux clients qui veulent des sites.",
-  lead:
-    "1 Token = 2 500 F = 1 contact client. Vous ne payez que pour ce qui vous intéresse. Le client, lui, paie 1 Token pour publier son brief.",
+  lead: `${TOKEN_RULE} = 1 contact client. Vous ne payez que pour ce qui vous intéresse. Le client, lui, paie 1 Token pour publier son brief.`,
   classic: [
     { label: "Le client poste un besoin" },
     { label: "Des dizaines de devs se battent" },
@@ -113,7 +85,7 @@ export const STEPS = [
   {
     num: "02",
     title: "Seuls les devs sérieux vous contactent",
-    text: "Le développeur qui voit votre brief paie 1 Token (2 500 F) pour démarrer une discussion privée. Pas de touristes.",
+    text: "Le développeur qui voit votre brief paie 1 Token pour démarrer une discussion privée. Pas de touristes.",
     icon: "inbox",
   },
   {
@@ -169,77 +141,6 @@ export const SELLERS = {
   },
 };
 
-/* ---------------------------------  DÉMO  ---------------------------------- */
-
-export const DEMO = {
-  eyebrow: "LE PRODUIT",
-  title: "Voyez TERANGA LABS en action.",
-  lead:
-    "Un brief publié pour 1 Token, un développeur sérieux qui ouvre la discussion, un échange en direct.",
-  request: {
-    title: "Brief : site e-commerce pour boutique de vêtements",
-    budget: "Budget : 150 000 FCFA",
-    location: "Thiès · Discussion privée",
-  },
-  flow: [
-    {
-      step: "Brief publié",
-      badge: "Étape 1",
-      badgeTone: "success",
-    },
-    {
-      step: "1 Token (2 500 F) ouvre la discussion",
-      badge: "Étape 2",
-      badgeTone: "warning",
-    },
-    {
-      step: "Échange en direct, sans commission",
-      badge: "Étape 3",
-      badgeTone: "success",
-    },
-  ],
-  cta: { label: "Voir les briefs en direct", href: "/briefs" },
-};
-
-/* ------------------------------  CATÉGORIES  ------------------------------- */
-
-export const CATEGORIES = [
-  { icon: Layout, title: "Site vitrine", text: "Présenter son activité" },
-  { icon: ShoppingCart, title: "E-commerce", text: "Vendre en ligne sur tout le Sénégal" },
-  { icon: Rocket, title: "Landing page", text: "Convertir en une seule page" },
-  { icon: Code2, title: "Application web", text: "Outils et plateformes sur mesure" },
-  { icon: Boxes, title: "Plateforme SaaS", text: "Services en ligne récurrents" },
-  { icon: RefreshCw, title: "Refonte de site", text: "Moderniser un site existant" },
-  { icon: Globe, title: "Portail web", text: "Etude, média, association" },
-  { icon: TrendingUp, title: "SEO & visibilité", text: "Être trouvé sur Google" },
-  { icon: Wrench, title: "Maintenance", text: "Mises à jour et support" },
-] as const;
-
-/* ---------------------------------  BÉNÉFICES  ----------------------------- */
-
-export const BENEFITS = {
-  eyebrow: "POURQUOI TERANGA LABS",
-  title: "Pensé pour le marché sénégalais.",
-  cards: [
-    {
-      title: "1 Token par brief",
-      text: "L’inscription est gratuite, la publication d’un brief coûte 1 Token (2 500 FCFA). Seuls les développeurs sérieux contactent.",
-    },
-{
-      title: "Développeur : 1 Token = 1 contact",
-      text: "Les développeurs paient 2 500 F pour débloquer un contact qui les intéresse.",
-    },
-    {
-      title: "Zéro commission",
-      text: "Aucune commission prélevée sur votre projet. Vous payez l’accès, pas la vente.",
-    },
-    {
-      title: "Pensé pour le Sénégal",
-      text: "Briefs en français, budgets en FCFA, messagerie interne sécurisée, régions partout au pays.",
-    },
-  ],
-};
-
 /* ---------------------------------  CONFIANCE  ----------------------------- */
 
 export const TRUST_FEATURES = [
@@ -250,7 +151,7 @@ export const TRUST_FEATURES = [
   },
   {
 title: "Développeur : 1 Token = 1 contact",
-    text: "Habituellement 2 500 F : vous débloquez le contact client d’un brief qui vous intéresse.",
+    text: "Vous débloquez le contact client d’un brief qui vous intéresse.",
     status: "Disponible" as const,
   },
   {
@@ -298,16 +199,12 @@ export const FAQS = [
     a: "Le client poste son brief en 2 minutes : type de site, budget et région. Le brief apparaît dans /briefs. Le développeur qui s’intéresse paie 1 Token pour ouvrir une discussion privée avec le client, puis l’échange se fait en direct sur la plateforme.",
   },
   {
-    q: "Combien coûte la publication d’un brief ?",
-    a: "1 Token (2 500 FCFA). La création du compte est gratuite. Vous commandez vos Tokens auprès de l’équipe, puis vous publiez votre brief en 2 minutes. Le développeur, lui, paie 1 Token de plus pour démarrer la discussion avec vous.",
+    q: "Combien coûte un Token ?",
+    a: `${TOKEN_LABEL_PRICED}. L’inscription est gratuite : vous commandez vos Tokens, puis vous publiez votre brief ou débloquez un contact. Le développeur paie son propre Token pour démarrer la discussion.`,
   },
   {
     q: "Comment acheter des Tokens ?",
     a: "Les Tokens se commandent auprès de l’équipe : vous nous écrivez, vous réglez par Wave ou Max It, et nous créditons vos Tokens une fois le paiement confirmé. Le paiement en ligne directement sur le site arrive bientôt.",
-  },
-  {
-    q: "Combien coûte un Token ?",
-    a: "1 Token = 2 500 F, et il débloque le contact d’un brief. Vous ne payez donc que pour les contacts qui vous intéressent vraiment.",
   },
   {
     q: "Y a-t-il une commission sur les projets ?",
