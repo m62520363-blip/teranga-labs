@@ -60,6 +60,8 @@ export async function createPaydunyaCheckout(params: {
   returnUrl?: string;
   cancelUrl?: string;
   callbackUrl?: string;
+  /** Origine publique du site, pour `store.logo_url`. */
+  siteUrl?: string;
   customer?: { name?: string; email?: string; phone?: string };
   channels?: string[];
 }): Promise<{ token: string; redirectUrl: string }> {
@@ -80,7 +82,11 @@ export async function createPaydunyaCheckout(params: {
     custom_data: params.customData,
   };
 
-  if (params.customer) {
+  // `customer` ne part que s'il porte au moins un champ : un objet vide
+  // n'est pas une donnée, et PayDunya peut le traiter comme une fiche
+  // client sans identité. La garde est ici plutôt que chez l'appelant pour
+  // qu'un nouveau point d'appel ne puisse pas l'oublier.
+  if (params.customer && Object.values(params.customer).some(Boolean)) {
     invoice.customer = params.customer;
   }
   if (params.channels?.length) {
@@ -92,9 +98,18 @@ export async function createPaydunyaCheckout(params: {
   if (params.cancelUrl) actions.cancel_url = params.cancelUrl;
   if (params.callbackUrl) actions.callback_url = params.callbackUrl;
 
+  // `store.logo_url` est affiché sur la page de paiement PayDunya. Sans lui,
+  // ils affichent une icône de marché générique : l'acheteur ne voit pas
+  // la marque du marchand sur la page où il saisit ses coordonnées.
+  // L'URL doit être absolue et publiquement accessible.
+  const store: Record<string, unknown> = { name: "TERANGA LABS" };
+  if (params.siteUrl) {
+    store.logo_url = `${params.siteUrl.replace(/\/+$/, "")}/logo.png`;
+  }
+
   const body: Record<string, unknown> = {
     invoice,
-    store: { name: "TERANGA LABS" },
+    store,
   };
   if (Object.keys(actions).length > 0) {
     body.actions = actions;

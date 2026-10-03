@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createHash } from "crypto";
 import {
   amountMatches,
+  createPaydunyaCheckout,
   isPaymentCompleted,
   parseIpnFormData,
   verifyIpnHash,
@@ -160,5 +161,123 @@ describe("isPaydunyaConfigured", () => {
     vi.unstubAllEnvs();
     vi.stubEnv("PAYDUNYA_MODE", "test");
     expect(isPaydunyaConfigured()).toBe(false);
+  });
+});
+
+/**
+ * Le corps envoyé a PayDunya conditionne l'acceptation de la facture ET ce
+ * que l'acheteur voit sur leur page. Il etait entierement non teste : une
+ * cle de `store` manquante ou un `customer` mal forme se manifestait
+ * uniquement en production, sous forme d'une page de paiement vide ou d'une
+ * facture refusee.
+ */
+describe("createPaydunyaCheckout", () => {
+  /** Capture le corps JSON envoye a l'API. */
+  async function captureBody(
+    params: Partial<Parameters<typeof createPaydunyaCheckout>[0]> = {}
+  ): Promise<Record<string, never>> {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        response_code: "00",
+        response_text: "https://app.paydunya.com/sandbox-checkout/testabc",
+        token: "testabc",
+      }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    await createPaydunyaCheckout({
+      amountFcfa: 20000,
+      description: "Pack Starter",
+      itemName: "Starter",
+      itemQuantity: 8,
+      customData: { intent_id: "intent-uuid-1" },
+      ...params,
+    });
+
+    const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+    return JSON.parse(String(init.body)) as Record<string, never>;
+  }
+
+  it("envoie store.name, exige par PayDunya", async () => {
+    const body = await captureBody();
+    expect((body.store as { name: string }).name).toBe("TERANGA LABS");
+  });
+
+  it("ajoute store.logo_url depuis l'origine publique", async () => {
+    const body = await captureBody({ siteUrl: "https://teranga-labs.vercel.app" });
+    expect((body.store as { logo_url?: string }).logo_url).toBe(
+      "https://teranga-labs.vercel.app/logo.png"
+    );
+  });
+
+  it("normalise une origine avec slash final", async () => {
+    const body = await captureBody({ siteUrl: "https://teranga-labs.vercel.app/" });
+    expect((body.store as { logo_url?: string }).logo_url).toBe(
+      "https://teranga-labs.vercel.app/logo.png"
+    );
+  });
+
+  it("omet logo_url si l'origine est inconnue", async () => {
+    const body = await captureBody();
+    expect((body.store as { logo_url?: string }).logo_url).toBeUndefined();
+  });
+
+  it("renvoie le noeud customer pour pre-remplir la page", async () => {
+    const body = await captureBody({
+      customer: { name: "Awa Diop", email: "awa@example.sn", phone: "771234567" },
+    });
+    expect((body.invoice as { customer?: unknown }).customer).toEqual({
+      name: "Awa Diop",
+      email: "awa@example.sn",
+      phone: "771234567",
+    });
+  });
+
+  it("omet customer plutot que d'envoyer un objet vide", async () => {
+    const body = await captureBody({ customer: {} });
+    expect((body.invoice as { customer?: unknown }).customer).toBeUndefined();
+  });
+
+  it("exige unit_price et total_price en chaine", async () => {
+    const body = await captureBody();
+    const item = (body.invoice as { items: { item_0: Record<string, unknown> } })
+      .items.item_0;
+    expect(item.unit_price).toBe("20000");
+    expect(item.total_price).toBe("20000");
+  });
+
+  it("transporte l'intention via custom_data", async () => {
+    const body = await captureBody();
+    expect((body.invoice as { custom_data: unknown }).custom_data).toEqual({
+      intent_id: "intent-uuid-1",
+    });
+  });
+
+  it("renvoie le token et l'URL de redirection", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: async () => ({
+          response_code: "00",
+          response_text: "https://app.paydunya.com/sandbox-checkout/testabc",
+          token: "testabc",
+        }),
+      })
+    );
+    const result = await createPaydunyaCheckout({
+      amountFcfa: 20000,
+      description: "Pack Starter",
+      itemName: "Starter",
+      itemQuantity: 8,
+      customData: { intent_id: "intent-uuid-1" },
+    });
+    expect(result).toEqual({
+      token: "testabc",
+      redirectUrl: "https://app.paydunya.com/sandbox-checkout/testabc",
+    });
   });
 });

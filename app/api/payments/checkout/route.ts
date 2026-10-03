@@ -84,7 +84,7 @@ export async function POST(request: Request) {
 
   const { data: profile } = await supabase
     .from("developers")
-    .select("id, status")
+    .select("id, status, full_name, whatsapp")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -178,6 +178,21 @@ export async function POST(request: Request) {
 
   try {
     if (usePaydunya) {
+      // Pré-remplissage de la page PayDunya : leur API accepte un nœud
+      // `customer` qui renseigne nom, email et téléphone. L'acheteur n'a
+      // donc plus rien à saisir sur leur page, ce qui est le principal
+      // levier de conversion sur un tunnel qu'on ne contrôle pas.
+      // Les valeurs viennent de la session et du profil, jamais du client.
+      const customer: { name?: string; email?: string; phone?: string } = {};
+      const fullName = profile?.full_name?.trim();
+      const email = user.email?.trim();
+      // `whatsapp` est le numéro que l'utilisateur a déjà saisi à
+      // l'inscription : on le réutilise plutôt que d'en redemander un.
+      const phone = profile?.whatsapp?.trim() ?? user.phone?.trim();
+      if (fullName) customer.name = fullName;
+      if (email) customer.email = email;
+      if (phone) customer.phone = phone;
+
       const checkout = await createPaydunyaCheckout({
         amountFcfa: pkg.price_fcfa,
         description: `Pack ${pkg.name} - ${pkg.tokens} Token(s) TERANGA LABS`,
@@ -186,6 +201,8 @@ export async function POST(request: Request) {
         // L'IPN ne renvoie pas de référence client Wave : l'id d'intention
         // transite par custom_data, seul moyen de le retrouver à l'arrivée.
         customData: { intent_id: intent.id },
+        ...(Object.keys(customer).length > 0 ? { customer } : {}),
+        siteUrl: origin,
         returnUrl: `${origin}/tokens?intent=${intent.id}`,
         cancelUrl: `${origin}/tokens?intent=${intent.id}&cancelled=1`,
       });
