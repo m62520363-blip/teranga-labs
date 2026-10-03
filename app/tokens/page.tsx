@@ -79,9 +79,8 @@ export default async function TokensPage() {
             </div>
             <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
               Le règlement passe par PayDunya, prestataire de paiement agréé
-              au Sénégal. Vous recevez une facture PDF par email. Si le paiement
-              en ligne échoue, vous pouvez aussi commander sans payer en ligne :
-              notre équipe encaisse et crédite manuellement.
+              au Sénégal. Vous recevez une facture PDF par email, et vos Tokens
+              sont crédités dès que le paiement est confirmé.
             </p>
             <p className="mt-4 rounded-xl border border-hairline bg-muted/60 px-4 py-3 text-xs leading-relaxed text-muted-foreground">
               <span className="font-medium text-foreground">
@@ -107,9 +106,8 @@ export default async function TokensPage() {
                 </h2>
                 <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
                   Un paiement n’est jamais simulé : les Tokens sont crédités
-                  qu’après réception effective de l’argent, automatiquement
-                  pour un règlement en ligne, ou après vérification manuelle
-                  pour une commande classique.
+                  qu’après réception effective de l’argent, automatiquement dès
+                  confirmation du règlement.
                 </p>
               </div>
             </div>

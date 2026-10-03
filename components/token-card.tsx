@@ -3,7 +3,6 @@
 import * as React from "react";
 import Link from "next/link";
 import {
-  CheckCircle2,
   Coins,
   CreditCard,
   ExternalLink,
@@ -12,8 +11,6 @@ import {
 } from "lucide-react";
 import type { TokenPackage } from "@/types/database";
 import { formatFCFA } from "@/lib/formatting";
-import { createClient } from "@/lib/supabase/client";
-import { decodeUnlockError } from "@/lib/tokens";
 import {
   Dialog,
   DialogClose,
@@ -26,40 +23,29 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "cn";
 
-type OrderResult = {
-  id: string;
-  package_name: string;
-  tokens: number;
-  price_fcfa: number;
-};
-
 function useBuyFlow(pkg: TokenPackage) {
   const [step, setStep] = React.useState<
     | "confirm"
     | "login"
     | "placing"
-    | "placed"
     | "redirecting"
     | "error"
   >("confirm");
-  const [order, setOrder] = React.useState<OrderResult | null>(null);
   const [errorMessage, setErrorMessage] = React.useState<string>("");
 
   const resetStep = () => {
     setStep("confirm");
-    setOrder(null);
     setErrorMessage("");
   };
 
   /**
    * Paiement en ligne via /api/payments/checkout.
    *
-   * Distinction importante avec `createOrder` : ici on ne crée aucune
-   * commande manuelle, on demande une facture au prestataire et on
-   * redirige. Le crédit se fait à l'arrivée de l'IPN, jamais ici.
+   * Aucune commande manuelle n'est creee ici : on demande une facture au
+   * prestataire et on redirige. Le credit se fait a l'arrivee de l'IPN.
    *
    * `window.location.assign` et non un <Link> : l'URL est une page externe
-   * (app.paydunya.com) et doit quitter le site, pas être routée par Next.
+   * (app.paydunya.com) et doit quitter le site, pas etre routee par Next.
    */
   const payOnline = async () => {
     setErrorMessage("");
@@ -85,7 +71,7 @@ function useBuyFlow(pkg: TokenPackage) {
       if (!response.ok || !payload?.launchUrl) {
         setErrorMessage(
           payload?.message ??
-            "Le paiement en ligne est indisponible. Utilisez la commande manuelle."
+            "Le paiement en ligne est indisponible pour le moment."
         );
         setStep("error");
         return;
@@ -95,55 +81,18 @@ function useBuyFlow(pkg: TokenPackage) {
       window.location.assign(payload.launchUrl);
     } catch {
       setErrorMessage(
-        "Connexion impossible. Utilisez la commande manuelle ci-dessous."
+        "Connexion impossible. Verifiez votre reseau puis reessayez."
       );
       setStep("error");
     }
   };
 
-  const createOrder = async () => {
-    setErrorMessage("");
-    setStep("placing");
-    const supabase = createClient();
-    const { data, error } = await supabase.rpc("create_token_order", {
-      p_package_id: pkg.id,
-    });
-    if (error) {
-      if (error.code === "TLNAU") {
-        setStep("login");
-        return;
-      }
-      setErrorMessage(decodeUnlockError(error.code, error.message));
-      setStep("error");
-      return;
-    }
-    const result = data as {
-      order_id?: string;
-      package_name?: string;
-      tokens?: number;
-      price_fcfa?: number;
-    } | null;
-    if (result?.order_id) {
-      setOrder({
-        id: result.order_id,
-        package_name: result.package_name ?? pkg.name,
-        tokens: result.tokens ?? pkg.tokens,
-        price_fcfa: result.price_fcfa ?? pkg.price_fcfa,
-      });
-      setStep("placed");
-    } else {
-      setErrorMessage("La commande n’a pas pu être créée.");
-      setStep("error");
-    }
-  };
-
-  return { step, order, errorMessage, createOrder, payOnline, resetStep };
+  return { step, errorMessage, payOnline, resetStep };
 }
 
 export function TokenCard({ pkg }: { pkg: TokenPackage }) {
   const [open, setOpen] = React.useState(false);
-  const { step, order, errorMessage, createOrder, payOnline, resetStep } =
-    useBuyFlow(pkg);
+  const { step, errorMessage, payOnline, resetStep } = useBuyFlow(pkg);
   const pricePerToken = pkg.tokens > 0 ? Math.round(pkg.price_fcfa / pkg.tokens) : 0;
 
   return (
@@ -225,8 +174,8 @@ export function TokenCard({ pkg }: { pkg: TokenPackage }) {
                   <li>Vos Tokens sont crédités dès que le paiement est confirmé.</li>
                 </ol>
                 <p className="border-t border-hairline pt-3 text-xs leading-relaxed text-muted-foreground">
-                  Une facture PDF vous est envoyée par email après confirmation.
-                  Vous pouvez aussi passer par commande classique ci-dessous.
+                  Le debit est effectu chez PayDunya. Vos Tokens sont credites
+                  des la confirmation du paiement.
                 </p>
               </div>
 
@@ -234,13 +183,6 @@ export function TokenCard({ pkg }: { pkg: TokenPackage }) {
                 <Button className="h-9 w-full" onClick={payOnline}>
                   <CreditCard className="size-4" aria-hidden="true" />
                   Payer maintenant
-                </Button>
-                <Button
-                  variant="outline"
-                  className="h-9 w-full"
-                  onClick={createOrder}
-                >
-                  Commander sans payer en ligne
                 </Button>
               </DialogFooter>
             </>
@@ -251,8 +193,7 @@ export function TokenCard({ pkg }: { pkg: TokenPackage }) {
               <DialogHeader>
                 <DialogTitle>Connexion requise</DialogTitle>
                 <DialogDescription>
-                  Connectez-vous à votre compte développeur pour commander des
-                  Tokens.
+                  Connectez-vous à votre compte pour acheter des Tokens.
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter className="gap-2">
@@ -297,69 +238,10 @@ export function TokenCard({ pkg }: { pkg: TokenPackage }) {
             </>
           ) : null}
 
-          {step === "placed" && order ? (
-            <>
-              <DialogHeader>
-                <DialogTitle className="flex items-center gap-2">
-                  <CheckCircle2 className="size-5 text-success" aria-hidden="true" />
-                  Commande manuelle créée
-                </DialogTitle>
-              </DialogHeader>
-
-              <div className="rounded-xl border border-hairline p-4">
-                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Commande
-                </p>
-                <p className="mt-1 font-mono text-sm">#{order.id}</p>
-                <div className="mt-3 border-t border-hairline pt-3 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">{order.package_name}</span>
-                    <span>{order.tokens} token{order.tokens > 1 ? "s" : ""}</span>
-                  </div>
-                  <div className="mt-1 flex justify-between font-medium">
-                    <span className="text-muted-foreground">Montant à payer</span>
-                    <span>{formatFCFA(order.price_fcfa)}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-2 rounded-xl bg-muted p-4 text-sm leading-relaxed text-muted-foreground">
-                <p>
-                  Envoyez <strong className="font-semibold">{formatFCFA(order.price_fcfa)}</strong> sur
-                  votre moyen de paiement habituel (Wave ou Max It) en
-                  mentionnant votre numéro de commande <strong className="font-mono">#{order.id}</strong>.
-                </p>
-                <p>
-                  Notre équipe confirme manuellement le paiement et crédite vos
-                  Tokens — le statut est visible dans votre tableau de bord.
-                </p>
-              </div>
-
-              <DialogFooter className="gap-2">
-                <DialogClose
-                  render={
-                    <Button variant="outline" type="button" className="h-9">
-                      Fermer
-                    </Button>
-                  }
-                />
-                <Button
-                  className="h-9"
-                  render={
-                    <Link href="/dashboard">
-                      Suivre ma commande
-                      <ExternalLink className="size-4" aria-hidden="true" />
-                    </Link>
-                  }
-                />
-              </DialogFooter>
-            </>
-          ) : null}
-
           {step === "error" ? (
             <>
               <DialogHeader>
-                <DialogTitle>Commande impossible</DialogTitle>
+                <DialogTitle>Paiement indisponible</DialogTitle>
                 <DialogDescription>{errorMessage}</DialogDescription>
               </DialogHeader>
               <DialogFooter className="gap-2">
@@ -370,11 +252,7 @@ export function TokenCard({ pkg }: { pkg: TokenPackage }) {
                     </Button>
                   }
                 />
-                <Button
-                  variant="outline"
-                  className="h-9"
-                  onClick={createOrder}
-                >
+                <Button variant="outline" className="h-9" onClick={payOnline}>
                   Réessayer
                 </Button>
               </DialogFooter>
