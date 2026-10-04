@@ -2,7 +2,9 @@ import { NextResponse } from "next/server";
 import { createAdminClient, isServiceConfigured } from "@/lib/supabase/admin";
 import {
   amountMatches,
+  confirmPaydunyaCheckout,
   isPaymentCompleted,
+  isPaydunyaApiError,
   parseIpnFormData,
   verifyIpnHash,
 } from "@/lib/payments/paydunya";
@@ -21,19 +23,23 @@ export const dynamic = "force-dynamic";
  *
  * Sécurité, dans l'ordre :
  *   1. `data.hash` doit valoir SHA-512(MasterKey) — sinon 401. Attention :
- *      ce hash ne couvre PAS le contenu du message (faiblesse du
- *      protocole PayDunya, cf. lib/payments/paydunya.ts), il prouve
- *      seulement que l'appelant connaît la MasterKey.
+ *      ce hash ne couvre PAS le contenu du message (faiblesse du protocole
+ *      PayDunya, cf. lib/payments/paydunya.ts), il prouve seulement que
+ *      l'appelant connaît la MasterKey.
  *   2. On ne traite QUE `status === "completed"` ; les statuts `pending`,
  *      `cancelled` et `failed` sont acquittés sans effet (PayDunya peut
  *      notifier plusieurs fois, et un paiement annulé ne doit rien créditer).
  *   3. L'intention de paiement est retrouvée via `custom_data.intent_id`.
- *   4. Le montant de l'IPN doit être strictement égal au montant gelé
- *      côté serveur dans `payment_intents`. C'est LE contrôle qui empêche
- *      un IPN forgé de créditer des Tokens : un attaquant connaissant la
- *      MasterKey ne peut pas fixer un montant arbitraire sans que la
- *      comparaison échoue.
- *   5. Le crédit passe par la RPC `credit_from_payment` (service_role
+ *   4. RÉ-VÉRIFICATION auprès de l'API PayDunya
+ *      (`checkout-invoice/confirm/{token}`). C'est LE contrôle qui rend le
+ *      Credit trustworthy : puisque le hash ne couvre pas le contenu, un
+ *      IPN forgé peut annoncer n'importe quel état. On redemande donc l'état
+ *      et le montant à PayDunya, et c'est cette réponse qui fait foi — pas
+ *      le corps de la requête. Le jeton vérifié est celui stocké en base
+ *      (`provider_session_id`), jamais celui fourni par l'appelant.
+ *   5. Le montant doit être strictement égal au montant gelé côté serveur
+ *      dans `payment_intents` ET à celui renvoyé par PayDunya.
+ *   6. Le crédit passe par la RPC `credit_from_payment` (service_role
  *      uniquement, idempotente) : un rejeu de l'IPN ne recrédite pas.
  *
  * Réponse : toujours 200 après acquittement, sinon PayDunya réessaie.
@@ -91,7 +97,9 @@ export async function POST(request: Request) {
 
   const { data: intent, error: intentError } = await admin
     .from("payment_intents")
-    .select("id, developer_id, tokens, amount_fcfa, status")
+    .select(
+      "id, developer_id, tokens, amount_fcfa, status, provider, provider_session_id"
+    )
     .eq("id", intentId)
     .maybeSingle();
 
@@ -104,8 +112,59 @@ export async function POST(request: Request) {
     return ok({ ok: true, credited: false, alreadyPaid: true });
   }
 
+  // On ne peut vérifier auprès de PayDunya que si l'intention porte un
+  // jeton de facture que NOUS avons émis. Sans lui, aucune vérification
+  // n'est possible : on refuse plutôt que de créditer sur la seule foi du
+  // corps de la requête.
+  const invoiceToken =
+    intent.provider === "paydunya" ? intent.provider_session_id : null;
+  if (!invoiceToken) {
+    return NextResponse.json(
+      { error: "missing_invoice_token" },
+      { status: 409 }
+    );
+  }
+
+  // Source de vérité : la réponse de l'API PayDunya, pas l'IPN.
+  let confirmed;
+  try {
+    confirmed = await confirmPaydunyaCheckout(invoiceToken);
+  } catch (err) {
+    if (isPaydunyaApiError(err)) {
+      console.error("[payments/ipn] confirm PayDunya refuse:", err.message);
+    } else {
+      console.error("[payments/ipn] confirm PayDunya injoignable:", err);
+    }
+    // 502 : l'API est momentanément indisponible. PayDunya réessaiera, ce
+    // qui est le comportement voulu — mieux vaut retarder un crédit que le
+    // calculer sur une donnée non vérifiée.
+    return NextResponse.json({ error: "confirm_unavailable" }, { status: 502 });
+  }
+
+  if (confirmed.status !== "completed") {
+    // L'IPN annonçait `completed` mais PayDunya dit autre chose : c'est la
+    // preuve qu'un IPN a été forgé. Rien n'est crédité.
+    return NextResponse.json(
+      { error: "status_mismatch", status: confirmed.status },
+      { status: 409 }
+    );
+  }
+
+  // Le montant de l'IPN, celui renvoyé par PayDunya et celui gelé en base
+  // doivent concorder. Les deux premiers sont vérifiés pour ne pas faire
+  // confiance au corps de la requête ; le troisième est la référence.
   if (!amountMatches(ipn.invoice?.total_amount, intent.amount_fcfa)) {
     return NextResponse.json({ error: "amount_mismatch" }, { status: 400 });
+  }
+
+  if (
+    confirmed.totalAmount === undefined ||
+    !amountMatches(confirmed.totalAmount, intent.amount_fcfa)
+  ) {
+    return NextResponse.json(
+      { error: "amount_mismatch_confirmed" },
+      { status: 400 }
+    );
   }
 
   const { data: creditResult, error: creditError } = await admin.rpc(

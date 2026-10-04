@@ -25,7 +25,7 @@ export type PaydunyaCheckoutResponse = {
   token?: string;
 };
 
-class PaydunyaApiError extends Error {
+export class PaydunyaApiError extends Error {
   constructor(
     public status: number,
     public code: string,
@@ -153,6 +153,102 @@ export async function createPaydunyaCheckout(params: {
   }
 
   return { token, redirectUrl };
+}
+
+/**
+ * Réponses de `checkout-invoice/confirm/{token}`.
+ *
+ * La doc (section « Checking the payment status ») indique que `status` est
+ * `completed`, `cancelled` ou `failed`, et que `pending` est renvoyé sous
+ * la forme `pending` : on accepte donc les quatre libellés.
+ */
+export type PaydunyaConfirmResult = {
+  status: PaydunyaIpnStatus;
+  totalAmount?: number;
+  token?: string;
+};
+
+/**
+ * Demande à PayDunya l'état RÉEL d'une facture.
+ *
+ * Pourquoi cette étape existe alors que le webhook est déjà acquitté : le
+ * hash de l'IPN vaut SHA-512(MasterKey) et ne couvre PAS le contenu du
+ * message (cf. verifyIpnHash). Un attaquant connaissant la MasterKey peut
+ * donc forger un IPN `completed` avec un `total_amount` quelconque. Le
+ * contrôle du montant côté serveur limite le dégât, mais ne l'empêche pas :
+ * il suffit d'annoncer le bon montant.
+ *
+ * Cette fonction referme la faille : l'état et le montant sont redemandés à
+ * PayDunya, dont la réponse ne peut pas être fabriquée sans les clés API.
+ * Le jeton utilisé est celui que NOUS avons émis et stocké en base, jamais
+ * celui fourni par l'appelant — sinon un attaquant pourrait nous faire
+ * vérifier sa propre facture, payée, et faire correspondre le montant.
+ */
+export async function confirmPaydunyaCheckout(
+  token: string
+): Promise<PaydunyaConfirmResult> {
+  const config = getPaydunyaConfig();
+
+  const response = await fetch(
+    `${config.checkoutConfirmBaseUrl}/${encodeURIComponent(token)}`,
+    {
+      method: "GET",
+      headers: {
+        "PAYDUNYA-MASTER-KEY": config.masterKey,
+        "PAYDUNYA-PRIVATE-KEY": config.privateKey,
+        "PAYDUNYA-TOKEN": config.token,
+      },
+      cache: "no-store",
+    }
+  );
+
+  const payload = (await response.json().catch(() => null)) as
+    | (PaydunyaCheckoutResponse & {
+        invoice?: { total_amount?: string | number; status?: string };
+        status?: string;
+      })
+    | null;
+
+  if (!response.ok || payload?.response_code !== "00") {
+    throw new PaydunyaApiError(
+      response.status,
+      payload?.response_code ?? "paydunya_confirm_failed",
+      payload?.response_text ?? `PayDunya confirm a répondu ${response.status}`
+    );
+  }
+
+  // La doc renvoie le statut à la racine pour `confirm`, mais certaines
+  // réponses l'imbriquent sous `invoice`. On accepte les deux plutôt que de
+  // rejeter un paiement légitime sur une forme de réponse différente.
+  const rawStatus = payload.status ?? payload.invoice?.status;
+  const status = String(rawStatus ?? "").toLowerCase() as PaydunyaIpnStatus;
+
+  if (
+    status !== "completed" &&
+    status !== "pending" &&
+    status !== "cancelled" &&
+    status !== "failed"
+  ) {
+    throw new PaydunyaApiError(
+      response.status,
+      "paydunya_unexpected_status",
+      `Statut de facture inconnu : ${String(rawStatus ?? "absent")}`
+    );
+  }
+
+  const rawAmount = payload.invoice?.total_amount;
+  const totalAmount =
+    rawAmount === undefined || rawAmount === null
+      ? undefined
+      : Number(String(rawAmount).trim());
+
+  return {
+    status,
+    totalAmount: Number.isFinite(totalAmount as number)
+      ? (totalAmount as number)
+      : undefined,
+    token,
+  };
 }
 
 /**

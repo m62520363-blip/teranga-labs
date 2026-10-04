@@ -2,10 +2,12 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createHash } from "crypto";
 import {
   amountMatches,
+  confirmPaydunyaCheckout,
   createPaydunyaCheckout,
   isPaymentCompleted,
   parseIpnFormData,
   verifyIpnHash,
+  PaydunyaApiError,
   type PaydunyaIpn,
 } from "@/lib/payments/paydunya";
 import {
@@ -279,5 +281,142 @@ describe("createPaydunyaCheckout", () => {
       token: "testabc",
       redirectUrl: "https://app.paydunya.com/sandbox-checkout/testabc",
     });
+  });
+});
+
+/**
+ * La re-verification serveur est ce qui rend le credit fiable : le hash de
+ * l'IPN ne couvrant pas le contenu, seul l'etat redemande a PayDunya fait foi.
+ */
+describe("confirmPaydunyaCheckout", () => {
+  function mockConfirm(payload: unknown, ok = true) {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok,
+      status: ok ? 200 : 401,
+      json: async () => payload,
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    return fetchMock;
+  }
+
+it("interroge checkout-invoice/confirm avec le jeton encode", async () => {
+    const fetchMock = mockConfirm({
+      response_code: "00",
+      response_text: "ok",
+      status: "completed",
+      invoice: { total_amount: "20000" },
+    });
+    await confirmPaydunyaCheckout("test_VPGPZNnHOC/../x");
+
+    const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+    expect(url).toContain("/checkout-invoice/confirm/");
+    // Les separateurs de chemin sont encodes : un jeton contenant `/` ou
+    // `..` ne peut pas sortir du endpoint. Les points restent litteraux,
+    // ce qui est sans consequence une fois `/` encode.
+    expect(url).not.toContain("/../");
+    expect(url).toContain("%2F");
+    expect(init.method).toBe("GET");
+  });
+
+  it("renvoie le statut et le montant reellement confirmes", async () => {
+    mockConfirm({
+      response_code: "00",
+      response_text: "ok",
+      status: "completed",
+      invoice: { total_amount: "20000" },
+    });
+    const result = await confirmPaydunyaCheckout("test_abc");
+    expect(result.status).toBe("completed");
+    expect(result.totalAmount).toBe(20000);
+    expect(result.token).toBe("test_abc");
+  });
+
+  it("accepte un statut imbrique sous invoice", async () => {
+    mockConfirm({
+      response_code: "00",
+      response_text: "ok",
+      invoice: { status: "completed", total_amount: 20000 },
+    });
+    expect((await confirmPaydunyaCheckout("test_abc")).status).toBe("completed");
+  });
+
+  it("normalise la casse du statut", async () => {
+    mockConfirm({
+      response_code: "00",
+      response_text: "ok",
+      status: "COMPLETED",
+      invoice: { total_amount: "20000" },
+    });
+    expect((await confirmPaydunyaCheckout("test_abc")).status).toBe("completed");
+  });
+
+  it("refuse un statut inconnu plutot que de le traiter comme paye", async () => {
+    mockConfirm({
+      response_code: "00",
+      response_text: "ok",
+      status: "refunded",
+      invoice: { total_amount: "20000" },
+    });
+    await expect(confirmPaydunyaCheckout("test_abc")).rejects.toBeInstanceOf(
+      PaydunyaApiError
+    );
+  });
+
+  it("refuse une reponse sans statut", async () => {
+    mockConfirm({ response_code: "00", response_text: "ok" });
+    await expect(confirmPaydunyaCheckout("test_abc")).rejects.toBeInstanceOf(
+      PaydunyaApiError
+    );
+  });
+
+  it("leve sur un code applicatif en erreur malgre un HTTP 200", async () => {
+    mockConfirm({ response_code: "01", response_text: "Clef invalide" });
+    await expect(confirmPaydunyaCheckout("test_abc")).rejects.toBeInstanceOf(
+      PaydunyaApiError
+    );
+  });
+
+  it("leve sur un refus HTTP", async () => {
+    mockConfirm({ response_code: "00", response_text: "ok" }, false);
+    await expect(confirmPaydunyaCheckout("test_abc")).rejects.toBeInstanceOf(
+      PaydunyaApiError
+    );
+  });
+
+  it("renvoie totalAmount undefined si PayDunya ne le precise pas", async () => {
+    mockConfirm({ response_code: "00", response_text: "ok", status: "completed" });
+    expect((await confirmPaydunyaCheckout("test_abc")).totalAmount).toBeUndefined();
+  });
+
+  it("utilise le segment sandbox en mode test", async () => {
+    const fetchMock = mockConfirm({
+      response_code: "00",
+      response_text: "ok",
+      status: "completed",
+      invoice: { total_amount: "20000" },
+    });
+    await confirmPaydunyaCheckout("test_abc");
+    const [url] = fetchMock.mock.calls[0] as [string];
+    expect(url).toContain("/sandbox-api/v1/checkout-invoice/confirm/");
+  });
+
+  it("utilise le segment api, sans sandbox, en mode live", async () => {
+    vi.stubEnv("PAYDUNYA_MODE", "live");
+    vi.stubEnv("PAYDUNYA_MASTER_KEY", MASTER);
+    vi.stubEnv("PAYDUNYA_PRIVATE_KEY", "private_live");
+    vi.stubEnv("PAYDUNYA_TOKEN", "token-live");
+    const fetchMock = mockConfirm({
+      response_code: "00",
+      response_text: "ok",
+      status: "completed",
+      invoice: { total_amount: "20000" },
+    });
+    await confirmPaydunyaCheckout("test_abc");
+    const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+    expect(url).toContain("/api/v1/checkout-invoice/confirm/");
+    expect(url).not.toContain("sandbox");
+    expect((init.headers as Record<string, string>)["PAYDUNYA-PRIVATE-KEY"]).toBe(
+      "private_live"
+    );
   });
 });
