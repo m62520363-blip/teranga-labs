@@ -1,4 +1,4 @@
-import Image from "next/image";
+﻿import Image from "next/image";
 import Link from "next/link";
 import { BRAND, LEGAL_PUBLISHER } from "@/components/landing/content";
 
@@ -27,7 +27,7 @@ const columns = [
     links: [
       { label: "Mentions légales", href: "/mentions-legales" },
       { label: "Politique de confidentialité", href: "/politique-de-confidentialite" },
-      { label: "Conditions d’utilisation", href: "/conditions-utilisation" },
+      { label: "Conditions d'utilisation", href: "/conditions-utilisation" },
       { label: "Politique de cookies", href: "/cookies" },
     ],
   },
@@ -49,8 +49,8 @@ export function Footer() {
             />
           </span>
           <p className="mt-4 text-sm leading-relaxed text-white/60">
-            Le marketplace inversé du Sénégal.{" "}
-            <span className="text-white/90">« Vous cherchez. Le marché répond. »</span>
+            Le marketplace inversé de l&apos;Afrique de l&apos;Ouest francophone.{" "}
+            <span className="text-white/90">Vous cherchez. Le marché répond.</span>
           </p>
         </div>
 
@@ -74,10 +74,31 @@ export function Footer() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="container-tl flex flex-col items-center gap-1.5 py-6 text-center text-sm text-white/60">
+        <div className="container-tl flex flex-col items-center gap-3 py-6 text-center text-sm text-white/60">
+          <div className="flex flex-wrap items-center justify-center gap-2" aria-label="Pays d'Afrique de l'Ouest francophone">
+            {[
+              { code: "sn", name: "Sénégal" },
+              { code: "bj", name: "Bénin" },
+              { code: "bf", name: "Burkina Faso" },
+              { code: "ci", name: "Côte d'Ivoire" },
+              { code: "gw", name: "Guinée-Bissau" },
+              { code: "ml", name: "Mali" },
+              { code: "ne", name: "Niger" },
+              { code: "tg", name: "Togo" },
+            ].map((country) => (
+              <Image
+                key={country.code}
+                src={`https://flagcdn.com/w40/${country.code}.png`}
+                alt={country.name}
+                width={30}
+                height={20}
+                className="h-5 w-auto rounded-sm shadow-sm"
+              />
+            ))}
+          </div>
+          <p className="text-sm text-white/60">Réservé aux pays d'Afrique de l'Ouest francophone (UEMOA)</p>
           <p>© {new Date().getFullYear()} {BRAND}. Tous droits réservés.</p>
           <p>{BRAND} est édité par {LEGAL_PUBLISHER}.</p>
-          <p>Dakar, Sénégal</p>
         </div>
       </div>
     </footer>

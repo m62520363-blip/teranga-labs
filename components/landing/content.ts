@@ -2,35 +2,35 @@
 
 
 /* --------------------------------------------------------------------------- */
-/*  Données éditables de la landing page — TERANGA LABS.                        */
-/*  Positionnement réel : marketplace inversé du Sénégal.                      */
-/*  Clients → briefs (1 Token) → développeurs débloquent le contact (1 Token).  */
-/*  Règle : ne jamais inventer de stats/clients/témoignages réels.             */
+/*  Donn�es �ditables de la landing page � TERANGA LABS.                        */
+/*  Positionnement r�el : marketplace invers� de l'Afrique de l'Ouest francophone.                      */
+/*  Clients é briefs (1 Token) é d�veloppeurs d�bloquent le contact (1 Token).  */
+/*  R�gle : ne jamais inventer de stats/clients/t�moignages r�els.             */
 /* --------------------------------------------------------------------------- */
 
 export const BRAND = "TERANGA LABS";
 
-/** Structure juridique qui édite la marque, affichée dans le footer et les pages légales. */
+/** Structure juridique qui �dite la marque, affich�e dans le footer et les pages l�gales. */
 export const LEGAL_PUBLISHER = "Walty Group-SUARL";
 
 export const META = {
-  title: "Le marketplace inversé du Sénégal — briefs web et développeurs — TERANGA LABS",
+  title: "Le marketplace invers� de l'Afrique de l'Ouest francophone � briefs web et d�veloppeurs � TERANGA LABS",
   description:
-    "TERANGA LABS, le marketplace inversé du Sénégal. Les clients publient le brief de leur site web pour 1 Token ; les développeurs débloquent le contact avec 1 Token et écrivent directement. Aucune commission.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://teranga-labs.vercel.app",
+    "TERANGA LABS, le marketplace invers� de l'Afrique de l'Ouest francophone. Les clients publient le brief de leur site web pour 1 Token ; les d�veloppeurs d�bloquent le contact avec 1 Token et �crivent directement. Aucune commission.",
+  url: process.env.NEXT_PUBLIC_SITE_URL éé "https://teranga-labs.vercel.app",
   keywords:
-    "marketplace Sénégal, développeurs Sénégal, freelance Sénégal, brief web, trouver des clients web, acheter des tokens, site e-commerce Dakar, développeur web Thiès, marketplace inversée",
+    "marketplace Afrique de l'Ouest francophone, d�veloppeurs Afrique de l'Ouest francophone, freelance Afrique de l'Ouest francophone, brief web, trouver des clients web, acheter des tokens, site e-commerce Dakar, d�veloppeur web Thi�s, marketplace invers�e",
 };
 
 /* ---------------------------------  HERO  ---------------------------------- */
 
 export const HERO = {
-  badge: "LE MARKETPLACE INVERSÉ DU SÉNÉGAL",
+  badge: "LE MARKETPLACE INVERS� de l'Afrique de l'Ouest francophone",
   titleA: "Des clients qui cherchent",
-  titleB: "un développeur web.",
+  titleB: "un d�veloppeur web.",
   subtitle:
-    "Une boutique à Thiès, un resto à Dakar, une école à Saint-Louis : ils publient leur brief pour 1 Token. Les développeurs sérieux débloquent leur contact avec 1 Token et écrivent directement.",
-  ctaPrimary: { label: "Je cherche un développeur", href: "/poster" },
+    "Une boutique � Thi�s, un resto � Dakar, une �cole � Saint-Louis : ils publient leur brief pour 1 Token. Les d�veloppeurs s�rieux d�bloquent leur contact avec 1 Token et �crivent directement.",
+  ctaPrimary: { label: "Je cherche un d�veloppeur", href: "/poster" },
   ctaSecondary: {
     label: "Je cherche des missions",
     href: "/briefs",
@@ -38,16 +38,16 @@ export const HERO = {
 };
 
 export const HERO_DEMO = {
-  label: "Comment ça marche",
+  label: "Comment �a marche",
   request: {
     title: "Je veux un site e-commerce pour ma boutique",
     budget: "Budget : 150 000 FCFA",
-    location: "Dakar · Discussion privée",
+    location: "Dakar � Discussion priv�e",
   },
   flow: [
-    { step: "01 · Brief publié", detail: "1 Token — 2 minutes", delay: 0.6 },
-    { step: "02 · Le dev paie 1 Token", detail: "Il démarre la discussion", delay: 1.6 },
-    { step: "03 · Discussion sécurisée", detail: "Messagerie interne en direct", delay: 2.6 },
+    { step: "01 � Brief publi�", detail: "1 Token � 2 minutes", delay: 0.6 },
+    { step: "02 � Le dev paie 1 Token", detail: "Il d�marre la discussion", delay: 1.6 },
+    { step: "03 � Discussion s�curis�e", detail: "Messagerie interne en direct", delay: 2.6 },
   ],
 };
 
@@ -55,43 +55,43 @@ export const HERO_DEMO = {
 
 export const CONCEPT = {
   eyebrow: "LE CONCEPT",
-  title: "On ne vend pas des sites. On vend l’accès aux clients qui veulent des sites.",
-  lead: `${TOKEN_RULE} = 1 contact client. Vous ne payez que pour ce qui vous intéresse. Le client, lui, paie 1 Token pour publier son brief.`,
+  title: "On ne vend pas des sites. On vend l�acc�s aux clients qui veulent des sites.",
+  lead: `${TOKEN_RULE} = 1 contact client. Vous ne payez que pour ce qui vous int�resse. Le client, lui, paie 1 Token pour publier son brief.`,
   classic: [
     { label: "Le client poste un besoin" },
     { label: "Des dizaines de devs se battent" },
-    { label: "Le client est spammé" },
+    { label: "Le client est spamm�" },
     { label: "Les devs perdent leur temps" },
-    { label: "Commission prélevée sur le projet" },
+    { label: "Commission pr�lev�e sur le projet" },
   ],
   inverted: [
     { label: "Le client poste son brief pour 1 Token", highlight: true },
     { label: "Le brief entre dans /briefs" },
     { label: "Le dev paie 1 Token" },
     { label: "Discussion interne ouverte en direct" },
-    { label: "Zéro commission, zéro intermédiaire", highlight: true },
+    { label: "Z�ro commission, z�ro interm�diaire", highlight: true },
   ],
 };
 
-/* -----------------------------  COMMENT ÇA MARCHE  ------------------------- */
+/* -----------------------------  COMMENT �A MARCHE  ------------------------- */
 
 export const STEPS = [
   {
     num: "01",
-    title: "Décrivez votre besoin",
-    text: "Publiez votre brief en 2 minutes : type de site, budget, région et votre WhatsApp restent privés. 1 Token, sans abonnement.",
+    title: "D�crivez votre besoin",
+    text: "Publiez votre brief en 2 minutes : type de site, budget, r�gion et votre WhatsApp restent priv�s. 1 Token, sans abonnement.",
     icon: "pen",
   },
   {
     num: "02",
-    title: "Seuls les devs sérieux vous contactent",
-    text: "Le développeur qui voit votre brief paie 1 Token pour démarrer une discussion privée. Pas de touristes.",
+    title: "Seuls les devs s�rieux vous contactent",
+    text: "Le d�veloppeur qui voit votre brief paie 1 Token pour d�marrer une discussion priv�e. Pas de touristes.",
     icon: "inbox",
   },
   {
     num: "03",
     title: "Choisissez votre meilleure offre",
-    text: "Vous comparez les développeurs qui vous ont contacté dans votre messagerie interne, et vous choisissez en toute liberté.",
+    text: "Vous comparez les d�veloppeurs qui vous ont contact� dans votre messagerie interne, et vous choisissez en toute libert�.",
     icon: "check",
   },
 ] as const;
@@ -100,19 +100,19 @@ export const STEPS = [
 
 export const BUYER = {
   eyebrow: "POUR LES CLIENTS",
-  title: "Vous cherchez un développeur ?",
+  title: "Vous cherchez un d�veloppeur é",
   lead:
-    "Dites ce dont vous avez besoin : type de site, budget, région. Les développeurs sérieux viennent à vous dans votre messagerie.",
+    "Dites ce dont vous avez besoin : type de site, budget, r�gion. Les d�veloppeurs s�rieux viennent � vous dans votre messagerie.",
   cta: { label: "Publier mon brief", href: "/poster" },
-  caption: "1 brief publié. Plusieurs développeurs sérieux.",
+  caption: "1 brief publi�. Plusieurs d�veloppeurs s�rieux.",
   form: {
-    questionLabel: "Quel type de site ?",
+    questionLabel: "Quel type de site é",
     questionValue: "Ex. Site e-commerce",
     budgetLabel: "Votre budget",
     budgetValue: "Ex. 150 000 FCFA",
-    cityLabel: "Votre région",
+    cityLabel: "Votre r�gion",
     cityValue: "Ex. Dakar",
-contactLabel: "Votre WhatsApp (reste privé)",
+contactLabel: "Votre WhatsApp (reste priv�)",
     contactValue: "Ex. +221 7X XX XX XX",
   },
 };
@@ -120,24 +120,24 @@ contactLabel: "Votre WhatsApp (reste privé)",
 /* ---------------------------------  SELLERS  ------------------------------- */
 
 export const SELLERS = {
-  eyebrow: "POUR LES DÉVELOPPEURS",
-  title: "Arrêtez de courir après les clients.",
+  eyebrow: "POUR LES D�VELOPPEURS",
+  title: "Arr�tez de courir apr�s les clients.",
   lead:
-    "Les briefs publiés vous attendent, avec leur budget et leur région. Et vous ne payez que pour ceux qui vous intéressent.",
+    "Les briefs publi�s vous attendent, avec leur budget et leur r�gion. Et vous ne payez que pour ceux qui vous int�ressent.",
   benefits: [
-    "Développeur : 1 Token = 1 contact client, sans commission sur le projet",
+    "D�veloppeur : 1 Token = 1 contact client, sans commission sur le projet",
     "Fini de vendre sur Facebook : les briefs arrivent tout seuls",
-    "Vous ne payez que pour ce qui vous intéresse",
-    "Contact via la messagerie interne sécurisée",
-    "Des clients sérieux, filtrés par le Token",
+    "Vous ne payez que pour ce qui vous int�resse",
+    "Contact via la messagerie interne s�curis�e",
+    "Des clients s�rieux, filtr�s par le Token",
   ],
-  cta: { label: "Découvrir les briefs", href: "/briefs" },
+  cta: { label: "D�couvrir les briefs", href: "/briefs" },
   notification: {
-    title: "Brief intéressant",
-    text: "Site e-commerce pour boutique — Thiès",
+    title: "Brief int�ressant",
+    text: "Site e-commerce pour boutique � Thi�s",
     budget: "Budget : 150 000 FCFA",
-    location: "Région : Thiès · Discussion privée",
-    reply: "Démarrer la discussion — 1 Token",
+    location: "R�gion : Thi�s � Discussion priv�e",
+    reply: "D�marrer la discussion � 1 Token",
   },
 };
 
@@ -146,86 +146,86 @@ export const SELLERS = {
 export const TRUST_FEATURES = [
   {
     title: "Publication simple",
-    text: "Le client décrit son besoin et son budget. Son WhatsApp reste privé. 1 Token par brief, aucun abonnement.",
+    text: "Le client d�crit son besoin et son budget. Son WhatsApp reste priv�. 1 Token par brief, aucun abonnement.",
     status: "Disponible" as const,
   },
   {
-title: "Développeur : 1 Token = 1 contact",
-    text: "Vous débloquez le contact client d’un brief qui vous intéresse.",
+title: "D�veloppeur : 1 Token = 1 contact",
+    text: "Vous d�bloquez le contact client d�un brief qui vous int�resse.",
     status: "Disponible" as const,
   },
   {
-    title: "Messagerie interne sécurisée",
-    text: "Aucun intermédiaire, aucune commission : la discussion se fait en direct sur la plateforme, le WhatsApp reste privé.",
+    title: "Messagerie interne s�curis�e",
+    text: "Aucun interm�diaire, aucune commission : la discussion se fait en direct sur la plateforme, le WhatsApp reste priv�.",
     status: "Disponible" as const,
   },
   {
     title: "Paiement des Tokens",
-    text: "Commandez vos Tokens auprès de l’équipe, réglés sur Wave ou Max It. Le paiement en ligne arrive bientôt.",
-    status: "Bientôt disponible" as const,
+    text: "Commandez vos Tokens aupr�s de l��quipe, r�gl�s sur Wave ou Max It. Le paiement en ligne arrive bient�t.",
+    status: "Bient�t disponible" as const,
   },
   {
-    title: "Réputation des développeurs",
-    text: "Notes et avis vérifiés pour savoir qui est sérieux avant de choisir.",
-    status: "Bientôt disponible" as const,
+    title: "R�putation des d�veloppeurs",
+    text: "Notes et avis v�rifi�s pour savoir qui est s�rieux avant de choisir.",
+    status: "Bient�t disponible" as const,
   },
   {
-    title: "Signalement et modération",
-    text: "Signalez un abus en un clic. Chaque signalement est traité par l’équipe.",
-    status: "Bientôt disponible" as const,
+    title: "Signalement et mod�ration",
+    text: "Signalez un abus en un clic. Chaque signalement est trait� par l��quipe.",
+    status: "Bient�t disponible" as const,
   },
 ];
 
 /* --------------------------------  STATISTIQUES  --------------------------- */
 
 export const STATS_PLACEHOLDER_LEGEND =
-  "Les chiffres ci-dessous s’affichent en direct dès la connexion de la base de données.";
+  "Les chiffres ci-dessous s�affichent en direct d�s la connexion de la base de donn�es.";
 
-/* -------------------------------  TÉMOIGNAGES  ----------------------------- */
-/* La section témoignages a été retirée tant qu'aucun avis réel n'existe.      */
-/* Les trois profils d'exemple (Aïssatou D., Malick W., Fatou D.) ont été    */
-/* supprimés : de faux témoignages décrédibilisent plus qu'ils ne convainquent.*/
-/* Les réintroduire uniquement avec de vrais avis vérifiés.                    */
+/* -------------------------------  T�MOIGNAGES  ----------------------------- */
+/* La section t�moignages a �t� retir�e tant qu'aucun avis r�el n'existe.      */
+/* Les trois profils d'exemple (A�ssatou D., Malick W., Fatou D.) ont �t�    */
+/* supprim�s : de faux t�moignages d�cr�dibilisent plus qu'ils ne convainquent.*/
+/* Les r�introduire uniquement avec de vrais avis v�rifi�s.                    */
 
 /* -----------------------------------  FAQ  --------------------------------- */
 
 export const FAQS = [
   {
-    q: "Qu’est-ce que TERANGA LABS ?",
-    a: "TERANGA LABS est le marketplace inversé du Sénégal : les clients publient le brief de leur site web pour 1 Token, et les développeurs sérieux viennent vers eux.",
+    q: "Qu�est-ce que TERANGA LABS é",
+    a: "TERANGA LABS est le marketplace invers� de l'Afrique de l'Ouest francophone : les clients publient le brief de leur site web pour 1 Token, et les d�veloppeurs s�rieux viennent vers eux.",
   },
   {
-    q: "Comment fonctionne le modèle ?",
-    a: "Le client poste son brief en 2 minutes : type de site, budget et région. Le brief apparaît dans /briefs. Le développeur qui s’intéresse paie 1 Token pour ouvrir une discussion privée avec le client, puis l’échange se fait en direct sur la plateforme.",
+    q: "Comment fonctionne le mod�le é",
+    a: "Le client poste son brief en 2 minutes : type de site, budget et r�gion. Le brief appara�t dans /briefs. Le d�veloppeur qui s�int�resse paie 1 Token pour ouvrir une discussion priv�e avec le client, puis l��change se fait en direct sur la plateforme.",
   },
   {
-    q: "Combien coûte un Token ?",
-    a: `${TOKEN_LABEL_PRICED}. L’inscription est gratuite : vous commandez vos Tokens, puis vous publiez votre brief ou débloquez un contact. Le développeur paie son propre Token pour démarrer la discussion.`,
+    q: "Combien co�te un Token é",
+    a: `${TOKEN_LABEL_PRICED}. L�inscription est gratuite : vous commandez vos Tokens, puis vous publiez votre brief ou d�bloquez un contact. Le d�veloppeur paie son propre Token pour d�marrer la discussion.`,
   },
   {
-    q: "Comment acheter des Tokens ?",
-    a: "Les Tokens se commandent auprès de l’équipe : vous nous écrivez, vous réglez par Wave ou Max It, et nous créditons vos Tokens une fois le paiement confirmé. Le paiement en ligne directement sur le site arrive bientôt.",
+    q: "Comment acheter des Tokens é",
+    a: "Les Tokens se commandent aupr�s de l��quipe : vous nous �crivez, vous r�glez par Wave ou Max It, et nous cr�ditons vos Tokens une fois le paiement confirm�. Le paiement en ligne directement sur le site arrive bient�t.",
   },
   {
-    q: "Y a-t-il une commission sur les projets ?",
-    a: "Non. TERANGA LABS ne prélève aucune commission sur les projets. Le modèle repose uniquement sur la vente de Tokens : vous vendez l’accès, pas la vente.",
+    q: "Y a-t-il une commission sur les projets é",
+    a: "Non. TERANGA LABS ne pr�l�ve aucune commission sur les projets. Le mod�le repose uniquement sur la vente de Tokens : vous vendez l�acc�s, pas la vente.",
   },
   {
-    q: "Un Token est-il remboursable ?",
-    a: "Un Token consommé sur un contact n’est pas remboursable. En cas de contact frauduleux ou de brief fictif, signalez-le dans les 48 heures suivant le déblocage : après vérification de la messagerie, l’équipe rembourse en Tokens.",
+    q: "Un Token est-il remboursable é",
+    a: "Un Token consomm� sur un contact n�est pas remboursable. En cas de contact frauduleux ou de brief fictif, signalez-le dans les 48 heures suivant le d�blocage : apr�s v�rification de la messagerie, l��quipe rembourse en Tokens.",
   },
   {
-    q: "TERANGA LABS est-il disponible au Sénégal ?",
-    a: "Oui. Tout est pensé pour le marché local : briefs en français, budgets en FCFA, régions partout au pays, et messagerie interne en temps réel.",
+    q: "TERANGA LABS est-il disponible au Afrique de l'Ouest francophone é",
+    a: "Oui. Tout est pens� pour le march� local : briefs en fran�ais, budgets en FCFA, r�gions partout au pays, et messagerie interne en temps r�el.",
   },
 ];
 
 /* ---------------------------------  CTA FINAL  ------------------------------ */
 
 export const CTA = {
-  titleA: "Un projet vous attend peut-être",
+  titleA: "Un projet vous attend peut-�tre",
   titleB: "sur TERANGA LABS.",
-  text: "Publiez le brief de votre site pour 1 Token. Ou découvrez les briefs qui recherchent déjà un développeur.",
+  text: "Publiez le brief de votre site pour 1 Token. Ou d�couvrez les briefs qui recherchent d�j� un d�veloppeur.",
   ctaPrimary: { label: "Publier mon brief", href: "/poster" },
-  ctaSecondary: { label: "Je suis développeur", href: "/briefs" },
+  ctaSecondary: { label: "Je suis d�veloppeur", href: "/briefs" },
 };
