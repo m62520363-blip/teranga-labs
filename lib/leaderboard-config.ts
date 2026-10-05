@@ -1,0 +1,1 @@
+export const LEADERBOARD_REWARDS = { regional: {1:5,2:2}, country:{1:5,2:2} } as const; export const LEADERBOARD_REWARD_ENABLED = true;
