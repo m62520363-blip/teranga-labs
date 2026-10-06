@@ -1,12 +1,53 @@
-﻿import { Metadata } from "next"
+﻿import type { Metadata } from "next"
+import { Crown, Trophy, UserRound } from "lucide-react"
 import { LEADERBOARD_CONFIG } from "@/lib/leaderboard-config"
 import { COUNTRIES } from "@/lib/countries"
 import { Flag } from "@/components/ui/Flag"
+import { Section, SectionHeader } from "@/components/landing/section"
+import { Reveal } from "@/components/reveal"
 
 export const metadata: Metadata = {
-  title: "Classement | TERANGA LABS",
-  description: "Classement mensuel des developpeurs — Afrique de l&apos;Ouest francophone (UEMOA). Seuls le 1er et le 2e recoivent des Tokens.",
+  title: "Classement des développeurs",
+  description:
+    "Classement mensuel des développeurs d'Afrique de l'Ouest francophone (UEMOA) : classement régional et par pays. Seuls le 1er et le 2e recoivent des Tokens.",
 }
+
+const EMPTY_REGIONAL = "Aucun classement pour le mois en cours."
+
+function RewardsLegend({
+  rewards,
+  scope,
+}: {
+  rewards: { 1?: number; 2?: number }
+  scope: string
+}) {
+  return (
+    <p className="mt-3 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+      <span className="badge badge-success">
+        1<sup>er</sup> {rewards[1] ?? 0} Tokens
+      </span>
+      <span className="badge badge-muted">
+        2{<sup>e</sup>} {rewards[2] ?? 0} Tokens
+      </span>
+      <span className="text-xs">Autres rangs : 0 Token — {scope}</span>
+    </p>
+  )
+}
+
+function EmptyRow({ label }: { label: string }) {
+  return (
+    <tr>
+      <td colSpan={5} className="px-4 py-10 text-center sm:px-6">
+        <span className="inline-flex items-center gap-2 text-sm text-muted-foreground">
+          <UserRound className="size-4 text-primary" aria-hidden="true" />
+          {label}
+        </span>
+      </td>
+    </tr>
+  )
+}
+
+const HEADERS = ["Rang", "Développeur", "Projets terminés (mois)", "Tokens attribués", "Badges"]
 
 export default function ClassementPage() {
   const rewardRegional = LEADERBOARD_CONFIG.rewards.regional
@@ -14,116 +55,162 @@ export default function ClassementPage() {
   const enabled = LEADERBOARD_CONFIG.enabled
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Classement des developpeurs</h1>
-          <p className="mt-2 text-sm text-gray-600">
-            Afrique de l&apos;Ouest francophone (UEMOA) — Classement mensuel (regional + par pays). Attribution automatique et
-            idempotente au snapshot de fin de mois.
+    <div className="bg-background">
+      <Section ariaLabel="Classement des développeurs">
+        <SectionHeader
+          eyebrow="Classement mensuel"
+          title="Le classement des développeurs"
+          lead="Chaque mois, le classement régional (UEMOA) et le classement de chaque pays récompensent les développeurs les plus actifs. Attribution automatique et idempotente au snapshot de fin de mois."
+        />
+
+        {!enabled && (
+          <p className="mx-auto mt-6 max-w-xl rounded-xl border border-warning/30 bg-warning/10 px-4 py-3 text-center text-xs text-warning">
+            Récompenses désactivées via la configuration (LEADERBOARD_REWARD_ENABLED=false).
           </p>
-          {!enabled && (
-            <p className="mt-2 text-xs text-amber-700">
-              Recompenses desactivees via configuration (LEADERBOARD_REWARD_ENABLED=false).
+        )}
+
+        <Reveal className="mt-12">
+          <div className="card mx-auto max-w-3xl p-7 text-center">
+            <span className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-primary-soft">
+              <Trophy className="size-6 text-primary" aria-hidden="true" />
+            </span>
+            <h2 className="mt-5 text-lg font-semibold tracking-tight">
+              Le classement démarre bientôt
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              Pour apparaître, un développeur doit avoir au moins{" "}
+              <strong className="text-foreground">
+                {LEADERBOARD_CONFIG.minProjectsToAppear} projets terminés et confirmés
+              </strong>{" "}
+              sur le mois concerné. Régional comme par pays, seuls les 2 premiers sont
+              récompensés.
             </p>
-          )}
-        </div>
-
-        <div className="mb-8 rounded-lg border border-blue-200 bg-blue-50 p-4">
-          <h2 className="text-sm font-semibold text-blue-900">Le classement demarre bientot</h2>
-          <p className="mt-1 text-xs text-blue-800">
-            Pour apparaitre au classement, un developpeur doit avoir au moins 2 projets termines et confirmes au cours du
-            mois concerne. Seuls le <strong>1er</strong> ({rewardRegional[1] ?? 0} Tokens) et le <strong>2e</strong> (
-            {rewardRegional[2] ?? 0} Tokens) recoivent des Tokens (regional + par pays).
-          </p>
-        </div>
-
-        <section className="mb-10">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">Classement regional (UEMOA)</h2>
-            <span className="text-xs text-gray-500">Periode en cours — en attente de donnees suffisantes</span>
+            <RewardsLegend rewards={rewardRegional} scope="classement régional UEMOA" />
           </div>
-          <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 sm:px-6">Rang</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 sm:px-6">Developpeur</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 sm:px-6">Projets termines (mois)</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 sm:px-6">Tokens attribues</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 sm:px-6">Badges</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 bg-white">
-                <tr>
-                  <td colSpan={5} className="px-4 py-6 text-center text-sm text-gray-500 sm:px-6">Aucune donnee pour le mois en cours.</td>
-                </tr>
-              </tbody>
-            </table>
+        </Reveal>
+
+        <section className="mt-14">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
+                Classement régional (UEMOA)
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Période en cours — en attente de données suffisantes
+              </p>
+            </div>
+            <span className="chip gap-2 bg-card/85 border-hairline backdrop-blur">
+              <Crown className="size-3.5 text-primary" aria-hidden="true" />
+              Top 2 récompensé
+            </span>
           </div>
-          <p className="mt-2 text-xs text-gray-500">
-            Recompenses regionales : 1er {rewardRegional[1] ?? 0} Tokens • 2e {rewardRegional[2] ?? 0} Tokens • Autres 0.
-          </p>
+
+          <div className="mt-5 overflow-hidden rounded-2xl border border-hairline bg-card">
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-hairline text-sm">
+                <thead>
+                  <tr className="bg-surface">
+                    {HEADERS.map((header) => (
+                      <th
+                        key={header}
+                        scope="col"
+                        className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground sm:px-6"
+                      >
+                        {header}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-hairline">
+                  <EmptyRow label={EMPTY_REGIONAL} />
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <RewardsLegend rewards={rewardRegional} scope="classement régional UEMOA" />
         </section>
 
-        <section className="mb-10">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">Classement par pays</h2>
-            <span className="text-xs text-gray-500">Periode en cours — en attente de donnees suffisantes</span>
+        <section className="mt-14">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
+              Classement par pays
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Période en cours — en attente de données suffisantes
+            </p>
           </div>
-          <div className="space-y-6">
-            {COUNTRIES.map((c) => (
-              <div key={c.code} className="overflow-hidden rounded-lg border border-gray-200 bg-white">
-                <div className="flex items-center justify-between border-b border-gray-100 bg-gray-50 px-4 py-3 sm:px-6">
-                  <div className="flex items-center gap-2">
-                    <Flag countryCode={c.code} size={20} />
-                    <h3 className="text-sm font-semibold text-gray-900">{c.nameFr}</h3>
-                    <span className="text-xs text-gray-500">({c.currencyLabel})</span>
+
+          <div className="mt-5 space-y-5">
+            {COUNTRIES.map((c, index) => (
+              <Reveal key={c.code} delay={(index % 3) as 0 | 1 | 2}>
+                <div className="overflow-hidden rounded-2xl border border-hairline bg-card">
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-b border-hairline bg-surface px-4 py-3.5 sm:px-6">
+                    <div className="flex items-center gap-2.5">
+                      <Flag countryCode={c.code} size={20} />
+                      <h3 className="text-sm font-semibold tracking-tight">{c.nameFr}</h3>
+                      <span className="badge badge-muted">{c.currencyLabel}</span>
+                    </div>
+                    <span className="text-xs text-muted-foreground">
+                      1{<sup>er</sup>} {rewardCountry[1] ?? 0} • 2{<sup>e</sup>}{" "}
+                      {rewardCountry[2] ?? 0} • Autres 0
+                    </span>
                   </div>
-                  <span className="text-xs text-gray-500">
-                    1er {rewardCountry[1] ?? 0} • 2e {rewardCountry[2] ?? 0} • Autres 0
-                  </span>
+
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-hairline text-sm">
+                      <thead>
+                        <tr>
+                          {HEADERS.map((header) => (
+                            <th
+                              key={header}
+                              scope="col"
+                              className="px-4 py-2.5 text-left text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground sm:px-6"
+                            >
+                              {header}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-hairline">
+                        <EmptyRow label={`Aucune donnée pour ${c.nameFr} ce mois-ci.`} />
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {c.notes && (
+                    <p className="border-t border-hairline px-4 py-2.5 text-xs text-muted-foreground sm:px-6">
+                      {c.notes}
+                    </p>
+                  )}
                 </div>
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-white">
-                    <tr>
-                      <th className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500 sm:px-6">Rang</th>
-                      <th className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500 sm:px-6">Developpeur</th>
-                      <th className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500 sm:px-6">Projets termines (mois)</th>
-                      <th className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500 sm:px-6">Tokens</th>
-                      <th className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500 sm:px-6">Badges</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100 bg-white">
-                    <tr>
-                      <td colSpan={5} className="px-4 py-4 text-center text-xs text-gray-500 sm:px-6">Aucune donnee pour ce pays ce mois-ci.</td>
-                    </tr>
-                  </tbody>
-                </table>
-                {c.notes && <p className="border-t border-gray-100 px-4 py-2 text-xs text-gray-500 sm:px-6">{c.notes}</p>}
-              </div>
+              </Reveal>
             ))}
           </div>
-          <p className="mt-2 text-xs text-gray-500">
-            Recompenses par pays : 1er {rewardCountry[1] ?? 0} Tokens • 2e {rewardCountry[2] ?? 0} Tokens • Autres 0.
-          </p>
+
+          <RewardsLegend rewards={rewardCountry} scope="classement par pays" />
         </section>
 
-        <section>
-          <h2 className="mb-3 text-lg font-semibold text-gray-900">Palmares des mois precedents</h2>
-          <div className="rounded-lg border border-gray-200 bg-white p-6 text-center">
-            <p className="text-sm text-gray-500">Aucun historique disponible pour le moment.</p>
-            <p className="mt-1 text-xs text-gray-400">
-              L&apos;historique apparaîtra apres le premier snapshot mensuel (attribution idempotente).
+        <section className="mt-14">
+          <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
+            Palmarès des mois précédents
+          </h2>
+          <div className="mt-5 rounded-2xl border border-hairline bg-card p-8 text-center">
+            <p className="text-sm text-muted-foreground">
+              Aucun historique disponible pour le moment.
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground/70">
+              L&apos;historique apparaîtra après le premier snapshot mensuel.
             </p>
           </div>
         </section>
 
-        <div className="mt-8 text-xs text-gray-500">
-          Critere d&apos;apparition : ≥ 2 projets termines et confirmes par mois. Seuls les 2 premiers (regional + par pays)
-          recoivent des Tokens. Badges, mise en avant et certificat conserves.
-        </div>
-      </div>
+        <p className="mt-12 border-t border-hairline pt-6 text-xs leading-relaxed text-muted-foreground">
+          Critère d&apos;apparition : au moins 2 projets terminés et confirmés par mois. Seuls
+          les 2 premiers (régional + par pays) reçoivent des Tokens ; les badges et la mise en
+          avant restent conservés.
+        </p>
+      </Section>
     </div>
   )
 }

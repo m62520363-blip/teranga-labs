@@ -8,16 +8,15 @@ import { BriefCard } from "@/components/brief-card";
 import { BriefGrid } from "@/components/brief-grid";
 import { EmptyState } from "@/components/empty-state";
 import { MarqueeStrip } from "@/components/marquee-strip";
-import {
-  PROJECT_TYPE_LABELS,
-  SENEGAL_REGIONS,
-} from "@/lib/tokens";
+import { PROJECT_TYPE_LABELS } from "@/lib/tokens";
+import { COUNTRIES } from "@/lib/countries";
 import { formatFCFA } from "@/lib/formatting";
 
-/** Bandeau défilant : les types de projets réellement acceptés + les régions. */
+/** Bandeau défilant : les types de projets réellement acceptés + les pays et régions desservis. */
 const PROJECT_TYPE_LABELS_LIST = [
   ...Object.values(PROJECT_TYPE_LABELS),
-  ...SENEGAL_REGIONS,
+  ...COUNTRIES.map((c) => c.nameFr),
+  ...COUNTRIES.flatMap((c) => c.regions.map((r) => r.name)),
 ];
 import { Hero } from "@/components/landing/hero";
 import { ConceptSection } from "@/components/landing/concept";
@@ -68,7 +67,7 @@ const structuredData = {
           name: "Qu’est-ce que TERANGA LABS ?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "TERANGA LABS est le marketplace inversé du Sénégal : les clients publient le brief de leur site web pour 1 Token, et les développeurs sérieux viennent vers eux en débloquant le contact avec 1 Token.",
+            text: "TERANGA LABS est le marketplace des projets web de l'Afrique de l'Ouest francophone : le client publie le brief de son site pour 1 Token, et le développeur qui s'intéresse débloque le contact avec 1 Token. Aucune commission.",
           },
         },
       ],

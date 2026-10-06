@@ -30,16 +30,25 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: absoluteUrl("/"),
   title: {
-    default: "TERANGA LABS — Des clients qui veulent un site",
+    default: "TERANGA LABS — Le marketplace des projets web de l'Afrique de l'Ouest francophone",
     template: "%s — TERANGA LABS",
   },
   description:
-    "TERANGA LABS connecte les entreprises et entrepreneurs sénégalais avec des développeurs prêts à construire leurs projets web.",
+    "TERANGA LABS met en relation les entreprises d'Afrique de l'Ouest francophone et des développeurs web : le client publie son brief pour 1 Token, le développeur débloque le contact avec 1 Token. Aucune commission.",
   keywords: [
     "développeur",
+    "Afrique de l'Ouest francophone",
     "Sénégal",
+    "Côte d'Ivoire",
+    "Mali",
+    "Burkina Faso",
+    "Guinée",
+    "Bénin",
+    "Togo",
+    "Niger",
     "création de site web",
     "Dakar",
+    "Abidjan",
     "marketplace",
     "freelance",
     "Tokens",
@@ -55,14 +64,14 @@ export const metadata: Metadata = {
     url: absoluteUrl("/"),
     title: "TERANGA LABS — Des clients qui veulent un site",
     description:
-      "Les clients publient leur besoin pour 1 Token. Les développeurs utilisent 1 Token pour débloquer leur contact.",
+      "Le client publie son besoin pour 1 Token. Le développeur utilise 1 Token pour débloquer le contact. Zéro commission.",
     siteName: "TERANGA LABS",
     images: [
       {
         url: absoluteUrl("/og.png"),
         width: 1200,
         height: 630,
-        alt: "TERANGA LABS — Le marketplace inversé des projets web au Sénégal.",
+        alt: "TERANGA LABS — Le marketplace des projets web de l'Afrique de l'Ouest francophone.",
       },
     ],
   },
@@ -70,7 +79,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "TERANGA LABS — Des clients qui veulent un site",
     description:
-      "Marketplace inversé de projets web au Sénégal.",
+      "Marketplace des projets web de l'Afrique de l'Ouest francophone : briefs, Tokens, zéro commission.",
     images: [absoluteUrl("/og.png")],
   },
   robots: {
@@ -97,14 +106,23 @@ const organizationJsonLd = {
   url: absoluteUrl("/").origin,
   logo: absoluteUrl("/icon.png"),
   description:
-    "Marketplace qui met en relation les entreprises sénégalaises et des développeurs web, sur un modèle inversé où les clients publient leurs besoins.",
-  areaServed: { "@type": "Country", name: "Sénégal" },
-  knowsLanguage: "fr-SN",
+    "Marketplace qui met en relation les entreprises d'Afrique de l'Ouest francophone et des développeurs web, sur un modèle inversé où les clients publient leurs besoins.",
+  areaServed: [
+    { "@type": "Country", name: "Sénégal" },
+    { "@type": "Country", name: "Côte d'Ivoire" },
+    { "@type": "Country", name: "Mali" },
+    { "@type": "Country", name: "Burkina Faso" },
+    { "@type": "Country", name: "Niger" },
+    { "@type": "Country", name: "Guinée" },
+    { "@type": "Country", name: "Bénin" },
+    { "@type": "Country", name: "Togo" },
+  ],
+  knowsLanguage: "fr",
   contactPoint: {
     "@type": "ContactPoint",
     contactType: "customer support",
     availableLanguage: ["fr"],
-    areaServed: "SN",
+    areaServed: ["SN", "CI", "ML", "BF", "NE", "GN", "BJ", "TG"],
   },
 };
 

@@ -68,11 +68,7 @@ export function Hero({
             className="tl-blur-in mt-8 flex flex-wrap items-center gap-2"
             style={{ animationDelay: "0.48s" }}
           >
-            {[
-              `Client : ${TOKEN_LABEL} pour publier`,
-              `Développeur : ${TOKEN_LABEL} pour débloquer le contact`,
-              "Aucune commission",
-            ].map((s) => (
+            {HERO.chips.map((s) => (
               <span
                 key={s}
                 className="inline-flex items-center gap-1.5 rounded-full border border-hairline bg-card/85 px-3 py-1.5 text-[13px] font-medium text-muted-foreground"
