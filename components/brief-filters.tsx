@@ -1,24 +1,19 @@
-"use client";
+﻿"use client"
 
-import * as React from "react";
-import { Loader2, Search } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { BriefCard } from "@/components/brief-card";
-import { BriefGrid } from "@/components/brief-grid";
-import { UnlockDialog } from "@/components/unlock-dialog";
-import { ReportButton } from "@/components/report-button";
-import { EmptyState } from "@/components/empty-state";
-import { createClient } from "@/lib/supabase/client";
-import { BRIEFS_COLUMNS, BRIEFS_PAGE_SIZE } from "@/lib/briefs-pagination";
-import type { PublicRequest } from "@/types/database";
-import { PROJECT_TYPES, PROJECT_TYPE_LABELS, SENEGAL_REGIONS } from "@/lib/tokens";
+import * as React from "react"
+import { Loader2, Search } from "lucide-react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Input } from "@/components/ui/input"
+import { CountryRegionSelect } from "@/components/ui/CountryRegionSelect"
+import { BriefCard } from "@/components/brief-card"
+import { BriefGrid } from "@/components/brief-grid"
+import { UnlockDialog } from "@/components/unlock-dialog"
+import { ReportButton } from "@/components/report-button"
+import { EmptyState } from "@/components/empty-state"
+import { createClient } from "@/lib/supabase/client"
+import { BRIEFS_COLUMNS, BRIEFS_PAGE_SIZE } from "@/lib/briefs-pagination"
+import type { PublicRequest } from "@/types/database"
+import { PROJECT_TYPE_LABELS, SENEGAL_REGIONS } from "@/lib/tokens"
 
 type UnlockInfo = Record<string, { conversation_id?: string; whatsapp?: string }>;
 
@@ -31,7 +26,7 @@ type BudgetBand = {
 const BUDGET_BANDS: BudgetBand[] = [
   { value: "all", label: "Tous les budgets", matches: () => true },
   { value: "lt-100k", label: "Moins de 100 000 F", matches: (b) => b < 100000 },
-  { value: "100k-300k", label: "100 000 – 300 000 F", matches: (b) => b >= 100000 && b <= 300000 },
+  { value: "100k-300k", label: "100 000 â€“ 300 000 F", matches: (b) => b >= 100000 && b <= 300000 },
   { value: "gt-300k", label: "Plus de 300 000 F", matches: (b) => b > 300000 },
 ];
 
@@ -57,6 +52,8 @@ export function BriefFilters({
   const [city, setCity] = React.useState("all");
   const [type, setType] = React.useState("all");
   const [budget, setBudget] = React.useState("all");
+  const [country, setCountry] = React.useState("")
+  const [region, setRegion] = React.useState("")
 
   const knownTotal = Math.max(total, all.length);
   const hasMore = all.length < knownTotal;
@@ -95,27 +92,27 @@ export function BriefFilters({
   const filtered = React.useMemo(() => {
     const q = query.trim().toLowerCase();
     return all.filter((brief) => {
-      if (q) {
-        const label = PROJECT_TYPE_LABELS[brief.project_type] ?? brief.project_type;
-        const haystack = `${brief.client_name} ${brief.description} ${brief.client_city} ${brief.project_type} ${label}`.toLowerCase();
-        if (!haystack.includes(q)) return false;
-      }
+      const label = PROJECT_TYPE_LABELS[brief.project_type] ?? brief.project_type;
+      const haystack = `${label} ${brief.client_city} ${brief.description ?? ""} ${(brief as PublicRequest & { country?: string }).country ?? ""} ${(brief as PublicRequest & { region?: string }).region ?? ""}`.toLowerCase();
+      if (q && !haystack.includes(q)) return false;
       if (city !== "all" && brief.client_city !== city) return false;
+      if (country && country !== "all" && (brief as PublicRequest & { country?: string }).country !== country) return false;
+      if (region && region !== "all" && (brief as PublicRequest & { region?: string }).region !== region) return false;
       if (type !== "all" && brief.project_type !== type) return false;
       if (!budgetBand.matches(brief.budget)) return false;
       return true;
     });
-  }, [all, query, city, type, budgetBand]);
+  }, [all, query, city, type, budget, budgetBand, country, region]);
+
 
   const cityItems = React.useMemo(() => {
-    const items: Record<string, string> = { all: "Toutes les régions" };
+    const items: Record<string, string> = { all: "Toutes les rÃ©gions" };
     for (const c of SENEGAL_REGIONS) items[c] = c;
     return items;
   }, []);
 
   const typeItems = React.useMemo(() => {
     const items: Record<string, string> = { all: "Tous les types" };
-    for (const t of PROJECT_TYPES) items[t] = PROJECT_TYPE_LABELS[t];
     return items;
   }, []);
 
@@ -137,14 +134,17 @@ export function BriefFilters({
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Rechercher par mots-clés : e-commerce, Dakar, WordPress…"
+            placeholder="Rechercher par mots-clÃ©s : e-commerce, Dakar, WordPressâ€¦"
             className="h-10 rounded-xl pl-9"
             aria-label="Rechercher dans les briefs"
           />
         </div>
+        <div className="mt-2">
+          <CountryRegionSelect country={country || null} region={region || null} onCountryChange={(c)=>setCountry(c||"")} onRegionChange={(r)=>setRegion(r||"")} showAllOption={true} />
+        </div>
         <div className="flex flex-wrap gap-3">
           <Select value={city} onValueChange={(v) => setCity(v ?? "all")} items={cityItems}>
-            <SelectTrigger size="default" className="w-full rounded-xl sm:w-auto" aria-label="Filtrer par région">
+            <SelectTrigger size="default" className="w-full rounded-xl sm:w-auto" aria-label="Filtrer par rÃ©gion">
               <SelectValue />
             </SelectTrigger>
             <SelectContent align="start">
@@ -186,11 +186,11 @@ export function BriefFilters({
 
       <p className="mt-6 text-sm font-medium text-muted-foreground">
         {filtered.length} brief{filtered.length > 1 ? "s" : ""} disponible
-        {filtered.length > 1 ? "s" : ""} au Sénégal
+        {filtered.length > 1 ? "s" : ""} au SÃ©nÃ©gal
         {hasMore ? (
           <span className="font-normal">
             {" "}
-            · {knownTotal} au total, affinez vos filtres ou affichez-en plus
+            Â· {knownTotal} au total, affinez vos filtres ou affichez-en plus
           </span>
         ) : null}
       </p>
@@ -219,8 +219,8 @@ export function BriefFilters({
       {filtered.length === 0 && (
         <div className="mt-6">
           <EmptyState
-            title="Aucun brief ne correspond à ces critères"
-            description="Modifiez vos filtres ou revenez plus tard : de nouveaux projets sont publiés régulièrement."
+            title="Aucun brief ne correspond Ã  ces critÃ¨res"
+            description="Modifiez vos filtres ou revenez plus tard : de nouveaux projets sont publiÃ©s rÃ©guliÃ¨rement."
           />
         </div>
       )}
@@ -236,10 +236,10 @@ export function BriefFilters({
             {loading ? (
               <Loader2 className="size-4 animate-spin" aria-hidden="true" />
             ) : null}
-            {loading ? "Chargement…" : "Afficher plus de briefs"}
+            {loading ? "Chargementâ€¦" : "Afficher plus de briefs"}
           </button>
           <p className="text-xs text-muted-foreground">
-            {all.length} sur {knownTotal} brief{knownTotal > 1 ? "s" : ""} chargé
+            {all.length} sur {knownTotal} brief{knownTotal > 1 ? "s" : ""} chargÃ©
             {all.length > 1 ? "s" : ""}
           </p>
           {loadError ? (
@@ -252,3 +252,7 @@ export function BriefFilters({
     </div>
   );
 }
+
+
+
+

@@ -1,0 +1,74 @@
+﻿npm.cmd : Vercel CLI 59.17.0 (Node.js 24.18.1)
+Au caractère Ligne:2 : 1
++ & "C:\Program Files\nodejs\npm.cmd" exec -- vercel ls teranga-labs 2> ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Vercel CLI 59.17.0 (Node.js 24.18.1):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Fetching deployments in acme-1c45
+> Deployments for acme-1c45/teranga-labs [447ms]
+
+  Age     Project                    Deployment                                              Status      Environment   
+  Duration     Username           
+  41m     acme-1c45/teranga-labs     https://teranga-labs-h8al305pq-acme-1c45.vercel.app     ÔùÅ Ready     Production  
+    1m           m62520363-7086     
+  43m     acme-1c45/teranga-labs     https://teranga-labs-nh9z0qa9w-acme-1c45.vercel.app     ÔùÅ Ready     Production  
+    1m           m62520363-7086     
+  45m     acme-1c45/teranga-labs     https://teranga-labs-c5oxvqwlu-acme-1c45.vercel.app     ÔùÅ Ready     Production  
+    1m           m62520363-7086     
+  47m     acme-1c45/teranga-labs     https://teranga-labs-8ml0uk2r9-acme-1c45.vercel.app     ÔùÅ Ready     Production  
+    1m           m62520363-7086     
+  49m     acme-1c45/teranga-labs     https://teranga-labs-gribnfd7p-acme-1c45.vercel.app     ÔùÅ Ready     Production  
+    1m           m62520363-7086     
+  51m     acme-1c45/teranga-labs     https://teranga-labs-51jimwgal-acme-1c45.vercel.app     ÔùÅ Ready     Production  
+    1m           m62520363-7086     
+  53m     acme-1c45/teranga-labs     https://teranga-labs-eypop48e0-acme-1c45.vercel.app     ÔùÅ Ready     Production  
+    1m           m62520363-7086     
+  54m     acme-1c45/teranga-labs     https://teranga-labs-k5kv2wpr5-acme-1c45.vercel.app     ÔùÅ Ready     Production  
+    1m           m62520363-7086     
+  1h      acme-1c45/teranga-labs     https://teranga-labs-n7xuutp59-acme-1c45.vercel.app     ÔùÅ Error     Production  
+    51s          m62520363-7086     
+  1h      acme-1c45/teranga-labs     https://teranga-labs-lkqp80fte-acme-1c45.vercel.app     ÔùÅ Error     Production  
+    55s          m62520363-7086     
+  2h      acme-1c45/teranga-labs     https://teranga-labs-2c8lum550-acme-1c45.vercel.app     ÔùÅ Error     Production  
+    42s          m62520363-7086     
+  2h      acme-1c45/teranga-labs     https://teranga-labs-n4oa4ujql-acme-1c45.vercel.app     ÔùÅ Error     Production  
+    47s          m62520363-7086     
+  2h      acme-1c45/teranga-labs     https://teranga-labs-kvn3p51vl-acme-1c45.vercel.app     ÔùÅ Error     Production  
+    44s          m62520363-7086     
+  4h      acme-1c45/teranga-labs     https://teranga-labs-7juy5w45g-acme-1c45.vercel.app     ÔùÅ Ready     Production  
+    1m           m62520363-7086     
+  4h      acme-1c45/teranga-labs     https://teranga-labs-h9pnlza95-acme-1c45.vercel.app     ÔùÅ Error     Production  
+    34s          m62520363-7086     
+  17h     acme-1c45/teranga-labs     https://teranga-labs-f6tlgeo9a-acme-1c45.vercel.app     ÔùÅ Ready     Production  
+    1m           m62520363-7086     
+  18h     acme-1c45/teranga-labs     https://teranga-labs-bwciwq2ir-acme-1c45.vercel.app     ÔùÅ Ready     Production  
+    52s          m62520363-7086     
+  19h     acme-1c45/teranga-labs     https://teranga-labs-9ku9c90fh-acme-1c45.vercel.app     ÔùÅ Ready     Production  
+    1m           m62520363-7086     
+  20h     acme-1c45/teranga-labs     https://teranga-labs-a7wl1mdhb-acme-1c45.vercel.app     ÔùÅ Ready     Production  
+    1m           m62520363-7086     
+  21h     acme-1c45/teranga-labs     https://teranga-labs-o2sqa944v-acme-1c45.vercel.app     ÔùÅ Ready     Production  
+    1m           m62520363-7086     
+
+https://teranga-labs-h8al305pq-acme-1c45.vercel.app
+https://teranga-labs-nh9z0qa9w-acme-1c45.vercel.app
+https://teranga-labs-c5oxvqwlu-acme-1c45.vercel.app
+https://teranga-labs-8ml0uk2r9-acme-1c45.vercel.app
+https://teranga-labs-gribnfd7p-acme-1c45.vercel.app
+https://teranga-labs-51jimwgal-acme-1c45.vercel.app
+https://teranga-labs-eypop48e0-acme-1c45.vercel.app
+https://teranga-labs-k5kv2wpr5-acme-1c45.vercel.app
+https://teranga-labs-n7xuutp59-acme-1c45.vercel.app
+https://teranga-labs-lkqp80fte-acme-1c45.vercel.app
+https://teranga-labs-2c8lum550-acme-1c45.vercel.app
+https://teranga-labs-n4oa4ujql-acme-1c45.vercel.app
+https://teranga-labs-kvn3p51vl-acme-1c45.vercel.app
+https://teranga-labs-7juy5w45g-acme-1c45.vercel.app
+https://teranga-labs-h9pnlza95-acme-1c45.vercel.app
+https://teranga-labs-f6tlgeo9a-acme-1c45.vercel.app
+https://teranga-labs-bwciwq2ir-acme-1c45.vercel.app
+https://teranga-labs-9ku9c90fh-acme-1c45.vercel.app
+https://teranga-labs-a7wl1mdhb-acme-1c45.vercel.app
+https://teranga-labs-o2sqa944v-acme-1c45.vercel.app
+> To display the next page, run `vercel ls teranga-labs --next 1791137184061`
