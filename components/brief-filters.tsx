@@ -9,6 +9,7 @@ import { BriefCard } from "@/components/brief-card"
 import { BriefGrid } from "@/components/brief-grid"
 import { UnlockDialog } from "@/components/unlock-dialog"
 import { ReportButton } from "@/components/report-button"
+import { FavoriteButton } from "@/components/favorite-button"
 import { EmptyState } from "@/components/empty-state"
 import { createClient } from "@/lib/supabase/client"
 import { BRIEFS_COLUMNS, BRIEFS_PAGE_SIZE } from "@/lib/briefs-pagination"
@@ -36,6 +37,7 @@ export function BriefFilters({
   user,
   balance,
   unlocks,
+  favorites = new Set<string>(),
   welcomeContactFree = false,
 }: {
   briefs: PublicRequest[];
@@ -43,6 +45,7 @@ export function BriefFilters({
   user: { id: string } | null;
   balance: number | null;
   unlocks: UnlockInfo;
+  favorites?: Set<string>;
   welcomeContactFree?: boolean;
 }) {
   const [all, setAll] = React.useState<PublicRequest[]>(briefs);
@@ -202,6 +205,12 @@ export function BriefFilters({
             brief={brief}
             footer={
               <div className="flex items-center gap-1">
+                {user ? (
+                  <FavoriteButton
+                    briefId={brief.id}
+                    initialFavorite={favorites.has(brief.id)}
+                  />
+                ) : null}
                 <ReportButton targetType="brief" targetId={brief.id} />
                 <UnlockDialog
                   brief={brief}

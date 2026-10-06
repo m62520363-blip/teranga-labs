@@ -129,6 +129,15 @@ export async function POST(request: Request) {
     );
   }
 
+  void (async () => {
+    const { error } = await admin.rpc("track_event", {
+      p_event: "otp.requested",
+      p_actor_id: user.id,
+      p_metadata: { channel: parsed.data.channel, purpose: parsed.data.purpose },
+    });
+    if (error) log.error({ action: "track.otp.requested", message: error.message });
+  })();
+
   return NextResponse.json({
     ok: true,
     purpose: parsed.data.purpose,

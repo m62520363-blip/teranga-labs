@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { absoluteUrl } from "@/lib/utils";
 import { allRegionSlugs } from "@/lib/region-slugs";
+import { allCountrySlugs } from "@/lib/geography";
 
 export const dynamic = "force-static";
 
@@ -11,11 +12,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "",
     "/a-propos",
     "/briefs",
+    "/classement",
     "/conditions-utilisation",
     "/contact",
     "/cookies",
+    "/dev",
     "/faq",
     "/mentions-legales",
+    "/pays",
     "/plan-du-site",
     "/politique-de-confidentialite",
     "/poster",
@@ -30,6 +34,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: route === "" ? 1 : 0.7,
   }));
 
+  // Pages pays (géographie statique du référentiel).
+  const countryEntries: MetadataRoute.Sitemap = allCountrySlugs().map(({ slug }) => ({
+    url: `${baseUrl}/pays/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly",
+    priority: 0.6,
+  }));
+
   // Une URL par région. Les pages sont rendues dynamiquement (elles comptent
   // les briefs réels), donc `lastModified` suit le build plutôt que la
   // dernière publication : on laisse la priorité légèrement sous celle des
@@ -41,5 +53,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...staticEntries, ...regionEntries];
+  return [...staticEntries, ...countryEntries, ...regionEntries];
 }

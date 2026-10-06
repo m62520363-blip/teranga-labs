@@ -177,6 +177,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "credit_failed" }, { status: 500 });
   }
 
+  void (async () => {
+    const { error } = await admin.rpc("track_event", {
+      p_event: "payment.credited",
+      p_metadata: {
+        flow: "ipn_paydunya",
+        amount_fcfa: intent.amount_fcfa,
+        tokens: intent.tokens,
+        developer_id: intent.developer_id,
+      },
+    });
+    if (error) console.error("[payments/ipn] track payment.credited failed:", error);
+  })();
+
   return ok({ ok: true, credited: true, result: creditResult });
 }
 

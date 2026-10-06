@@ -24,6 +24,7 @@ export default async function BriefsPage() {
   let total = 0;
   const unlocks: Record<string, { conversation_id?: string; whatsapp?: string }> = {};
   let balance: number | null = null;
+  const favorites = new Set<string>();
   // true si le compte n'a jamais débloqué de contact ET n'a jamais consommé
   // l'offre de bienvenue : son 1er contact sera donc gratuit (migration 0033).
   let welcomeContactFree = false;
@@ -73,6 +74,13 @@ export default async function BriefsPage() {
         .maybeSingle();
       const w = welcome as { has_unlocked_contact?: boolean; gift_consumed?: boolean } | null;
       welcomeContactFree = w?.has_unlocked_contact === false && w?.gift_consumed === false;
+
+      const { data: myFavorites } = await supabase
+        .from("favorites")
+        .select("request_id");
+      for (const fav of myFavorites ?? []) {
+        if (fav.request_id) favorites.add(fav.request_id);
+      }
     }
   }
 
@@ -82,7 +90,7 @@ export default async function BriefsPage() {
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
             <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
-              {total} brief{total > 1 ? "s" : ""} disponible{total > 1 ? "s" : ""} au Sénégal
+              {total} brief{total > 1 ? "s" : ""} disponible{total > 1 ? "s" : ""} sur le marketplace
             </h1>
             <p className="mt-3 text-base leading-relaxed text-muted-foreground">
               1 Token ouvre une discussion privée avec le client, en direct.
@@ -108,6 +116,7 @@ export default async function BriefsPage() {
             user={user ? { id: user.id } : null}
             balance={balance}
             unlocks={unlocks}
+            favorites={favorites}
             welcomeContactFree={welcomeContactFree}
           />
         </div>

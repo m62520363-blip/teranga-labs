@@ -90,5 +90,14 @@ export async function POST(request: Request) {
     );
   }
 
+  void (async () => {
+    const { error } = await admin.rpc("track_event", {
+      p_event: "otp.verified",
+      p_actor_id: user.id,
+      p_metadata: { channel: parsed.data.channel, purpose: parsed.data.purpose },
+    });
+    if (error) console.error("[otp] track otp.verified failed:", error);
+  })();
+
   return NextResponse.json({ verified: true });
 }

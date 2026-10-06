@@ -2,7 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { briefSchema } from "@/lib/validations";
 import { createClient, getCurrentUser } from "@/lib/supabase/server";
 import { flushNotifications } from "@/lib/notifications/dispatch";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
+import { log } from "@/lib/log";
 
 export const runtime = "nodejs";
 
@@ -100,6 +102,19 @@ export async function POST(request: NextRequest) {
   void flushNotifications().catch(() => {
     /* silencieux : la file conserve les jobs pending */
   });
+
+  // Journal d'usage réel (migration 0039) : non bloquant.
+  const admin = createAdminClient();
+  if (admin) {
+    void (async () => {
+      const { error } = await admin.rpc("track_event", {
+        p_event: "brief_published",
+        p_actor_id: user.id,
+        p_request_id: result.id,
+      });
+      if (error) log.error({ action: "track.brief_published", message: error.message });
+    })();
+  }
 
   return NextResponse.json({
     id: result.id,

@@ -374,6 +374,15 @@ export const otpVerifySchema = z
 
 export type OtpVerifyBody = z.infer<typeof otpVerifySchema>;
 
+/** Corps de POST /api/favorites/toggle (P1, §25). */
+export const favoriteToggleSchema = z
+  .object({
+    request_id: z.string().uuid("Identifiant de brief invalide."),
+  })
+  .strict();
+
+export type FavoriteToggleBody = z.infer<typeof favoriteToggleSchema>;
+
 export function parseSkills(raw: string): string[] {
   return raw
     .split(",")

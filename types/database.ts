@@ -225,6 +225,22 @@ export interface Database {
         Update: Partial<Database["public"]["Tables"]["unlocks"]["Insert"]>;
         Relationships: [];
       };
+      favorites: {
+        Row: {
+          id: string;
+          user_id: string;
+          request_id: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          request_id: string;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["favorites"]["Insert"]>;
+        Relationships: [];
+      };
       token_refund_requests: {
         Row: {
           id: string;
@@ -706,6 +722,27 @@ export interface Database {
           p_comment?: string;
         };
         Returns: Json;
+      };
+      track_event: {
+        Args: {
+          p_event: string;
+          p_actor_id?: string;
+          p_request_id?: string;
+          p_metadata?: Record<string, unknown>;
+        };
+        Returns: Json;
+      };
+      toggle_favorite: {
+        Args: {
+          p_request_id: string;
+        };
+        Returns: Json;
+      };
+      is_favorited: {
+        Args: {
+          p_request_id: string;
+        };
+        Returns: boolean;
       };
       get_token_balance: {
         Args: Record<string, never>;

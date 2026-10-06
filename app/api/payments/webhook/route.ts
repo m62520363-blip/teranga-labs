@@ -95,6 +95,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "credit_failed" }, { status: 500 });
     }
 
+    void (async () => {
+      const { error } = await admin.rpc("track_event", {
+        p_event: "payment.credited",
+        p_metadata: { flow: "webhook_wave", amount_fcfa: intent.amount_fcfa },
+      });
+      if (error) console.error("[payments] track payment.credited failed:", error);
+    })();
+
     return NextResponse.json({ ok: true, credited: true, result: creditResult });
   }
 
@@ -130,6 +138,14 @@ export async function POST(request: Request) {
     console.error("[payments] admin_confirm_verification_payment failed:", confirmError);
     return NextResponse.json({ error: "confirm_failed" }, { status: 500 });
   }
+
+  void (async () => {
+    const { error } = await admin.rpc("track_event", {
+      p_event: "payment.credited",
+      p_metadata: { flow: "verification", amount_fcfa: verification.amount_fcfa },
+    });
+    if (error) console.error("[payments] track payment.credited failed:", error);
+  })();
 
   return NextResponse.json({ ok: true, confirmed: true, result: confirmResult });
 }
