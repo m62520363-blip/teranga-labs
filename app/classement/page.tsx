@@ -9,7 +9,7 @@ import { Reveal } from "@/components/reveal"
 export const metadata: Metadata = {
   title: "Classement des développeurs",
   description:
-    "Classement mensuel des développeurs d'Afrique de l'Ouest francophone (UEMOA) : classement régional et par pays. Seuls le 1er et le 2e recoivent des Tokens.",
+    "Classement mensuel des développeurs d'Afrique de l'Ouest francophone : classement régional et par pays. Seuls le 1er et le 2e recoivent des Tokens.",
 }
 
 const EMPTY_REGIONAL = "Aucun classement pour le mois en cours."
@@ -60,7 +60,7 @@ export default function ClassementPage() {
         <SectionHeader
           eyebrow="Classement mensuel"
           title="Le classement des développeurs"
-          lead="Chaque mois, le classement régional (UEMOA) et le classement de chaque pays récompensent les développeurs les plus actifs. Attribution automatique et idempotente au snapshot de fin de mois."
+          lead="Chaque mois, le classement régional (Afrique de l'Ouest francophone) et le classement de chaque pays récompensent les développeurs les plus actifs. Attribution automatique et idempotente au snapshot de fin de mois."
         />
 
         {!enabled && (
@@ -85,7 +85,7 @@ export default function ClassementPage() {
               sur le mois concerné. Régional comme par pays, seuls les 2 premiers sont
               récompensés.
             </p>
-            <RewardsLegend rewards={rewardRegional} scope="classement régional UEMOA" />
+            <RewardsLegend rewards={rewardRegional} scope="classement régional (Afrique de l'Ouest francophone)" />
           </div>
         </Reveal>
 
@@ -93,7 +93,7 @@ export default function ClassementPage() {
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
-                Classement régional (UEMOA)
+                Classement régional (Afrique de l&apos;Ouest francophone)
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
                 Période en cours — en attente de données suffisantes
@@ -128,7 +128,7 @@ export default function ClassementPage() {
             </div>
           </div>
 
-          <RewardsLegend rewards={rewardRegional} scope="classement régional UEMOA" />
+          <RewardsLegend rewards={rewardRegional} scope="classement régional (Afrique de l'Ouest francophone)" />
         </section>
 
         <section className="mt-14">

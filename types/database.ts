@@ -668,6 +668,45 @@ export interface Database {
       };
     };
     Functions: {
+      has_role: {
+        Args: {
+          p_roles: string[];
+        };
+        Returns: boolean;
+      };
+      request_otp: {
+        Args: {
+          p_channel: string;
+          p_target?: string;
+          p_purpose?: string;
+          p_user_id: string;
+        };
+        Returns: Json;
+      };
+      verify_otp: {
+        Args: {
+          p_channel: string;
+          p_target: string;
+          p_code: string;
+          p_purpose?: string;
+        };
+        Returns: Json;
+      };
+      create_mission_from_offer: {
+        Args: {
+          p_offer_id: string;
+          p_description?: string;
+        };
+        Returns: Json;
+      };
+      mission_update_status: {
+        Args: {
+          p_mission_id: string;
+          p_to_status: string;
+          p_comment?: string;
+        };
+        Returns: Json;
+      };
       get_token_balance: {
         Args: Record<string, never>;
         Returns: number;

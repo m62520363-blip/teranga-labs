@@ -311,6 +311,69 @@ export const phoneOtpSchema = z.object({
     ),
 });
 
+/** Corps de POST /api/payments/checkout (audit C5). */
+export const paymentCheckoutSchema = z
+  .object({
+    packageId: z.string().trim().min(1, "packageId manquant.").max(64, "packageId invalide."),
+    provider: z.enum(["wave", "paydunya", "max_it", "card"]).optional(),
+  })
+  .strict();
+
+export type PaymentCheckoutBody = z.infer<typeof paymentCheckoutSchema>;
+
+/** Paramètre GET /api/payments/status (audit C5). */
+export const paymentStatusSchema = z.object({
+  intent: z.string().uuid("Identifiant d'intention invalide."),
+});
+
+/** Corps de POST /api/verification/checkout (audit C5). */
+export const verificationCheckoutSchema = z
+  .object({
+    method: z.enum(["wave", "max_it"]).optional(),
+  })
+  .strict();
+
+export type VerificationCheckoutBody = z.infer<typeof verificationCheckoutSchema>;
+
+/** Corps de POST /api/otp/request (§9). */
+export const otpRequestSchema = z
+  .object({
+    channel: z.enum(["whatsapp", "sms", "email"]),
+    target: z
+      .string()
+      .trim()
+      .min(9, "Cible invalide.")
+      .max(80, "Cible invalide.")
+      .optional(),
+    purpose: z
+      .enum(["verification", "phone_verify", "email_verify"])
+      .default("verification"),
+  })
+  .strict();
+
+export type OtpRequestBody = z.infer<typeof otpRequestSchema>;
+
+/** Corps de POST /api/otp/verify (§9). */
+export const otpVerifySchema = z
+  .object({
+    channel: z.enum(["whatsapp", "sms", "email"]),
+    target: z
+      .string()
+      .trim()
+      .min(9, "Cible invalide.")
+      .max(80, "Cible invalide."),
+    code: z
+      .string()
+      .trim()
+      .regex(/^\d{6}$/, "Code invalide : 6 chiffres attendus."),
+    purpose: z
+      .enum(["verification", "phone_verify", "email_verify"])
+      .default("verification"),
+  })
+  .strict();
+
+export type OtpVerifyBody = z.infer<typeof otpVerifySchema>;
+
 export function parseSkills(raw: string): string[] {
   return raw
     .split(",")

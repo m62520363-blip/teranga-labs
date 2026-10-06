@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser, createClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import { paymentStatusSchema } from "@/lib/validations";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -17,13 +19,25 @@ export async function GET(request: Request) {
     );
   }
 
-  const intentId = new URL(request.url).searchParams.get("intent");
-  if (!intentId) {
+  const rl = rateLimit(`status:${clientIp(request)}`, 60);
+  if (!rl.ok) {
     return NextResponse.json(
-      { code: "BAD_REQUEST", message: "Paramètre intent manquant." },
+      { code: "RATE_LIMITED", message: "Trop de demandes." },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSeconds) } }
+    );
+  }
+
+  const parsed = paymentStatusSchema.safeParse({
+    intent: new URL(request.url).searchParams.get("intent"),
+  });
+  if (!parsed.success) {
+    return NextResponse.json(
+      { code: "BAD_REQUEST", message: parsed.error.issues[0]?.message ?? "Requête invalide." },
       { status: 400 }
     );
   }
+
+  const intentId = parsed.data.intent;
 
   const user = await getCurrentUser();
   if (!user) {

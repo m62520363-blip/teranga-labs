@@ -3,6 +3,9 @@ import { getCurrentUser, createClient, isSupabaseConfigured } from "@/lib/supaba
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createCheckoutSession, isWaveApiError } from "@/lib/payments/wave";
 import { isWaveConfigured } from "@/lib/payments/config";
+import { verificationCheckoutSchema } from "@/lib/validations";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
+import { log } from "@/lib/log";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -30,7 +33,18 @@ export async function POST(request: Request) {
     );
   }
 
-  let body: { method?: string };
+  const rl = rateLimit(`verification-checkout:${clientIp(request)}`, 10);
+  if (!rl.ok) {
+    return NextResponse.json(
+      {
+        code: "RATE_LIMITED",
+        message: "Trop de demandes. Réessayez dans quelques instants.",
+      },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSeconds) } }
+    );
+  }
+
+  let body: unknown;
   try {
     body = await request.json();
   } catch {
@@ -40,7 +54,18 @@ export async function POST(request: Request) {
     );
   }
 
-  const method = body.method === "max_it" ? "max_it" : "wave";
+  const parsed = verificationCheckoutSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json(
+      {
+        code: "BAD_REQUEST",
+        message: parsed.error.issues[0]?.message ?? "Requête invalide.",
+      },
+      { status: 400 }
+    );
+  }
+
+  const method = parsed.data.method === "max_it" ? "max_it" : "wave";
 
   const user = await getCurrentUser();
   if (!user) {
@@ -161,13 +186,27 @@ export async function POST(request: Request) {
     });
   } catch (err) {
     if (isWaveApiError(err)) {
-      console.error("[verification] Wave checkout error:", err.message);
+      log.error({
+        action: "verification.checkout",
+        provider: "wave",
+        user: user.id,
+        request_id: requestId,
+        status: 502,
+        message: err.message,
+      });
       return NextResponse.json(
         { code: "PROVIDER_ERROR", message: "Le prestataire de paiement a refusé la demande." },
         { status: 502 }
       );
     }
-    console.error("[verification] checkout error:", err);
+    log.error({
+      action: "verification.checkout",
+      provider: "wave",
+      user: user.id,
+      request_id: requestId,
+      status: 500,
+      message: err instanceof Error ? err.message : String(err),
+    });
     return NextResponse.json(
       { code: "SERVER_ERROR", message: "Erreur inattendue lors du paiement." },
       { status: 500 }

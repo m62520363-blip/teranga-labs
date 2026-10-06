@@ -69,11 +69,12 @@ export function Footer() {
         <div className="container-tl flex flex-col items-center gap-3 py-6 text-center text-sm text-white/60">
           <div className="flex flex-wrap items-center justify-center gap-2" aria-label="Pays d’Afrique de l’Ouest francophone">
             {[
-              { code: "sn", name: "Sénégal" },
+{ code: "sn", name: "Sénégal" },
               { code: "bj", name: "Bénin" },
               { code: "bf", name: "Burkina Faso" },
-              { code: "ci", name: "Côte d’Ivoire" },
+              { code: "ci", name: "Côte d'Ivoire" },
               { code: "gn", name: "Guinée" },
+              { code: "gw", name: "Guinée-Bissau" },
               { code: "ml", name: "Mali" },
               { code: "ne", name: "Niger" },
               { code: "tg", name: "Togo" },
@@ -83,7 +84,7 @@ export function Footer() {
               </Link>
             ))}
           </div>
-          <p className="text-sm text-white/60">Réservé aux pays d&apos;Afrique de l&apos;Ouest francophone (UEMOA)</p>
+          <p className="text-sm text-white/60">Réservé aux pays d&apos;Afrique de l&apos;Ouest francophone</p>
           <p>© {new Date().getFullYear()} {BRAND}. Tous droits réservés.</p>
           <p className="text-xs text-white/40">Édité par {LEGAL_PUBLISHER}.</p>
         </div>

@@ -1,4 +1,4 @@
-﻿export type CountryCode = "SN" | "CI" | "ML" | "BF" | "NE" | "GN" | "BJ" | "TG"
+﻿export type CountryCode = "SN" | "CI" | "ML" | "BF" | "NE" | "GN" | "GW" | "BJ" | "TG"
 
 export interface Region {
   code: string
@@ -180,7 +180,30 @@ export const COUNTRIES: Country[] = [
       { code: "GN-N", name: "Nzérékoré" },
     ],
     mobilePayments: [{ name: "À confirmer", note: "Moyens de paiement mobiles à confirmer." }],
-    notes: "Guinée : devise GNF (taux configurable, non figé).",
+notes: "Guinée : devise GNF (taux configurable, non figé).",
+  },
+  {
+    code: "GW",
+    iso2: "GW",
+    iso3: "GNB",
+    name: "Guinea-Bissau",
+    nameFr: "Guinée-Bissau",
+    flagUrl: "https://flagcdn.com/w20/gw.png",
+    phoneCode: "+245",
+    currency: "XOF",
+    currencyLabel: "FCFA",
+    regions: [
+      { code: "GW-BA", name: "Bafatá" },
+      { code: "GW-BM", name: "Biombo" },
+      { code: "GW-BS", name: "Bissau" },
+      { code: "GW-BL", name: "Bolama" },
+      { code: "GW-CA", name: "Cacheu" },
+      { code: "GW-GA", name: "Gabú" },
+      { code: "GW-OI", name: "Oio" },
+      { code: "GW-QU", name: "Quinara" },
+      { code: "GW-TO", name: "Tombali" },
+    ],
+    mobilePayments: [{ name: "à confirmer", note: "Moyens de paiement mobiles à confirmer." }],
   },
   {
     code: "BJ",
@@ -229,7 +252,10 @@ export const COUNTRIES: Country[] = [
   },
 ]
 
-export const UEMOA_COUNTRY_CODES = COUNTRIES.map((c) => c.code)
+// Bassin de diffusion : Afrique de l'Ouest francophone.
+// NB : ne pas employer « UEMOA » : certains de ces pays n'y appartiennent
+// pas (Guinée, Guinée-Bissau est bien membre mais lusophone, etc.).
+export const SCOPE_COUNTRY_CODES = COUNTRIES.map((c) => c.code)
 
 export function getCountryByCode(code: CountryCode | string | null | undefined): Country | undefined {
   if (!code) return undefined

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { briefSchema } from "@/lib/validations";
 import { createClient, getCurrentUser } from "@/lib/supabase/server";
 import { flushNotifications } from "@/lib/notifications/dispatch";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -39,6 +40,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       { error: parsed.error.issues[0]?.message ?? "Formulaire invalide." },
       { status: 422 }
+    );
+  }
+
+  const rl = rateLimit(`brief-publish:${clientIp(request)}`, 5);
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: "Trop de publications récentes. Réessayez un peu plus tard." },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSeconds) } }
     );
   }
 

@@ -5,6 +5,9 @@ import { createCheckoutSession, isWaveApiError } from "@/lib/payments/wave";
 import { isWaveConfigured } from "@/lib/payments/config";
 import { createPaydunyaCheckout, isPaydunyaApiError } from "@/lib/payments/paydunya";
 import { isPaydunyaConfigured } from "@/lib/payments/paydunya-config";
+import { paymentCheckoutSchema } from "@/lib/validations";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
+import { log } from "@/lib/log";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -48,7 +51,18 @@ export async function POST(request: Request) {
     );
   }
 
-  let body: { packageId?: string; provider?: string };
+  const rl = rateLimit(`checkout:${clientIp(request)}`, 10);
+  if (!rl.ok) {
+    return NextResponse.json(
+      {
+        code: "RATE_LIMITED",
+        message: "Trop de demandes. Réessayez dans quelques instants.",
+      },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSeconds) } }
+    );
+  }
+
+  let body: unknown;
   try {
     body = await request.json();
   } catch {
@@ -58,13 +72,18 @@ export async function POST(request: Request) {
     );
   }
 
-  const packageId = body.packageId;
-  if (!packageId || typeof packageId !== "string") {
+  const parsed = paymentCheckoutSchema.safeParse(body);
+  if (!parsed.success) {
     return NextResponse.json(
-      { code: "BAD_REQUEST", message: "packageId manquant." },
+      {
+        code: "BAD_REQUEST",
+        message: parsed.error.issues[0]?.message ?? "Requête invalide.",
+      },
       { status: 400 }
     );
   }
+
+  const packageId = parsed.data.packageId;
 
   const user = await getCurrentUser();
   if (!user) {
@@ -161,7 +180,7 @@ export async function POST(request: Request) {
 
     // Prestataire effectif : PayDunya prioritaire (Mobile Money et carte déjà
     // activés côté compte), Wave en repli.
-  const requested = body.provider;
+  const requested = parsed.data.provider;
   const usePaydunya =
     requested === "paydunya" ? paydunyaReady : requested === "wave" ? false : paydunyaReady;
   const provider = usePaydunya ? "paydunya" : "wave";
@@ -252,20 +271,41 @@ export async function POST(request: Request) {
     });
   } catch (err) {
     if (isPaydunyaApiError(err)) {
-      console.error("[payments] PayDunya checkout error:", err.message);
+      log.error({
+        action: "payment.checkout",
+        provider: "paydunya",
+        user: user.id,
+        request_id: intent.id,
+        status: 502,
+        message: err.message,
+      });
       return NextResponse.json(
         { code: "PROVIDER_ERROR", message: "Le prestataire de paiement a refusé la demande." },
         { status: 502 }
       );
     }
     if (isWaveApiError(err)) {
-      console.error("[payments] Wave checkout error:", err.message);
+      log.error({
+        action: "payment.checkout",
+        provider: "wave",
+        user: user.id,
+        request_id: intent.id,
+        status: 502,
+        message: err.message,
+      });
       return NextResponse.json(
         { code: "PROVIDER_ERROR", message: "Le prestataire de paiement a refusé la demande." },
         { status: 502 }
       );
     }
-    console.error("[payments] checkout error:", err);
+    log.error({
+      action: "payment.checkout",
+      provider: usePaydunya ? "paydunya" : "wave",
+      user: user.id,
+      request_id: intent.id,
+      status: 500,
+      message: err instanceof Error ? err.message : String(err),
+    });
     return NextResponse.json(
       { code: "SERVER_ERROR", message: "Erreur inattendue lors du paiement." },
       { status: 500 }
