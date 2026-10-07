@@ -732,6 +732,20 @@ export interface Database {
         };
         Returns: Json;
       };
+      get_leaderboard: {
+        Args: {
+          p_year?: number;
+          p_month?: number;
+        };
+        Returns: Json;
+      };
+      settle_leaderboard: {
+        Args: {
+          p_year: number;
+          p_month: number;
+        };
+        Returns: Json;
+      };
       toggle_favorite: {
         Args: {
           p_request_id: string;
