@@ -1,11 +1,12 @@
 import type { MetadataRoute } from "next";
 import { absoluteUrl } from "@/lib/utils";
+import { createClient } from "@/lib/supabase/server";
 import { allRegionSlugs } from "@/lib/region-slugs";
 import { allCountrySlugs } from "@/lib/geography";
 
-export const dynamic = "force-static";
+export const revalidate = 3600;
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = absoluteUrl("/").origin;
 
   const routes = [
@@ -53,5 +54,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...staticEntries, ...countryEntries, ...regionEntries];
+  // Une URL par fiche développeur publique (annuaire réel : seuls les profils
+  // approuvés sont indexés, jamais les comptes en attente/refusés).
+  const supabase = await createClient();
+  let developerEntries: MetadataRoute.Sitemap = [];
+  if (supabase) {
+    const { data } = await supabase.rpc("list_approved_developers", { p_limit: 1000 });
+    const rows = (Array.isArray(data) ? data : []) as Array<{
+      username?: string | null;
+    }>;
+    developerEntries = rows
+      .filter((d) => d.username)
+      .map((d) => ({
+        url: `${baseUrl}/dev/${encodeURIComponent(d.username as string)}`,
+        lastModified: new Date(),
+        changeFrequency: "weekly",
+        priority: 0.6,
+      }));
+  }
+
+  return [...staticEntries, ...countryEntries, ...regionEntries, ...developerEntries];
 }
