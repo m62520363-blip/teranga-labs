@@ -806,6 +806,22 @@ export interface Database {
         };
         Returns: Json;
       };
+      teranga_match: {
+        Args: {
+          p_project_type?: string;
+          p_city?: string;
+          p_budget?: number;
+          p_services?: string[];
+          p_limit?: number;
+        };
+        Returns: Json;
+      };
+      get_developer_score: {
+        Args: {
+          p_identifier: string;
+        };
+        Returns: Json;
+      };
       toggle_favorite: {
         Args: {
           p_request_id: string;

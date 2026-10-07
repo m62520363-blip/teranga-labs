@@ -15,6 +15,7 @@ import {
 import { createClient, getCurrentRole, getCurrentUser } from "@/lib/supabase/server";
 import { formatFCFA, formatDate } from "@/lib/formatting";
 import { ShareProfileButton } from "@/components/dev/share-profile-button";
+import { ScoreBreakdown } from "@/components/dev/score-breakdown";
 import { ReportButton } from "@/components/report-button";
 import { ContactButton } from "@/components/dev/contact-dialog";
 import { availabilityInfo, experienceLabel } from "@/lib/dev-labels";
@@ -267,6 +268,8 @@ export default async function DeveloperProfilePage({
               <ReportButton targetType="developer" targetId={profile.id} />
             </div>
           </header>
+
+          <ScoreBreakdown identifier={profile.id} />
 
           <section className="mt-8 border-t border-hairline pt-8" aria-label="Contact">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">

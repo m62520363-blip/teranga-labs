@@ -16,6 +16,7 @@ import {
   getCurrentUser,
 } from "@/lib/supabase/server";
 import { UnlockDialog } from "@/components/unlock-dialog";
+import { TerangaMatch } from "@/components/briefs/teranga-match";
 import {
   formatFCFA,
   formatDate,
@@ -274,6 +275,12 @@ let welcomeContactFree = false;
                 </div>
               )}
             </div>
+
+            <TerangaMatch
+              projectType={brief.project_type}
+              city={brief.client_city}
+              budget={brief.budget}
+            />
           </div>
         </div>
       </div>
