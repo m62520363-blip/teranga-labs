@@ -822,6 +822,77 @@ export interface Database {
         };
         Returns: Json;
       };
+      create_agency: {
+        Args: {
+          p_name: string;
+          p_slug: string;
+          p_bio?: string;
+          p_logo_url?: string;
+          p_city?: string;
+          p_country?: string;
+          p_website?: string;
+        };
+        Returns: Json;
+      };
+      get_agency_by_invite: {
+        Args: {
+          p_invite_code: string;
+        };
+        Returns: Json;
+      };
+      join_agency: {
+        Args: {
+          p_agency_id: string;
+          p_invite_code: string;
+        };
+        Returns: Json;
+      };
+      rotate_agency_invite: {
+        Args: {
+          p_agency_id: string;
+        };
+        Returns: Json;
+      };
+      remove_agency_member: {
+        Args: {
+          p_developer_id: string;
+        };
+        Returns: Json;
+      };
+      leave_agency: {
+        Args: Record<string, never>;
+        Returns: Json;
+      };
+      set_agency_status: {
+        Args: {
+          p_agency_id: string;
+          p_status: string;
+        };
+        Returns: Json;
+      };
+      list_agencies: {
+        Args: {
+          p_limit?: number;
+          p_offset?: number;
+        };
+        Returns: Json;
+      };
+      get_agency: {
+        Args: {
+          p_slug: string;
+        };
+        Returns: Json;
+      };
+      get_agency_by_developer: {
+        Args: {
+          p_developer_id: string;
+        };
+        Returns: Json;
+      };
+      my_agency: {
+        Args: Record<string, never>;
+        Returns: Json;
+      };
       toggle_favorite: {
         Args: {
           p_request_id: string;

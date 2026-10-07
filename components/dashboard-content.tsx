@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { DashboardStats } from "@/components/dashboard-stats";
 import { MissionsManager, type TlMissionOption } from "@/components/dev/missions-manager";
+import AgencyManager from "@/components/agency/agency-manager";
 import { DevReviewsPanel } from "@/components/dev/reviews-panel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -145,7 +146,7 @@ function FilterChip({
   );
 }
 
-type TabKey = "crm" | "profil" | "activite" | "devis" | "missions" | "avis";
+type TabKey = "crm" | "profil" | "activite" | "devis" | "missions" | "avis" | "agence";
 
 function DevStatusBanner({ profile }: { profile: DeveloperProfile }) {
   const status = profile.status;
@@ -367,9 +368,9 @@ export function DashboardContent({
   const [crmView, setCrmView] = React.useState<"board" | "list">("board");
   const [savingGoal, setSavingGoal] = React.useState(false);
   const [saving, setSaving] = React.useState(false);
-  const defaultTab: TabKey = (["crm", "profil", "activite", "devis", "missions", "avis"] as TabKey[]).includes(
-    initialTab as TabKey
-  )
+  const defaultTab: TabKey = (
+    ["crm", "profil", "activite", "devis", "missions", "avis", "agence"] as TabKey[]
+  ).includes(initialTab as TabKey)
     ? (initialTab as TabKey)
     : unlocks.length > 0
       ? "crm"
@@ -621,6 +622,7 @@ export function DashboardContent({
     { key: "devis", label: "Devis & missions", count: missions.length + devisEnAttente.length },
     { key: "missions", label: "Missions réalisées", count: myMissions.length },
     { key: "avis", label: "Mes avis", count: myReviews?.total },
+    { key: "agence", label: "Mon agence" },
   ];
 
   return (
@@ -1732,6 +1734,12 @@ export function DashboardContent({
         {tab === "avis" ? (
           <section className="mt-8" aria-label="Mes avis clients">
             <DevReviewsPanel initial={myReviews} />
+          </section>
+        ) : null}
+
+        {tab === "agence" ? (
+          <section className="mt-8" aria-label="Mon agence">
+            <AgencyManager />
           </section>
         ) : null}
 

@@ -2,6 +2,24 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [P2-2] — 2026-10-07
+
+Deuxième vague du chapitre P2 : les **agences** rejoignent la plateforme.
+
+### Migration `0044_agencies.sql`
+- Tables `agencies` (nom, slug unique, bio, logo, ville, pays, site, `verified`, `status` pending/active/suspended, code d'invitation secret, owner) et `agency_members` (un développeur = une agence au maximum).
+- RLS : lecture publique des agences actives uniquement ; toute écriture via RPC SECURITY DEFINER.
+- RPC : création, rejoint par code (`get_agency_by_invite` + `join_agency`), régénération du code, retrait de membre, départ, passage de statut (admin), `list_agencies`, `get_agency` (avec membres), `get_agency_by_developer`, `my_agency`.
+
+### Interface
+- **Page `/agences`** : annuaire public des agences actives.
+- **Page `/agences/[slug]`** : fiche de l'agence + membres (liens vers les fiches développeurs) + metadata SEO.
+- **Fiche `/dev/[username]`** : badge « {Nom de l'agence} » cliquable quand le développeur appartient à une agence.
+- **Dashboard développeur → onglet « Mon agence »** : créer son agence, gérer invitations (code + régénération), retirer des membres, quitter.
+
+### Vérifications
+- typecheck ✔, lint 0/0 ✔, 159 tests ✔.
+
 ## [P2-1] — 2026-10-07
 
 Première vague du chapitre P2 : le TERANGA SCORE passe au niveau supérieur et TERANGA MATCH entre en scène.

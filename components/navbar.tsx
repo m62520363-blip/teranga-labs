@@ -63,6 +63,7 @@ export function Navbar({
 
   const appLinks: { href: string; label: string; adminOnly?: boolean }[] = [];
   appLinks.push({ href: "/dev", label: "Trouver un développeur" });
+  appLinks.push({ href: "/agences", label: "Agences" });
   if (authed) {
     appLinks.push({ href: homeHref, label: "Accueil" });
     appLinks.push({ href: "/conversations", label: "Messages" });
@@ -215,6 +216,7 @@ export function Navbar({
                 <>
                   <MobileNavLink href="/">Accueil</MobileNavLink>
                   <MobileNavLink href="/dev">Trouver un développeur</MobileNavLink>
+                  <MobileNavLink href="/agences">Agences</MobileNavLink>
                   <MobileNavLink href="/#comment-ca-marche">Comment ça marche</MobileNavLink>
                   <MobileNavLink href="/poster">Pour les clients</MobileNavLink>
                   <MobileNavLink href="/briefs">Pour les développeurs</MobileNavLink>
@@ -296,6 +298,7 @@ function DesktopNavLinks({
     : [
         { href: "/", label: "Accueil" },
         { href: "/dev", label: "Trouver un dev" },
+        { href: "/agences", label: "Agences" },
         { href: "/#comment-ca-marche", label: "Comment ça marche" },
         { href: "/poster", label: "Pour les clients" },
         { href: "/briefs", label: "Pour les développeurs" },

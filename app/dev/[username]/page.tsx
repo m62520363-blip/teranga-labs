@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import {
   BadgeCheck,
   Briefcase,
+  Building2,
   ExternalLink,
   Globe,
   MapPin,
@@ -27,6 +28,8 @@ import {
   reviewQuestionLabel,
 } from "@/lib/reviews-labels";
 import type { DeveloperReviewStats, PublicDeveloperProfile } from "@/types/database";
+import { asAgencyBadge } from "@/types/agency";
+import Link from "next/link";
 import { cn } from "cn";
 import { ReportReviewButton } from "@/components/review/report-review-button";
 
@@ -106,6 +109,11 @@ export default async function DeveloperProfilePage({
   const reviewStats = statsRes?.data as unknown as DeveloperReviewStats | null;
   const visibleReviews = reviewStats?.reviews ?? [];
 
+  const agencyRes = supabase
+    ? await supabase.rpc("get_agency_by_developer", { p_developer_id: profile.id })
+    : { data: null };
+  const agencyBadge = asAgencyBadge(agencyRes?.data);
+
   const contactCost =
     typeof costRes?.data === "number" && costRes.data > 0 ? costRes.data : 1;
 
@@ -161,6 +169,15 @@ export default async function DeveloperProfilePage({
                       <BadgeCheck className="size-3.5" aria-hidden="true" />
                       Développeur vérifié
                     </span>
+                  ) : null}
+                  {agencyBadge ? (
+                    <Link
+                      href={`/agences/${agencyBadge.slug}`}
+                      className="inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-primary-soft px-2.5 py-1 text-xs font-medium text-primary transition-colors hover:border-primary"
+                    >
+                      <Building2 className="size-3.5" aria-hidden="true" />
+                      {agencyBadge.name}
+                    </Link>
                   ) : null}
                 </div>
                 <p className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
