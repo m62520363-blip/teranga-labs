@@ -6,17 +6,33 @@ import {
   getCurrentUser,
 } from "@/lib/supabase/server";
 import { BRIEFS_COLUMNS, BRIEFS_PAGE_SIZE } from "@/lib/briefs-pagination";
+import { findRegionByPlace } from "@/lib/geography";
 import type { PublicRequest } from "@/types/database";
 
 export const metadata: Metadata = {
   title: "Briefs",
   description:
-    "Consultez les projets web disponibles au Sénégal et démarrez une discussion privée avec le client pour 1 Token.",
+    "Consultez les projets web disponibles en Afrique de l'Ouest francophone et démarrez une discussion privée avec le client pour 1 Token.",
 };
 
 export const dynamic = "force-dynamic";
 
-export default async function BriefsPage() {
+export default async function BriefsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ country?: string; region?: string }>;
+}) {
+  const sp = await searchParams;
+  // Deep-links géographiques (pages /pays et /ville) : ?country=SN&region=Dakar.
+  const initialCountry =
+    typeof sp.country === "string" && sp.country.trim()
+      ? sp.country.trim().toUpperCase().slice(0, 3)
+      : "";
+  const initialRegionName =
+    typeof sp.region === "string" && sp.region.trim() ? sp.region.trim() : "";
+  const resolvedRegion = findRegionByPlace(initialRegionName);
+  const initialRegion = resolvedRegion ? resolvedRegion.code : "";
+
   const supabase = await createClient();
   const user = await getCurrentUser();
 
@@ -117,6 +133,8 @@ export default async function BriefsPage() {
             balance={balance}
             unlocks={unlocks}
             favorites={favorites}
+            initialCountry={initialCountry}
+            initialRegion={initialRegion}
             welcomeContactFree={welcomeContactFree}
           />
         </div>

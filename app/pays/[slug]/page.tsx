@@ -134,6 +134,15 @@ export default async function CountryPage({
                 <Link href={`/briefs?country=${country.code}`}>Tous les briefs</Link>
               }
             />
+            <Button
+              variant="outline"
+              className="h-10 rounded-xl"
+              render={
+                <Link href={`/dev?city=${encodeURIComponent(country.nameFr)}`}>
+                  Développeurs en {country.nameFr}
+                </Link>
+              }
+            />
           </div>
 
           <section className="mt-12">

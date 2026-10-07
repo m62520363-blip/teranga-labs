@@ -34,12 +34,14 @@ const MIN_EXPERIENCES = [
 
 export function DirectoryPage({
   initial,
+  initialCity,
   filters,
   contactCost,
   role,
   authed,
 }: {
   initial: ApprovedDeveloper[];
+  initialCity?: string;
   filters: DirectoryFilters;
   contactCost: number;
   role: string | null;
@@ -48,7 +50,7 @@ export function DirectoryPage({
   const [items, setItems] = React.useState<ApprovedDeveloper[]>(initial);
   const [query, setQuery] = React.useState("");
   const [specialty, setSpecialty] = React.useState("");
-  const [city, setCity] = React.useState("");
+  const [city, setCity] = React.useState(initialCity ?? "");
   const [availability, setAvailability] = React.useState("");
   const [projectType, setProjectType] = React.useState("");
   const [minRating, setMinRating] = React.useState("0");

@@ -14,7 +14,8 @@ import { EmptyState } from "@/components/empty-state"
 import { createClient } from "@/lib/supabase/client"
 import { BRIEFS_COLUMNS, BRIEFS_PAGE_SIZE } from "@/lib/briefs-pagination"
 import type { PublicRequest } from "@/types/database"
-import { PROJECT_TYPE_LABELS, SENEGAL_REGIONS } from "@/lib/tokens"
+import { PROJECT_TYPE_LABELS } from "@/lib/tokens"
+import { countryCodeForPlace, findRegionByPlace } from "@/lib/geography"
 
 type UnlockInfo = Record<string, { conversation_id?: string; whatsapp?: string }>;
 
@@ -38,6 +39,8 @@ export function BriefFilters({
   balance,
   unlocks,
   favorites = new Set<string>(),
+  initialCountry = "",
+  initialRegion = "",
   welcomeContactFree = false,
 }: {
   briefs: PublicRequest[];
@@ -46,6 +49,8 @@ export function BriefFilters({
   balance: number | null;
   unlocks: UnlockInfo;
   favorites?: Set<string>;
+  initialCountry?: string;
+  initialRegion?: string;
   welcomeContactFree?: boolean;
 }) {
   const [all, setAll] = React.useState<PublicRequest[]>(briefs);
@@ -55,8 +60,8 @@ export function BriefFilters({
   const [city, setCity] = React.useState("all");
   const [type, setType] = React.useState("all");
   const [budget, setBudget] = React.useState("all");
-  const [country, setCountry] = React.useState("")
-  const [region, setRegion] = React.useState("")
+  const [country, setCountry] = React.useState(initialCountry)
+  const [region, setRegion] = React.useState(initialRegion)
 
   const knownTotal = Math.max(total, all.length);
   const hasMore = all.length < knownTotal;
@@ -92,27 +97,41 @@ export function BriefFilters({
     [budget]
   );
 
+  // Villes réellement présentes dans les briefs chargés (jamais inventées).
+  const cityItems = React.useMemo(() => {
+    const items: Record<string, string> = { all: "Toutes les villes" };
+    const seen = new Set<string>();
+    for (const b of all) {
+      const c = b.client_city?.trim();
+      if (c && !seen.has(c)) {
+        seen.add(c);
+        items[c] = c;
+      }
+    }
+    return items;
+  }, [all]);
+
   const filtered = React.useMemo(() => {
     const q = query.trim().toLowerCase();
+    const selectedRegion = region ? findRegionByPlace(region) : null;
     return all.filter((brief) => {
       const label = PROJECT_TYPE_LABELS[brief.project_type] ?? brief.project_type;
-      const haystack = `${label} ${brief.client_city} ${brief.description ?? ""} ${(brief as PublicRequest & { country?: string }).country ?? ""} ${(brief as PublicRequest & { region?: string }).region ?? ""}`.toLowerCase();
+      const haystack = `${label} ${brief.client_city} ${brief.description ?? ""}`.toLowerCase();
       if (q && !haystack.includes(q)) return false;
-      if (city !== "all" && brief.client_city !== city) return false;
-      if (country && country !== "all" && (brief as PublicRequest & { country?: string }).country !== country) return false;
-      if (region && region !== "all" && (brief as PublicRequest & { region?: string }).region !== region) return false;
+      if (city !== "all" && brief.client_city?.trim() !== city) return false;
+      if (country && country !== "all") {
+        const match = countryCodeForPlace(brief.client_city);
+        if (!match || match.toUpperCase() !== country.toUpperCase()) return false;
+      }
+      if (selectedRegion) {
+        const regionMatch = findRegionByPlace(brief.client_city);
+        if (!regionMatch || regionMatch.code !== selectedRegion.code) return false;
+      }
       if (type !== "all" && brief.project_type !== type) return false;
       if (!budgetBand.matches(brief.budget)) return false;
       return true;
     });
   }, [all, query, city, type, budget, budgetBand, country, region]);
-
-
-  const cityItems = React.useMemo(() => {
-    const items: Record<string, string> = { all: "Toutes les rÃ©gions" };
-    for (const c of SENEGAL_REGIONS) items[c] = c;
-    return items;
-  }, []);
 
   const typeItems = React.useMemo(() => {
     const items: Record<string, string> = { all: "Tous les types" };
@@ -137,7 +156,7 @@ export function BriefFilters({
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Rechercher par mots-clÃ©s : e-commerce, Dakar, WordPressâ€¦"
+            placeholder="Rechercher par mots-clés : e-commerce, Dakar, WordPress…"
             className="h-10 rounded-xl pl-9"
             aria-label="Rechercher dans les briefs"
           />
@@ -147,7 +166,7 @@ export function BriefFilters({
         </div>
         <div className="flex flex-wrap gap-3">
           <Select value={city} onValueChange={(v) => setCity(v ?? "all")} items={cityItems}>
-            <SelectTrigger size="default" className="w-full rounded-xl sm:w-auto" aria-label="Filtrer par rÃ©gion">
+            <SelectTrigger size="default" className="w-full rounded-xl sm:w-auto" aria-label="Filtrer par ville">
               <SelectValue />
             </SelectTrigger>
             <SelectContent align="start">
@@ -189,7 +208,7 @@ export function BriefFilters({
 
       <p className="mt-6 text-sm font-medium text-muted-foreground">
         {filtered.length} brief{filtered.length > 1 ? "s" : ""} disponible
-        {filtered.length > 1 ? "s" : ""} au SÃ©nÃ©gal
+        {filtered.length > 1 ? "s" : ""} sur le marketplace
         {hasMore ? (
           <span className="font-normal">
             {" "}

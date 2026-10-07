@@ -73,7 +73,7 @@ export async function generateMetadata({
     title: `${profile.full_name ?? "Développeur"}${profile.city ? ` · ${profile.city}` : ""} · Teranga Labs`,
     description:
       profile.bio ??
-      `Développeur ${profile.city ?? "au Sénégal"} — consultez le portfolio et contactez directement.`,
+      `Développeur ${profile.city ?? "en Afrique de l’Ouest francophone"} — consultez le portfolio et contactez directement.`,
   };
 }
 
@@ -664,7 +664,7 @@ export default async function DeveloperProfilePage({
 
         <p className="mt-6 text-center text-xs text-muted-foreground">
           Profil présenté par Teranga Labs — mise en relation directe entre
-          clients et développeurs au Sénégal.
+          clients et développeurs en Afrique de l’Ouest francophone.
         </p>
       </div>
     </div>
