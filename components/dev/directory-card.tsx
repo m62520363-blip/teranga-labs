@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   BadgeCheck,
   Briefcase,
@@ -51,10 +52,12 @@ export function DirectoryCard({
         <div className="flex min-w-0 items-center gap-3">
           <div className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-hairline">
             {developer.avatar_url ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
+              <Image
                 src={developer.avatar_url}
                 alt={`Avatar de ${developer.full_name ?? developer.username ?? "développeur"}`}
+                width={48}
+                height={48}
+                unoptimized
                 className="size-full object-cover"
               />
             ) : (

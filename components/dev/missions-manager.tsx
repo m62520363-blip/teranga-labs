@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { toast } from "sonner";
+import Image from "next/image";
 import {
   AlertTriangle,
   Briefcase,
@@ -266,11 +267,13 @@ export function MissionsManager({
               >
                 <div className="flex flex-col gap-4 md:flex-row md:items-start">
                   {shot ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
+                    <Image
                       src={shot}
                       alt=""
                       loading="lazy"
+                      width={384}
+                      height={192}
+                      unoptimized
                       className="h-24 w-full shrink-0 rounded-xl border border-hairline object-cover md:w-36"
                     />
                   ) : (

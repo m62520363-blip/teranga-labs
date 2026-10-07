@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import {
   BadgeCheck,
@@ -126,10 +127,12 @@ export default async function DeveloperProfilePage({
             <div className="flex items-start gap-5">
               <div className="relative shrink-0">
                 {profile.avatar_url ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
+                  <Image
                     src={profile.avatar_url}
                     alt=""
+                    width={96}
+                    height={96}
+                    unoptimized
                     className="size-20 rounded-2xl border border-hairline object-cover md:size-24"
                   />
                 ) : (
@@ -341,11 +344,13 @@ export default async function DeveloperProfilePage({
                     className="group rounded-2xl border border-hairline bg-card p-5 transition-colors hover:border-primary/50"
                   >
                     {link.image_url ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
+                      <Image
                         src={link.image_url}
                         alt=""
                         loading="lazy"
+                        width={640}
+                        height={256}
+                        unoptimized
                         className="mb-4 h-32 w-full rounded-xl border border-hairline object-cover"
                       />
                     ) : (
@@ -392,11 +397,13 @@ export default async function DeveloperProfilePage({
                       className="flex flex-col rounded-2xl border border-hairline bg-card p-5"
                     >
                       {shot ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
+                        <Image
                           src={shot}
                           alt=""
                           loading="lazy"
+                          width={640}
+                          height={256}
+                          unoptimized
                           className="mb-4 h-32 w-full rounded-xl border border-hairline object-cover"
                         />
                       ) : (

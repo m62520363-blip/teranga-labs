@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createAdminClient, isServiceConfigured } from "@/lib/supabase/admin";
+import { log } from "@/lib/log";
 import {
   isCheckoutCompleted,
   verifyWaveSignature,
@@ -91,7 +92,7 @@ export async function POST(request: Request) {
     );
 
     if (creditError) {
-      console.error("[payments] credit_from_payment failed:", creditError);
+      log.error({ action: "webhook.credit.failed", provider: "wave", message: creditError.message });
       return NextResponse.json({ error: "credit_failed" }, { status: 500 });
     }
 
@@ -100,7 +101,8 @@ export async function POST(request: Request) {
         p_event: "payment.credited",
         p_metadata: { flow: "webhook_wave", amount_fcfa: intent.amount_fcfa },
       });
-      if (error) console.error("[payments] track payment.credited failed:", error);
+      if (error)
+        log.error({ action: "webhook.credit.track", provider: "wave", message: error.message });
     })();
 
     return NextResponse.json({ ok: true, credited: true, result: creditResult });
@@ -135,7 +137,11 @@ export async function POST(request: Request) {
   );
 
   if (confirmError) {
-    console.error("[payments] admin_confirm_verification_payment failed:", confirmError);
+    log.error({
+      action: "webhook.verification.confirm.failed",
+      provider: "wave",
+      message: confirmError.message,
+    });
     return NextResponse.json({ error: "confirm_failed" }, { status: 500 });
   }
 
@@ -144,7 +150,12 @@ export async function POST(request: Request) {
       p_event: "payment.credited",
       p_metadata: { flow: "verification", amount_fcfa: verification.amount_fcfa },
     });
-    if (error) console.error("[payments] track payment.credited failed:", error);
+    if (error)
+      log.error({
+        action: "webhook.verification.track",
+        provider: "wave",
+        message: error.message,
+      });
   })();
 
   return NextResponse.json({ ok: true, confirmed: true, result: confirmResult });

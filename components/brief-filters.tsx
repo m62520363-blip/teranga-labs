@@ -131,7 +131,7 @@ export function BriefFilters({
       if (!budgetBand.matches(brief.budget)) return false;
       return true;
     });
-  }, [all, query, city, type, budget, budgetBand, country, region]);
+  }, [all, query, city, type, country, region, budgetBand]);
 
   const typeItems = React.useMemo(() => {
     const items: Record<string, string> = { all: "Tous les types" };

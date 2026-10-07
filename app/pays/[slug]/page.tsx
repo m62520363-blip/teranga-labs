@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MapPin, ShieldCheck } from "lucide-react";
@@ -102,7 +103,7 @@ export default async function CountryPage({
         <div className="mx-auto max-w-4xl">
           <p className="inline-flex items-center gap-2 text-sm font-medium text-primary">
             {getFlagUrl(country.code, 24) ? (
-              <img
+              <Image
                 src={getFlagUrl(country.code, 24)}
                 alt=""
                 width={24}

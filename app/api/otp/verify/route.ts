@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser, isSupabaseConfigured } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { log } from "@/lib/log";
 import { otpVerifySchema } from "@/lib/validations";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 
@@ -96,7 +97,8 @@ export async function POST(request: Request) {
       p_actor_id: user.id,
       p_metadata: { channel: parsed.data.channel, purpose: parsed.data.purpose },
     });
-    if (error) console.error("[otp] track otp.verified failed:", error);
+    if (error)
+      log.error({ action: "otp.verified.track", message: error.message });
   })();
 
   return NextResponse.json({ verified: true });

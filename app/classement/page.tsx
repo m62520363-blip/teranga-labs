@@ -1,5 +1,6 @@
 ﻿import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { Award, Crown, ShieldCheck, Trophy, UserRound } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { COUNTRIES } from "@/lib/countries";
@@ -80,10 +81,12 @@ function DeveloperCell({ row }: { row: LeaderboardRow }) {
   return (
     <div className="flex items-center gap-3">
       {row.avatar_url ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <Image
           src={row.avatar_url}
           alt=""
+          width={36}
+          height={36}
+          unoptimized
           className="size-9 shrink-0 rounded-lg border border-hairline object-cover"
         />
       ) : (

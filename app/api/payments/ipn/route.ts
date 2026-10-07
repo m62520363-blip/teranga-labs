@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createAdminClient, isServiceConfigured } from "@/lib/supabase/admin";
+import { log } from "@/lib/log";
 import {
   amountMatches,
   confirmPaydunyaCheckout,
@@ -131,9 +132,9 @@ export async function POST(request: Request) {
     confirmed = await confirmPaydunyaCheckout(invoiceToken);
   } catch (err) {
     if (isPaydunyaApiError(err)) {
-      console.error("[payments/ipn] confirm PayDunya refuse:", err.message);
+      log.error({ action: "ipn.confirm.refused", provider: "paydunya", message: err.message });
     } else {
-      console.error("[payments/ipn] confirm PayDunya injoignable:", err);
+      log.error({ action: "ipn.confirm.unreachable", provider: "paydunya", message: String(err) });
     }
     // 502 : l'API est momentanément indisponible. PayDunya réessaiera, ce
     // qui est le comportement voulu — mieux vaut retarder un crédit que le
@@ -173,7 +174,11 @@ export async function POST(request: Request) {
   );
 
   if (creditError) {
-    console.error("[payments/ipn] credit_from_payment failed:", creditError);
+    log.error({
+      action: "ipn.credit.failed",
+      provider: "paydunya",
+      message: creditError.message,
+    });
     return NextResponse.json({ error: "credit_failed" }, { status: 500 });
   }
 
@@ -187,7 +192,12 @@ export async function POST(request: Request) {
         developer_id: intent.developer_id,
       },
     });
-    if (error) console.error("[payments/ipn] track payment.credited failed:", error);
+    if (error)
+      log.error({
+        action: "ipn.credit.track",
+        provider: "paydunya",
+        message: error.message,
+      });
   })();
 
   return ok({ ok: true, credited: true, result: creditResult });

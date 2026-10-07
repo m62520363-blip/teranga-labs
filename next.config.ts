@@ -17,6 +17,14 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  images: {
+    remotePatterns: [
+      // Drapeaux (référentiel statique des pays).
+      { protocol: "https", hostname: "flagcdn.com" },
+      // Fichiers publics hébergés sur le stockage Supabase du projet.
+      { protocol: "https", hostname: "virihuuksoepswccxsne.supabase.co" },
+    ],
+  },
   async headers() {
     return [
       {

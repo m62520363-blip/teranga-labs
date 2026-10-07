@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { toast } from "sonner";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
   Building2,
@@ -276,10 +277,12 @@ export function MissionsDashboard({ missions, userId, role, focusId = null }: Pr
                   <div className="mt-4 flex items-center gap-3 rounded-xl border border-hairline bg-surface px-3 py-2.5">
                     {m.opponent && m.opponent.related_as === "developer" &&
                     m.opponent.avatar_url ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
+                      <Image
                         src={m.opponent.avatar_url}
                         alt=""
+                        width={36}
+                        height={36}
+                        unoptimized
                         className="size-9 shrink-0 rounded-lg border border-hairline object-cover"
                       />
                     ) : (

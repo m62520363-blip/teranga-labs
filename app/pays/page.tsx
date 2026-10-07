@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { getFlagUrl, COUNTRIES, type CountryCode } from "@/lib/countries";
@@ -25,7 +26,7 @@ function CountryCard({ code, slug }: { code: CountryCode; slug: string }) {
       aria-label={`Développeurs web et briefs en ${country.nameFr}`}
       className="group flex items-center gap-4 rounded-2xl border border-hairline bg-card p-5 transition-colors hover:border-primary/40"
     >
-      <img
+      <Image
         src={getFlagUrl(country.code, 48)}
         alt={`Drapeau ${country.nameFr}`}
         width={48}
