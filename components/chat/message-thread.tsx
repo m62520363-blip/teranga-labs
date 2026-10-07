@@ -1,11 +1,13 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Loader2, Send, Sparkles, Check, Zap } from "lucide-react";
+import { Loader2, Send, Sparkles, Check, Zap, ClipboardList } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { formatFCFA, formatDateTime } from "@/lib/formatting";
+import { missionErrorMessage } from "@/lib/mission-labels";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -51,6 +53,7 @@ type Props = {
   initialMessages: ThreadMessage[];
   initialOffers: ThreadOffer[];
   hasRequest?: boolean;
+  missionId?: string | null;
 };
 
 export function MessageThread({
@@ -63,6 +66,7 @@ export function MessageThread({
   initialMessages,
   initialOffers,
   hasRequest = true,
+  missionId = null,
 }: Props) {
   const [messages, setMessages] = React.useState<ThreadMessage[]>(initialMessages);
   const [offers, setOffers] = React.useState<ThreadOffer[]>(initialOffers);
@@ -76,6 +80,7 @@ export function MessageThread({
     description: "",
   });
   const [offerSending, setOfferSending] = React.useState(false);
+  const [creatingMission, setCreatingMission] = React.useState(false);
   const bottomRef = React.useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -277,6 +282,22 @@ export function MessageThread({
 
   const awardedOffer = offers.find((o) => o.status === "accepted");
 
+  const startMission = async () => {
+    if (!awardedOffer) return;
+    setCreatingMission(true);
+    const supabase = createClient();
+    const { error } = await supabase.rpc("create_mission_from_offer", {
+      p_offer_id: awardedOffer.id,
+    });
+    setCreatingMission(false);
+    if (error) {
+      toast.error(missionErrorMessage(error.code ?? null, error.message || "Impossible de créer la mission."));
+      return;
+    }
+    toast.success("Mission créée. C'est parti !");
+    setTimeout(() => router.refresh(), 350);
+  };
+
   return (
     <div className="flex h-full min-h-[60vh] flex-col overflow-hidden rounded-2xl border border-hairline bg-card">
       <div className="flex items-center justify-between gap-3 border-b border-hairline px-5 py-4">
@@ -368,6 +389,30 @@ export function MessageThread({
               {awardedOffer.delivery_days} jour{awardedOffer.delivery_days > 1 ? "s" : ""} a été
               accepté. La discussion est clôturée.
             </p>
+            {isClient && !missionId ? (
+              <button
+                type="button"
+                disabled={creatingMission}
+                onClick={() => void startMission()}
+                className="mt-3 inline-flex h-9 items-center gap-2 rounded-xl bg-success px-4 text-xs font-semibold text-white shadow-sm transition-opacity outline-none hover:opacity-90 focus-visible:ring-2 focus-visible:ring-success/50 disabled:opacity-60"
+              >
+                {creatingMission ? (
+                  <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
+                ) : (
+                  <ClipboardList className="size-3.5" aria-hidden="true" />
+                )}
+                {creatingMission ? "Création…" : "Démarrer la mission"}
+              </button>
+            ) : null}
+            {missionId ? (
+              <Link
+                href={`/missions?focus=${missionId}`}
+                className="mt-3 inline-flex h-9 items-center gap-2 rounded-xl bg-success px-4 text-xs font-semibold text-white shadow-sm transition-opacity outline-none hover:opacity-90 focus-visible:ring-2 focus-visible:ring-success/50"
+              >
+                <ClipboardList className="size-3.5" aria-hidden="true" />
+                Suivre la mission
+              </Link>
+            ) : null}
           </div>
         ) : null}
 

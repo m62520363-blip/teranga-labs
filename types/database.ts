@@ -45,6 +45,8 @@ export type PaymentIntentStatus =
 
 export type ConversationStatus = "active" | "awarded" | "archived";
 
+export type MissionStatus = "new" | "in_progress" | "completed" | "disputed" | "cancelled";
+
 export type MessageType = "text" | "offer" | "system";
 
 export type OfferStatus = "pending" | "accepted" | "rejected";
@@ -345,6 +347,64 @@ export interface Database {
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["conversations"]["Insert"]>;
+        Relationships: [];
+      };
+      missions: {
+        Row: {
+          id: string;
+          request_id: string;
+          conversation_id: string | null;
+          offer_id: string | null;
+          developer_id: string;
+          client_id: string;
+          status: MissionStatus;
+          agreed_price_fcfa: number;
+          agreed_days: number;
+          description: string | null;
+          started_at: string | null;
+          completed_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          request_id: string;
+          conversation_id?: string | null;
+          offer_id?: string | null;
+          developer_id: string;
+          client_id: string;
+          status?: MissionStatus;
+          agreed_price_fcfa: number;
+          agreed_days: number;
+          description?: string | null;
+          started_at?: string | null;
+          completed_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["missions"]["Insert"]>;
+        Relationships: [];
+      };
+      mission_events: {
+        Row: {
+          id: string;
+          mission_id: string;
+          actor_id: string;
+          status_from: string | null;
+          status_to: string;
+          comment: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          mission_id: string;
+          actor_id: string;
+          status_from?: string | null;
+          status_to: string;
+          comment?: string | null;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["mission_events"]["Insert"]>;
         Relationships: [];
       };
       developer_projects: {

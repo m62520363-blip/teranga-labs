@@ -66,6 +66,7 @@ export function Navbar({
   if (authed) {
     appLinks.push({ href: homeHref, label: "Accueil" });
     appLinks.push({ href: "/conversations", label: "Messages" });
+    appLinks.push({ href: "/missions", label: "Missions" });
     if (isClient) {
       appLinks.push({ href: "/poster", label: "Publier un brief" });
     } else if (isDev) {

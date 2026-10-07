@@ -36,6 +36,12 @@ export default async function ConversationThreadPage({
   const { conversation } = thread;
   const request = thread.request;
 
+  const mission = await supabase
+    .from("missions")
+    .select("id")
+    .eq("conversation_id", id)
+    .maybeSingle();
+
   return (
     <div className="bg-surface py-8 md:py-12">
       <div className="container-tl">
@@ -73,6 +79,7 @@ export default async function ConversationThreadPage({
           initialMessages={thread.messages as unknown as ThreadMessage[]}
           initialOffers={thread.offers as unknown as ThreadOffer[]}
           hasRequest={thread.hasRequest}
+          missionId={mission?.data?.id ?? null}
         />
       </div>
     </div>
