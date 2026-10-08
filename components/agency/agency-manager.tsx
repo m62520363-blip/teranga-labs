@@ -21,7 +21,7 @@ import {
   type MyAgency,
   type MyAgencyMember,
 } from "@/types/agency";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 
 const STATUS_LABEL: Record<MyAgency["status"], string> = {
   pending: "En attente de validation",

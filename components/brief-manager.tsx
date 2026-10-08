@@ -60,6 +60,9 @@ export function BriefManager({
   const [brief, setBrief] = React.useState(data);
   const [busy, setBusy] = React.useState(false);
   const statusHint = brief.unlocks_count > 0 ? brief.unlocks_count : 0;
+  const [promoting, setPromoting] = React.useState(false);
+  const [promoteDays, setPromoteDays] = React.useState(7);
+  const [promoteMsg, setPromoteMsg] = React.useState("");
 
   const changeStatus = async (status: string) => {
     setBusy(true);
@@ -75,6 +78,29 @@ export function BriefManager({
     }
     setBrief({ ...brief, status });
     toast.success("Brief mis à jour");
+  };
+
+  const promote = async () => {
+    setPromoting(true);
+    setPromoteMsg("");
+    const supabase = createClient();
+    const { data, error } = await supabase.rpc("sponsor_brief", {
+      p_request_id: brief.id,
+      p_management_key: managementKey,
+      p_days: promoteDays,
+    });
+    setPromoting(false);
+    if (error) {
+      toast.error(error.message || "Impossible de mettre en avant ce brief.");
+      return;
+    }
+    const ends = (data as { ends_at?: string } | null)?.ends_at;
+    toast.success(
+      ends
+        ? `Brief mis en avant jusqu'au ${new Date(ends).toLocaleDateString("fr-FR")}`
+        : "Brief mis en avant."
+    );
+    setPromoteMsg("Ce brief apparaît désormais en tête du marketplace.");
   };
 
   return (
@@ -111,6 +137,54 @@ export function BriefManager({
             profils sérieux. Répondez-leur dans la messagerie interne du site.
           </p>
         </div>
+
+        {brief.status === "ouvert" ? (
+          <div className="mt-4 rounded-xl border border-primary/30 bg-primary-soft/60 p-4">
+            <p className="flex items-center gap-2 text-sm font-medium">
+              <Star className="size-4 text-primary" aria-hidden="true" />
+              Mettre ce brief en avant sur le marketplace
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Votre brief apparaît en tête de l&apos;annuaire des projets pour
+              attirer plus de développeurs (1 Token par jour).
+            </p>
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              {[7, 14, 30].map((days) => (
+                <button
+                  key={days}
+                  type="button"
+                  onClick={() => setPromoteDays(days)}
+                  className={cn(
+                    "inline-flex h-9 items-center rounded-lg border px-3 text-sm font-medium transition-colors",
+                    promoteDays === days
+                      ? "border-primary bg-primary-soft text-primary"
+                      : "border-hairline bg-background text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  {days} jours
+                </button>
+              ))}
+              <button
+                type="button"
+                onClick={() => void promote()}
+                disabled={promoting}
+                className="ml-auto inline-flex h-9 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-medium text-ink transition-colors hover:bg-primary-hover disabled:opacity-60"
+              >
+                {promoting ? (
+                  <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+                ) : (
+                  <Star className="size-4" aria-hidden="true" />
+                )}
+                Mettre en avant
+              </button>
+            </div>
+            {promoteMsg ? (
+              <p className="mt-3 text-sm font-medium text-emerald-700">
+                {promoteMsg}
+              </p>
+            ) : null}
+          </div>
+        ) : null}
 
         {brief.status !== "fermé" ? (
           <div className="mt-6">

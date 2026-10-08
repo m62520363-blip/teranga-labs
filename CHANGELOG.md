@@ -2,6 +2,26 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [P2-3] — 2026-10-07
+
+Troisième vague du chapitre P2 : le **sponsoring** (mise en avant payante en Tokens).
+
+### Migration `0045_sponsoring.sql`
+- Tables `sponsored_profiles` et `sponsored_briefs` (période cumulable, durée 1-30 jours, RLS lecture seule) + `debit_tokens` (verrou anti-course, transaction négative).
+- `sponsor_dev_profile(p_days)` : débit Tokens au prix journalier de `app_settings.sponsoring_profile_price_tokens` (défaut 2), le profil remonte en tête de l'annuaire.
+- `sponsor_brief(p_request_id, p_management_key, p_days)` : idem pour un brief ouvert (le client détenteur de la clé), prix `sponsoring_brief_price_tokens`.
+- `get_sponsoring_prices()` (lecture publique des tarifs) et `admin_set_sponsoring_prices(...)` (admin).
+- `list_approved_developers` réécrite (mêmes paramètres) : ajout de `is_sponsored`/`featured_until` et tri « sponsorisés d'abord ».
+
+### Interface
+- **Annuaire** : les profils sponsorisés sont affichés en tête, quel que soit le tri.
+- **Marketplace des briefs** : badge « Mis en avant » + sponsorisés triés en premier (`isBriefSponsored` + relation `sponsored_briefs`).
+- **Dashboard développeur → Réputation & commandes** : panneau « Promouvoir mon profil » (7/14/30 jours, prix dynamique).
+- **Brief ouvert (page de gestion du client)** : panneau « Mettre ce brief en avant » avec choix de durée.
+
+### Vérifications
+- typecheck ✔, lint 0/0 ✔, 159 tests ✔.
+
 ## [P2-2] — 2026-10-07
 
 Deuxième vague du chapitre P2 : les **agences** rejoignent la plateforme.

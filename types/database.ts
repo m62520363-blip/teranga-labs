@@ -893,6 +893,31 @@ export interface Database {
         Args: Record<string, never>;
         Returns: Json;
       };
+      get_sponsoring_prices: {
+        Args: Record<string, never>;
+        Returns: Json;
+      };
+      sponsor_dev_profile: {
+        Args: {
+          p_days?: number;
+        };
+        Returns: Json;
+      };
+      sponsor_brief: {
+        Args: {
+          p_request_id: string;
+          p_management_key: string;
+          p_days?: number;
+        };
+        Returns: Json;
+      };
+      admin_set_sponsoring_prices: {
+        Args: {
+          p_profile_price_tokens: number;
+          p_brief_price_tokens: number;
+        };
+        Returns: Json;
+      };
       toggle_favorite: {
         Args: {
           p_request_id: string;
@@ -1420,6 +1445,10 @@ export type PublicRequest = Pick<
   "id" | "client_name" | "client_city" | "project_type" | "budget" | "description" | "status" | "hidden" | "budget_verified" | "demo" | "created_at"
 >;
 
+export type PublicRequestWithSponsor = PublicRequest & {
+  sponsored_briefs?: { ends_at: string | null }[] | null;
+};
+
 export type TokenPackage = Database["public"]["Tables"]["token_packages"]["Row"];
 
 export type DeveloperProfile = Database["public"]["Tables"]["developers"]["Row"];
@@ -1571,6 +1600,8 @@ export type ApprovedDeveloper = {
   satisfaction_pct: number | null;
   phone_masked: string | null;
   email_masked: string | null;
+  is_sponsored?: boolean | null;
+  featured_until?: string | null;
 };
 
 export type DeveloperMission = {

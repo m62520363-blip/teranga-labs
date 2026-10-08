@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { BadgeCheck, MapPin, Sparkles, Timer } from "lucide-react";
+import { BadgeCheck, MapPin, Sparkles, Star, Timer } from "lucide-react";
 import type { PublicRequest } from "@/types/database";
 import { formatFCFA, formatRelativeTime, briefFreshness } from "@/lib/formatting";
 import { PROJECT_TYPE_LABELS } from "@/lib/tokens";
@@ -10,10 +10,12 @@ export function BriefCard({
   brief,
   footer,
   compact = false,
+  sponsored = false,
 }: {
   brief: PublicRequest;
   footer?: ReactNode;
   compact?: boolean;
+  sponsored?: boolean;
 }) {
   const freshness = briefFreshness(brief.created_at);
 
@@ -35,6 +37,12 @@ export function BriefCard({
       </div>
 
       <div className="mt-3 flex flex-wrap items-center gap-1.5">
+        {sponsored ? (
+          <span className="inline-flex h-5 items-center gap-1 rounded-full bg-ink px-2.5 text-[11px] font-semibold text-background">
+            <Star className="size-3 fill-current" aria-hidden="true" />
+            Mis en avant
+          </span>
+        ) : null}
         {brief.demo ? (
           <span className="inline-flex h-5 items-center rounded-full border border-primary/40 bg-primary-soft px-2.5 text-[11px] font-semibold text-primary">
             Exemple

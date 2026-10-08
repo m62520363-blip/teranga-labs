@@ -12,8 +12,8 @@ import { ReportButton } from "@/components/report-button"
 import { FavoriteButton } from "@/components/favorite-button"
 import { EmptyState } from "@/components/empty-state"
 import { createClient } from "@/lib/supabase/client"
-import { BRIEFS_COLUMNS, BRIEFS_PAGE_SIZE } from "@/lib/briefs-pagination"
-import type { PublicRequest } from "@/types/database"
+import { BRIEFS_COLUMNS, BRIEFS_PAGE_SIZE, isBriefSponsored } from "@/lib/briefs-pagination"
+import type { PublicRequest, PublicRequestWithSponsor } from "@/types/database"
 import { PROJECT_TYPE_LABELS } from "@/lib/tokens"
 import { countryCodeForPlace, findRegionByPlace } from "@/lib/geography"
 
@@ -53,7 +53,9 @@ export function BriefFilters({
   initialRegion?: string;
   welcomeContactFree?: boolean;
 }) {
-  const [all, setAll] = React.useState<PublicRequest[]>(briefs);
+  const [all, setAll] = React.useState<PublicRequestWithSponsor[]>(
+    briefs as PublicRequestWithSponsor[]
+  );
   const [loading, setLoading] = React.useState(false);
   const [loadError, setLoadError] = React.useState<string | null>(null);
   const [query, setQuery] = React.useState("");
@@ -80,7 +82,7 @@ export function BriefFilters({
         .order("id", { ascending: false })
         .range(all.length, all.length + BRIEFS_PAGE_SIZE - 1);
       if (error) throw error;
-      const rows = (data ?? []) as PublicRequest[];
+      const rows = (data ?? []) as PublicRequestWithSponsor[];
       setAll((prev) => {
         const seen = new Set(prev.map((b) => b.id));
         return [...prev, ...rows.filter((b) => !seen.has(b.id))];
@@ -130,6 +132,10 @@ export function BriefFilters({
       if (type !== "all" && brief.project_type !== type) return false;
       if (!budgetBand.matches(brief.budget)) return false;
       return true;
+    }).sort((a, b) => {
+      const aS = isBriefSponsored(a) ? 0 : 1;
+      const bS = isBriefSponsored(b) ? 0 : 1;
+      return aS - bS;
     });
   }, [all, query, city, type, country, region, budgetBand]);
 
@@ -222,6 +228,7 @@ export function BriefFilters({
           <BriefCard
             key={brief.id}
             brief={brief}
+            sponsored={isBriefSponsored(brief)}
             footer={
               <div className="flex items-center gap-1">
                 {user ? (

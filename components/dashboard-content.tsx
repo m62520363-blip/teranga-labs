@@ -33,6 +33,7 @@ import {
 import { DashboardStats } from "@/components/dashboard-stats";
 import { MissionsManager, type TlMissionOption } from "@/components/dev/missions-manager";
 import AgencyManager from "@/components/agency/agency-manager";
+import SponsorPanel from "@/components/sponsoring/sponsor-panel";
 import { DevReviewsPanel } from "@/components/dev/reviews-panel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -1430,7 +1431,11 @@ export function DashboardContent({
         ) : null}
 
         {tab === "activite" ? (
-          <div className="mt-8 grid gap-6 lg:grid-cols-2">
+          <>
+            <div className="mt-8">
+              <SponsorPanel />
+            </div>
+            <div className="mt-8 grid gap-6 lg:grid-cols-2">
             <section
               className="rounded-2xl border border-hairline bg-card p-6 shadow-sm sm:p-8"
               aria-label="Réputation"
@@ -1605,7 +1610,8 @@ export function DashboardContent({
                 </ul>
               )}
             </section>
-          </div>
+            </div>
+          </>
         ) : null}
 
         {tab === "devis" ? (
