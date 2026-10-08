@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { getCurrentUser, isSupabaseConfigured } from "@/lib/supabase/server";
+import { isSupabaseConfigured } from "@/lib/supabase/server";
+import { apiRequireUser } from "@/lib/auth/guards";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { otpRequestSchema } from "@/lib/validations";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
@@ -25,13 +26,9 @@ export async function POST(request: Request) {
     );
   }
 
-  const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json(
-      { code: "UNAUTHENTICATED", message: "Connectez-vous." },
-      { status: 401 }
-    );
-  }
+  const guard = await apiRequireUser();
+  if (guard.response) return guard.response;
+  const user = guard.user!;
 
   const rl = rateLimit(`otp-request:${clientIp(request)}`, 5);
   if (!rl.ok) {

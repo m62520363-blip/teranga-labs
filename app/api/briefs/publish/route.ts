@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { briefSchema } from "@/lib/validations";
-import { createClient, getCurrentUser } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
+import { apiRequireUser } from "@/lib/auth/guards";
 import { flushNotifications } from "@/lib/notifications/dispatch";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
@@ -62,13 +63,9 @@ export async function POST(request: NextRequest) {
   }
 
   // La publication coûte 1 Token : l'auteur doit être connecté.
-  const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json(
-      { error: "Connectez-vous pour publier un brief." },
-      { status: 401 }
-    );
-  }
+  const guard = await apiRequireUser();
+  if (guard.response) return guard.response;
+  const user = guard.user!;
 
   const values = parsed.data;
   const { data, error } = await supabase.rpc("publish_brief", {

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { apiRequireRole } from "@/lib/auth/guards";
+import { apiRequireRole, CONNECTED_ROLES } from "@/lib/auth/guards";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { favoriteToggleSchema } from "@/lib/validations";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const guard = await apiRequireRole(["client", "developer", "agency", "moderator", "support", "admin"]);
+  const guard = await apiRequireRole(CONNECTED_ROLES);
   if (guard.response) return guard.response;
   const user = guard.user!;
 

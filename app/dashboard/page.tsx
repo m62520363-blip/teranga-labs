@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { DashboardContent, type OrderItem, type UnlockHistoryItem } from "@/components/dashboard-content";
-import { getCurrentUser, createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
+import { requireUser } from "@/lib/auth/guards";
 import { getConversations } from "@/lib/conversations";
 import type { MyDeveloperMission, MyDeveloperReviews } from "@/types/database";
 
@@ -37,8 +38,7 @@ export default async function DashboardPage({
 }: {
   searchParams: Promise<{ tab?: string }>;
 }) {
-  const user = await getCurrentUser();
-  if (!user) redirect("/login");
+  const user = await requireUser();
 
   const supabase = await createClient();
   if (!supabase) return notConfigured();

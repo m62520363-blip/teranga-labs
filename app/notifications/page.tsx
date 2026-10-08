@@ -1,18 +1,16 @@
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
 import { NotificationsPage } from "@/components/notifications-page";
-import { getCurrentUser } from "@/lib/supabase/server";
+import { requireUser } from "@/lib/auth/guards";
 
 export const metadata: Metadata = {
   title: "Notifications",
-  description: "Vos messages, devis et alertes sur TERANGA LABS.",
+  description: "Vos alertes TERANGA LABS.",
   robots: { index: false, follow: false },
 };
 
 export const dynamic = "force-dynamic";
 
 export default async function NotificationsRoute() {
-  const user = await getCurrentUser();
-  if (!user) redirect("/login");
+  const user = await requireUser();
   return <NotificationsPage userId={user.id} />;
 }

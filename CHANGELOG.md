@@ -2,6 +2,24 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [P3-1] — 2026-10-08
+
+Première vague du chapitre P3 (qualité de production) : **centralisation des gardes de route** (audit C7/§33).
+
+### Gardes
+- `lib/auth/guards.ts` : ajout de `apiRequireUser()` (session uniquement, réponse JSON 401) et de `CONNECTED_ROLES` (les 6 rôles reconnus).
+- **8 pages** migrées vers `requireUser()` / `requireRole()` : `/client`, `/dashboard`, `/conversations`, `/conversations/[id]`, `/missions`, `/notifications`, `/parametres`, `/review/[id]` — plus aucune page n'écrit `redirect("/login")` en dur.
+- **6 routes API** migrées vers `apiRequireUser()` : `briefs/publish`, `otp/request`, `otp/verify`, `payments/checkout`, `payments/status`, `verification/checkout` ; `favorites/toggle` réutilise `CONNECTED_ROLES`.
+- `payments/ipn` et `payments/webhook` restent volontairement publiques (callbacks signés) ; `ai/brief-assist` reste public (limité par IP).
+
+### Régression (nouveau)
+- `tests/route-guards.test.ts` : aucun `redirect("/login")` en dur dans `app/`, aucun `getCurrentUser()` direct dans les routes API, listes des routes protégées sous contrôle.
+
+Comportement conservé : les branchements de rôle existants (`get_my_role` → `/dashboard` ou `/client`) sont inchangés pour ne pas pénaliser les anciens comptes sans entrée `user_roles`.
+
+### Vérifications
+- typecheck ✔, lint 0/0 ✔, **167 tests** (dont 3 nouveaux).
+
 ## [P2] — 2026-10-08 : chapitre terminé
 
 Six vagues livrées. Bilan final du chapitre P2.

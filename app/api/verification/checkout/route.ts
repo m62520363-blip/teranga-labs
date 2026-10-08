@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { getCurrentUser, createClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import { apiRequireUser } from "@/lib/auth/guards";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createCheckoutSession, isWaveApiError } from "@/lib/payments/wave";
 import { isWaveConfigured } from "@/lib/payments/config";
@@ -67,13 +68,9 @@ export async function POST(request: Request) {
 
   const method = parsed.data.method === "max_it" ? "max_it" : "wave";
 
-  const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json(
-      { code: "UNAUTHENTICATED", message: "Connectez-vous pour demander la vérification." },
-      { status: 401 }
-    );
-  }
+  const guard = await apiRequireUser();
+  if (guard.response) return guard.response;
+  const user = guard.user!;
 
   const supabase = await createClient();
   if (!supabase) {

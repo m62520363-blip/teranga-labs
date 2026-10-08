@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { ArrowLeft, Phone } from "lucide-react";
-import { createClient, getCurrentUser } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
+import { requireUser } from "@/lib/auth/guards";
 import { getConversationThread } from "@/lib/conversations";
 import {
   MessageThread,
@@ -24,9 +25,7 @@ export default async function ConversationThreadPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const user = await getCurrentUser();
-  if (!user) redirect("/login");
-
+  const user = await requireUser();
   const supabase = await createClient();
   if (!supabase) notFound();
 

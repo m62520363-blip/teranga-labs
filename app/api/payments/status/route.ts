@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { getCurrentUser, createClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import { apiRequireUser } from "@/lib/auth/guards";
 import { paymentStatusSchema } from "@/lib/validations";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 
@@ -39,13 +40,8 @@ export async function GET(request: Request) {
 
   const intentId = parsed.data.intent;
 
-  const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json(
-      { code: "UNAUTHENTICATED", message: "Connectez-vous." },
-      { status: 401 }
-    );
-  }
+  const guard = await apiRequireUser();
+  if (guard.response) return guard.response;
 
   const supabase = await createClient();
   if (!supabase) {

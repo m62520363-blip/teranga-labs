@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
-import { createClient, getCurrentUser } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
+import { requireUser } from "@/lib/auth/guards";
 import {
   MissionsDashboard,
   type MissionPayload,
@@ -19,11 +19,21 @@ export default async function MissionsPage({
 }: {
   searchParams?: Promise<{ focus?: string }>;
 }) {
-  const user = await getCurrentUser();
-  if (!user) redirect("/login");
+  const user = await requireUser();
 
   const supabase = await createClient();
-  if (!supabase) redirect("/login");
+  if (!supabase) {
+    return (
+      <div className="bg-surface py-16">
+        <div className="container-tl mx-auto max-w-md text-center">
+          <h1 className="text-2xl font-semibold">Configuration requise</h1>
+          <p className="mt-3 text-sm text-muted-foreground">
+            Connexion à Supabase manquante.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const roleRes = await supabase.rpc("get_my_role");
   const role = typeof roleRes.data === "string" ? roleRes.data : null;

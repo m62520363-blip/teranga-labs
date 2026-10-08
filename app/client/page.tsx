@@ -11,8 +11,9 @@ import {
   Plus,
   ShieldCheck,
 } from "lucide-react";
-import { createClient, getCurrentUser } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 import { getConversations } from "@/lib/conversations";
+import { requireUser } from "@/lib/auth/guards";
 import { formatFCFA, formatRelativeTime } from "@/lib/formatting";
 import type { TokenHistoryItem } from "@/types/database";
 import { EmptyState } from "@/components/empty-state";
@@ -48,8 +49,7 @@ type MyRequest = {
 };
 
 export default async function ClientPage() {
-  const user = await getCurrentUser();
-  if (!user) redirect("/login");
+  const user = await requireUser();
 
   const supabase = await createClient();
   if (!supabase) {

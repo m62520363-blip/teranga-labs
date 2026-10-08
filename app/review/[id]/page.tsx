@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import { createClient, getCurrentUser } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
+import { requireUser } from "@/lib/auth/guards";
 import { ReviewForm } from "@/components/review/review-form";
 import type { ReviewForRequest } from "@/types/database";
 
@@ -22,8 +23,7 @@ export default async function ReviewPage({
 }) {
   const { id } = await params;
 
-  const user = await getCurrentUser();
-  if (!user) redirect("/login");
+  await requireUser();
 
   const supabase = await createClient();
   if (!supabase) {

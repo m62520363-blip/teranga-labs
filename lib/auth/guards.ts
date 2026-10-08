@@ -21,12 +21,41 @@ export type AllowedRole =
   | "support"
   | "admin";
 
+/** Tous les rôles qui peuvent utiliser une session : garde de connexion < -> rôles. */
+export const CONNECTED_ROLES: AllowedRole[] = [
+  "client",
+  "developer",
+  "agency",
+  "moderator",
+  "support",
+  "admin",
+];
+
 const LOGIN_URL = "/login";
 
 export async function requireUser() {
   const user = await getCurrentUser();
   if (!user) redirect(LOGIN_URL);
   return user;
+}
+
+/**
+ * Garde de session pour les routes API : même comportement que la
+ * construction « getCurrentUser() puis 401 » recopiée page par page,
+ * centralisée ici (audit C7).
+ */
+export async function apiRequireUser() {
+  const user = await getCurrentUser();
+  if (!user) {
+    return {
+      user: null,
+      response: NextResponse.json(
+        { code: "UNAUTHENTICATED", message: "Connectez-vous." },
+        { status: 401 }
+      ),
+    };
+  }
+  return { user, response: null };
 }
 
 export async function requireRole(allowed: AllowedRole[]) {
