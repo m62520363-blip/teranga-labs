@@ -2,6 +2,24 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [P3] — 2026-10-08 : chapitre terminé
+
+Quatre vagues livrées pour la **qualité de production** (audit C6/C7, §32).
+
+| Vague | Contenu |
+| --- | --- |
+| P3-1 | Gardes de route centralisées (8 pages + 6 routes API, `CONNECTED_ROLES`, `apiRequireUser`) + test anti-régression |
+| P3-2 | Abstraction `PaymentProvider` (PayDunya ⇄ Wave), checkout/vérification unifiés + tests contrat |
+| P3-3 | Verrouillage RPC (revoke PUBLIC), **correctif `debit_tokens`**, tests pgtap RLS + surface anon à jour |
+| P3-4 | Tests E2E Playwright (build prod + `next start`), job CI dédié |
+
+Accompagnements transverses : la CI couvre désormais typecheck, lint, tests unitaires, build, **tests SQL pgtap** (`supabase start` applique les migrations sur base vierge) et **E2E**. `gitleaks` reste actif sur les secrets.
+
+**Migrations livrées : `0043_score_match` → `0047_revoke_privilege_public`.** À appliquer dans l'ordre dans le SQL Editor Supabase (la `0047` est indispensable : sans elle, `debit_tokens` reste exécutable par n'importe qui).
+
+État final vérifié :
+- typecheck ✔, **lint 0/0 error/warning** ✔, **174 tests unitaires** ✔, **9 tests E2E** ✔, **build Next production** ✔ (7,4 min sur poste local, pages statiques générées sans erreur).
+
 ## [P3-4] — 2026-10-08
 
 Quatrième vague du chapitre P3 : **tests de bout en bout (Playwright)** — smoke suite sur l'application réelle (build production + `next start`).
