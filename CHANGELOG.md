@@ -2,6 +2,19 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [P3-4] — 2026-10-08
+
+Quatrième vague du chapitre P3 : **tests de bout en bout (Playwright)** — smoke suite sur l'application réelle (build production + `next start`).
+
+### Nouveau
+- **`@playwright/test`** (devDependencies) + `playwright.config.ts` : serveur web isolé (`next build && next start` sur le port 3100, réutilisable hors CI), Chromium, retries sur CI, rapport HTML.
+- **`e2e/smoke.spec.ts`** : les pages publiques statiques (`/plan-du-site`, `/conditions-utilisation`, `/faq`, `/a-propos`) répondent 200, la 404 fonctionne, et les liens du header (visiteur) mènent à des pages valides.
+- **`e2e/guards.spec.ts`** : accueil servie, et sans session `/dashboard` comme `/client` redirigent vers `/login`. Tests à double portée : exécutés en CI (variables `NEXT_PUBLIC_SUPABASE_*` fournies), chargement de `.env.local` en local, sinon skip documenté.
+- **CI** : nouveau job `e2e` (installation navigateur, exécution, upload du rapport Playwright en cas d'échec) ; `.gitignore` complété (`test-results/`, `playwright-report/`).
+
+### Vérifications
+- typecheck ✔, lint 0/0 ✔, **174 tests unitaires** inchangés, **9 tests E2E verts** en local sur build de production.
+
 ## [P3-3] — 2026-10-08
 
 Troisième vague du chapitre P3 : **verrouillage des RPC récentes + tests pgtap RLS** (audit C7/§32).
