@@ -16,6 +16,7 @@ import {
   Send,
   ShieldCheck,
   Sparkles,
+  Wand2,
   Wallet,
 } from "lucide-react";
 import { briefSchema, type BriefFormValues } from "@/lib/validations";
@@ -128,6 +129,8 @@ export function PosterForm() {
   const [confirmOpen, setConfirmOpen] = React.useState(false);
   const [isPublishing, setIsPublishing] = React.useState(false);
   const [pending, setPending] = React.useState<BriefFormValues | null>(null);
+  const [aiLoading, setAiLoading] = React.useState(false);
+  const [aiSuggestions, setAiSuggestions] = React.useState<string[]>([]);
 
   const form = useForm<BriefFormValues>({
     resolver: zodResolver(briefSchema) as Resolver<BriefFormValues>,
@@ -159,6 +162,39 @@ export function PosterForm() {
       ? [...features, label]
       : features.filter((f) => f !== label);
     setValue("features", next, { shouldValidate: true });
+  };
+
+  const improveDescription = async () => {
+    const raw = (watch("description") || "").trim();
+    if (!raw) {
+      toast.error("Écrivez d'abord une petite description.");
+      return;
+    }
+    setAiLoading(true);
+    setAiSuggestions([]);
+    try {
+      const res = await fetch("/api/ai/brief-assist", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ description: raw }),
+      });
+      const data = (await res.json()) as {
+        description?: string;
+        suggestions?: string[];
+        message?: string;
+      };
+      if (!res.ok || typeof data.description !== "string") {
+        toast.error(data.message ?? "Impossible d'améliorer la description.");
+        return;
+      }
+      setValue("description", data.description, { shouldValidate: true });
+      setAiSuggestions(data.suggestions ?? []);
+      toast.success("Description affinée.");
+    } catch {
+      toast.error("Service indisponible, réessayez plus tard.");
+    } finally {
+      setAiLoading(false);
+    }
   };
 
   const addCustomFeatures = () => {
@@ -575,6 +611,21 @@ export function PosterForm() {
       </FieldGroup>
 
       <FieldGroup label="Décrivez votre besoin" htmlFor="description" hint="Ce que vous vendez, vos objectifs, ce qu’il faut absolument que le projet fasse.">
+        <div className="mb-2 flex items-center justify-end">
+          <button
+            type="button"
+            onClick={() => void improveDescription()}
+            disabled={aiLoading || isSubmitting}
+            className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-primary/30 bg-primary-soft px-3 text-xs font-medium text-primary transition-colors hover:border-primary disabled:opacity-60"
+          >
+            {aiLoading ? (
+              <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
+            ) : (
+              <Wand2 className="size-3.5" aria-hidden="true" />
+            )}
+            {aiLoading ? "Amélioration…" : "Améliorer avec l’IA"}
+          </button>
+        </div>
         <Textarea
           id="description"
           {...register("description")}
@@ -583,6 +634,18 @@ export function PosterForm() {
           aria-invalid={Boolean(errors.description)}
         />
         {errors.description ? <FieldError>{errors.description.message}</FieldError> : null}
+        {aiSuggestions.length > 0 ? (
+          <div className="mt-2 rounded-xl border border-hairline bg-muted p-3">
+            <p className="text-xs font-semibold text-muted-foreground">
+              Suggestions de notre assistant
+            </p>
+            <ul className="mt-1.5 list-disc space-y-1 pl-4 text-xs leading-relaxed text-muted-foreground">
+              {aiSuggestions.map((s) => (
+                <li key={s}>{s}</li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
       </FieldGroup>
 
       {formError && (

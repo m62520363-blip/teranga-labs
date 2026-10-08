@@ -2,6 +2,21 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [P2-5] — 2026-10-07
+
+Cinquième vague du chapitre P2 : l'**assistant IA de rédaction des briefs**, sans blocage externe.
+
+### « IA brief assistant » (`lib/ai/brief-assistant.ts`)
+- **Mode règles (toujours actif)** : nettoyage de la description, complétion d'une phrase trop courte, détection du type de projet (vitrine, e-commerce, landing, application, refonte) et suggestions d'enrichissement calibrées secteur.
+- **Mode LLM optionnel** : si `AI_API_KEY` (+ `AI_BASE_URL`, `AI_MODEL`) sont définis, l'endpoint compatible OpenAI reformule la description et produit des suggestions (timeout 7 s, retour automatique sur le mode règles en cas d'échec — aucune dépendance bloquante).
+
+### Interface + sécurité
+- Route `POST /api/ai/brief-assist` (limite 10/min par IP, validation stricte).
+- Formulaire « Publier un brief » : bouton **« Améliorer avec l’IA »** au-dessus de la description + affichage des suggestions sous le champ, avec protection contre la double soumission.
+
+### Vérifications
+- typecheck ✔, lint 0/0 ✔, **164 tests** (dont 5 nouveaux pour le mode règles).
+
 ## [P2-4] — 2026-10-07
 
 Quatrième vague du chapitre P2 : l'**abonnement PRO** (payé en Tokens, sans carte récurrente).
