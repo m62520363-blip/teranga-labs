@@ -2,6 +2,22 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [P3-3] — 2026-10-08
+
+Troisième vague du chapitre P3 : **verrouillage des RPC récentes + tests pgtap RLS** (audit C7/§32).
+
+### Correctif de sécurité (migration `0047_revoke_privilege_public.sql`)
+- PostgreSQL accorde EXECUTE à PUBLIC sur toute fonction créée : les RPC de `0044`→`0046` (agences, sponsoring, PRO) restaient donc invocables par n'importe quel visiteur malgré leurs `grant` ciblés.
+- Le cas le plus critique : `debit_tokens` ne vérifie pas `auth.uid() = p_user` — un utilisateur connecté pouvait, via PUBLIC, **débiter le solde d'un autre développeur**. La migration révoque PUBLIC (et anon/authenticated pour `debit_tokens`) sur les 15 RPC sensibles ; les invocations internes des RPC sponsor/PRO (SECURITY DEFINER) restent fonctionnelles (rôle owner).
+- Les fonctions réellement publiques (annuaire, prix) sont conservées : `list_agencies`, `get_agency`, `get_agency_by_developer`, `get_sponsoring_prices`, `get_pro_prices`, `get_pro_status`.
+
+### Tests pgtap (nouveau)
+- `supabase/tests/rls_critique.sql` (plan 7) : RLS activée sur les 10 entités critiques récentes, aucune écriture ouverte à un visiteur, 17 RPC sensibles jamais exécutables par anon, `debit_tokens` hors de portée des rôles navigateur, RPC de découverte toujours publiques, garde `has_role` non-PUBLIC, sponsor/PRO/agence exécutables par `authenticated`.
+- `supabase/tests/permissions.sql` : surface anon figée mise à jour (+6 fonctions publiques) — le garde-fou reste valide.
+
+### Vérifications
+- typecheck ✔, lint 0/0 ✔, **174 tests** ; `rls_critique.sql` et `0047` s'exécuteront sur le job CI `db-tests` au prochain push.
+
 ## [P3-2] — 2026-10-08
 
 Deuxième vague du chapitre P3 : **abstraction `PaymentProvider`** (§6 audit, PayDunya ⇄ Wave).

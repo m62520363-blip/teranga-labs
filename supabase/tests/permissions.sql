@@ -61,6 +61,8 @@ select is(
 -- que les révocations de la migration 0031 portent bien sur PUBLIC.
 --
 -- Toute nouvelle fonction publique doit être revue puis ajoutée ici.
+-- (0044-0046 ajoutèrent list_agencies, get_agency, get_agency_by_developer,
+--  get_sponsoring_prices, get_pro_prices, get_pro_status ; 0047 verrouille le reste.)
 select is(
   (
     select coalesce(string_agg(fn, ', ' order by fn), '(aucune)')
@@ -73,8 +75,8 @@ select is(
            and has_function_privilege('anon', p.oid, 'execute')
       ) s
   ),
-  'create_brief(p_client_name text, p_client_whatsapp text, p_client_city text, p_project_type text, p_budget integer, p_description text), get_brief_management(p_management_key uuid), get_contact_cost(), get_developer_reviews(p_developer uuid), get_directory_filters(), get_peer_display_name(p_user_id uuid), get_public_developer_profile(p_identifier text, p_viewer_role text), get_verification_price(), is_admin(), is_phone_taken(p_phone text), is_username_taken(p_username text), list_approved_developers(p_query text, p_specialty text, p_technologies text[], p_services text[], p_city text, p_min_experience integer, p_availability text, p_min_rating numeric, p_verified_only boolean, p_project_type text, p_sort text, p_limit integer, p_offset integer), mask_email(p_email text), mask_phone(p_phone text), normalize_phone(p_phone text), submit_contact_message(p_name text, p_email text, p_message text, p_subject text), submit_report(p_target_type text, p_target_id uuid, p_reason text, p_description text), submit_verification_request(p_method text), update_brief_status(p_management_key uuid, p_status text)',
-  'liste des fonctions de public appelables par un visiteur : inchangée'
+  'create_brief(p_client_name text, p_client_whatsapp text, p_client_city text, p_project_type text, p_budget integer, p_description text), get_agency(p_slug text), get_agency_by_developer(p_developer_id uuid), get_brief_management(p_management_key uuid), get_contact_cost(), get_developer_reviews(p_developer uuid), get_directory_filters(), get_peer_display_name(p_user_id uuid), get_pro_prices(), get_pro_status(p_developer_id uuid), get_public_developer_profile(p_identifier text, p_viewer_role text), get_sponsoring_prices(), get_verification_price(), is_admin(), is_phone_taken(p_phone text), is_username_taken(p_username text), list_agencies(p_limit integer, p_offset integer), list_approved_developers(p_query text, p_specialty text, p_technologies text[], p_services text[], p_city text, p_min_experience integer, p_availability text, p_min_rating numeric, p_verified_only boolean, p_project_type text, p_sort text, p_limit integer, p_offset integer), mask_email(p_email text), mask_phone(p_phone text), normalize_phone(p_phone text), submit_contact_message(p_name text, p_email text, p_message text, p_subject text), submit_report(p_target_type text, p_target_id uuid, p_reason text, p_description text), submit_verification_request(p_method text), update_brief_status(p_management_key uuid, p_status text)',
+  'liste des fonctions de public appelables par un visiteur : inchangée (verrouillée par 0047)'
 );
 
 -- -----------------------------------------------------------------------------
