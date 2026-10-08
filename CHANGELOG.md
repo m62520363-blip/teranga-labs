@@ -2,6 +2,23 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [P2-4] — 2026-10-07
+
+Quatrième vague du chapitre P2 : l'**abonnement PRO** (payé en Tokens, sans carte récurrente).
+
+### Migration `0046_pro_subscription.sql`
+- Table `subscriptions` (période active `ends_at`, plan `pro`, RLS lecture seule) + réécriture v3 de `list_approved_developers` avec `is_pro` / `pro_until`.
+- `subscribe_pro()` : achète une période de `pro_duration_days` jours (défaut 30) au prix de `app_settings.pro_price_tokens` (défaut 15 Tokens), prolonge l'abonnement existant.
+- `get_pro_status(p_developer_id)` : statut public du badge (actif → `ends_at`);
+- `get_pro_prices()` + `admin_set_pro_prices(...)` pour l'équipe.
+
+### Interface
+- **Dashboard développeur → onglet « Abonnement PRO »** : état actuel + activation / prolongation en 1 clic.
+- **Annuaire et fiche `/dev/[username]`** : badge PRO (couronne) quand la période est active.
+
+### Vérifications
+- typecheck ✔, lint 0/0 ✔, 159 tests ✔.
+
 ## [P2-3] — 2026-10-07
 
 Troisième vague du chapitre P2 : le **sponsoring** (mise en avant payante en Tokens).

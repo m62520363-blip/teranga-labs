@@ -5,6 +5,7 @@ import {
   BadgeCheck,
   Briefcase,
   Building2,
+  Crown,
   ExternalLink,
   Globe,
   MapPin,
@@ -114,6 +115,12 @@ export default async function DeveloperProfilePage({
     : { data: null };
   const agencyBadge = asAgencyBadge(agencyRes?.data);
 
+  const proRes = supabase
+    ? await supabase.rpc("get_pro_status", { p_developer_id: profile.id })
+    : { data: null };
+  const proStatus = proRes?.data as { active?: boolean; ends_at?: string } | null;
+  const isPro = Boolean(proStatus?.active);
+
   const contactCost =
     typeof costRes?.data === "number" && costRes.data > 0 ? costRes.data : 1;
 
@@ -168,6 +175,12 @@ export default async function DeveloperProfilePage({
                     <span className="inline-flex items-center gap-1.5 rounded-full border border-success/40 bg-success-soft px-2.5 py-1 text-xs font-medium text-success">
                       <BadgeCheck className="size-3.5" aria-hidden="true" />
                       Développeur vérifié
+                    </span>
+                  ) : null}
+                  {isPro ? (
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-primary-soft px-2.5 py-1 text-xs font-medium text-primary">
+                      <Crown className="size-3.5" aria-hidden="true" />
+                      PRO
                     </span>
                   ) : null}
                   {agencyBadge ? (

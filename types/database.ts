@@ -918,6 +918,27 @@ export interface Database {
         };
         Returns: Json;
       };
+      get_pro_prices: {
+        Args: Record<string, never>;
+        Returns: Json;
+      };
+      subscribe_pro: {
+        Args: Record<string, never>;
+        Returns: Json;
+      };
+      get_pro_status: {
+        Args: {
+          p_developer_id?: string;
+        };
+        Returns: Json;
+      };
+      admin_set_pro_prices: {
+        Args: {
+          p_price_tokens: number;
+          p_duration_days: number;
+        };
+        Returns: Json;
+      };
       toggle_favorite: {
         Args: {
           p_request_id: string;
@@ -1602,6 +1623,8 @@ export type ApprovedDeveloper = {
   email_masked: string | null;
   is_sponsored?: boolean | null;
   featured_until?: string | null;
+  is_pro?: boolean | null;
+  pro_until?: string | null;
 };
 
 export type DeveloperMission = {

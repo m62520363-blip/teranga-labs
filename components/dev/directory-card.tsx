@@ -3,6 +3,7 @@ import Image from "next/image";
 import {
   BadgeCheck,
   Briefcase,
+  Crown,
   FolderKanban,
   MapPin,
   ShieldCheck,
@@ -72,6 +73,12 @@ export function DirectoryCard({
           <div className="min-w-0">
             <p className="flex items-center gap-1.5 truncate font-semibold tracking-tight">
               {developer.full_name ?? developer.username ?? "Développeur"}
+              {developer.is_pro ? (
+                <Crown
+                  className="size-4 shrink-0 text-primary"
+                  aria-label="Profil PRO"
+                />
+              ) : null}
               {developer.is_verified ? (
                 <BadgeCheck className="size-4 shrink-0 text-primary" aria-label="Profil vérifié" />
               ) : null}

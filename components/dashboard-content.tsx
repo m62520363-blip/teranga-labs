@@ -34,6 +34,7 @@ import { DashboardStats } from "@/components/dashboard-stats";
 import { MissionsManager, type TlMissionOption } from "@/components/dev/missions-manager";
 import AgencyManager from "@/components/agency/agency-manager";
 import SponsorPanel from "@/components/sponsoring/sponsor-panel";
+import ProPanel from "@/components/sponsoring/pro-panel";
 import { DevReviewsPanel } from "@/components/dev/reviews-panel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -147,7 +148,7 @@ function FilterChip({
   );
 }
 
-type TabKey = "crm" | "profil" | "activite" | "devis" | "missions" | "avis" | "agence";
+type TabKey = "crm" | "profil" | "activite" | "devis" | "missions" | "avis" | "agence" | "pro";
 
 function DevStatusBanner({ profile }: { profile: DeveloperProfile }) {
   const status = profile.status;
@@ -370,7 +371,7 @@ export function DashboardContent({
   const [savingGoal, setSavingGoal] = React.useState(false);
   const [saving, setSaving] = React.useState(false);
   const defaultTab: TabKey = (
-    ["crm", "profil", "activite", "devis", "missions", "avis", "agence"] as TabKey[]
+    ["crm", "profil", "activite", "devis", "missions", "avis", "agence", "pro"] as TabKey[]
   ).includes(initialTab as TabKey)
     ? (initialTab as TabKey)
     : unlocks.length > 0
@@ -624,6 +625,7 @@ export function DashboardContent({
     { key: "missions", label: "Missions réalisées", count: myMissions.length },
     { key: "avis", label: "Mes avis", count: myReviews?.total },
     { key: "agence", label: "Mon agence" },
+    { key: "pro", label: "Abonnement PRO" },
   ];
 
   return (
@@ -1746,6 +1748,12 @@ export function DashboardContent({
         {tab === "agence" ? (
           <section className="mt-8" aria-label="Mon agence">
             <AgencyManager />
+          </section>
+        ) : null}
+
+        {tab === "pro" ? (
+          <section className="mt-8" aria-label="Abonnement PRO">
+            <ProPanel />
           </section>
         ) : null}
 
