@@ -2,6 +2,28 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [P2] — 2026-10-08 : chapitre terminé
+
+Six vagues livrées. Bilan final du chapitre P2.
+
+| Vague | Contenu |
+| --- | --- |
+| P2-1 | TERANGA SCORE à 7 composantes + TERANGA MATCH brief ↔ développeur |
+| P2-2 | Agences (création, invitations, membres, annuaire, badges) |
+| P2-3 | Sponsoring (profils & briefs mis en avant, paiement en Tokens) |
+| P2-4 | Abonnement PRO (achat en Tokens, badge PRO, annuaire) |
+| P2-5 | IA brief assistant (fallback règles + LLM optionnel) |
+| P2-6 | Qualité : build complet, lint, typecheck, tests |
+
+**Migrations livrées : `0043_score_match` → `0046_pro_subscription`.** À appliquer dans l'ordre dans le SQL Editor Supabase.
+
+État final vérifié :
+- typecheck ✔, **lint 0 warning**, **164 tests verts**, **build Next complet** (compilé en 3,4 min, 22 pages statiques générées, aucune erreur).
+
+Rappel des règles d'exploitation :
+- Le sponsoring et le PRO se paient **en Tokens** (pas d'auto-récurrence) → aucun blocage extérieur.
+- L'assistant IA fonctionne **sans clé LLM** ; si `AI_API_KEY` est posée (endpoint OpenAI-compatible), il bascule automatiquement en mode LLM avec repli sûr.
+
 ## [P2-5] — 2026-10-07
 
 Cinquième vague du chapitre P2 : l'**assistant IA de rédaction des briefs**, sans blocage externe.
