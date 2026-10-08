@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { apiRequireUser } from "@/lib/auth/guards";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { createCheckoutSession, isWaveApiError } from "@/lib/payments/wave";
 import { isWaveConfigured } from "@/lib/payments/config";
+import { getProviderByName } from "@/lib/payments/provider";
 import { verificationCheckoutSchema } from "@/lib/validations";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { log } from "@/lib/log";
@@ -157,14 +157,16 @@ export async function POST(request: Request) {
   }
 
   const origin = process.env.NEXT_PUBLIC_APP_URL ?? new URL(request.url).origin;
+  const impl = getProviderByName("wave");
 
   try {
-    const session = await createCheckoutSession({
-      amount: String(price),
-      currency: "XOF",
-      successUrl: `${origin}/verification?request=${requestId}`,
-      errorUrl: `${origin}/verification?request=${requestId}`,
-      clientReference: requestId,
+    const checkout = await impl.createCheckout({
+      amountFcfa: price,
+      description: "Vérification de profil TERANGA LABS",
+      reference: requestId,
+      origin,
+      returnPath: `/verification?request=${requestId}`,
+      cancelPath: `/verification?request=${requestId}`,
     });
 
     // Mémorise la session Wave côté serveur (concordance du webhook).
@@ -172,20 +174,20 @@ export async function POST(request: Request) {
     if (admin) {
       await admin
         .from("verification_requests")
-        .update({ provider_session_id: session.id })
+        .update({ provider_session_id: checkout.sessionId })
         .eq("id", requestId);
     }
 
     return NextResponse.json({
       requestId,
-      launchUrl: session.wave_launch_url,
-      sessionId: session.id,
+      launchUrl: checkout.launchUrl,
+      sessionId: checkout.sessionId,
     });
   } catch (err) {
-    if (isWaveApiError(err)) {
+    if (impl.isApiError(err)) {
       log.error({
         action: "verification.checkout",
-        provider: "wave",
+        provider: impl.name,
         user: user.id,
         request_id: requestId,
         status: 502,
@@ -198,7 +200,7 @@ export async function POST(request: Request) {
     }
     log.error({
       action: "verification.checkout",
-      provider: "wave",
+      provider: impl.name,
       user: user.id,
       request_id: requestId,
       status: 500,

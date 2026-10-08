@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { apiRequireUser } from "@/lib/auth/guards";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { createCheckoutSession, isWaveApiError } from "@/lib/payments/wave";
-import { isWaveConfigured } from "@/lib/payments/config";
-import { createPaydunyaCheckout, isPaydunyaApiError } from "@/lib/payments/paydunya";
-import { isPaydunyaConfigured } from "@/lib/payments/paydunya-config";
+import {
+  getPreferredProvider,
+  getProviderByName,
+} from "@/lib/payments/provider";
 import { paymentCheckoutSchema } from "@/lib/validations";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { log } from "@/lib/log";
@@ -29,10 +29,7 @@ export const dynamic = "force-dynamic";
  * demander. Incohérent, il retombe sur celui qui est configuré.
  */
 export async function POST(request: Request) {
-  const paydunyaReady = isPaydunyaConfigured();
-  const waveReady = isWaveConfigured();
-
-  if (!paydunyaReady && !waveReady) {
+  if (getPreferredProvider("auto") === null) {
     return NextResponse.json(
       {
         code: "PAYMENT_NOT_CONFIGURED",
@@ -175,14 +172,16 @@ export async function POST(request: Request) {
   const origin = process.env.NEXT_PUBLIC_APP_URL ?? new URL(request.url).origin;
   const admin = createAdminClient();
 
-    // Prestataire effectif : PayDunya prioritaire (Mobile Money et carte déjà
-    // activés côté compte), Wave en repli.
+  // Prestataire effectif : PayDunya prioritaire (Mobile Money et carte déjà
+  // activés côté compte), Wave en repli. Le client ne choisit pas librement :
+  // `paydunya`, `wave` sinon fallback, et tout autre valeur (max_it/card)
+  // retombe sur l'ordre de préférence serveur.
   const requested = parsed.data.provider;
-  const usePaydunya =
-    requested === "paydunya" ? paydunyaReady : requested === "wave" ? false : paydunyaReady;
-  const provider = usePaydunya ? "paydunya" : "wave";
+  const providerName = getPreferredProvider(
+    requested === "wave" || requested === "paydunya" ? requested : "auto"
+  );
 
-  if (!usePaydunya && !waveReady) {
+  if (!providerName) {
     return NextResponse.json(
       {
         code: "PAYMENT_NOT_CONFIGURED",
@@ -191,104 +190,55 @@ export async function POST(request: Request) {
       { status: 503 }
     );
   }
+  const impl = getProviderByName(providerName);
 
   try {
-    if (usePaydunya) {
-      // Pré-remplissage de la page PayDunya : leur API accepte un nœud
-      // `customer` qui renseigne nom, email et téléphone. L'acheteur n'a
-      // donc plus rien à saisir sur leur page, ce qui est le principal
-      // levier de conversion sur un tunnel qu'on ne contrôle pas.
-      // Les valeurs viennent de la session et du profil, jamais du client.
-      const customer: { name?: string; email?: string; phone?: string } = {};
-      const fullName = profile?.full_name?.trim();
-      const email = user.email?.trim();
-      // `whatsapp` est le numéro que l'utilisateur a déjà saisi à
-      // l'inscription : on le réutilise plutôt que d'en redemander un.
-      const phone = profile?.whatsapp?.trim() ?? user.phone?.trim();
-      if (fullName) customer.name = fullName;
-      if (email) customer.email = email;
-      if (phone) customer.phone = phone;
+    const customer: { name?: string; email?: string; phone?: string } = {};
+    const fullName = profile?.full_name?.trim();
+    const email = user.email?.trim();
+    const phone = profile?.whatsapp?.trim() ?? user.phone?.trim();
+    if (fullName) customer.name = fullName;
+    if (email) customer.email = email;
+    if (phone) customer.phone = phone;
 
-      const checkout = await createPaydunyaCheckout({
-        amountFcfa: pkg.price_fcfa,
-        description: `Pack ${pkg.name} - ${pkg.tokens} Token(s) TERANGA LABS`,
-        itemName: pkg.name,
-        itemQuantity: pkg.tokens,
-        // L'IPN ne renvoie pas de référence client Wave : l'id d'intention
-        // transite par custom_data, seul moyen de le retrouver à l'arrivée.
-        customData: { intent_id: intent.id },
-        ...(Object.keys(customer).length > 0 ? { customer } : {}),
-        siteUrl: origin,
-        returnUrl: `${origin}/tokens?intent=${intent.id}`,
-        cancelUrl: `${origin}/tokens?intent=${intent.id}&cancelled=1`,
-      });
-
-      if (admin) {
-        await admin
-          .from("payment_intents")
-          .update({
-            provider: "paydunya",
-            provider_session_id: checkout.token,
-          })
-          .eq("id", intent.id);
-      }
-
-      return NextResponse.json({
-        intentId: intent.id,
-        launchUrl: checkout.redirectUrl,
-        sessionId: checkout.token,
-        provider: "paydunya",
-      });
-    }
-
-    const session = await createCheckoutSession({
-      amount: String(pkg.price_fcfa),
-      currency: "XOF",
-      successUrl: `${origin}/tokens?intent=${intent.id}`,
-      errorUrl: `${origin}/tokens?intent=${intent.id}`,
-      clientReference: intent.id,
+    const checkout = await impl.createCheckout({
+      amountFcfa: pkg.price_fcfa,
+      description: `Pack ${pkg.name} - ${pkg.tokens} Token(s) TERANGA LABS`,
+      itemName: pkg.name,
+      itemQuantity: pkg.tokens,
+      reference: intent.id,
+      origin,
+      returnPath: `/tokens?intent=${intent.id}`,
+      cancelPath: `/tokens?intent=${intent.id}&cancelled=1`,
+      ...(Object.keys(customer).length > 0 ? { customer } : {}),
     });
 
-    // Mémorise la session Wave côté serveur (pour la concordance webhook).
+    // Mémorise la session prestataire côté serveur (concordance IPN/webhook).
     if (admin) {
       await admin
         .from("payment_intents")
         .update({
-          provider: "wave",
-          provider_session_id: session.id,
+          provider: checkout.provider,
+          provider_session_id: checkout.sessionId,
         })
         .eq("id", intent.id);
     }
 
     return NextResponse.json({
       intentId: intent.id,
-      launchUrl: session.wave_launch_url,
-      sessionId: session.id,
-      provider,
+      launchUrl: checkout.launchUrl,
+      sessionId: checkout.sessionId,
+      provider: checkout.provider,
     });
   } catch (err) {
-    if (isPaydunyaApiError(err)) {
+    if (impl.isApiError(err)) {
       log.error({
         action: "payment.checkout",
-        provider: "paydunya",
+        provider: impl.name,
         user: user.id,
         request_id: intent.id,
         status: 502,
-        message: err.message,
-      });
-      return NextResponse.json(
-        { code: "PROVIDER_ERROR", message: "Le prestataire de paiement a refusé la demande." },
-        { status: 502 }
-      );
-    }
-    if (isWaveApiError(err)) {
-      log.error({
-        action: "payment.checkout",
-        provider: "wave",
-        user: user.id,
-        request_id: intent.id,
-        status: 502,
-        message: err.message,
+        message: err instanceof Error ? err.message : String(err),
       });
       return NextResponse.json(
         { code: "PROVIDER_ERROR", message: "Le prestataire de paiement a refusé la demande." },
@@ -297,7 +247,7 @@ export async function POST(request: Request) {
     }
     log.error({
       action: "payment.checkout",
-      provider: usePaydunya ? "paydunya" : "wave",
+      provider: impl.name,
       user: user.id,
       request_id: intent.id,
       status: 500,

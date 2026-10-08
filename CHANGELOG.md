@@ -2,6 +2,25 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [P3-2] — 2026-10-08
+
+Deuxième vague du chapitre P3 : **abstraction `PaymentProvider`** (§6 audit, PayDunya ⇄ Wave).
+
+### `lib/payments/provider.ts`
+- Contrat commun `PaymentProvider.nom/isConfigured/isApiError/createCheckout` avec deux implémentations (PayDunya PAR, Wave Checkout Session).
+- `getPreferredProvider(requested)` : résolution serveur du prestataire (`auto`, `paydunya` + repli Wave, `wave`), retour `null` quand rien n'est opérationnel.
+- `getProviderByName(name)` + types `CheckoutInput`/`ProviderCheckoutResult` partagés.
+
+### Simplification des routes
+- `payments/checkout` : suppression des deux branches parallèles PayDunya/Wave au profit d'un appel unique ; même ordre de préférence, mêmes messages 503/502, mêmes écritures `payment_intents` (comportement préservé ; l'intention n'est créée qu'après la vérification qu'un prestataire existe).
+- `verification/checkout` : passage sur le provider Wave via le contrat (l'option historique `max_it` n'existe pas côté PayDunya, comportement inchangé).
+
+### Tests
+- `tests/payments-provider.test.ts` : résolution du prestataire (priorité, repli, null), contrat commun (Wave : session+client_reference ; PayDunya : facture + `custom_data`), via mocks fetch.
+
+### Vérifications
+- typecheck ✔, lint 0/0 ✔, **174 tests** (dont 7 nouveaux).
+
 ## [P3-1] — 2026-10-08
 
 Première vague du chapitre P3 (qualité de production) : **centralisation des gardes de route** (audit C7/§33).
