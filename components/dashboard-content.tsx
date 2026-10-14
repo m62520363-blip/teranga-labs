@@ -39,6 +39,7 @@ import { DevReviewsPanel } from "@/components/dev/reviews-panel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PhoneInput } from "@/components/ui/phone-input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -1283,13 +1284,11 @@ export function DashboardContent({
                   </div>
                   <div className="flex flex-col gap-2">
                     <Label htmlFor="dp-whatsapp">WhatsApp (contact public)</Label>
-                    <Input
+                    <PhoneInput
                       id="dp-whatsapp"
-                      type="tel"
                       value={p.whatsapp}
-                      onChange={(e) => setP({ ...p, whatsapp: e.target.value })}
+                      onChange={(v) => setP({ ...p, whatsapp: v })}
                       className="h-10 rounded-xl"
-                      placeholder="+221771234567"
                     />
                   </div>
                   <div className="flex flex-col gap-2">

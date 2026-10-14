@@ -2,6 +2,20 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [P5-bis] — 2026-10-13 : champs téléphone/WhatsApp multi-pays (correctif C2)
+
+Le site couvre 9 pays d'Afrique de l'Ouest, mais la saisie du numéro (WhatsApp/téléphone) était figée sur le Sénégal : placeholder `+221`, messages d'erreur `Ex : +221771234567`, et surtout `normalizeWhatsApp` qui **convertissait de force** tout numéro local commençant par `0` en `221…` — faux pour un Malien, Ivoirien, Béninois, etc.
+
+### Nouveau
+- `components/ui/phone-input.tsx` : champ téléphone réutilisable avec **sélecteur d'indicatif pays** (drapeau + indicatif, 9 pays de `lib/countries.ts`) et saisie de la partie nationale. Émet un numéro international complet (`+221…`, `+223…`, `+225…`…). Utilisé à l'inscription (WhatsApp), à la connexion OTP, dans l'onboarding développeur (téléphone + WhatsApp), la publication de brief (WhatsApp) et le profil dashboard.
+
+### Corrigé
+- `normalizeWhatsApp` (`lib/tokens.ts`) : ne force plus d'indicatif pays ; retire seulement les séparateurs, le `+` et le préfixe `00`. Le pays est désormais toujours explicite grâce au sélecteur.
+- Messages de validation (`lib/validations.ts`) : plus d'exemple `+221771234567` — « Choisissez votre pays puis saisissez votre numéro. »
+- Formulaire OTP : texte « indicatif 221 pour le Sénégal » remplacé par un libellé multi-pays.
+
+Vérifié : typecheck ✔, lint 0/0 ✔, **175 tests unitaires** ✔.
+
 ## [P5] — 2026-10-13 : synchronisation console admin (audit R4)
 
 Chapitre **P5** (audit `AUDIT.md` §11, périmètre console admin — dépôt séparé `teranga-labs-admin`) : les modules console livrés en P2/P4 (litiges, support, agences, croissance/sponsoring/PRO, risque) n'avaient pas de RPC de lecture côté admin. P5-1 (site) ajoute la surface SQL ; P5-2 (console) branche les modules correspondants.

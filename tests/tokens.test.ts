@@ -22,11 +22,19 @@ describe("normalizeWhatsApp", () => {
     expect(normalizeWhatsApp("00221771234567")).toBe("221771234567");
   });
 
-  it("convertit le numéro local sénégalais 0… en 221…", () => {
-    expect(normalizeWhatsApp("0771234567")).toBe("221771234567");
+  it("ne force plus d'indicatif sur un numéro sans pays", () => {
+    // Un numéro « 0… » local est ambigu hors Sénégal : on le laisse tel quel
+    // (PhoneInput préfixe toujours l'indicatif sélectionné).
+    expect(normalizeWhatsApp("0771234567")).toBe("0771234567");
   });
 
-  it("laisse un numéro déjà en 221 intact", () => {
+  it("normalise un numéro d'un autre pays du bassin", () => {
+    expect(normalizeWhatsApp("+223 76 12 34 56")).toBe("22376123456");
+    expect(normalizeWhatsApp("+225 07 08 09 10 11")).toBe("2250708091011");
+    expect(normalizeWhatsApp("+226 70 12 34 56")).toBe("22670123456");
+  });
+
+  it("laisse un numéro déjà international intact", () => {
     expect(normalizeWhatsApp("221771234567")).toBe("221771234567");
   });
 });
@@ -36,8 +44,8 @@ describe("waLink", () => {
     expect(waLink("+221 77 123 45 67")).toBe("https://wa.me/221771234567");
   });
 
-  it("ne contient pas de caractères invalides", () => {
-    expect(waLink("0771234567")).toBe("https://wa.me/221771234567");
+  it("produit un lien pour un autre pays", () => {
+    expect(waLink("+223 76 12 34 56")).toBe("https://wa.me/22376123456");
   });
 });
 

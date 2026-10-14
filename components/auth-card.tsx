@@ -34,6 +34,7 @@ import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { PhoneOtpForm } from "@/components/phone-otp-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PhoneInput } from "@/components/ui/phone-input";
 import {
   Select,
   SelectContent,
@@ -687,21 +688,18 @@ function SignupPane({
               <Label htmlFor="signup-whatsapp">
                 {role === "client" ? "WhatsApp (optionnel)" : "WhatsApp"}
               </Label>
-              <div className="relative">
-                <Phone
-                  className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
-                  aria-hidden="true"
-                />
-                <Input
-                  id="signup-whatsapp"
-                  type="tel"
-                  {...register("whatsapp")}
-                  autoComplete="tel"
-                  className="h-11 rounded-xl border-hairline bg-background/70 pl-10 transition-[border-color,box-shadow] duration-200 focus-visible:border-primary/60 focus-visible:shadow-[0_0_0_3px_rgba(232,106,44,0.14)]"
-                  placeholder="+221 7X XX XX XX"
-                  aria-invalid={Boolean(errors.whatsapp)}
-                />
-              </div>
+              <PhoneInput
+                id="signup-whatsapp"
+                value={(watch("whatsapp") as string) ?? ""}
+                onChange={(v) =>
+                  setValue("whatsapp", v, {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                  })
+                }
+                autoComplete="tel"
+                aria-invalid={Boolean(errors.whatsapp)}
+              />
             </Field>
 
             {role === "developer" && (

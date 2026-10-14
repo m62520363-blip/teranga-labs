@@ -31,13 +31,18 @@ export const PROJECT_TYPE_LABELS: Record<string, string> = {
   refonte: "Refonte",
 };
 
+/**
+ * Normalise un numéro pour un lien wa.me / un identifiant WhatsApp : on retire
+ * les séparateurs, le « + » et le préfixe international « 00 ».
+ *
+ * On ne force plus jamais d'indicatif pays : le champ `PhoneInput` fait
+ * toujours précéder le numéro de l'indicatif sélectionné (ex. `+221`,
+ * `+223`, `+225`…), donc la partie nationale est déjà complète. Deviner un
+ * pays à partir d'un numéro « 0… » local serait faux hors Sénégal.
+ */
 export function normalizeWhatsApp(raw: string): string {
   const digits = raw.replace(/[\s\-.()+]/g, "");
   if (digits.startsWith("00")) return digits.slice(2);
-  if (digits.startsWith("+")) return digits.slice(1);
-  if (digits.startsWith("0") && digits.length === 10) {
-    return `221${digits.slice(1)}`;
-  }
   return digits;
 }
 

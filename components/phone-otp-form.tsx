@@ -7,6 +7,7 @@ import { ArrowLeft, Loader2, MessageSquare, ShieldCheck } from "lucide-react";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PhoneInput } from "@/components/ui/phone-input";
 import { phoneOtpSchema } from "@/lib/validations";
 
 type Step = "phone" | "code";
@@ -128,19 +129,16 @@ export function PhoneOtpForm({ onBack }: { onBack: () => void }) {
         <form onSubmit={sendCode} className="flex flex-col gap-4" noValidate>
           <div className="flex flex-col gap-2">
             <Label htmlFor="otp-phone">Numéro de téléphone</Label>
-            <Input
+            <PhoneInput
               id="otp-phone"
-              type="tel"
-              inputMode="tel"
-              autoComplete="tel"
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="+221 77 123 45 67"
-              className="h-11 rounded-xl border-hairline bg-background/70"
+              onChange={setPhone}
+              autoComplete="tel"
               aria-invalid={Boolean(error)}
             />
             <p className="text-xs text-muted-foreground">
-              Format international, indicatif 221 pour le Sénégal.
+              Choisissez votre pays puis saisissez votre numéro (format
+              international).
             </p>
           </div>
 

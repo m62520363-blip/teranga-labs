@@ -25,6 +25,7 @@ import { useBalance } from "@/components/balance-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PhoneInput } from "@/components/ui/phone-input";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
@@ -599,12 +600,13 @@ export function PosterForm() {
       </FieldGroup>
 
       <FieldGroup label="Votre WhatsApp" htmlFor="client_whatsapp" hint="Reste privé tant que vous n’acceptez pas une proposition : les développeurs vous écrivent d’abord dans la messagerie interne.">
-        <Input
+        <PhoneInput
           id="client_whatsapp"
-          type="tel"
-          {...register("client_whatsapp")}
+          value={(watch("client_whatsapp") as string) ?? ""}
+          onChange={(v) =>
+            setValue("client_whatsapp", v, { shouldValidate: true, shouldDirty: true })
+          }
           className="h-10 rounded-xl"
-          placeholder="+221 7X XX XX XX"
           aria-invalid={Boolean(errors.client_whatsapp)}
         />
         {errors.client_whatsapp ? <FieldError>{errors.client_whatsapp.message}</FieldError> : null}

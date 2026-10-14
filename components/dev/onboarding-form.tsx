@@ -15,7 +15,6 @@ import {
   Loader2,
   Mail,
   MapPin,
-  Phone,
   Plus,
   Send,
   Trash2,
@@ -40,6 +39,7 @@ import {
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PhoneInput } from "@/components/ui/phone-input";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
@@ -417,39 +417,29 @@ function IdentityStep({
         </Field>
 
         <Field label="Téléphone" error={errors.phone?.message} htmlFor="oi-phone">
-          <div className="relative">
-            <Phone
-              className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
-              aria-hidden="true"
-            />
-            <Input
-              id="oi-phone"
-              type="tel"
-              autoComplete="tel"
-              {...register("phone")}
-              className="h-11 rounded-xl border-hairline bg-background/70 pl-10"
-              placeholder="+221 77 123 45 67"
-              aria-invalid={Boolean(errors.phone)}
-            />
-          </div>
+          <PhoneInput
+            id="oi-phone"
+            value={(watch("phone") as string) ?? ""}
+            onChange={(v) =>
+              setValue("phone", v, { shouldValidate: true, shouldDirty: true })
+            }
+            autoComplete="tel"
+            className="h-11 rounded-xl border-hairline bg-background/70"
+            aria-invalid={Boolean(errors.phone)}
+          />
         </Field>
 
         <Field label="WhatsApp" error={errors.whatsapp?.message} htmlFor="oi-whatsapp">
-          <div className="relative">
-            <Phone
-              className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
-              aria-hidden="true"
-            />
-            <Input
-              id="oi-whatsapp"
-              type="tel"
-              autoComplete="tel"
-              {...register("whatsapp")}
-              className="h-11 rounded-xl border-hairline bg-background/70 pl-10"
-              placeholder="+221 77 123 45 67"
-              aria-invalid={Boolean(errors.whatsapp)}
-            />
-          </div>
+          <PhoneInput
+            id="oi-whatsapp"
+            value={(watch("whatsapp") as string) ?? ""}
+            onChange={(v) =>
+              setValue("whatsapp", v, { shouldValidate: true, shouldDirty: true })
+            }
+            autoComplete="tel"
+            className="h-11 rounded-xl border-hairline bg-background/70"
+            aria-invalid={Boolean(errors.whatsapp)}
+          />
         </Field>
 
         <Field label="Région" error={errors.city?.message} htmlFor="oi-city">
