@@ -1,10 +1,11 @@
 -- =============================================================================
 -- Teranga Labs — Tests pgtap de la forte RLS des entités critiques.
 --
--- Couvre les tables et fonctions ajoutées après l'audit P0/P1/P2 (missions,
--- OTP, favoris, agences, sponsoring, PRO analytics) : la RLS doit être
--- activée partout, aucune écriture ne doit être ouverte à un visiteur, et
--- les RPC sensibles (sponsoring, PRO, agences, OTP, débit de Tokens)
+-- Couvre les tables et fonctions ajoutées après l'audit P0/P1/P2/P4 (missions,
+-- OTP, favoris, agences, sponsoring, PRO analytics, litiges, risque, flags,
+-- disponibilités, support) : la RLS doit être activée partout, aucune
+-- écriture ne doit être ouverte à un visiteur, et les RPC sensibles
+-- (sponsoring, PRO, agences, OTP, débit de Tokens, litiges, tickets)
 -- ne doivent jamais être exécutables par le rôle anon.
 --
 -- Exécution : local `supabase test db` / CI job `db-tests` / `npm run test:db`.
@@ -30,7 +31,9 @@ select is(
          'otp_verifications', 'missions', 'mission_events',
          'analytic_events', 'favorites',
          'agencies', 'agency_members',
-         'sponsored_profiles', 'sponsored_briefs', 'subscriptions'
+         'sponsored_profiles', 'sponsored_briefs', 'subscriptions',
+         'disputes', 'risk_events', 'feature_flags',
+         'developer_availability', 'support_tickets', 'support_messages'
        )
        and not c.relrowsecurity
   ),
@@ -53,7 +56,9 @@ select is(
          'otp_verifications', 'missions', 'mission_events',
          'analytic_events', 'favorites',
          'agencies', 'agency_members',
-         'sponsored_profiles', 'sponsored_briefs', 'subscriptions'
+         'sponsored_profiles', 'sponsored_briefs', 'subscriptions',
+         'disputes', 'risk_events', 'feature_flags',
+         'developer_availability', 'support_tickets', 'support_messages'
        )
   ),
   0,
@@ -79,7 +84,11 @@ select is(
            'create_agency', 'join_agency', 'rotate_agency_invite',
            'remove_agency_member', 'leave_agency', 'set_agency_status',
            'my_agency', 'agency_role', 'admin_set_sponsoring_prices',
-           'admin_set_pro_prices', 'get_agency_by_invite'
+           'admin_set_pro_prices', 'get_agency_by_invite',
+           'open_dispute', 'list_my_disputes', 'set_dispute_status',
+           'log_risk_event', 'create_support_ticket', 'reply_support_ticket',
+           'list_my_tickets', 'close_support_ticket',
+           'set_my_availability', 'admin_set_feature_flag'
          )
        )
   ),
@@ -121,11 +130,12 @@ select is(
          or p.proname = 'get_sponsoring_prices' and p.pronargs = 0
          or p.proname = 'get_pro_prices' and p.pronargs = 0
          or p.proname = 'get_pro_status' and p.pronargs = 1
+         or p.proname = 'is_feature_enabled' and p.pronargs = 1
        )
        and not has_function_privilege('anon', p.oid, 'execute')
   ),
   0,
-  'les RPC de découverte publique (agences, prix) restent appelables par anon'
+  'les RPC de découverte publique (agences, prix, flags) restent appelables par anon'
 );
 
 -- -----------------------------------------------------------------------------

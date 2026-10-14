@@ -2,6 +2,28 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [P4-1] — 2026-10-08
+
+Première vague du chapitre P4 (clôture de l'audit) : **fin des tables manquantes C11** (§45/§48/§31/§12) — 3 migrations NON destructives.
+
+### Migration `0048_disputes_risk.sql`
+- **`disputes`** : litige ouvert par un participant de la mission (client ou développeur) contre l'autre ; RLS lecture parties uniquement ; `open_dispute` (verrou mission, une seule dispute ouverte), `list_my_disputes`, `set_dispute_status` (modération `is_admin()`).
+- **`risk_events`** : journal d'incidents écriture **service_role ONLY** (`log_risk_event`, même garde que `track_event`). Pas de table `risk_scores` : le score se dérive d'un `count(*)` — aucune valeur inventée (§36).
+
+### Migration `0049_feature_flags_availability.sql`
+- **`feature_flags`** : aucune seed (pas de flag inventé), lecture publique, écriture console/RPC `admin_set_feature_flag` (admin only) ; `is_feature_enabled` en défaut FALSE.
+- **`developer_availability`** : 7 lignes/développeur (lun 0 → dim 6), lecture publique (annuaire), écriture `set_my_availability` (propriétaire).
+
+### Migration `0050_support_tickets.sql`
+- **`support_tickets` + `support_messages`** : support utilisateur ; RLS lecture propriétaire uniquement ; `create_support_ticket` (anti-spam : 5 tickets ouverts max), `reply_support_ticket`, `list_my_tickets`, `close_support_ticket` — réponse du support prévue via `is_staff` (console admin).
+
+### Garde-fous pgtap
+- `rls_critique.sql` : 6 nouvelles tables sous RLS (16 au total), 10 nouvelles RPC sensibles hors anon, `is_feature_enabled` ajouté aux découverte publique.
+- `permissions.sql` : `is_feature_enabled(p_key text)` ajouté à la surface anon figée ; `log_risk_event` ajouté aux fonctions internes.
+
+### Vérifications
+- typecheck ✔, lint 0/0 ✔, **174 tests** inchangés ; les 3 migrations s'appliqueront sur le CI `db-tests` au prochain push.
+
 ## [P3] — 2026-10-08 : chapitre terminé
 
 Quatre vagues livrées pour la **qualité de production** (audit C6/C7, §32).
