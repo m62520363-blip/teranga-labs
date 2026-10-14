@@ -2,6 +2,26 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [P5] — 2026-10-13 : synchronisation console admin (audit R4)
+
+Chapitre **P5** (audit `AUDIT.md` §11, périmètre console admin — dépôt séparé `teranga-labs-admin`) : les modules console livrés en P2/P4 (litiges, support, agences, croissance/sponsoring/PRO, risque) n'avaient pas de RPC de lecture côté admin. P5-1 (site) ajoute la surface SQL ; P5-2 (console) branche les modules correspondants.
+
+### P5-1 — `0051_admin_console_sync.sql` (nouveau, non destructif)
+
+- `admin_alerts()` étendu : `+open_disputes` (litiges ouverts) et `+open_support` (tickets support ouverts) — les 4 compteurs historiques sont inchangés.
+- Nouvelles RPC admin (toutes `SECURITY DEFINER` + garde `is_admin()` + `REVOKE ALL … FROM PUBLIC` + `GRANT EXECUTE authenticated`, conformément à la règle `0047`) :
+  - `admin_list_disputes(p_status)` / `admin_list_support_tickets(p_status)` / `admin_list_support_messages(p_ticket_id)` / `admin_reply_support_ticket(p_ticket_id, p_body)` / `admin_close_support_ticket(p_ticket_id)`
+  - `admin_list_agencies(p_status)` (compte les membres)
+  - `admin_list_sponsored()` / `admin_list_subscriptions()` / `admin_list_feature_flags()` / `admin_list_risk_events(p_limit)`
+
+**Migration à appliquer dans le SQL Editor Supabase (après `0050`).** Aucune modification du parcours public ni des garanties RLS : surface anon inchangée (les nouvelles RPC ne sont pas accordées à `anon`).
+
+### P5-2 — console `teranga-labs-admin` (dépôt séparé)
+
+Nouveaux modules branchés dans le shell : **Litiges** (`Scale`), **Support** (`LifeBuoy`, conversation + réponse staff + fermeture), **Agences** (`Building2`, valider/suspendre via `set_agency_status`), **Croissance & PRO** (`TrendingUp`, sponsoring actif, abonnements PRO, tarifs, feature flags avec bascule), **Événements de risque** (`ShieldAlert`). Compteurs d'alertes du shell enrichis (`open_disputes`, `open_support`).
+
+Vérifié côté console : typecheck ✔, lint 0/0 ✔, build production ✔. Vérifié côté site (inchangé côté TS) : typecheck ✔, lint 0/0 ✔.
+
 ## [P4] — 2026-10-08 : chapitre terminé — **audit clos**
 
 Trois vagues pour **clôturer l'audit initial** (constats C1 → C14 tous traités, suivi dans `AUDIT.md` §11).
