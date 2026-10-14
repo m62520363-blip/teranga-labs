@@ -29,16 +29,15 @@ import {
   type LoginFormValues,
   type SignupFormValues,
 } from "@/lib/validations";
-import { SENEGAL_REGIONS } from "@/lib/tokens";
+import { ALL_REGION_ITEMS } from "@/lib/countries";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { PhoneOtpForm } from "@/components/phone-otp-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PhoneInput } from "@/components/ui/phone-input";
+import { RegionSelectContent } from "@/components/ui/region-select";
 import {
   Select,
-  SelectContent,
-  SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -579,7 +578,7 @@ function SignupPane({
                     onValueChange={(v) =>
                       v && setValue("city", v as ClientSignupFormValues["city"], { shouldValidate: true })
                     }
-                    items={Object.fromEntries(SENEGAL_REGIONS.map((c) => [c, c]))}
+                    items={ALL_REGION_ITEMS}
                   >
                     <SelectTrigger
                       id="signup-city"
@@ -587,13 +586,7 @@ function SignupPane({
                     >
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent align="start">
-                      {SENEGAL_REGIONS.map((city) => (
-                        <SelectItem key={city} value={city}>
-                          {city}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
+                    <RegionSelectContent />
                   </Select>
                 </div>
               </Field>

@@ -40,12 +40,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PhoneInput } from "@/components/ui/phone-input";
+import { RegionSelectContent } from "@/components/ui/region-select";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import {
   Select,
-  SelectContent,
-  SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -61,7 +60,8 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { parseSkills } from "@/lib/validations";
 import { formatFCFA, formatDate } from "@/lib/formatting";
-import { SENEGAL_REGIONS, waLink } from "@/lib/tokens";
+import { waLink } from "@/lib/tokens";
+import { ALL_REGION_ITEMS } from "@/lib/countries";
 import type { ConversationListItem } from "@/lib/conversations";
 import type {
   TransactionRow,
@@ -1249,9 +1249,7 @@ export function DashboardContent({
                     <Select
                       value={p.city ?? ""}
                       onValueChange={(v) => setP({ ...p, city: v ?? "" })}
-                      items={Object.fromEntries(
-                        SENEGAL_REGIONS.map((r) => [r, r])
-                      )}
+                      items={ALL_REGION_ITEMS}
                     >
                       <SelectTrigger
                         id="dp-city"
@@ -1259,13 +1257,7 @@ export function DashboardContent({
                       >
                         <SelectValue placeholder="Sélectionnez votre région" />
                       </SelectTrigger>
-                      <SelectContent align="start">
-                        {SENEGAL_REGIONS.map((region) => (
-                          <SelectItem key={region} value={region}>
-                            {region}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
+                      <RegionSelectContent />
                     </Select>
                   </div>
                   <div className="flex flex-col gap-2">

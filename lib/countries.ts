@@ -42,12 +42,12 @@ export const COUNTRIES: Country[] = [
       { code: "SN-TH", name: "Thiès" },
       { code: "SN-DI", name: "Diourbel" },
       { code: "SN-FK", name: "Fatick" },
+      { code: "SN-KF", name: "Kaffrine" },
       { code: "SN-KA", name: "Kaolack" },
       { code: "SN-KO", name: "Kolda" },
       { code: "SN-LG", name: "Louga" },
       { code: "SN-MT", name: "Matam" },
       { code: "SN-SL", name: "Saint-Louis" },
-      { code: "SN-TC", name: "Tambacounda" },
       { code: "SN-ZG", name: "Ziguinchor" },
       { code: "SN-KE", name: "Kédougou" },
       { code: "SN-SE", name: "Sédhiou" },
@@ -273,3 +273,30 @@ export function getFlagUrl(code: CountryCode | string | null | undefined, size: 
   if (code) return "https://flagcdn.com/w" + size + "/" + String(code).toLowerCase() + ".png"
   return "https://flagcdn.com/w" + size + "/xx.png"
 }
+
+// ---------------------------------------------------------------------------
+// Régions du périmètre (9 pays, 93 régions).
+//
+// Le champ `client_city` / `city` stocke le NOM d'une région du référentiel.
+// Le pays n'est pas une colonne dédiée : il est dérivé côté app par
+// `lib/geography.ts` (countryCodeForPlace). Seul « Savanes » est ambigu
+// (existe en CI et TG) — acceptable pour l'instant, sans migration DB.
+// ---------------------------------------------------------------------------
+
+/** Tous les noms de régions du périmètre, triés, doublons éliminés. */
+export const ALL_REGION_NAMES: string[] = Array.from(
+  new Set(COUNTRIES.flatMap((c) => c.regions.map((r) => r.name)))
+).sort((a, b) => a.localeCompare(b, "fr"))
+
+const REGION_NAME_SET = new Set(ALL_REGION_NAMES.map((n) => n.toLowerCase()))
+
+/** Vrai si `name` est une région connue du périmètre (insensible à la casse). */
+export function isKnownRegion(name: string | null | undefined): boolean {
+  const n = (name ?? "").trim().toLowerCase()
+  return n.length > 0 && REGION_NAME_SET.has(n)
+}
+
+/** Map valeur→libellé pour la prop `items` des `Select` (base-ui). */
+export const ALL_REGION_ITEMS: Record<string, string> = Object.fromEntries(
+  ALL_REGION_NAMES.map((n) => [n, n])
+)

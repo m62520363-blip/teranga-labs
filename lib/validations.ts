@@ -1,5 +1,16 @@
 import { z } from "zod";
-import { PROJECT_TYPES, SENEGAL_REGIONS } from "@/lib/tokens";
+import { PROJECT_TYPES } from "@/lib/tokens";
+import { isKnownRegion } from "@/lib/countries";
+
+/**
+ * Champ « région » multi-pays : on stocke le NOM d'une région du référentiel
+ * (`lib/countries.ts`, 9 pays). Le pays est dérivé côté app par `lib/geography.ts`.
+ */
+const regionField = (message = "Choisissez une région.") =>
+  z
+    .string()
+    .trim()
+    .refine((v) => isKnownRegion(v), { message });
 
 export const usernameSchema = z
   .string()
@@ -46,9 +57,7 @@ export const developerIdentitySchema = z.object({
     .trim()
     .min(2, "Pays requis.")
     .max(60, "Pays trop long."),
-  city: z.enum(SENEGAL_REGIONS, {
-    message: "Choisissez une région.",
-  }),
+  city: regionField(),
 });
 
 export type DeveloperIdentityFormValues = z.infer<
@@ -199,9 +208,7 @@ export const briefSchema = z.object({
       /^\+?[0-9\s\-().]{9,20}$/,
       "Numéro WhatsApp invalide. Choisissez votre pays puis saisissez votre numéro."
     ),
-  client_city: z.enum(SENEGAL_REGIONS, {
-    message: "Choisissez une région.",
-  }),
+  client_city: regionField(),
   project_type: z.enum(PROJECT_TYPES, {
     message: "Choisissez un type de projet.",
   }),
@@ -277,9 +284,7 @@ export const clientSignupSchema = z.object({
     .max(72, "Mot de passe trop long.")
     .regex(/[A-Za-z]/, "Au moins une lettre.")
     .regex(/\d/, "Au moins un chiffre."),
-  city: z.enum(SENEGAL_REGIONS, {
-    message: "Choisissez une région.",
-  }),
+  city: regionField(),
   whatsapp: z
     .string()
     .regex(

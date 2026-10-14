@@ -20,12 +20,13 @@ import {
   Wallet,
 } from "lucide-react";
 import { briefSchema, type BriefFormValues } from "@/lib/validations";
-import { SENEGAL_REGIONS } from "@/lib/tokens";
+import { ALL_REGION_ITEMS } from "@/lib/countries";
 import { useBalance } from "@/components/balance-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PhoneInput } from "@/components/ui/phone-input";
+import { RegionSelectContent } from "@/components/ui/region-select";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
@@ -37,16 +38,12 @@ import {
 } from "@/components/ui/dialog";
 import {
   Select,
-  SelectContent,
-  SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "cn";
 
-const cityItems: Record<string, string> = Object.fromEntries(
-  SENEGAL_REGIONS.map((c) => [c, c])
-);
+const cityItems: Record<string, string> = ALL_REGION_ITEMS;
 
 const TYPE_OPTIONS: {
   value: string;
@@ -561,13 +558,7 @@ export function PosterForm() {
             <SelectTrigger className="h-10 w-full rounded-xl" aria-label="Région">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent align="start">
-              {SENEGAL_REGIONS.map((city) => (
-                <SelectItem key={city} value={city}>
-                  {city}
-                </SelectItem>
-              ))}
-            </SelectContent>
+            <RegionSelectContent />
           </Select>
           {errors.client_city ? <FieldError>{errors.client_city.message}</FieldError> : null}
         </FieldGroup>

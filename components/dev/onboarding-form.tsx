@@ -34,12 +34,13 @@ import {
   EXPERIENCE_LEVELS,
   LINK_KINDS,
   PROJECT_TYPES,
-  SENEGAL_REGIONS,
 } from "@/lib/tokens";
+import { ALL_REGION_ITEMS } from "@/lib/countries";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PhoneInput } from "@/components/ui/phone-input";
+import { RegionSelectContent } from "@/components/ui/region-select";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
@@ -116,7 +117,7 @@ const SPECIALTY_SUGGESTIONS = [
   "Rédacteur web & SEO",
 ];
 
-const CITY_ITEMS = Object.fromEntries(SENEGAL_REGIONS.map((c) => [c, c]));
+const CITY_ITEMS: Record<string, string> = ALL_REGION_ITEMS;
 
 export function OnboardingForm({
   initial,
@@ -453,6 +454,7 @@ function IdentityStep({
               onValueChange={(v) =>
                 v && setValue("city", v as DeveloperIdentityFormValues["city"], { shouldValidate: true })
               }
+              items={CITY_ITEMS}
             >
               <SelectTrigger
                 id="oi-city"
@@ -460,13 +462,7 @@ function IdentityStep({
               >
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent align="start">
-                {SENEGAL_REGIONS.map((c) => (
-                  <SelectItem key={c} value={c}>
-                    {CITY_ITEMS[c]}
-                  </SelectItem>
-                ))}
-              </SelectContent>
+              <RegionSelectContent />
             </Select>
           </div>
         </Field>

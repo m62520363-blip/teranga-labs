@@ -2,6 +2,26 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [P5-ter] — 2026-10-13 : régions multi-pays (correctif P0 — publier un brief hors Sénégal)
+
+Le site couvre 9 pays d'Afrique de l'Ouest, mais le champ « région » était figé sur le Sénégal : les 3 schemas de validation utilisaient `z.enum(SENEGAL_REGIONS)` (14 valeurs), donc **publier un brief, s'inscrire en tant que client ou compléter son onboarding hors Sénégal rejetait la requête en HTTP 422**. Les 4 listes déroulantes n'offraient que les 14 régions sénégalaises.
+
+### Nouveau
+- `components/ui/region-select.tsx` : `RegionSelectContent` — contenu d'un `Select` listant les **92 régions** du périmètre (9 pays de `lib/countries.ts`), **groupées par pays** (en-tête `SelectLabel`). La valeur émise reste le **nom** de région (modèle de données inchangé, sans migration DB).
+- `lib/countries.ts` : `ALL_REGION_NAMES` (92 noms uniques), `isKnownRegion()` (test d'appartenance insensible à la casse), `ALL_REGION_ITEMS` (map valeur→libellé pour les `Select`).
+- `lib/region-slugs.ts` : généralisé aux 92 régions. Chaque slug porte désormais son `countryCode`. « Savanes » (CI + TG) est dédoublonné par slug (première occurrence conservée). `countryCodeForRegionSlug()` ajouté.
+- `Kaffrine` ajouté aux régions du Sénégal dans `lib/countries.ts` (13 → 14, aligné sur `SENEGAL_REGIONS`).
+
+### Corrigé
+- `lib/validations.ts` : les 3 `z.enum(SENEGAL_REGIONS)` (`city` développeur, `client_city` brief, `city` inscription client) remplacés par un champ `regionField()` validé via `isKnownRegion()` — toute région des 9 pays est désormais acceptée.
+- Les 4 sélecteurs de région (`auth-card`, `poster-form`, `dev/onboarding-form`, `dashboard-content`) branchés sur `RegionSelectContent` : liste groupée par pays au lieu des 14 régions sénégalaises.
+- Pages SEO `/ville` : l'index liste les 92 régions groupées par pays (texte « Afrique de l'Ouest » au lieu de « Sénégal ») ; la page région dérive le pays affiché (badge, JSON-LD, `inLanguage: "fr"`) au lieu de durcir « Sénégal ». Le sitemap suit automatiquement (92 URLs).
+
+### Note
+Le pays n'est pas une colonne dédiée sur `requests` : il est dérivé côté app par `lib/geography.ts` (`countryCodeForPlace`). Seul « Savanes » est ambigu (existe en CI et TG) — les deux émettent « Savanes », ce qui colle au modèle par nom stocké en base.
+
+Vérifié : typecheck ✔, lint 0/0 ✔, **177 tests unitaires** ✔.
+
 ## [P5-bis] — 2026-10-13 : champs téléphone/WhatsApp multi-pays (correctif C2)
 
 Le site couvre 9 pays d'Afrique de l'Ouest, mais la saisie du numéro (WhatsApp/téléphone) était figée sur le Sénégal : placeholder `+221`, messages d'erreur `Ex : +221771234567`, et surtout `normalizeWhatsApp` qui **convertissait de force** tout numéro local commençant par `0` en `221…` — faux pour un Malien, Ivoirien, Béninois, etc.

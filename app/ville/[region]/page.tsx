@@ -4,8 +4,13 @@ import { notFound } from "next/navigation";
 import { ArrowRight, MapPin, ShieldCheck } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { PROJECT_TYPE_LABELS } from "@/lib/tokens";
+import { getCountryByCode } from "@/lib/countries";
 import { BRIEFS_COLUMNS } from "@/lib/briefs-pagination";
-import { findRegionBySlug, slugifyRegion } from "@/lib/region-slugs";
+import {
+  countryCodeForRegionSlug,
+  findRegionBySlug,
+  slugifyRegion,
+} from "@/lib/region-slugs";
 import { formatFCFA, formatDate } from "@/lib/formatting";
 import { absoluteUrl } from "@/lib/utils";
 import { projectTypeLabel } from "@/lib/dev-missions-labels";
@@ -13,12 +18,13 @@ import { Button } from "@/components/ui/button";
 import { cn } from "cn";
 
 /**
- * Pages région : une URL stable et partageable par région du Sénégal.
+ * Pages région : une URL stable et partageable par région du périmètre
+ * (9 pays d'Afrique de l'Ouest).
  *
  * Les pages sont rendues dynamiquement (`force-dynamic`) car elles comptent
  * les briefs réels du moment. Générer du statique à la compilation figerait
  * des compteurs faux, ce qui est exactement le piège qu'on a évité sur la
- * home à l'étape 1.
+ * home à l'étage 1.
  */
 export const dynamic = "force-dynamic";
 
@@ -42,14 +48,16 @@ export async function generateMetadata({
   if (!region) {
     return { title: "Région introuvable", robots: { index: false, follow: false } };
   }
+  const countryName =
+    getCountryByCode(countryCodeForRegionSlug(rawSlug) ?? "")?.nameFr ?? "Afrique de l'Ouest";
 
   return {
     title: `Développeurs web à ${region}`,
-    description: `Trouvez un développeur web à ${region} (Sénégal) pour créer votre site, votre boutique en ligne ou votre application. Publiez votre besoin depuis TERANGA LABS.`,
+    description: `Trouvez un développeur web à ${region} (${countryName}) pour créer votre site, votre boutique en ligne ou votre application. Publiez votre besoin depuis TERANGA LABS.`,
     alternates: { canonical: `/ville/${slugifyRegion(region)}` },
     openGraph: {
       title: `Développeurs web à ${region} — TERANGA LABS`,
-      description: `Les briefs web réels de ${region}, publiés par des entreprises et entrepreneurs sénégalais.`,
+      description: `Les briefs web réels de ${region}, publiés par des entreprises et entrepreneurs du ${countryName}.`,
       url: absoluteUrl(`/ville/${slugifyRegion(region)}`),
     },
   };
@@ -77,6 +85,8 @@ export default async function RegionPage({
   const { region: rawSlug } = await params;
   const region = findRegionBySlug(rawSlug);
   if (!region) notFound();
+  const countryName =
+    getCountryByCode(countryCodeForRegionSlug(rawSlug) ?? "")?.nameFr ?? "Afrique de l'Ouest";
 
   const briefs = await getRegionBriefs(region);
   const slug = slugifyRegion(region);
@@ -85,9 +95,9 @@ export default async function RegionPage({
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name: `Développeurs web à ${region}`,
-    description: `Les briefs web réels publiés à ${region}, au Sénégal.`,
+    description: `Les briefs web réels publiés à ${region}, en ${countryName}.`,
     url: absoluteUrl(`/ville/${slug}`),
-    inLanguage: "fr-SN",
+    inLanguage: "fr",
     isPartOf: { "@type": "WebSite", name: "TERANGA LABS", url: absoluteUrl("/").origin },
   };
 
@@ -101,7 +111,7 @@ export default async function RegionPage({
         <div className="mx-auto max-w-4xl">
           <p className="inline-flex items-center gap-1.5 text-sm font-medium text-primary">
             <MapPin className="size-4" aria-hidden="true" />
-            Sénégal
+            {countryName}
           </p>
           <h1 className="mt-3 text-3xl font-bold tracking-tight md:text-4xl">
             Développeurs web à {region}
