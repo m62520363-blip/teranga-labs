@@ -2,6 +2,19 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [P4-2] — 2026-10-08
+
+Deuxième vague du chapitre P4 : **page Support** — l'interface des tickets créés en P4-1.
+
+### Nouveau
+- **`/support`** (privée, `requireUser()`) : ouverture de ticket (sujet + message, validations côté client doublant les garde serveur), liste des tickets avec statut (`En attente`/`Répondu`/`Fermé`), conversation complète par ticket (lecture directe RLS), réponse, fermeture.
+- **`components/support-tickets.tsx`** : client component suivant le pattern établi (`createClient`, `friendlyRpcError`, UI primitives du projet).
+- **Footer** : lien « Support » ajouté (colonne « Découvrir ») ; page volontairement absente du plan du site (privée, `noindex`).
+- **E2E** : garde `/support` → `/login` sans session.
+
+### Vérifications
+- typecheck ✔, lint 0/0 ✔, **174 tests** ✔, **10 tests E2E** ✔ (build production + `next start`).
+
 ## [P4-1] — 2026-10-08
 
 Première vague du chapitre P4 (clôture de l'audit) : **fin des tables manquantes C11** (§45/§48/§31/§12) — 3 migrations NON destructives.

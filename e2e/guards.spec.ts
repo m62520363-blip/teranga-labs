@@ -34,4 +34,9 @@ test.describe("gardes de routes (nécessite Supabase)", () => {
     await page.goto("/client", { waitUntil: "domcontentloaded" });
     await expect(page).toHaveURL(/\/login/);
   });
+
+  test("sans session, /support redirige vers /login", async ({ page }) => {
+    await page.goto("/support", { waitUntil: "domcontentloaded" });
+    await expect(page).toHaveURL(/\/login/);
+  });
 });
