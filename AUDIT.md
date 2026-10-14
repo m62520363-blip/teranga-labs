@@ -3,6 +3,9 @@
 > Réalisé avant toute modification, conformément à la §3 et §60 du cahier des charges.
 > Périmètre : `teranga-labs` (site) + `teranga-labs-admin` (console).
 > Date : 2026-10-06 — Branche `main` @ `7d01760`.
+> **Mise à jour : 2026-10-08 — les constats C1 → C14 sont tous traités
+> (chapitres P0 → P4, voir §11). Les constats ci-dessous sont conservés
+> pour l'historique.**
 
 ---
 
@@ -114,3 +117,35 @@
 **P0 (indispensable au lancement)** — C1, C3, C4, C5, C6, C7, C9, C8, C14 (§58).
 **P1 (croissance)** — C2, C10, C11, C12, C13.
 **P2 (différenciation)** — IA, agences, sponsoring, abonnement.
+
+---
+
+## 11. Suivi des corrections (au 2026-10-08)
+
+Tous les constats de §3 sont traités et poussés sur `main` (détail au `CHANGELOG.md`) :
+
+| # | État | Livraison |
+|---|---|---|
+| C1 | ✅ | Libellé UEMOA corrigé (`lib/countries.ts`, `/pays`, landing) + tests `geography.test.ts` |
+| C2 | ✅ | Pages `/ville`, `/pays` + sitemap régions (`region-slugs.ts`, tests dédiés) |
+| C3 | ✅ | Migration `0036` : rôles `client`, `agency`, `support`, `super_admin` |
+| C4 | ✅ | Migration `0037` + routes `otp/request`, `otp/verify` |
+| C5 | ✅ | Schémas zod sur `payments/checkout`, `payments/status`, `verification/checkout` |
+| C6 | ✅ | `lib/rate-limit.ts` appliqué aux routes sensibles (OTP, checkout, IA, favoris) |
+| C7 | ✅ | P3-1 : `requireUser`/`apiRequireUser` centralisés (8 pages + 6 routes API) + anti-régression |
+| C8 | ✅ | `lib/log.ts` : logs structurés (timestamp, action, request_id…) |
+| C9 | ✅ | Migration `0038` : `missions` + machine à états + `mission_events` transactionnels |
+| C10 | ✅ | Migration `0039` : `analytic_events` + `track_event` (service_role) |
+| C11 | ✅ | `0040` favoris ; `0048` litiges + risque ; `0049` feature flags + disponibilités ; `0050` support (P4-1) + page `/support` (P4-2) |
+| C12 | ✅ | Migration `0043` : TERANGA SCORE + TERANGA MATCH |
+| C13 | ✅ | `/classement` dans le sitemap (`app/sitemap.ts`) |
+| C14 | ✅ | P3-3 pgtap (RLS + surface anon + garde RPC) ; P3-4 E2E Playwright (10 tests) ; tests unitaires webhook/unlock existants |
+
+**Éléments transverses livrés** : validations zod, rate-limiting, logs structurés,
+CHANGELOG §61, `docs/DEPLOIEMENT.md` §66, CI complète (quality/build/db-tests/e2e/secrets),
+verrouillage des privilèges SQL (`0047` — `debit_tokens` révoquée de PUBLIC), abstraction
+`PaymentProvider`, tests E2E + SQL ajoutés à la CI.
+
+**Restant hors périmètre site** : la console `teranga-labs-admin` (dépôt séparé, R4) —
+elle consomme les mêmes RPC (service_role) et devra suivre l'évolution des tables
+`disputes`, `support_*`, `feature_flags`.

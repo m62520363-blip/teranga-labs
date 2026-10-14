@@ -2,6 +2,16 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [P4-3] — 2026-10-08
+
+Troisième vague du chapitre P4 : **livrables documentaires de fin de projet** (§61, §66, suivi d'audit).
+
+### `docs/DEPLOIEMENT.md` (nouveau)
+- Guide opérationnel : prérequis, variables d'environnement (serveur vs client, service_role), procédure de migrations (non destructive, ordre, vérification pgtap), déploiement Vercel (site + console), jobs CI, contrôles post-déploiement, rappels sécurité (0047, IPN PayDunya).
+
+### `AUDIT.md` mis à jour
+- §11 ajouté : tableau de suivi C1 → C14 — **tous les constats de l'audit initial sont traités**, avec la livraison correspondante (migrations, P0-P4) et le périmètre restant hors site (console admin, dépôt séparé).
+
 ## [P4-2] — 2026-10-08
 
 Deuxième vague du chapitre P4 : **page Support** — l'interface des tickets créés en P4-1.
