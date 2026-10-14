@@ -2,6 +2,27 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [P4] — 2026-10-08 : chapitre terminé — **audit clos**
+
+Trois vagues pour **clôturer l'audit initial** (constats C1 → C14 tous traités, suivi dans `AUDIT.md` §11).
+
+| Vague | Contenu |
+| --- | --- |
+| P4-1 | Fin des tables manquantes C11 : `disputes` + `risk_events` (`0048`), `feature_flags` + `developer_availability` (`0049`), `support_tickets` (`0050`) — pgtap étendu |
+| P4-2 | Page `/support` (tickets privés : ouverture, conversation, réponse, fermeture) + lien footer + garde E2E |
+| P4-3 | `docs/DEPLOIEMENT.md` (§66) + `AUDIT.md` à jour (tableau de suivi C1→C14) |
+
+**Migrations livrées : `0048_disputes_risk` → `0050_support_tickets`.** À appliquer dans l'ordre dans le SQL Editor Supabase (au-delà de `0047` déjà livrée en P3-3).
+
+État final vérifié :
+- typecheck ✔, **lint 0/0 error/warning** ✔, **174 tests unitaires** ✔, **10 tests E2E** ✔, **build Next production** ✔.
+- CI complète : quality + build + db-tests (pgtap) + e2e + détection de secrets.
+
+L'ensemble des vagues P0 → P4 est ainsi poussé : **l'audit initial est clos** — le
+site couvre le parcours complet (brief → match → contact → mission → avis),
+les paiements, les rôles, la sécurité SQL (RLS + privilèges verrouillés), la
+qualité (typecheck, lint, 174 tests, 10 E2E, CI 5 jobs).
+
 ## [P4-3] — 2026-10-08
 
 Troisième vague du chapitre P4 : **livrables documentaires de fin de projet** (§61, §66, suivi d'audit).
