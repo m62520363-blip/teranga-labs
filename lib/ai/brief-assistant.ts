@@ -31,7 +31,7 @@ const TYPE_HINTS: { keywords: string[]; label: string; suggestions: string[] }[]
     suggestions: [
       "Listez les produits ou services à vendre (nombre, catégories).",
       "Précisez le moyen de paiement : mobile money (Wave, Orange Money), carte bancaire…",
-      "Indiquez le mode de livraison (Dakar, régions, Sénégal, export).",
+      "Indiquez le mode de livraison (votre ville, votre pays, export).",
       "Prévoyez un espace d'administration pour gérer produits et commandes.",
     ],
   },

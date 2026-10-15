@@ -105,7 +105,7 @@ const FEATURE_OPTIONS = [
 ] as const;
 
 const BUDGET_HINTS: Record<string, string> = {
-  vitrine: "L’ordre de prix au Sénégal pour un site vitrine se situe entre 80 000 et 300 000 FCFA.",
+  vitrine: "L’ordre de prix pour un site vitrine se situe entre 80 000 et 300 000 FCFA.",
   "e-commerce": "Une boutique payante démarre généralement autour de 200 000 FCFA.",
   "landing page": "Une landing page se situe souvent entre 60 000 et 250 000 FCFA.",
   "app web": "Une application web sur mesure demande un budget plus conséquent (dès 300 000 FCFA).",

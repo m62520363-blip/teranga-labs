@@ -6,7 +6,7 @@ import { TOKEN_RULE } from "@/lib/formatting";
 export const metadata: Metadata = {
   title: "À propos",
   description:
-    "TERANGA LABS est le marketplace inversé du Sénégal : les clients publient le brief de leur site web moyennant 1 Token, les développeurs débloquent le contact avec 1 Token.",
+    "TERANGA LABS est le marketplace inversé d'Afrique de l'Ouest : les clients publient le brief de leur site web moyennant 1 Token, les développeurs débloquent le contact avec 1 Token.",
 };
 
 const values = [
@@ -37,10 +37,10 @@ export default function AProposPage() {
           </h1>
           <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
             <span className="font-semibold text-foreground">On ne vend pas des sites. On vend l’accès aux clients qui veulent des sites.</span>{" "}
-            TERANGA LABS est le marketplace inversé du Sénégal : une boutique à
-            Thiès, un resto à Dakar, une école à Saint-Louis publient
-            le brief de leur projet (1 Token), et les développeurs sérieux
-            viennent vers eux.
+            TERANGA LABS est le marketplace inversé d&apos;Afrique de
+            l&apos;Ouest : une boutique à Thiès, un resto à Dakar, une école à
+            Abidjan publient le brief de leur projet (1 Token), et les
+            développeurs sérieux viennent vers eux.
           </p>
 
           <div className="mt-12 grid gap-6 sm:grid-cols-3">

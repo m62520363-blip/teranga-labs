@@ -1,20 +1,3 @@
-export const SENEGAL_REGIONS = [
-  "Dakar",
-  "Diourbel",
-  "Fatick",
-  "Kaffrine",
-  "Kaolack",
-  "Kédougou",
-  "Kolda",
-  "Louga",
-  "Matam",
-  "Saint-Louis",
-  "Sédhiou",
-  "Tambacounda",
-  "Thiès",
-  "Ziguinchor",
-] as const;
-
 export const PROJECT_TYPES = [
   "vitrine",
   "e-commerce",

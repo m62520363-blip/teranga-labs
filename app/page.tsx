@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     description: META.description,
     type: "website",
     siteName: "TERANGA LABS",
-    locale: "fr_SN",
+    locale: "fr",
     url: META.url || undefined,
   },
   twitter: {
@@ -57,7 +57,7 @@ const structuredData = {
       "@type": "WebSite",
       name: "TERANGA LABS",
       description: META.description,
-      inLanguage: "fr-SN",
+      inLanguage: "fr",
     },
     {
       "@type": "FAQPage",

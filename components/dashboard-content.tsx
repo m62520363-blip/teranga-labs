@@ -1290,7 +1290,7 @@ export function DashboardContent({
                       value={p.bio}
                       onChange={(e) => setP({ ...p, bio: e.target.value })}
                       className="min-h-28 rounded-xl"
-                      placeholder="Développeur web basé à Dakar, spécialisé dans les sites vitrines et e-commerce pour les PME sénégalaises…"
+                      placeholder="Développeur web basé à Abidjan, spécialisé dans les sites vitrines et e-commerce pour les PME de la sous-région…"
                     />
                   </div>
                   <div className="flex flex-col gap-2">

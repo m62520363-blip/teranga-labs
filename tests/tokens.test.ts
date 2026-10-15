@@ -4,7 +4,6 @@ import {
   normalizeWhatsApp,
   PROJECT_TYPES,
   PROJECT_TYPE_LABELS,
-  SENEGAL_REGIONS,
   waLink,
 } from "@/lib/tokens";
 
@@ -50,17 +49,6 @@ describe("waLink", () => {
 });
 
 describe("constants", () => {
-  it("a les 14 régions du Sénégal, sans Autre", () => {
-    expect(SENEGAL_REGIONS).toHaveLength(14);
-    expect(SENEGAL_REGIONS).not.toContain("Autre");
-    expect(SENEGAL_REGIONS).not.toContain("Touba");
-    expect(SENEGAL_REGIONS).toContain("Dakar");
-    expect(SENEGAL_REGIONS).toContain("Thiès");
-    expect(SENEGAL_REGIONS).toContain("Ziguinchor");
-    expect(SENEGAL_REGIONS).toContain("Kédougou");
-    expect(SENEGAL_REGIONS).toContain("Sédhiou");
-  });
-
   it("a 5 types de projet avec leurs libellés", () => {
     expect(PROJECT_TYPES).toHaveLength(5);
     expect(PROJECT_TYPES).toContain("refonte");

@@ -97,7 +97,7 @@ export const BUYER = {
     cityLabel: "Votre région",
     cityValue: "Ex. Dakar",
     contactLabel: "Votre WhatsApp (reste privé)",
-    contactValue: "Ex. +221 7X XX XX XX",
+    contactValue: "Ex. +225 07 07 07 07 07",
   },
 };
 

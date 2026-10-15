@@ -495,7 +495,7 @@ function IdentityStep({
               autoComplete="country-name"
               {...register("country")}
               className="h-11 rounded-xl border-hairline bg-background/70 pl-10"
-              placeholder="Sénégal"
+              placeholder="Ex. Sénégal, Côte d'Ivoire…"
               aria-invalid={Boolean(errors.country)}
             />
           </div>

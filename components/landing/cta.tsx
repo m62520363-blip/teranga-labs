@@ -43,7 +43,7 @@ export function FinalCta() {
             </Link>
           </div>
 
-          <p className="mt-8 text-sm text-white/50">© {BRAND} — Sénégal, 2026</p>
+          <p className="mt-8 text-sm text-white/50">© {BRAND} — Afrique de l&apos;Ouest, 2026</p>
         </div>
       </Reveal>
     </section>

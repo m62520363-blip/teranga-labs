@@ -4,7 +4,7 @@ import { BRAND, LEGAL_PUBLISHER } from "@/components/landing/content";
 
 export const metadata: Metadata = {
   title: "Mentions légales",
-  description: "Mentions légales de TERANGA LABS, le marketplace inversé du Sénégal.",
+  description: "Mentions légales de TERANGA LABS, le marketplace inversé d'Afrique de l'Ouest.",
 };
 
 export default function MentionsLegalesPage() {

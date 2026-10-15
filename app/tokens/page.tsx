@@ -79,8 +79,9 @@ export default async function TokensPage() {
             </div>
             <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
               Le règlement passe par PayDunya, prestataire de paiement agréé
-              au Sénégal. Vous recevez une facture PDF par email, et vos Tokens
-              sont crédités dès que le paiement est confirmé.
+              au Sénégal et dans la sous-région. Vous recevez une facture PDF
+              par email, et vos Tokens sont crédités dès que le paiement est
+              confirmé.
             </p>
             <p className="mt-4 rounded-xl border border-hairline bg-muted/60 px-4 py-3 text-xs leading-relaxed text-muted-foreground">
               <span className="font-medium text-foreground">

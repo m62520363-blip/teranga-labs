@@ -2,6 +2,29 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [P5-quater] — 2026-10-14 : textes, branding et métadonnées multi-pays
+
+Après la correction des régions (P5-ter), les textes visibles et les métadonnées donn encore l'impression d'un site « Sénégal uniquement » alors que le périmètre est de 9 pays.
+
+### Corrigé
+- **Manifest PWA** (`public/manifest.json`) : « Marketplace inversé des développeurs du Sénégal » → « … d'Afrique de l'Ouest ».
+- **À propos** : description + corps de page généralisés (exemples de villes répartis sur le bassin : Thiès, Dakar, Abidjan).
+- **Mentions légales** : description metadata généralisée (l'adresse légale « Dakar, Sénégal » reste factuelle et inchangée).
+- **Landing** : copyright « © TERANGA LABS — Sénégal, 2026 » → « — Afrique de l'Ouest, 2026 » ; placeholder WhatsApp d'exemple multi-pays.
+- **Tokens** : PayDunya présenté comme agréé « au Sénégal et dans la sous-région ».
+- **Placeholder bio développeur** (dashboard) et **placeholder pays** (agence, onboarding) : exemples non sénégalais.
+- **Astuce budget** (`poster-form`) : « L'ordre de prix au Sénégal… » → « L'ordre de prix… ».
+- **Assistant IA** (`brief-assistant`) : mode de livraison « (Dakar, régions, Sénégal, export) » → « (votre ville, votre pays, export) ».
+
+### Métadonnées / SEO
+- `app/layout.tsx` : `areaServed` du JSON-LD Organization **+ Guinée-Bissau** (9e pays manquant, aussi ajouté aux keywords) ; `locale`/`inLanguage` `fr_SN` → `fr`.
+- `app/page.tsx` : `locale` `fr_SN` → `fr`, `inLanguage` `fr-SN` → `fr`.
+
+### Nettoyage
+- `SENEGAL_REGIONS` supprimé de `lib/tokens.ts` : plus aucun import en production depuis la généralisation P5-ter (couvert par `lib/countries.ts` / `tests/region-slugs.test.ts`). Test associé retiré de `tests/tokens.test.ts`.
+
+Vérifié : typecheck ✔, lint 0/0 ✔, **176 tests unitaires** ✔.
+
 ## [P5-ter] — 2026-10-13 : régions multi-pays (correctif P0 — publier un brief hors Sénégal)
 
 Le site couvre 9 pays d'Afrique de l'Ouest, mais le champ « région » était figé sur le Sénégal : les 3 schemas de validation utilisaient `z.enum(SENEGAL_REGIONS)` (14 valeurs), donc **publier un brief, s'inscrire en tant que client ou compléter son onboarding hors Sénégal rejetait la requête en HTTP 422**. Les 4 listes déroulantes n'offraient que les 14 régions sénégalaises.

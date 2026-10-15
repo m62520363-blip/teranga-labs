@@ -43,6 +43,7 @@ export const metadata: Metadata = {
     "Mali",
     "Burkina Faso",
     "Guinée",
+    "Guinée-Bissau",
     "Bénin",
     "Togo",
     "Niger",
@@ -60,7 +61,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    locale: "fr_SN",
+    locale: "fr",
     url: absoluteUrl("/"),
     title: "TERANGA LABS — Des clients qui veulent un site",
     description:
@@ -114,6 +115,7 @@ const organizationJsonLd = {
     { "@type": "Country", name: "Burkina Faso" },
     { "@type": "Country", name: "Niger" },
     { "@type": "Country", name: "Guinée" },
+    { "@type": "Country", name: "Guinée-Bissau" },
     { "@type": "Country", name: "Bénin" },
     { "@type": "Country", name: "Togo" },
   ],
@@ -122,7 +124,7 @@ const organizationJsonLd = {
     "@type": "ContactPoint",
     contactType: "customer support",
     availableLanguage: ["fr"],
-    areaServed: ["SN", "CI", "ML", "BF", "NE", "GN", "BJ", "TG"],
+    areaServed: ["SN", "CI", "ML", "BF", "NE", "GN", "GW", "BJ", "TG"],
   },
 };
 
@@ -131,7 +133,7 @@ const websiteJsonLd = {
   "@type": "WebSite",
   name: "TERANGA LABS",
   url: absoluteUrl("/").origin,
-  inLanguage: "fr-SN",
+  inLanguage: "fr",
   publisher: { "@type": "Organization", name: "TERANGA LABS" },
   // Pas de SearchAction : la recherche des briefs est faite côté client
   // et n'est pas adressable par une URL (?q=), donc la déclarer ici

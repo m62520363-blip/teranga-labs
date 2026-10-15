@@ -270,7 +270,7 @@ export default function AgencyManager() {
                 value={form.country}
                 onChange={(e) => setForm({ ...form, country: e.target.value })}
                 className="h-11 w-full rounded-xl border border-hairline bg-background px-3 text-sm outline-none focus:border-primary"
-                placeholder="Sénégal"
+                placeholder="Ex. Côte d'Ivoire"
               />
             </div>
           </div>
