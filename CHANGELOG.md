@@ -2,6 +2,27 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [P5-huit] — 2026-10-15 : suite E2E multi-pays (couverture des surfaces P5-ter/quater)
+
+La suite E2E existait (10 tests) mais **ne touchait aucune des pages multi-pays** : uniquement des pages statiques et les gardes de routes. Les 6 vagues précédentes (régions, `/ville`, `/pays`, indicatifs) avaient donc été poussées sans vérification d'exécution — le seul signalement de bug (P5-sept) venait d'une erreur image remontée par hasard.
+
+### Ajouté — `e2e/multipays.spec.ts` (10 tests)
+- **`/ville`** : les 9 pays en sections, cross-vérification lib → DOM (93 entrées de région, **92 URLs uniques** après dédup « Savanes »), chaque URL du référentiel répond 200, région inconnue → 404.
+- **`/ville/[region]`** : 1 échantillon par pays — le pays dérivé du slug apparaît dans la page, le `title` nomme la région (vérifie `countryCodeForRegionSlug` de bout en bout).
+- **`/pays`** : 9 cartes, largeurs de drapeau dans `PUBLISHED_WIDTHS`, **zéro échec réseau d'image** après scroll.
+- **`/pays/[slug]`** : les 9 pages en 200, `h1` exact, toutes les régions listées, zéro échec réseau ; slug inconnu → 404.
+- **Sitemap** : 92 entrées `/ville` uniques + 9 `/pays`.
+- **Indicatif (inscription)** : le `Select` propose bien les 9 pays — ancré sur l'indicatif (unique) puis le nom, car un filtre sur le nom matcherait « Guinée » dans « Guinée-Bissau ».
+- **Régression P5-sept** : `getFlagUrl` ne cible que des largeurs publiées.
+
+### Points de vigilance rencontrés (documentés pour la suite)
+- **Hydratation React** : une interaction avant hydratation échoue *silencieusement* — le popup ne s'ouvre pas, sans erreur. `waitForLoadState("networkidle")` est requis avant de cliquer un `Select`.
+- **`getByRole` strict** : « Guinée » matche « Guinée-Bissau » → `exact: true` obligatoire.
+- **Footer** : présent sur chaque page, il rend 9 drapeaux — on asserte le **réseau**, pas un comptage d'images.
+- **Ne pas lancer `test:e2e` et `check` en parallèle** : le build réécrit `.next/` pendant que `tsc` lit `.next/types/validator.ts` (faux négatif `TS6053`).
+
+Vérifié : typecheck ✔, lint 0/0 ✔, **181 tests unitaires** ✔, **E2E 20/20** ✔.
+
 ## [P5-sept] — 2026-10-15 : drapeaux cassés (flagcdn) — bug visible uniquement à l'exécution
 
 Ajout d'une suite E2E (Playwright, déjà en place : 10 tests) et **première exécution** : elle a révélé un bug d'affichage livré par les vagues multi-pays et invisible des tests unitaires, puisque rien ne vérifiait la résolution réseau des images.
