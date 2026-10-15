@@ -2,6 +2,22 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [P5-cinq] — 2026-10-14 : devise = FCFA partout (fin de la promesse GNF non tenue)
+
+La FAQ et la page `/pays/[slug]` promettaient un affichage des prix « en GNF pour la Guinée », alors que rien n'était implémenté : le paiement (PayDunya, Wave) envoie `currency: "XOF"` et les colonnes DB sont `*_fcfa`. `lib/currency.ts` (conversions GNF↔XOF) existait mais n'était **importé nulle part**.
+
+### Corrigé
+- **FAQ landing** : « … en FCFA (en GNF pour la Guinée) » → « … en FCFA ».
+- **`/pays` (index)** : footnote « Les prix sont affichés en FCFA (en GNF pour la Guinée) » → « … en FCFA ».
+- **`/pays/[slug]`** : « Devise : GNF (taux configurable, non figé) » → « Les prix sont affichés en FCFA. »
+
+### Supprimé
+- `lib/currency.ts` : module de conversion GNF↔XOF jamais importé (code mort). Le support GNF (affichage ou paiement) reste ouvert comme évolution future.
+
+Les badges « FCFA »/« GNF » sur les cartes `/pays` et `/classement` restent : ils décrivent la devise **nationale** du pays (donnée factuelle du référentiel — seule la Guinée est en GNF), pas une devise de prix.
+
+Vérifié : typecheck ✔, lint 0/0 ✔, **176 tests unitaires** ✔.
+
 ## [P5-quater] — 2026-10-14 : textes, branding et métadonnées multi-pays
 
 Après la correction des régions (P5-ter), les textes visibles et les métadonnées donn encore l'impression d'un site « Sénégal uniquement » alors que le périmètre est de 9 pays.

@@ -118,9 +118,8 @@ export default async function CountryPage({
           </h1>
           <p className="mt-3 max-w-2xl leading-relaxed text-muted-foreground">
             Publiez votre besoin en {country.nameFr} et recevez en quelques
-            minutes les réponses des développeurs actifs. Devise :{" "}
-            {country.currencyLabel}
-            {country.currency !== "XOF" ? " (taux configurable, non figé)" : ""}.{" "}
+            minutes les réponses des développeurs actifs. Les prix sont
+            affichés en FCFA.{" "}
             {totalOpen > 0
               ? `${totalOpen} brief${totalOpen > 1 ? "s" : ""} ouvré${totalOpen > 1 ? "s" : ""} en ce moment dans le pays.`
               : "Les briefs publiés y seront affichés ici dès leur arrivée."}

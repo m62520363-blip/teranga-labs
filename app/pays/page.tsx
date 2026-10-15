@@ -76,9 +76,9 @@ export default function CountriesPage() {
           </ul>
 
           <p className="mt-8 text-xs leading-relaxed text-muted-foreground">
-            Les prix sont affichés en FCFA (en GNF pour la Guinée). Les moyens de
-            paiement mobiles disponibles sont indiqués sur chaque page du
-            pays dès que l&apos;intégration est confirmée.
+            Les prix sont affichés en FCFA. Les moyens de paiement mobiles
+            disponibles sont indiqués sur chaque page du pays dès que
+            l&apos;intégration est confirmée.
           </p>
         </div>
       </div>
