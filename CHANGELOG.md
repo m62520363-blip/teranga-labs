@@ -2,6 +2,38 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [P5-sept] — 2026-10-15 : drapeaux cassés (flagcdn) — bug visible uniquement à l'exécution
+
+Ajout d'une suite E2E (Playwright, déjà en place : 10 tests) et **première exécution** : elle a révélé un bug d'affichage livré par les vagues multi-pays et invisible des tests unitaires, puisque rien ne vérifiait la résolution réseau des images.
+
+### Le bug
+`getFlagUrl(code, size)` construisait `https://flagcdn.com/w{size}/{pays}.png` pour **toute** taille. Or flagcdn ne publie que des largeurs « × 20 » — vérifié par requête réelle : **20, 40, 80, 160, 320, 640, 1280 renvoient 200 ; 16, 24, 32, 48, 64… renvoient 404**, quel que soit le pays (`sn`, `ci`, `ml`, `us`, `fr`, `de`) et quel que soit le User-Agent (navigateur ou non).
+
+Résultat, **chaque drapeau du périmètre était en erreur** sur les pages multi-pays :
+
+| Taille | Utilisé par | État |
+| --- | --- | --- |
+| 16 | `phone-input` (sélecteur d'indicatif, 9 pays) | ❌ 404 |
+| 24 | `/pays/[slug]` (banderole) | ❌ 404 |
+| 32 | autorisé par la signature de `getFlagUrl` | ❌ 404 |
+| 48 | `/pays` (cartes) | ❌ 404 |
+| 20 / 40 | `/classement` / `footer` (hardcodés) | ✅ 200 |
+
+Second défaut : le fallback `…/xx.png` (drapeau neutre renvoyé par `Flag` **sans code pays**, utilisé par les boutons de signalement) **n'existe pas chez flagcdn → 404**.
+
+### Corrigé — `lib/countries.ts`
+- **`getFlagUrl`** arrondit la taille vers le **haut** sur une largeur réellement publiée (`FLAGCDN_WIDTHS`) : `16→20`, `24→40`, `32→40`, `48→80`. Next/Image met ensuite à l'échelle CSS demandée — aucun gain de netteté perdu, aucun 404.
+- **Fallback `xx.png` → `un.png`** (la seule entrée neutre réellement servie par flagcdn).
+- `country.flagUrl.replace(/\/w\d+\//, …)` : regex plutôt que substitution littérale `"/w20/"`.
+
+`footer.tsx` (`w40`) et les `flagUrl` du référentiel (`w20/…`) étaient déjà valides : inchangés.
+
+### Ajouté
+- **`tests/flags.test.ts`** (5 tests, offline/déterministe) : verrouille le fait que `getFlagUrl` n'émet que des largeurs publiées, que l'arrondi est vers le haut, que le pays est conservé, et que le fallback n'est plus `xx.png`.
+- **`e2e/`** : 10 tests (gardes de routes + pages statiques + navigation header) — exécutés en local, ils sont ce qui a attrapé le bug.
+
+Vérifié : typecheck ✔, lint 0/0 ✔, **181 tests unitaires** ✔, **E2E 10/10** ✔ sans aucune erreur `upstream image`.
+
 ## [P5-six] — 2026-10-15 : normalisation téléphone multi-pays (migration `0052`)
 
 Dernier point « Sénégal » du périmètre 9 pays, côté base. La migration `0024` normalisait un numéro via `right(chiffres, 9)` : correct pour le Sénégal (numéro national à 9 chiffres, l'indicatif `221` est retranché), mais **faux pour les 8 autres pays**. Ex. Côte d'Ivoire (+225, national à 10 chiffres) : deux numéros distincts `+2250708091011` et `+2251708091011` réduisaient à la même clé `808091011` — le second était rejeté à tort (« Ce numéro WhatsApp est déjà associé à un autre compte »).

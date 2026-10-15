@@ -267,11 +267,26 @@ export function getRegionsByCountry(code: CountryCode | string | null | undefine
   return country?.regions ?? []
 }
 
+// flagcdn ne publie que des largeurs « × 20 » (20, 40, 80, 160, 320, …) :
+// toute autre largeur renvoie un 404 (constaté sur w16/w24/w32/w48, y compris
+// avec un User-Agent navigateur). On arrondit donc la taille demandée vers le
+// HAUT sur une largeur publiée, pour ne jamais perdre en netteté — Next/Image
+// met l'image à l'échelle CSS demandée.
+const FLAGCDN_WIDTHS = [20, 40, 80, 160, 320, 640, 1280] as const
+
+function snapFlagWidth(size: number): number {
+  for (const w of FLAGCDN_WIDTHS) if (w >= size) return w
+  return FLAGCDN_WIDTHS[FLAGCDN_WIDTHS.length - 1]
+}
+
 export function getFlagUrl(code: CountryCode | string | null | undefined, size: 16 | 20 | 24 | 32 | 48 = 20): string {
+  const w = snapFlagWidth(size)
   const country = getCountryByCode(code)
-  if (country) return country.flagUrl.replace("/w20/", "/w" + size + "/")
-  if (code) return "https://flagcdn.com/w" + size + "/" + String(code).toLowerCase() + ".png"
-  return "https://flagcdn.com/w" + size + "/xx.png"
+  if (country) return country.flagUrl.replace(/\/w\d+\//, `/w${w}/`)
+  if (code) return `https://flagcdn.com/w${w}/${String(code).toLowerCase()}.png`
+  // « xx.png » n'existe pas chez flagcdn (404) : « un.png » est le
+  // drapeau neutre réellement servi.
+  return `https://flagcdn.com/w${w}/un.png`
 }
 
 // ---------------------------------------------------------------------------
