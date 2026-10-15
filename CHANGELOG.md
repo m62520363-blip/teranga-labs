@@ -2,6 +2,22 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [P5-six] — 2026-10-15 : normalisation téléphone multi-pays (migration `0052`)
+
+Dernier point « Sénégal » du périmètre 9 pays, côté base. La migration `0024` normalisait un numéro via `right(chiffres, 9)` : correct pour le Sénégal (numéro national à 9 chiffres, l'indicatif `221` est retranché), mais **faux pour les 8 autres pays**. Ex. Côte d'Ivoire (+225, national à 10 chiffres) : deux numéros distincts `+2250708091011` et `+2251708091011` réduisaient à la même clé `808091011` — le second était rejeté à tort (« Ce numéro WhatsApp est déjà associé à un autre compte »).
+
+### Corrigé — `supabase/migrations/0052_normalize_phone_multi_pays.sql`
+- **`normalize_phone`** : conserve les chiffres internationaux complets (E.164 sans `+`, préfixe `00` retiré) au lieu de tronquer à 9. La clé est donc plus spécifique et ne peut plus créer de collision entre pays.
+- **Recalcul des colonnes générées** `developers.whatsapp_key` / `client_profiles.phone_key` (DROP + ADD force Postgres à réévaluer la fonction sur chaque ligne).
+- **Index uniques recréés** : sans risque d'échec — l'ancien index garantissait déjà l'unicité des 9 derniers chiffres, donc a fortiori celle de la chaîne complète.
+- `check_phone_unique` (trigger) et `is_phone_taken` appellent `normalize_phone` des deux côtés : elles suivent la nouvelle définition automatiquement, aucune recréation nécessaire.
+
+Le frontend (`normalizeWhatsApp` en `lib/tokens.ts`, corrigé en P5-bis) applique déjà la même logique (chiffres + retrait de `00`, sans forcer d'indicatif) : la clé serveur et le lien `wa.me` convergent.
+
+> **À appliquer manuellement** dans le SQL Editor Supabase (comme les migrations précédentes) : `0052_normalize_phone_multi_pays.sql`.
+
+Vérifié : typecheck ✔, lint 0/0 ✔, **176 tests unitaires** ✔.
+
 ## [P5-cinq] — 2026-10-14 : devise = FCFA partout (fin de la promesse GNF non tenue)
 
 La FAQ et la page `/pays/[slug]` promettaient un affichage des prix « en GNF pour la Guinée », alors que rien n'était implémenté : le paiement (PayDunya, Wave) envoie `currency: "XOF"` et les colonnes DB sont `*_fcfa`. `lib/currency.ts` (conversions GNF↔XOF) existait mais n'était **importé nulle part**.
