@@ -16,7 +16,9 @@ begin;
 
 create extension if not exists pgtap with schema extensions;
 
-select plan(7);
+-- 9 assertions ci-dessous (le filet `plan()` doit correspondre au nombre
+-- d'appels is()/ok() : pgtap échoue sinon, et db-test.mjs refuse le verdict).
+select plan(9);
 
 -- -----------------------------------------------------------------------------
 -- 1. RLS activée sur toutes les entités critiques récentes

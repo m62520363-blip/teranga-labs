@@ -114,10 +114,16 @@ function runWithPsql(dbUrl, file) {
     stdio: ["ignore", "pipe", "pipe"],
     shell: true,
   });
+  const out = (psql.stdout ?? "").toString();
+  // Un échec d'assertion pgtap n'est PAS une erreur SQL : psql sort en 0 et
+  // ON_ERROR_STOP ne déclenche rien. On lit donc le TAP lui-même.
   return {
     code: psql.status ?? 1,
-    out: (psql.stdout ?? "").toString(),
+    out,
     err: (psql.stderr ?? "").toString(),
+    tapFailures: (out.match(/^\s*not ok /gm) ?? []).length,
+    // plan(N) non respecté : finish() le signale en commentaire TAP.
+    planMismatch: /^\s*# Looks like you planned/m.test(out),
   };
 }
 
@@ -152,9 +158,16 @@ async function main() {
     if (dbUrl) {
       const r = runWithPsql(dbUrl, file);
       if (r.out.trim()) console.log(r.out.trim());
-      if (r.code !== 0) {
+      const psqlBroken = r.code !== 0;
+      const assertionsFailed = r.tapFailures > 0 || r.planMismatch;
+      if (psqlBroken || assertionsFailed) {
         failures += 1;
-        console.error(`[db-test] ✗ ${name} — échec (psql, code ${r.code})`);
+        const why = psqlBroken
+          ? `psql, code ${r.code}`
+          : r.planMismatch
+            ? "plan() non respecté (fin des tests incohérente)"
+            : `${r.tapFailures} assertion(s) pgtap en échec`;
+        console.error(`[db-test] ✗ ${name} — échec (${why})`);
         if (r.err.trim()) console.error(r.err.trim());
       } else {
         console.log(`[db-test] ✓ ${name} (${Date.now() - started} ms)`);
