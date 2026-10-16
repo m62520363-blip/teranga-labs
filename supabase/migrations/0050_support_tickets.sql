@@ -213,13 +213,13 @@ BEGIN
 END;
 $$;
 
-REVOKE ALL ON FUNCTION public.create_support_ticket(TEXT, TEXT) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.create_support_ticket(TEXT, TEXT) FROM PUBLIC, ANON;
 GRANT EXECUTE ON FUNCTION public.create_support_ticket(TEXT, TEXT) TO authenticated;
-REVOKE ALL ON FUNCTION public.reply_support_ticket(UUID, TEXT) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.reply_support_ticket(UUID, TEXT) FROM PUBLIC, ANON;
 GRANT EXECUTE ON FUNCTION public.reply_support_ticket(UUID, TEXT) TO authenticated;
-REVOKE ALL ON FUNCTION public.list_my_tickets() FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.list_my_tickets() FROM PUBLIC, ANON;
 GRANT EXECUTE ON FUNCTION public.list_my_tickets() TO authenticated;
-REVOKE ALL ON FUNCTION public.close_support_ticket(UUID) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.close_support_ticket(UUID) FROM PUBLIC, ANON;
 GRANT EXECUTE ON FUNCTION public.close_support_ticket(UUID) TO authenticated;
 
 COMMIT;

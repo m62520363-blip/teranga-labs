@@ -294,7 +294,7 @@ declare
   v_limit integer := greatest(1, least(coalesce(p_limit, 8), 24));
 begin
   return coalesce((
-    select jsonb_agg(x order by (x->>'score')::integer desc, (x->>'reputation_score')::integer desc)
+    select jsonb_agg(x order by x.score desc, x.reputation_score desc)
     from (
       select d.id as developer_id,
              d.username,

@@ -95,7 +95,32 @@ BEGIN
     FROM scored
   ) s;
 
-  SELECT COALESCE(jsonb_agg(grp ORDER BY grp->>'key' ASC), '[]'::jsonb)
+  -- Le CTE scored doit etre redeclare : une CTE n'existe que dans la
+  -- statement qui la definit (plpgsql la resout a l'execution du call).
+  WITH scored AS (
+    SELECT
+      mm.developer_id,
+      mm.cnt,
+      COALESCE(NULLIF(trim(d.full_name), ''), d.username, d.id::text) AS full_name,
+      d.username,
+      d.city,
+      d.avatar_url,
+      COALESCE(trim(d.country), '') AS country
+    FROM (
+      SELECT m.developer_id, COUNT(*)::INT AS cnt
+        FROM public.missions m
+       WHERE m.status = 'completed'
+         AND m.completed_at IS NOT NULL
+         AND m.completed_at >= v_start
+         AND m.completed_at <  v_end
+       GROUP BY m.developer_id
+    ) mm
+    JOIN public.developers d ON d.id = mm.developer_id
+    WHERE mm.cnt >= 2 -- leaderboard-config.minProjectsToAppear
+  )
+  -- jb = la colonne jsonb du sous-select ; "grp" designe la ligne (record),
+  -- et grp->>'key' provoquait "operator does not exist: record ->> unknown".
+  SELECT COALESCE(jsonb_agg(jb ORDER BY jb->>'key' ASC), '[]'::jsonb)
   INTO v_countries
   FROM (
     SELECT jsonb_build_object(
@@ -172,7 +197,7 @@ BEGIN
     INSERT INTO public.leaderboard_monthly
       (year, month, scope, scope_key, rank, developer_id, completed_projects, tokens_awarded)
     VALUES
-      (p_year, p_month, 'regional', 'aof', v_rank, v_developer, v_cnt, v_tokens)
+      (p_year, p_month, 'regional', 'aof', v_rank, v_developer, v_cnt, 0)
     ON CONFLICT (year, month, scope, scope_key, developer_id)
       DO UPDATE SET rank = EXCLUDED.rank,
                     completed_projects = EXCLUDED.completed_projects,
@@ -217,7 +242,7 @@ BEGIN
       INSERT INTO public.leaderboard_monthly
         (year, month, scope, scope_key, rank, developer_id, completed_projects, tokens_awarded)
       VALUES
-        (p_year, p_month, 'country', v_scope_key, v_rank, v_developer, v_cnt, v_tokens)
+        (p_year, p_month, 'country', v_scope_key, v_rank, v_developer, v_cnt, 0)
       ON CONFLICT (year, month, scope, scope_key, developer_id)
         DO UPDATE SET rank = EXCLUDED.rank,
                       completed_projects = EXCLUDED.completed_projects,

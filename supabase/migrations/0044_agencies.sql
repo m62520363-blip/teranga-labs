@@ -169,6 +169,7 @@ create or replace function public.join_agency(
   p_agency_id uuid,
   p_invite_code uuid
 )
+returns jsonb
 language plpgsql
 security definer
 set search_path = public
@@ -332,7 +333,7 @@ declare
   v_offset integer := greatest(0, coalesce(p_offset, 0));
 begin
   return coalesce((
-    select jsonb_agg(jb order by a.name)
+    select jsonb_agg(jb order by jb->>'name')
     from (
       select jsonb_build_object(
         'id', a.id,

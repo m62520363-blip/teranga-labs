@@ -2,6 +2,34 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [Rattrapage-DB] — 2026-10-16 : migrations 0036→0051 appliquées sur prod + bugs runtime corrigés
+
+La base de production (`virihuuksoepswccxsne`) ne contenait que 0035 et 0052 : les migrations 0036→0051 (vagues P1→P5) n'avaient **jamais été exécutées**, alors que le front les consomme déjà (`/classement`, `/agences`, Teranga Match, console admin). Application manuelle via le SQL Editor (bloc par bloc, sondage PostgREST après chaque bloc).
+
+### Bugs runtime trouvés en prod (invisibles en CI : pgtap ne teste pas l'exécution, `db-test.mjs` en mode psql ignore les échecs)
+
+| Fichier | Bug | Correction |
+| --- | --- | --- |
+| 0041 | CTE `scored` déclarée dans la 1re statement seulement → `relation "scored" does not exist` au 2e call (plpgsql résout les relations à l'exécution, pas à la création) | CTE re-déclarée dans la 2e statement |
+| 0041 | `jsonb_agg(grp ORDER BY grp->>'key')` : `grp` est un record, pas le jsonb → `operator does not exist: record ->> unknown` | `jsonb_agg(jb ORDER BY jb->>'key')` (la colonne jsonb du sous-select) |
+| 0041 | `_leaderboard_settle` : l'upsert écrivait `tokens_awarded = v_tokens`, rendant le garde `NOT EXISTS (tokens_awarded > 0)` toujours faux → **crédit des récompenses Tokens jamais effectué** | INSERT à 0, puis crédit + UPDATE |
+| 0043 | `teranga_match` : même `->>` sur record (`x.score`) | `ORDER BY x.score DESC, x.reputation_score DESC` |
+| 0044 | `join_agency` sans clause `RETURNS` → `42P13 function result type must be specified` | `returns jsonb` ajouté |
+| 0044 | `list_agencies` : `ORDER BY a.name` hors portée de l'agregat (alias du sous-select) → `42P01 missing FROM-clause entry for table "a"` | `ORDER BY jb->>'name'` |
+
+### Trou de privilèges bouché (0047 corrigé, retenu sur 0048→0051)
+
+`REVOKE … FROM public` ne suffit pas : le rôle `anon` possède un grant `EXECUTE` explicite qui survit au revoke (constaté en prod). `debit_tokens` — sans garde d'identité : tout utilisateur connecté pouvait **débiter le solde d'un autre développeur** — et 16 RPC privées (agences, sponsoring, PRO) sont désormais révoquées de `public` **et** `anon` ; `log_risk_event` l'est aussi de `authenticated` (service_role uniquement). Vérifié : les 17 renvoient `401 permission denied` en appel anonyme, les lectures publiques restent en `200`.
+
+### Portée
+
+- **0048→0051 appliqués** : litiges + journal de risque, feature flags + disponibilités hebdomadaires, tickets support, synchronisation console admin (11 RPC admin — noms vérifiés ligne à ligne contre `teranga-labs-admin/app` et `croissance.tsx` / `support.tsx` / `risk.tsx`, console authentifiée en session `authenticated` via `lib/supabase/server.ts`).
+- Revokes `+ANON` alignés sur 0048→0051 (même correction que 0047) ; référence `public.` supprimée dans l'`ON CONFLICT` de 0049 (aucun précédent du pattern qualifié).
+- Sondeur final prod : **15 tables → 200**, **11 lectures anon → 200**, **10 RPC privées → 401**, **13 RPC admin → 401** ; `teranga_match` et `get_developer_score` renvoient des données réelles (résolution par UUID et par username).
+- `rattrapage_0036_0051.sql` resynchronisé (16/16 sections identiques aux migrations unites, mojibake historique réparé).
+
+Reste hors périmètre (dette P9 documentée) : pgtap comportemental sur 0052, tests admin (0 actuellement), `db-test.mjs` doit faire échouer la CI sur un pgtap en échec en mode psql, évolution de `client_country`.
+
 ## [P5-huit] — 2026-10-15 : suite E2E multi-pays (couverture des surfaces P5-ter/quater)
 
 La suite E2E existait (10 tests) mais **ne touchait aucune des pages multi-pays** : uniquement des pages statiques et les gardes de routes. Les 6 vagues précédentes (régions, `/ville`, `/pays`, indicatifs) avaient donc été poussées sans vérification d'exécution — le seul signalement de bug (P5-sept) venait d'une erreur image remontée par hasard.

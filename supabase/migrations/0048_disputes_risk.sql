@@ -173,11 +173,11 @@ BEGIN
 END;
 $$;
 
-REVOKE ALL ON FUNCTION public.open_dispute(UUID, TEXT) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.open_dispute(UUID, TEXT) FROM PUBLIC, ANON;
 GRANT EXECUTE ON FUNCTION public.open_dispute(UUID, TEXT) TO authenticated;
-REVOKE ALL ON FUNCTION public.list_my_disputes() FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.list_my_disputes() FROM PUBLIC, ANON;
 GRANT EXECUTE ON FUNCTION public.list_my_disputes() TO authenticated;
-REVOKE ALL ON FUNCTION public.set_dispute_status(UUID, TEXT, TEXT) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.set_dispute_status(UUID, TEXT, TEXT) FROM PUBLIC, ANON;
 GRANT EXECUTE ON FUNCTION public.set_dispute_status(UUID, TEXT, TEXT) TO authenticated;
 
 -- ------------------------------------------------------------
@@ -228,7 +228,7 @@ BEGIN
 END;
 $$;
 
-REVOKE ALL ON FUNCTION public.log_risk_event(UUID, TEXT, TEXT, JSONB) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.log_risk_event(UUID, TEXT, TEXT, JSONB) FROM PUBLIC, ANON, AUTHENTICATED;
 GRANT EXECUTE ON FUNCTION public.log_risk_event(UUID, TEXT, TEXT, JSONB) TO service_role;
 
 COMMIT;

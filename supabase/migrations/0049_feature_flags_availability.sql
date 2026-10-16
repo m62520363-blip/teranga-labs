@@ -87,7 +87,7 @@ BEGIN
   VALUES (v_key, COALESCE(p_enabled, FALSE), p_description, auth.uid(), NOW())
   ON CONFLICT (key) DO UPDATE
     SET enabled = EXCLUDED.enabled,
-        description = COALESCE(EXCLUDED.description, public.feature_flags.description),
+        description = COALESCE(EXCLUDED.description, feature_flags.description),
         updated_by = EXCLUDED.updated_by,
         updated_at = NOW();
 
@@ -95,7 +95,7 @@ BEGIN
 END;
 $$;
 
-REVOKE ALL ON FUNCTION public.admin_set_feature_flag(TEXT, BOOLEAN, TEXT) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.admin_set_feature_flag(TEXT, BOOLEAN, TEXT) FROM PUBLIC, ANON;
 GRANT EXECUTE ON FUNCTION public.admin_set_feature_flag(TEXT, BOOLEAN, TEXT) TO authenticated;
 
 -- ------------------------------------------------------------
@@ -164,7 +164,7 @@ BEGIN
 END;
 $$;
 
-REVOKE ALL ON FUNCTION public.set_my_availability(BOOLEAN, INT[]) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.set_my_availability(BOOLEAN, INT[]) FROM PUBLIC, ANON;
 GRANT EXECUTE ON FUNCTION public.set_my_availability(BOOLEAN, INT[]) TO authenticated;
 
 COMMIT;

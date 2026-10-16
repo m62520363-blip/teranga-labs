@@ -369,25 +369,25 @@ $$;
 -- ------------------------------------------------------------
 -- 8. Privilèges : jamais PUBLIC (rappel 0047), session admin.
 -- ------------------------------------------------------------
-REVOKE ALL ON FUNCTION public.admin_list_disputes(TEXT) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.admin_list_disputes(TEXT) FROM PUBLIC, ANON;
 GRANT EXECUTE ON FUNCTION public.admin_list_disputes(TEXT) TO authenticated;
-REVOKE ALL ON FUNCTION public.admin_list_support_tickets(TEXT) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.admin_list_support_tickets(TEXT) FROM PUBLIC, ANON;
 GRANT EXECUTE ON FUNCTION public.admin_list_support_tickets(TEXT) TO authenticated;
-REVOKE ALL ON FUNCTION public.admin_list_support_messages(UUID) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.admin_list_support_messages(UUID) FROM PUBLIC, ANON;
 GRANT EXECUTE ON FUNCTION public.admin_list_support_messages(UUID) TO authenticated;
-REVOKE ALL ON FUNCTION public.admin_reply_support_ticket(UUID, TEXT) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.admin_reply_support_ticket(UUID, TEXT) FROM PUBLIC, ANON;
 GRANT EXECUTE ON FUNCTION public.admin_reply_support_ticket(UUID, TEXT) TO authenticated;
-REVOKE ALL ON FUNCTION public.admin_close_support_ticket(UUID) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.admin_close_support_ticket(UUID) FROM PUBLIC, ANON;
 GRANT EXECUTE ON FUNCTION public.admin_close_support_ticket(UUID) TO authenticated;
-REVOKE ALL ON FUNCTION public.admin_list_agencies(TEXT) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.admin_list_agencies(TEXT) FROM PUBLIC, ANON;
 GRANT EXECUTE ON FUNCTION public.admin_list_agencies(TEXT) TO authenticated;
-REVOKE ALL ON FUNCTION public.admin_list_sponsored() FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.admin_list_sponsored() FROM PUBLIC, ANON;
 GRANT EXECUTE ON FUNCTION public.admin_list_sponsored() TO authenticated;
-REVOKE ALL ON FUNCTION public.admin_list_subscriptions() FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.admin_list_subscriptions() FROM PUBLIC, ANON;
 GRANT EXECUTE ON FUNCTION public.admin_list_subscriptions() TO authenticated;
-REVOKE ALL ON FUNCTION public.admin_list_feature_flags() FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.admin_list_feature_flags() FROM PUBLIC, ANON;
 GRANT EXECUTE ON FUNCTION public.admin_list_feature_flags() TO authenticated;
-REVOKE ALL ON FUNCTION public.admin_list_risk_events(INTEGER) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.admin_list_risk_events(INTEGER) FROM PUBLIC, ANON;
 GRANT EXECUTE ON FUNCTION public.admin_list_risk_events(INTEGER) TO authenticated;
 
 COMMIT;

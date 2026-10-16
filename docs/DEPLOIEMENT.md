@@ -25,7 +25,8 @@ dans un commit, une issue ou une conversation.
 
 ## 3. Migrations
 
-1. Ordre strict : `supabase/migrations/0001_…` → `0050_…` (dernière : support).
+1. Ordre strict : `supabase/migrations/0001_…` → `0052_…` (dernière : normalisation
+   téléphone multi-pays).
 2. Application via le **SQL Editor Supabase** (un fichier à la fois, dans l'ordre), ou
    `supabase db push` pour les équipes outillées CLI.
 3. Règles **non destructives** : `CREATE … IF NOT EXISTS`, `ALTER`, jamais `DROP` sur
