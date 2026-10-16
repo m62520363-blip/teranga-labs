@@ -99,6 +99,17 @@ insert into public.requests (
   client_name, client_whatsapp, client_city, project_type, budget, description, demo
 )
 select
+  'Immo Cotonou Prestige', '+221771000109', 'Littoral', 'vitrine', 250000,
+  'Agence immobilière à Cotonou. Nous vendons et louons des villas et appartements. Nous voulons un site vitrine premium avec galerie des biens, filtres ville/budget et formulaire de contact.',
+  true
+where not exists (
+  select 1 from public.requests where client_whatsapp = '+221771000109'
+);
+
+insert into public.requests (
+  client_name, client_whatsapp, client_city, project_type, budget, description, demo
+)
+select
   'Maison Petcha', '+221771000110', 'Bissau', 'e-commerce', 100000,
   'Boutique de vêtements en petcha (pagne traditionnel) à Bissau. Catalogue en ligne, commandes WhatsApp et livraisons en ville.',
   true
