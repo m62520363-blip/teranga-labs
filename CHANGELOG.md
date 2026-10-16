@@ -2,6 +2,12 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [Disponibilité] — 2026-10-16 : écran de disponibilité dans le dashboard développeur
+
+- **`components/availability-card.tsx`** (nouveau) : interrupteur *Disponible / Indisponible* + pastilles des jours joignables (L→D, numérotation 0049 : lundi=0 … dimanche=6), branché sur `set_my_availability` — la RPC existait depuis 0049 sans aucun écran dans le front. Lecture directe sur `developer_availability` (SELECT public, RLS) ; zéro ligne = indisponible (pas d'état « jamais configuré » à distinguer, le schéma ne le permet pas).
+- Intégré à l'onglet « Mon profil & portfolio » du dashboard développeur, au-dessus de la carte de visite.
+- Contrôle des noms RPC porté à **154 appels vérifiés** (123 site + 31 admin) avec le nouvel appel du front.
+
 ## [P9-fiabilisation] — 2026-10-16 : db-test lit le TAP, filet `plan(9)`, pgtap 0052
 
 - **`scripts/db-test.mjs`** : en mode psql, un échec d'assertion pgtap (`not ok`) ne produit aucun code d'erreur SQL — le runner ne regardait que le code retour de psql et déclarait le fichier au vert, laissant la CI passer à travers d'une régression. Il lit désormais le TAP lui-même (`not ok`, plan non respecté) en plus du code retour ; logique validée sur un extrait TAP de référence.

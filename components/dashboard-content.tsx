@@ -31,6 +31,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { DashboardStats } from "@/components/dashboard-stats";
+import AvailabilityCard from "@/components/availability-card";
 import { MissionsManager, type TlMissionOption } from "@/components/dev/missions-manager";
 import AgencyManager from "@/components/agency/agency-manager";
 import SponsorPanel from "@/components/sponsoring/sponsor-panel";
@@ -1180,7 +1181,12 @@ export function DashboardContent({
         ) : null}
 
         {tab === "profil" ? (
-          <section className="mt-8" aria-label="Profil développeur">
+          <>
+            <section className="mt-8" aria-label="Disponibilité">
+              <AvailabilityCard userId={userId} />
+            </section>
+
+            <section className="mt-8" aria-label="Profil développeur">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <h2 className="text-lg font-semibold tracking-tight">
@@ -1420,7 +1426,8 @@ export function DashboardContent({
                 </div>
               </div>
             </form>
-          </section>
+            </section>
+          </>
         ) : null}
 
         {tab === "activite" ? (
