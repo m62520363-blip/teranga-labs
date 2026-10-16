@@ -48,7 +48,7 @@ npm run dev                  # http://localhost:3000
 1. Créer un projet Supabase.
 2. Exécuter **toutes** les migrations dans l'ordre : `supabase/migrations/*.sql`
    (`0001_initial_schema.sql` → `0031_security_hardening.sql`).
-3. Insérer les données de démo : `supabase/seed.sql` (6 briefs).
+3. Insérer les données de démo : `supabase/seed.sql` (10 briefs sur les 9 pays du périmètre). Pour rattraper une base déjà seedée en version Sénégal uniquement : `supabase/seed-afrique-ouest-prod.sql`.
 4. Configurer **Auth → URL : http://localhost:3000** et le redirect à `/auth/confirm`.
 
 > Sans `.env.local` renseigné, l'app tourne en « mode démo » (aucun appel Supabase).

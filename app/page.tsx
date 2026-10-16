@@ -181,7 +181,7 @@ function RecentRequests({ briefs }: { briefs: PublicRequest[] }) {
       <SectionHeader
         eyebrow="En direct"
         title="Ce qui se cherche en ce moment"
-        lead="Chaque demande est publiée par un client pour 1 Token. Le développeur intéressé débloque le contact avec 1 Token et écrit directement."
+        lead="De Dakar à Lomé, d'Abidjan à Bamako : chaque demande est publiée par un client pour 1 Token. Le développeur intéressé débloque le contact avec 1 Token et écrit directement. Prix affichés en FCFA."
       />
       <div className="mt-14">
         {briefs.length > 0 ? (

@@ -2,6 +2,12 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [Démo-Afrique-ouest] — 2026-10-16 : les briefs de démonstration couvrent les 9 pays
+
+- **`supabase/seed.sql` réécrit** : les 6 briefs 100 % Sénégal deviennent **10 briefs couvrant les 9 pays du périmètre** (Dakar, Ziguinchor · Abidjan · Bamako · Ouagadougou « Centre » · Lomé « Maritime » · Niamey · Conakry · Cotonou « Littoral » · Bissau), avec des commerces et budgets réalistes de la sous-région (70 000 à 250 000 FCFA). Chaque `client_city` est une **région du référentiel** (`lib/countries.ts`) : les briefs alimentent donc les compteurs `/pays/[slug]` et les filtres pays/région de leur pays. La colonne `demo` est désormais posée explicitement (badge « Exemple » + déblocage gratuit) et le préfixe WhatsApp `+2217710001xx` (détection démo, migration 0023) est conservé.
+- **`supabase/seed-afrique-ouest-prod.sql`** (nouveau, à coller une fois dans le SQL Editor) : reprend les 6 briefs de démo déjà en production (UPDATE par numéro, ids conservés pour ne pas casser les déblocages existants) et ajoute les 3 pays manquants (Niamey, Conakry, Bissau) — idempotent.
+- **Section « Ce qui se cherche en ce moment »** (`app/page.tsx`) : le lead ancre le marché régional (« De Dakar à Lomé, d'Abidjan à Bamako… Prix affichés en FCFA »). Le bandeau défilant listait déjà les 9 pays et leurs 93 régions.
+
 ## [Bottom-nav] — 2026-10-16 : réservée aux comptes connectés, rôles distincts, finition « vivante » façon Apple
 
 - **Visiteurs : plus de bottom nav** (mobile comme desktop). La navigation visiteur repose sur la navbar + menu hamburger ; les scènes 3D et illustrations d'atterrissage restent inchangées.
