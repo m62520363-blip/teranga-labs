@@ -30,6 +30,11 @@ jobs:
       - name: Installer les dépendances
         run: npm ci
 
+      # Une RPC inexistante n'échoue qu'à l'exécution (404 PGRST202) : contrôle
+      # statique des noms appelés par le site (et la console admin si présente).
+      - name: Contrôle des noms RPC
+        run: node scripts/check-rpc-names.mjs
+
       - name: Typecheck
         run: npm run typecheck
 

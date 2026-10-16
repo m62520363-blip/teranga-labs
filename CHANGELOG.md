@@ -7,6 +7,7 @@ Toutes les modifications notables du projet TERANGA LABS sont documentées ici (
 - **`scripts/db-test.mjs`** : en mode psql, un échec d'assertion pgtap (`not ok`) ne produit aucun code d'erreur SQL — le runner ne regardait que le code retour de psql et déclarait le fichier au vert, laissant la CI passer à travers d'une régression. Il lit désormais le TAP lui-même (`not ok`, plan non respecté) en plus du code retour ; logique validée sur un extrait TAP de référence.
 - **`supabase/tests/rls_critique.sql`** : `plan(7)` alors que le fichier compte 9 assertions (pgtap refuse alors le verdict) → `plan(9)`.
 - **`supabase/tests/phone_multi_pays.sql`** (nouveau) : 6 tests **comportementaux** sur `normalize_phone` (0052), jusque-là non testée — pas de troncature à 9 chiffres, convergence `00…`/`+…`, NULL sur numéro absent, anti-collision ivoirienne (deux `+225` distincts), colonnes générées stockées, index uniques recréés.
+- **`scripts/check-rpc-names.mjs`** (nouveau, en tête de `npm run check` et de la CI qualité) : chaque `.rpc("…")` des fronts doit posséder un `CREATE FUNCTION` dans les migrations — une RPC inexistante n'échoue qu'à l'exécution (404 `PGRST202`), justement pour les 31 appels admin jamais couverts par la suite E2E. **153 appels vérifiés (122 site + 31 admin), 0 écart.**
 - Reste : 0 test dans `teranga-labs-admin`, UI disponibilités (`set_my_availability` sans écran), vérification des RPC en session admin authentifiée.
 
 ## [Rattrapage-DB] — 2026-10-16 : migrations 0036→0051 appliquées sur prod + bugs runtime corrigés
