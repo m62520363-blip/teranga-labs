@@ -8,6 +8,7 @@ import { BriefCard } from "@/components/brief-card";
 import { BriefGrid } from "@/components/brief-grid";
 import { EmptyState } from "@/components/empty-state";
 import { MarqueeStrip } from "@/components/marquee-strip";
+import { Reveal } from "@/components/reveal";
 import { PROJECT_TYPE_LABELS } from "@/lib/tokens";
 import { COUNTRIES } from "@/lib/countries";
 import { formatFCFA } from "@/lib/formatting";
@@ -185,11 +186,13 @@ function RecentRequests({ briefs }: { briefs: PublicRequest[] }) {
       />
       <div className="mt-14">
         {briefs.length > 0 ? (
-          <BriefGrid>
-            {briefs.map((brief) => (
-              <BriefCard key={brief.id} brief={brief} />
-            ))}
-          </BriefGrid>
+          <Reveal>
+            <BriefGrid>
+              {briefs.map((brief) => (
+                <BriefCard key={brief.id} brief={brief} />
+              ))}
+            </BriefGrid>
+          </Reveal>
         ) : (
           <EmptyState
             title="Aucune demande en ligne pour le moment"

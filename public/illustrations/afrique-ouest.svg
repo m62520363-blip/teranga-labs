@@ -9,16 +9,16 @@
     <circle cx="148" cy="232" r="4"/><circle cx="176" cy="224" r="4"/><circle cx="204" cy="220" r="4"/><circle cx="232" cy="224" r="4"/><circle cx="260" cy="232" r="4"/><circle cx="288" cy="240" r="4"/>
     <circle cx="176" cy="256" r="4"/><circle cx="204" cy="252" r="4"/><circle cx="232" cy="256" r="4"/><circle cx="260" cy="264" r="4"/>
   </g>
-  <!-- Pins de villes -->
+  <!-- Pins de villes (périmètre : uniquement les 9 pays) -->
   <g>
-    <circle cx="140" cy="150" r="9" fill="#e86a2c"/><circle cx="140" cy="150" r="3.5" fill="#0d0d0d"/>
-    <text x="140" y="134" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#f2f2f2">Dakar</text>
-    <circle cx="236" cy="216" r="8" fill="#e86a2c" opacity="0.85"/><circle cx="236" cy="216" r="3" fill="#0d0d0d"/>
-    <text x="264" y="220" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#f2f2f2">Abidjan</text>
-    <circle cx="292" cy="168" r="7" fill="#e86a2c" opacity="0.7"/><circle cx="292" cy="168" r="2.5" fill="#0d0d0d"/>
-    <text x="306" y="160" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#9a9a9a">Bamako</text>
-    <circle cx="208" cy="128" r="7" fill="#e86a2c" opacity="0.7"/><circle cx="208" cy="128" r="2.5" fill="#0d0d0d"/>
-    <text x="220" y="120" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#9a9a9a">Nouakchott</text>
+    <circle cx="122" cy="158" r="9" fill="#e86a2c"/><circle cx="122" cy="158" r="3.5" fill="#0d0d0d"/>
+    <text x="122" y="140" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#f2f2f2">Dakar</text>
+    <circle cx="242" cy="236" r="8" fill="#e86a2c" opacity="0.85"/><circle cx="242" cy="236" r="3" fill="#0d0d0d"/>
+    <text x="256" y="248" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#f2f2f2">Abidjan</text>
+    <circle cx="214" cy="152" r="7" fill="#e86a2c" opacity="0.7"/><circle cx="214" cy="152" r="2.5" fill="#0d0d0d"/>
+    <text x="226" y="144" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#9a9a9a">Bamako</text>
+    <circle cx="264" cy="170" r="7" fill="#e86a2c" opacity="0.7"/><circle cx="264" cy="170" r="2.5" fill="#0d0d0d"/>
+    <text x="276" y="162" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#9a9a9a">Ouagadougou</text>
   </g>
-  <text x="240" y="332" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="#9a9a9a">9 pays · 40+ régions · une seule plateforme</text>
+  <text x="240" y="332" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="#9a9a9a">9 pays · 93 régions · une seule plateforme</text>
 </svg>

@@ -37,8 +37,20 @@ const columns = [
 
 export function Footer() {
   return (
-    <footer className="bg-surface text-white border-t border-hairline">
-      <div className="container-tl grid gap-12 py-16 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+    <footer className="relative overflow-hidden bg-surface text-white border-t border-hairline">
+      {/* Décor technologique léger : grille masquée + halo orange en haut. */}
+      <div
+        className="pointer-events-none absolute inset-0 bg-grid opacity-30"
+        aria-hidden="true"
+        style={{
+          maskImage: "radial-gradient(ellipse 70% 55% at 50% 0%, black, transparent)",
+        }}
+      />
+      <div
+        className="glow-orb pointer-events-none absolute -top-28 right-[12%] size-64 rounded-full"
+        aria-hidden="true"
+      />
+      <div className="container-tl relative grid gap-12 py-16 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div className="max-w-xs">
           <span className="inline-flex">
             <span className="sr-only">{BRAND}</span>

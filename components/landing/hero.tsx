@@ -3,6 +3,7 @@ import { ArrowRight, Check, MapPin, Wallet } from "lucide-react";
 import { HERO, HERO_DEMO } from "@/components/landing/content";
 import { TOKEN_LABEL, TOKEN_RULE } from "@/lib/formatting";
 import { Scene3D } from "@/components/landing/scene-3d";
+import { HeroOrbit } from "@/components/landing/hero-orbit";
 
 export function Hero({
   realBrief,
@@ -100,6 +101,9 @@ function HeroVisual({
         variant="marketplace"
         className="pointer-events-none absolute -inset-x-16 -bottom-24 -top-14 -z-10 opacity-50"
       />
+      {/* Orbite décorative : mini tableau de bord, brief flottant, duo
+          client/développeur, badge vérifié — parallax léger au pointeur. */}
+      <HeroOrbit />
       <div className="absolute -inset-10 -z-10 rounded-full bg-[radial-gradient(closest-side,rgba(232,106,44,0.16),transparent)]" />
 
       <div className="card-elevated relative rounded-2xl border border-hairline bg-card p-6 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.6)]">

@@ -95,7 +95,7 @@ test.describe("illustrations de marque", () => {
     await page.goto("/", { waitUntil: "networkidle" });
     const illustrations = page.locator('img[src^="/illustrations/"]');
     const count = await illustrations.count();
-    expect(count, "au moins deux illustrations sur la home").toBeGreaterThanOrEqual(2);
+    expect(count, "au moins une illustration externe sur la home").toBeGreaterThanOrEqual(1);
     for (let i = 0; i < count; i++) {
       const img = illustrations.nth(i);
       await img.scrollIntoViewIfNeeded();
@@ -105,5 +105,16 @@ test.describe("illustrations de marque", () => {
         })
         .toBeGreaterThan(0);
     }
+  });
+
+  test("la carte de l'Afrique de l'Ouest est présente et vivante", async ({ page }) => {
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    const map = page.getByTestId("west-africa-map");
+    await expect(map).toBeAttached();
+    // Les connexions entre villes doivent être animées (dashflow CSS).
+    const animated = await map.locator(".tl-dash-flow").first().evaluate(
+      (el) => getComputedStyle(el).animationName,
+    );
+    expect(animated, "animation tl-dash-flow active").toBe("tl-dash-flow");
   });
 });

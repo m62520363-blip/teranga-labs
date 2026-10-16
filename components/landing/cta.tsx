@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, Store } from "lucide-react";
 import { CTA, BRAND } from "@/components/landing/content";
 import { Reveal } from "@/components/reveal";
+import { Scene3D } from "@/components/landing/scene-3d";
 
 export function FinalCta() {
   return (
@@ -20,6 +21,16 @@ export function FinalCta() {
         style={{
           maskImage: "radial-gradient(ellipse 85% 75% at 50% 45%, black 25%, transparent 100%)",
         }}
+      />
+      {/* Deux scènes 3D en lisière : composition forte sans jamais gêner
+          le texte central ni les boutons (pointer-events-none, xl+). */}
+      <Scene3D
+        variant="team"
+        className="pointer-events-none absolute -left-20 bottom-6 hidden opacity-30 xl:block"
+      />
+      <Scene3D
+        variant="marketplace"
+        className="pointer-events-none absolute -right-20 top-6 hidden opacity-30 xl:block"
       />
 
       <Reveal className="container-tl relative">

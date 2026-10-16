@@ -484,6 +484,48 @@ h6 {
   }
 }
 
+/* ---------------- Carte Afrique de l'Ouest : connexions et villes vivantes --------------- */
+@keyframes tl-dash-flow {
+  to {
+    stroke-dashoffset: -32;
+  }
+}
+
+.tl-dash-flow {
+  stroke-dasharray: 5 11;
+  animation: tl-dash-flow 2.6s linear infinite;
+}
+
+@keyframes tl-pulse-ring {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.7;
+  }
+  80%,
+  100% {
+    transform: scale(2.3);
+    opacity: 0;
+  }
+}
+
+.tl-pulse-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: tl-pulse-ring 2.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tl-dash-flow {
+    animation: none;
+    stroke-dasharray: none;
+    opacity: 0.5;
+  }
+  .tl-pulse-ring {
+    animation: none;
+    opacity: 0;
+  }
+}
+
 /* Grain très léger pour les panneaux sombres */
 .tl-grain {
   background-image:
@@ -609,7 +651,9 @@ h6 {
     border-color 0.35s ease;
 }
 .card-interactive:hover {
-  transform: translateY(-5px);
+  /* Léger basculement 3D au survol (souris uniquement : le tactile n'a
+     pas de hover) pour donner de la profondeur sans dépendance. */
+  transform: perspective(900px) translateY(-5px) rotateX(2.5deg);
   border-color: rgba(232, 106, 44, 0.4);
   box-shadow:
     0 24px 48px -24px rgba(232, 106, 44, 0.45),

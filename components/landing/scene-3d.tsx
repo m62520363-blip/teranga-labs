@@ -101,7 +101,8 @@ function Layer({
   );
 }
 
-function Coin({ className }: { className?: string }) {
+/** Pièce 3D du Token, réutilisable hors des scènes (hero, CTA…). */
+export function Coin({ className }: { className?: string }) {
   return (
     <span
       className={cn(

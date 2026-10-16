@@ -2,6 +2,20 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [Immersif-3D] — 2026-10-16 : hero orbite, carte Afrique vivante, CTA et footer enrichis
+
+Refonte immersive de la landing **sans dépendance** (zéro WebGL/three.js, CSS 3D + SVG animé, `prefers-reduced-motion` partout, thème sombre premium conservé sur décision) :
+
+- **Hero — orbite décorative** (`components/landing/hero-orbit.tsx`, nouveau) : mini tableau de bord (briefs ouverts, Tokens), carte de brief flottante « Boutique wax · Abidjan » avec pastille *Nouveau* qui pulse, duo client/développeur « Contact débloqué », badge « Profils vérifiés » et pièce de Token — posés en `translateZ` autour de la carte réelle, flottants (`tl-float` sur calque interne pour ne pas écraser la profondeur), avec **parallax léger au pointeur** (5° max, souris uniquement). Cachés sous `sm` (mobile = composition réduite, comme demandé pour les entrées de gamme). La carte du brief reste la seule source d'information (`aria-hidden` sur l'orbite).
+- **Carte Afrique de l'Ouest vivante** (`components/landing/west-africa-map.tsx`, nouveau) : SVG inline (un `<img>` ne se stylerait pas) avec **9 villes des 9 pays** reliées par des **connexions en pointillés qui défilent** (`tl-dash-flow`) et des **halos pulsant** sur Dakar/Ouagadougou/Abidjan (`tl-pulse-ring`). Correction d'une erreur de l'ancienne illustration : **Nouakchott (Mauritanie) n'est pas dans le périmètre** — remplacée par Bissau, Conakry, Niamey, Cotonou, Lomé. Légende dynamique depuis `lib/countries.ts` (9 pays · 93 régions). `afrique-ouest.svg` mis à jour en conséquence (réserve OG).
+- **CTA final** : deux scènes 3D en lisière (`team` à gauche, `marketplace` à droite, `xl+`, opacité 30 %) qui encadrent le texte sans jamais gêner les boutons.
+- **Footer** : décor technologique léger (grille masquée radialement + halo orange), toujours lisible.
+- **Cartes interactives** : le survol bascule désormais en léger 3D (`perspective(900px) rotateX(2.5deg))` — souris uniquement, le tactile n'a pas de hover).
+- **Grille des briefs récents** : apparition au scroll (`Reveal`) comme le reste de la landing.
+- **E2E** : `landing.spec.ts` passe à **10 tests** — la carte animée est verrouillée (`tl-dash-flow` réellement actif) et le test illustrations s'adapte (1 SVG externe suffit désormais sur la home).
+
+Déjà en place (inchangé, confirmé par l'audit) : compteurs animés (`AnimatedCounter`), accordéon FAQ animé, `Reveal` au scroll sur toutes les sections, marquee 38 s, scènes 3D sur hero/agences/classement/poster/à-propos/tokens/inscription.
+
 ## [Démo-Afrique-ouest] — 2026-10-16 : les briefs de démonstration couvrent les 9 pays
 
 - **`supabase/seed.sql` réécrit** : les 6 briefs 100 % Sénégal deviennent **10 briefs couvrant les 9 pays du périmètre** (Dakar, Ziguinchor · Abidjan · Bamako · Ouagadougou « Centre » · Lomé « Maritime » · Niamey · Conakry · Cotonou « Littoral » · Bissau), avec des commerces et budgets réalistes de la sous-région (70 000 à 250 000 FCFA). Chaque `client_city` est une **région du référentiel** (`lib/countries.ts`) : les briefs alimentent donc les compteurs `/pays/[slug]` et les filtres pays/région de leur pays. La colonne `demo` est désormais posée explicitement (badge « Exemple » + déblocage gratuit) et le préfixe WhatsApp `+2217710001xx` (détection démo, migration 0023) est conservé.

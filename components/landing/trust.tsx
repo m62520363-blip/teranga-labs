@@ -2,6 +2,7 @@ import { ShieldCheck } from "lucide-react";
 import { TRUST_FEATURES } from "@/components/landing/content";
 import { Reveal } from "@/components/reveal";
 import { Section, SectionHeader } from "@/components/landing/section";
+import { WestAfricaMap } from "@/components/landing/west-africa-map";
 import { cn } from "cn";
 
 export function TrustSection() {
@@ -14,17 +15,10 @@ export function TrustSection() {
       />
 
       <Reveal className="mt-12">
-        {/* Carte abstraite des pays et villes réellement desservis (SVG local,
-            déjà optimisé : next/image n'apporterait rien sur du vectoriel). */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/illustrations/afrique-ouest.svg"
-          alt="Carte stylisée de l’Afrique de l’Ouest francophone : Dakar, Abidjan, Bamako, Nouakchott et les régions couvertes par TERANGA LABS"
-          width={480}
-          height={360}
-          loading="lazy"
-          className="mx-auto w-full max-w-xl rounded-2xl border border-hairline"
-        />
+        {/* Carte vivante des 9 pays desservis : connexions en pointillés
+            animées + halos pulsant sur les villes principales (SVG inline,
+            CSS pur, coupé en prefers-reduced-motion). */}
+        <WestAfricaMap />
       </Reveal>
 
       <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
