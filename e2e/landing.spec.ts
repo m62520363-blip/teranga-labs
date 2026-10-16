@@ -1,55 +1,70 @@
 import { test, expect, type Page } from "@playwright/test";
 
 /**
- * Verrouille l'organisation de la navigation et la présence des visuels
- * d'atterrissage introduits avec la bottom nav visiteur et les scènes 3D :
- *   - la bottom nav est visible sur mobile pour un visiteur (pas seulement
- *     pour les comptes connectés) et masquée sur desktop ;
+ * Verrouille l'organisation de la navigation d'atterrissage :
+ *   - la bottom nav est réservée aux comptes connectés : un visiteur n'en a
+ *     pas (même sur mobile) et navigue via la navbar + menu hamburger ;
  *   - chaque page d'atterrissage porte sa scène 3D (scène 3D native,
  *     aucune dépendance WebGL) ;
  *   - les illustrations de marque se chargent réellement (pas d'URL morte).
+ *
+ * Les docks client / développeur (rôles distincts) exigent une session
+ * authentifiée : ils se vérifient en manuel sur un compte de test.
  */
 
 const MOBILE = { width: 390, height: 844 };
 const DESKTOP = { width: 1280, height: 800 };
-
-const DOCK_LABELS = ["Accueil", "Dévs", "Publier", "Briefs", "Compte"];
 
 async function gotoMobile(page: Page, path: string) {
   await page.setViewportSize(MOBILE);
   await page.goto(path, { waitUntil: "domcontentloaded" });
 }
 
-test.describe("bottom nav visiteur", () => {
-  test("visible sur mobile avec les 5 destinations", async ({ page }) => {
+test.describe("navigation visiteur (sans bottom nav)", () => {
+  test("pas de bottom nav sur la home mobile", async ({ page }) => {
     await gotoMobile(page, "/");
-    const dock = page.getByRole("navigation", { name: "Navigation rapide" });
-    await expect(dock).toBeVisible();
-    for (const label of DOCK_LABELS) {
-      await expect(dock.getByRole("link", { name: label })).toBeVisible();
+    await expect(
+      page.getByRole("navigation", { name: "Navigation rapide" }),
+    ).toBeHidden();
+    // La navbar classique reste là pour organiser la découverte.
+    await expect(
+      page.getByRole("navigation", { name: "Navigation principale" }),
+    ).toBeVisible();
+  });
+
+  test("pas de bottom nav sur les pages découvertes (/briefs, /poster)", async ({
+    page,
+  }) => {
+    for (const path of ["/briefs", "/poster"]) {
+      await gotoMobile(page, path);
+      await expect(
+        page.getByRole("navigation", { name: "Navigation rapide" }),
+        `dock absent sur ${path}`,
+      ).toBeHidden();
     }
   });
 
-  test("l'action centrale Publier mène à /poster", async ({ page }) => {
+  test("le menu hamburger reste la navigation mobile du visiteur", async ({
+    page,
+  }) => {
     await gotoMobile(page, "/");
-    const dock = page.getByRole("navigation", { name: "Navigation rapide" });
-    await dock.getByRole("link", { name: "Publier" }).click();
-    await expect(page).toHaveURL(/\/poster/);
+    const burger = page.getByRole("button", { name: /ouvrir le menu/i });
+    await burger.click();
+    const menu = page.getByRole("link", { name: "Se connecter" });
+    await expect(menu).toBeVisible();
   });
 
-  test("masquée sur desktop (la navbar classique prend le relais)", async ({ page }) => {
+  test("desktop inchangé : navbar principale visible, dock absent", async ({
+    page,
+  }) => {
     await page.setViewportSize(DESKTOP);
     await page.goto("/", { waitUntil: "domcontentloaded" });
-    await expect(page.getByRole("navigation", { name: "Navigation rapide" })).toBeHidden();
-    await expect(page.getByRole("navigation", { name: "Navigation principale" })).toBeVisible();
-  });
-
-  test("l'état actif est bien marqué (aria-current)", async ({ page }) => {
-    await gotoMobile(page, "/briefs");
-    const dock = page.getByRole("navigation", { name: "Navigation rapide" });
-    const current = dock.locator('[aria-current="page"]');
-    await expect(current).toHaveCount(1);
-    await expect(current).toContainText("Briefs");
+    await expect(
+      page.getByRole("navigation", { name: "Navigation rapide" }),
+    ).toBeHidden();
+    await expect(
+      page.getByRole("navigation", { name: "Navigation principale" }),
+    ).toBeVisible();
   });
 });
 

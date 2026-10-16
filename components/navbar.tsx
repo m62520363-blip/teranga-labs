@@ -9,7 +9,6 @@ import {
   Coins,
   UsersRound,
   Home,
-  LogIn,
   Menu,
   MessageCircle,
   Plus,
@@ -94,43 +93,36 @@ export function Navbar({
     appLinks.push({ href: "/parametres", label: "Paramètres" });
   }
 
-  const dockItems: DockItem[] = React.useMemo(() => {
+  /** null = pas de dock (visiteurs non connectés : navigation via la navbar + menu). */
+  const dockItems: DockItem[] | null = React.useMemo(() => {
+    if (!authed) return null;
     if (isClient) {
+      // Espace client : trouver un dev, publier, suivre ses missions.
       return [
         { href: "/client", label: "Accueil", icon: Home },
         { href: "/dev", label: "Dévs", icon: UsersRound },
-        { href: "/poster", label: "Poster", icon: Plus, emphasis: true },
-        { href: "/tokens", label: "Tokens", icon: Coins },
+        { href: "/poster", label: "Publier", icon: Plus, emphasis: true },
+        { href: "/missions", label: "Missions", icon: Briefcase },
         { href: "/conversations", label: "Messages", icon: MessageCircle },
-        { href: "/parametres", label: "Compte", icon: Settings2 },
       ];
     }
     if (isDev) {
+      // Espace développeur : décrocher des briefs, gagner des tokens, profil.
+      // Pas d'action centrale « + » : le cœur du métier est la réponse aux briefs.
       return [
         { href: "/dashboard", label: "Accueil", icon: Home },
         { href: "/briefs", label: "Briefs", icon: Briefcase },
         { href: "/tokens", label: "Tokens", icon: Coins },
         { href: "/conversations", label: "Messages", icon: MessageCircle },
         { href: "/dashboard?tab=profil", label: "Profil", icon: UserRound },
-        { href: "/parametres", label: "Compte", icon: Settings2 },
       ];
     }
-    if (authed) {
-      // Autres rôles connectés (admin, …) : pas d'espace dédié sur le site.
-      return [
-        { href: "/briefs", label: "Briefs", icon: Briefcase },
-        { href: "/dev", label: "Dévs", icon: UsersRound },
-        { href: "/conversations", label: "Messages", icon: MessageCircle },
-        { href: "/parametres", label: "Compte", icon: Settings2 },
-      ];
-    }
-    // Visiteurs : la même barre pour organiser la découverte du marché.
+    // Autres rôles connectés (admin, …) : pas d'espace dédié sur le site.
     return [
-      { href: "/", label: "Accueil", icon: Home },
-      { href: "/dev", label: "Dévs", icon: UsersRound },
-      { href: "/poster", label: "Publier", icon: Plus, emphasis: true },
       { href: "/briefs", label: "Briefs", icon: Briefcase },
-      { href: "/login", label: "Compte", icon: LogIn },
+      { href: "/dev", label: "Dévs", icon: UsersRound },
+      { href: "/conversations", label: "Messages", icon: MessageCircle },
+      { href: "/parametres", label: "Compte", icon: Settings2 },
     ];
   }, [isClient, isDev, authed]);
 
@@ -253,7 +245,7 @@ export function Navbar({
         )}
       </header>
 
-      <MobileDock items={dockItems} pathname={pathname} />
+      {dockItems ? <MobileDock items={dockItems} pathname={pathname} /> : null}
     </>
   );
 }
@@ -362,13 +354,15 @@ function DesktopNavLinks({
 }
 
 /* ----------------------------- DOCK MOBILE FLOTTANT ---------------------------- */
+/* Finition « vivante » façon Apple : verre flottant avec reflet qui traverse,
+   capsule en dégradé primaire qui glisse au ressort sous l'onglet actif,
+   icône active qui « pop », pression tactile qui resserre l'élément. */
 
 function MobileDock({ items, pathname }: { items: DockItem[]; pathname: string }) {
   const rowRef = React.useRef<HTMLDivElement>(null);
-  const halosRef = React.useRef(new Map<string, HTMLAnchorElement>());
-  const [pos, setPos] = React.useState<{ x: number; y: number; w: number; active: boolean }>({
+  const itemRefs = React.useRef(new Map<string, HTMLAnchorElement>());
+  const [pos, setPos] = React.useState<{ x: number; w: number; active: boolean }>({
     x: 0,
-    y: 0,
     w: 36,
     active: false,
   });
@@ -381,16 +375,15 @@ function MobileDock({ items, pathname }: { items: DockItem[]; pathname: string }
       const row = rowRef.current;
       if (!row) return;
       const rowRect = row.getBoundingClientRect();
-      const el = activeHref ? halosRef.current.get(activeHref.split("?")[0]) : undefined;
+      const el = activeHref ? itemRefs.current.get(activeHref) : undefined;
       if (!el) {
         setPos((p) => ({ ...p, active: false }));
         return;
       }
       const rect = el.getBoundingClientRect();
       setPos({
-        x: rect.left - rowRect.left,
-        y: rect.top - rowRect.top,
-        w: rect.width,
+        x: rect.left - rowRect.left + 3,
+        w: rect.width - 6,
         active: true,
       });
     };
@@ -407,26 +400,30 @@ function MobileDock({ items, pathname }: { items: DockItem[]; pathname: string }
   return (
     <nav
       aria-label="Navigation rapide"
-      className="fixed inset-x-0 bottom-3 z-40 px-4 md:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 flex justify-center px-4 pb-[calc(0.6rem+env(safe-area-inset-bottom))] pt-2 md:hidden"
     >
       <div
         ref={rowRef}
-        className="relative mx-auto w-full max-w-md rounded-[1.75rem] border border-white/10 bg-surface/85 px-2 py-2 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.9)] backdrop-blur-xl"
+        className="tl-dock-in relative w-full max-w-md overflow-hidden rounded-[1.6rem] border border-white/12 bg-surface/70 px-1.5 py-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_24px_60px_-20px_rgba(0,0,0,0.9)] backdrop-blur-2xl"
       >
-        <div
+        {/* Reflet vivant : un éclat traverse lentement le verre */}
+        <span
+          aria-hidden="true"
+          className="tl-dock-sheen pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+        />
+        {/* Capsule de l'onglet actif : glisse au ressort d'un onglet à l'autre */}
+        <span
           aria-hidden="true"
           className={cn(
-            "pointer-events-none absolute left-0 rounded-full bg-gradient-to-br from-primary to-primary-hover shadow-[0_0_18px_rgba(232,106,44,0.5)] ring-1 ring-white/15 transition-transform duration-500 will-change-transform [transition-timing-function:var(--ease-spring)]",
+            "pointer-events-none absolute left-1.5 top-1.5 h-[calc(100%-0.75rem)] rounded-[1.2rem] bg-gradient-to-b from-primary to-primary-hover shadow-[0_6px_20px_-4px_rgba(232,106,44,0.55)] ring-1 ring-white/20 transition-all duration-500 will-change-transform [transition-timing-function:var(--ease-spring)]",
             !pos.active && "opacity-0"
           )}
           style={{
             width: pos.w,
-            height: pos.w,
-            transform: `translate(${pos.x}px, ${pos.y}px)`,
-            top: 0,
+            transform: `translateX(${pos.x}px)`,
           }}
         />
-        <div className="relative flex items-start">
+        <div className="relative flex items-stretch">
           {items.map((item) => {
             const active = isActiveLink(pathname, item.href.split("?")[0]);
             const Icon = item.icon;
@@ -436,38 +433,37 @@ function MobileDock({ items, pathname }: { items: DockItem[]; pathname: string }
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 ref={(el) => {
-                  const key = item.href.split("?")[0];
-                  if (el) halosRef.current.set(key, el);
-                  else halosRef.current.delete(key);
+                  if (el) itemRefs.current.set(item.href, el);
+                  else itemRefs.current.delete(item.href);
                 }}
-                className="group flex w-full flex-1 flex-col items-center gap-1 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
-                style={{ touchAction: "manipulation" }}
+                className="group relative flex w-full flex-1 touch-manipulation flex-col items-center justify-center gap-0.5 rounded-[1.1rem] px-1 pb-1.5 pt-1.5 outline-none transition-transform duration-150 ease-out active:scale-90 focus-visible:ring-2 focus-visible:ring-primary/60"
               >
                 <span
                   className={cn(
-                    "grid size-9 place-items-center transition-transform duration-200 group-active:scale-90",
-                    item.emphasis &&
-                      "rounded-full bg-primary text-ink shadow-[0_8px_20px_-6px_rgba(232,106,44,0.7)]",
+                    "grid place-items-center transition-all duration-300 [transition-timing-function:var(--ease-spring)] group-hover:scale-105",
+                    active ? "scale-110" : "scale-100"
                   )}
-                  style={{ minWidth: 36 }}
                 >
-                  <span
+                  <Icon
                     className={cn(
-                      "relative z-10 grid size-9 place-items-center transition-colors duration-200",
-                      item.emphasis
+                      "size-[19px] transition-colors duration-200",
+                      active
                         ? "text-ink"
-                        : active
-                          ? "text-ink"
+                        : item.emphasis
+                          ? "text-primary"
                           : "text-muted-foreground group-hover:text-foreground"
                     )}
-                  >
-                    <Icon className="size-[18px]" aria-hidden="true" />
-                  </span>
+                    aria-hidden="true"
+                  />
                 </span>
                 <span
                   className={cn(
-                    "z-10 text-[10px] font-semibold tracking-tight transition-colors duration-200",
-                    active ? "text-primary-light" : "text-muted-foreground"
+                    "z-10 text-[10px] leading-tight tracking-tight transition-all duration-200",
+                    active
+                      ? "font-bold text-ink"
+                      : item.emphasis
+                        ? "font-semibold text-primary"
+                        : "font-medium text-muted-foreground group-hover:text-foreground"
                   )}
                 >
                   {item.label}

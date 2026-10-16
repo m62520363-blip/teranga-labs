@@ -2,9 +2,16 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [Bottom-nav] — 2026-10-16 : réservée aux comptes connectés, rôles distincts, finition « vivante » façon Apple
+
+- **Visiteurs : plus de bottom nav** (mobile comme desktop). La navigation visiteur repose sur la navbar + menu hamburger ; les scènes 3D et illustrations d'atterrissage restent inchangées.
+- **Dock client ≠ dock développeur**, clairement distincts : client (Accueil · Dévs · **Publier** · Missions · Messages — l'action centrale « + » en primaire), développeur (Accueil · Briefs · Tokens · Messages · Profil — sans action centrale, le cœur du métier est la réponse aux briefs), autres rôles connectés (Briefs · Dévs · Messages · Compte).
+- **Finition « vivante » façon Apple** (`components/navbar.tsx` + `app/globals.css`) : verre flottant (`backdrop-blur-2xl`, liseré lumineux haut, coins `env(safe-area-inset-bottom)` pour iPhone), **éclat qui traverse lentement le verre** (`tl-dock-sheen`, coupé en `prefers-reduced-motion`), **capsule en dégradé primaire qui glisse au ressort** (`--ease-spring`) sous l'onglet actif, icône active qui « pop » (scale 110 spring), pression tactile qui resserre l'élément (active:scale-90), entrée du dock en fondu-échelle (`tl-dock-in`). Collision de clés corrigée (`/dashboard` vs `/dashboard?tab=profil`).
+- **`e2e/landing.spec.ts` mis à jour** : absence du dock vérifiée pour un visiteur (home, /briefs, /poster, desktop), hamburger mobile toujours utilisable. Les docks rôles (client/dev) exigent une session authentifiée : vérification manuelle sur compte de test.
+
 ## [Interface] — 2026-10-16 : bottom nav pour les visiteurs + animations 3D et illustrations sur les landings
 
-- **Bottom nav (dock mobile)** visible pour **tous**, visiteurs compris — elle n'existait que pour les comptes connectés. Ensembles réorganisés par rôle : visiteur (Accueil · Dévs · **Publier** · Briefs · Compte, l'action centrale en pastille primaire), client (Poster remonté au centre), dev inchangé, et un ensemble dédié aux autres rôles connectés (admin).
+- **Bottom nav (dock mobile)** visible pour **tous**, visiteurs compris — ensembles réorganisés par rôle. *(Remplacé le jour même par [Bottom-nav] : dock réservé aux comptes connectés, rôles distincts, finition Apple.)*
 - **`components/landing/scene-3d.tsx`** : vraie scène 3D **sans dépendance** (perspective + translateZ, parallax au pointeur, keyframes natives `tl-float`, `prefers-reduced-motion` honoré via `globals.css`) — 5 variantes : `marketplace`, `tokens`, `brief`, `team`, `ranking`. Intégrée sur : hero de l'accueil (fond de la carte), `/agences`, `/classement`, `/poster` (écran visiteur), `/a-propos`, `/tokens`, `/inscription-developpeur` — masquée sous `lg` pour préserver les écrans d'app utiles (briefs, annuaire).
 - **Illustrations de marque** dans `public/illustrations/` (6 SVG palette TERANGA) : `marketplace` → section Concept, `afrique-ouest` (carte des pays/villes desservis) → section Confiance, `brief` → `/poster` ; `tokens`, `agence`, `classement` dispo pour les usages futurs (OG, e-mails).
 - **`e2e/landing.spec.ts`** (9 tests, tous verts) : bottom nav visiteur (visibilité mobile, 5 destinations, action centrale, `aria-current`, masquage desktop), présence d'une scène 3D avec perspective active sur l'accueil /classement /agences /a-propos, et chargement réel des illustrations (pas d'URL morte).

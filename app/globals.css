@@ -438,6 +438,52 @@ h6 {
   animation: tl-pop-in 0.22s var(--ease-spring);
 }
 
+/* ---------------- Dock mobile façon Apple (verre flottant + capsule vivante) --------------- */
+@keyframes tl-dock-in {
+  from {
+    opacity: 0;
+    transform: translateY(22px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.tl-dock-in {
+  opacity: 0;
+  animation: tl-dock-in 0.65s var(--ease-spring) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tl-dock-in {
+    opacity: 1;
+    animation: none;
+  }
+}
+
+/* Reflet vivant : un éclat traverse lentement le verre du dock */
+@keyframes tl-dock-sheen {
+  0% {
+    transform: translateX(-140%) skewX(-18deg);
+  }
+  55%,
+  100% {
+    transform: translateX(420%) skewX(-18deg);
+  }
+}
+
+.tl-dock-sheen {
+  animation: tl-dock-sheen 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tl-dock-sheen {
+    opacity: 0;
+    animation: none;
+  }
+}
+
 /* Grain très léger pour les panneaux sombres */
 .tl-grain {
   background-image:
