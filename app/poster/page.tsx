@@ -86,6 +86,8 @@ export default async function PosterPage() {
             ))}
           </ul>
 
+          {/* SVG local de marque : next/image n'apporterait rien sur du vectoriel. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/illustrations/brief.svg"
             alt="Exemple de brief de projet web publié en deux minutes sur TERANGA LABS"

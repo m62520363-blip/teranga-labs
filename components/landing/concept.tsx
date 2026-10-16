@@ -43,7 +43,9 @@ export function ConceptSection() {
       </div>
 
       <Reveal className="mt-14">
-        {/* Illustration du principe : le client et le développeur échangent via un Token. */}
+        {/* Illustration du principe : le client et le développeur échangent via un Token
+            (SVG local, déjà optimisé : next/image n'apporterait rien sur du vectoriel). */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/illustrations/marketplace.svg"
           alt="Un client et un développeur échangent sur TERANGA LABS via un Token, sans commission"

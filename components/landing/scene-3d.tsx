@@ -294,7 +294,7 @@ function TeamScene() {
     <>
       <Layer z={-40} x="50%" y="52%" float={false}>
         <div className="flex items-end gap-2.5">
-          {[44, 64, 52].map((h, i) => (
+          {[44, 64, 52].map((h) => (
             <span
               key={h}
               className="w-11 rounded-t-xl border border-hairline bg-gradient-to-b from-card to-muted"
