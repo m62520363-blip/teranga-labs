@@ -27,7 +27,13 @@ type NavbarUser = {
   name: string | null;
 };
 
-type DockItem = { href: string; label: string; icon: React.ComponentType<{ className?: string }> };
+type DockItem = {
+  href: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  /** Met en avant l'action centrale (publication d'un brief). */
+  emphasis?: boolean;
+};
 
 export function Navbar({
   user,
@@ -93,9 +99,9 @@ export function Navbar({
       return [
         { href: "/client", label: "Accueil", icon: Home },
         { href: "/dev", label: "Dévs", icon: UsersRound },
+        { href: "/poster", label: "Poster", icon: Plus, emphasis: true },
         { href: "/tokens", label: "Tokens", icon: Coins },
         { href: "/conversations", label: "Messages", icon: MessageCircle },
-        { href: "/poster", label: "Poster", icon: Plus },
         { href: "/parametres", label: "Compte", icon: Settings2 },
       ];
     }
@@ -109,14 +115,24 @@ export function Navbar({
         { href: "/parametres", label: "Compte", icon: Settings2 },
       ];
     }
+    if (authed) {
+      // Autres rôles connectés (admin, …) : pas d'espace dédié sur le site.
+      return [
+        { href: "/briefs", label: "Briefs", icon: Briefcase },
+        { href: "/dev", label: "Dévs", icon: UsersRound },
+        { href: "/conversations", label: "Messages", icon: MessageCircle },
+        { href: "/parametres", label: "Compte", icon: Settings2 },
+      ];
+    }
+    // Visiteurs : la même barre pour organiser la découverte du marché.
     return [
       { href: "/", label: "Accueil", icon: Home },
+      { href: "/dev", label: "Dévs", icon: UsersRound },
+      { href: "/poster", label: "Publier", icon: Plus, emphasis: true },
       { href: "/briefs", label: "Briefs", icon: Briefcase },
-      { href: "/faq", label: "FAQ", icon: MessageCircle },
-      { href: "/poster", label: "Poster", icon: Plus },
-      { href: "/login", label: "Connexion", icon: LogIn },
+      { href: "/login", label: "Compte", icon: LogIn },
     ];
-  }, [isClient, isDev]);
+  }, [isClient, isDev, authed]);
 
   return (
     <>
@@ -237,7 +253,7 @@ export function Navbar({
         )}
       </header>
 
-      {authed ? <MobileDock items={dockItems} pathname={pathname} /> : null}
+      <MobileDock items={dockItems} pathname={pathname} />
     </>
   );
 }
@@ -429,14 +445,20 @@ function MobileDock({ items, pathname }: { items: DockItem[]; pathname: string }
               >
                 <span
                   className={cn(
-                    "grid size-9 place-items-center transition-transform duration-200 group-active:scale-90"
+                    "grid size-9 place-items-center transition-transform duration-200 group-active:scale-90",
+                    item.emphasis &&
+                      "rounded-full bg-primary text-ink shadow-[0_8px_20px_-6px_rgba(232,106,44,0.7)]",
                   )}
                   style={{ minWidth: 36 }}
                 >
                   <span
                     className={cn(
                       "relative z-10 grid size-9 place-items-center transition-colors duration-200",
-                      active ? "text-ink" : "text-muted-foreground group-hover:text-foreground"
+                      item.emphasis
+                        ? "text-ink"
+                        : active
+                          ? "text-ink"
+                          : "text-muted-foreground group-hover:text-foreground"
                     )}
                   >
                     <Icon className="size-[18px]" aria-hidden="true" />

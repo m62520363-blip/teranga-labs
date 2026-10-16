@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Coins, FileSearch, ShieldCheck } from "lucide-react";
 import { TOKEN_RULE } from "@/lib/formatting";
+import { Scene3D } from "@/components/landing/scene-3d";
 
 export const metadata: Metadata = {
   title: "À propos",
@@ -42,6 +43,10 @@ export default function AProposPage() {
             Abidjan publient le brief de leur projet (1 Token), et les
             développeurs sérieux viennent vers eux.
           </p>
+
+          <div className="mt-10 flex justify-center">
+            <Scene3D variant="marketplace" />
+          </div>
 
           <div className="mt-12 grid gap-6 sm:grid-cols-3">
             {values.map((value) => (

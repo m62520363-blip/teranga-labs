@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Building2, MapPin, ShieldCheck, UsersRound } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { asAgencyList, type AgencyListItem } from "@/types/agency";
+import { Scene3D } from "@/components/landing/scene-3d";
 
 export const metadata: Metadata = {
   title: "Agences",
@@ -36,18 +37,21 @@ export default async function AgenciesPageRoute() {
   return (
     <div className="bg-surface py-10 md:py-14">
       <div className="container-tl">
-        <div className="mb-8 max-w-2xl">
-          <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary-soft px-3 py-1 text-xs font-semibold text-primary">
-            <Building2 className="size-3.5" aria-hidden="true" />
-            Agences vérifiées
-          </p>
-          <h1 className="text-3xl font-semibold leading-tight tracking-tight md:text-4xl">
-            Travaillez avec une <span className="text-primary">équipe</span>
-          </h1>
-          <p className="mt-3 text-sm leading-relaxed text-muted-foreground md:text-base">
-            Des collectifs de développeurs validés par TERANGA LABS, réunis sous
-            une même enseigne pour porter vos projets de bout en bout.
-          </p>
+        <div className="mb-8 grid items-center gap-8 lg:grid-cols-[1fr_auto]">
+          <div className="max-w-2xl">
+            <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary-soft px-3 py-1 text-xs font-semibold text-primary">
+              <Building2 className="size-3.5" aria-hidden="true" />
+              Agences vérifiées
+            </p>
+            <h1 className="text-3xl font-semibold leading-tight tracking-tight md:text-4xl">
+              Travaillez avec une <span className="text-primary">équipe</span>
+            </h1>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground md:text-base">
+              Des collectifs de développeurs validés par TERANGA LABS, réunis sous
+              une même enseigne pour porter vos projets de bout en bout.
+            </p>
+          </div>
+          <Scene3D variant="team" className="hidden lg:block" />
         </div>
 
         {agencies.length === 0 ? (

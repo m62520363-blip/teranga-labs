@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, Check, MapPin, Wallet } from "lucide-react";
 import { HERO, HERO_DEMO } from "@/components/landing/content";
 import { TOKEN_LABEL, TOKEN_RULE } from "@/lib/formatting";
+import { Scene3D } from "@/components/landing/scene-3d";
 
 export function Hero({
   realBrief,
@@ -93,6 +94,12 @@ function HeroVisual({
 }) {
   return (
     <div className="tl-blur-in relative mx-auto w-full max-w-md" style={{ animationDelay: "0.32s" }} aria-hidden="true">
+      {/* Scène 3D de fond : profondeur réelle (translateZ) et objets flottants,
+          parallax désactivé ici pour laisser la carte du brief cliquable. */}
+      <Scene3D
+        variant="marketplace"
+        className="pointer-events-none absolute -inset-x-16 -bottom-24 -top-14 -z-10 opacity-50"
+      />
       <div className="absolute -inset-10 -z-10 rounded-full bg-[radial-gradient(closest-side,rgba(232,106,44,0.16),transparent)]" />
 
       <div className="card-elevated relative rounded-2xl border border-hairline bg-card p-6 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.6)]">

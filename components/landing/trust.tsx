@@ -13,6 +13,18 @@ export function TrustSection() {
         lead="Nous avançons pas à pas. Chaque fonctionnalité est annoncée uniquement lorsqu’elle est réellement disponible."
       />
 
+      <Reveal className="mt-12">
+        {/* Carte abstraite des pays et villes réellement desservis. */}
+        <img
+          src="/illustrations/afrique-ouest.svg"
+          alt="Carte stylisée de l’Afrique de l’Ouest francophone : Dakar, Abidjan, Bamako, Nouakchott et les régions couvertes par TERANGA LABS"
+          width={480}
+          height={360}
+          loading="lazy"
+          className="mx-auto w-full max-w-xl rounded-2xl border border-hairline"
+        />
+      </Reveal>
+
       <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {TRUST_FEATURES.map((feature, index) => (
           <Reveal key={feature.title} delay={(index % 3) as 0 | 1 | 2}>

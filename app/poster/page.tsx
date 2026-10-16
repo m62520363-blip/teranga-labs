@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PosterForm } from "@/components/poster-form";
 import { getCurrentUser } from "@/lib/supabase/server";
+import { Scene3D } from "@/components/landing/scene-3d";
 
 export const metadata: Metadata = {
   title: "Poster un brief",
@@ -17,33 +18,36 @@ export default async function PosterPage() {
     return (
       <div className="bg-surface py-16 md:py-24">
         <div className="container-tl">
-          <div className="mx-auto max-w-xl">
-            <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
-              Connectez-vous pour publier un brief
-            </h1>
-            <p className="mt-3 text-base leading-relaxed text-muted-foreground">
-              La publication d’un brief coûte <strong className="text-foreground">1 Token</strong>.
-              Créez un compte, commandez vos Tokens auprès de l’équipe (Wave ou
-              Max It), puis décrivez votre projet : les développeurs vous contactent
-              dans la messagerie interne.
-            </p>
+          <div className="grid items-center gap-12 lg:grid-cols-2">
+            <div className="max-w-xl">
+              <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
+                Connectez-vous pour publier un brief
+              </h1>
+              <p className="mt-3 text-base leading-relaxed text-muted-foreground">
+                La publication d’un brief coûte <strong className="text-foreground">1 Token</strong>.
+                Créez un compte, commandez vos Tokens auprès de l’équipe (Wave ou
+                Max It), puis décrivez votre projet : les développeurs vous contactent
+                dans la messagerie interne.
+              </p>
 
-            <div className="mt-10 flex flex-wrap gap-3">
-              <Link href="/login" className="btn btn-primary">
-                Se connecter
-              </Link>
-              <Link href="/tokens" className="btn btn-secondary">
-                Acheter des Tokens
-              </Link>
+              <div className="mt-10 flex flex-wrap gap-3">
+                <Link href="/login" className="btn btn-primary">
+                  Se connecter
+                </Link>
+                <Link href="/tokens" className="btn btn-secondary">
+                  Acheter des Tokens
+                </Link>
+              </div>
+
+              <p className="mt-8 text-sm leading-relaxed text-muted-foreground">
+                Pas encore de compte ?{" "}
+                <Link href="/login?mode=signup" className="underline decoration-primary/60 underline-offset-4 hover:text-foreground">
+                  Inscrivez-vous gratuitement
+                </Link>{" "}
+                — l’inscription est gratuite, seule la publication consomme 1 Token.
+              </p>
             </div>
-
-            <p className="mt-8 text-sm leading-relaxed text-muted-foreground">
-              Pas encore de compte ?{" "}
-              <Link href="/login?mode=signup" className="underline decoration-primary/60 underline-offset-4 hover:text-foreground">
-                Inscrivez-vous gratuitement
-              </Link>{" "}
-              — l’inscription est gratuite, seule la publication consomme 1 Token.
-            </p>
+            <Scene3D variant="brief" className="hidden lg:block" />
           </div>
         </div>
       </div>
@@ -81,6 +85,15 @@ export default async function PosterPage() {
               </li>
             ))}
           </ul>
+
+          <img
+            src="/illustrations/brief.svg"
+            alt="Exemple de brief de projet web publié en deux minutes sur TERANGA LABS"
+            width={480}
+            height={360}
+            loading="lazy"
+            className="mx-auto mt-10 w-full max-w-md rounded-2xl border border-hairline"
+          />
         </div>
       </div>
     </div>

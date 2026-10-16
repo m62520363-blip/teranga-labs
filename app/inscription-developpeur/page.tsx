@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { ArrowRight, BadgeCheck, CheckCircle2, Clock3 } from "lucide-react";
 import { OnboardingForm, type OnboardingData } from "@/components/dev/onboarding-form";
 import { getCurrentUser, createClient } from "@/lib/supabase/server";
+import { Scene3D } from "@/components/landing/scene-3d";
 
 export const metadata: Metadata = {
   title: "Inscription développeur",
@@ -94,19 +95,22 @@ export default async function InscriptionDeveloppeurPage() {
   return (
     <div className="bg-surface py-14">
       <div className="container-tl">
-        <header className="mx-auto max-w-3xl">
-          <span className="chip gap-2 border-hairline bg-card">
-            <span className="size-1.5 rounded-full bg-primary" aria-hidden="true" />
-            INSCRIPTION DÉVELOPPEUR
-          </span>
-          <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
-            Rejoignez TERANGA LABS
-          </h1>
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            Deux étapes, quelques minutes. Votre dossier est examiné par notre équipe
-            <span className="font-medium text-foreground"> avant activation</span> —
-            garantie zéro spam pour les clients.
-          </p>
+        <header className="mx-auto grid max-w-4xl items-center gap-6 lg:grid-cols-[1fr_auto]">
+          <div>
+            <span className="chip gap-2 border-hairline bg-card">
+              <span className="size-1.5 rounded-full bg-primary" aria-hidden="true" />
+              INSCRIPTION DÉVELOPPEUR
+            </span>
+            <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
+              Rejoignez TERANGA LABS
+            </h1>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+              Deux étapes, quelques minutes. Votre dossier est examiné par notre équipe
+              <span className="font-medium text-foreground"> avant activation</span> —
+              garantie zéro spam pour les clients.
+            </p>
+          </div>
+          <Scene3D variant="team" className="hidden lg:block" />
         </header>
 
         {status === "active" || status === "verified" ? (

@@ -3,6 +3,7 @@ import { CheckCircle2 } from "lucide-react";
 import { TokenCard } from "@/components/token-card";
 import { createClient } from "@/lib/supabase/server";
 import { EmptyState } from "@/components/empty-state";
+import { Scene3D } from "@/components/landing/scene-3d";
 
 export const metadata: Metadata = {
   title: "Tokens",
@@ -34,6 +35,8 @@ export default async function TokensPage() {
             Débloquez les coordonnées des clients qui cherchent un développeur.
           </p>
         </div>
+
+        <Scene3D variant="tokens" className="mt-6" />
 
         {packages && packages.length > 0 ? (
           <div className="mx-auto mt-14 grid max-w-4xl gap-5 sm:grid-cols-2 lg:grid-cols-4">

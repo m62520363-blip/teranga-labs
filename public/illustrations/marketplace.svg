@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360" fill="none" role="img" aria-label="Un client et un développeur échangent via un Token">
+  <rect width="480" height="360" rx="24" fill="#0f0f0f"/>
+  <circle cx="240" cy="180" r="150" fill="#e86a2c" opacity="0.07"/>
+  <circle cx="240" cy="180" r="96" fill="#e86a2c" opacity="0.06"/>
+  <!-- Client -->
+  <g>
+    <rect x="52" y="120" width="120" height="150" rx="18" fill="#141414" stroke="#2a2a2a"/>
+    <circle cx="112" cy="164" r="24" fill="#241712"/>
+    <circle cx="112" cy="156" r="10" fill="#e86a2c"/>
+    <path d="M92 186c4-12 12-18 20-18s16 6 20 18" fill="#e86a2c"/>
+    <rect x="74" y="214" width="76" height="8" rx="4" fill="#2a2a2a"/>
+    <rect x="74" y="230" width="52" height="8" rx="4" fill="#2a2a2a"/>
+    <text x="112" y="262" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="600" fill="#f2f2f2">Client</text>
+  </g>
+  <!-- Développeur -->
+  <g>
+    <rect x="308" y="120" width="120" height="150" rx="18" fill="#141414" stroke="#2a2a2a"/>
+    <circle cx="368" cy="164" r="24" fill="#241712"/>
+    <circle cx="368" cy="156" r="10" fill="#34d399"/>
+    <path d="M348 186c4-12 12-18 20-18s16 6 20 18" fill="#34d399"/>
+    <text x="352" y="226" font-family="ui-monospace,monospace" font-size="16" font-weight="700" fill="#e86a2c">&lt;/&gt;</text>
+    <rect x="330" y="240" width="76" height="8" rx="4" fill="#2a2a2a"/>
+    <text x="368" y="262" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="600" fill="#f2f2f2">Développeur</text>
+  </g>
+  <!-- Token au centre -->
+  <g>
+    <line x1="176" y1="196" x2="212" y2="196" stroke="#e86a2c" stroke-width="3" stroke-dasharray="6 6" opacity="0.7"/>
+    <line x1="268" y1="196" x2="304" y2="196" stroke="#e86a2c" stroke-width="3" stroke-dasharray="6 6" opacity="0.7"/>
+    <circle cx="240" cy="196" r="34" fill="#e86a2c"/>
+    <circle cx="240" cy="196" r="27" fill="none" stroke="#ffd9a8" stroke-width="3" opacity="0.85"/>
+    <text x="240" y="205" text-anchor="middle" font-family="system-ui,sans-serif" font-size="24" font-weight="800" fill="#5b2508">T</text>
+  </g>
+  <text x="240" y="322" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="#9a9a9a">1 Token débloque la conversation · 0 commission</text>
+</svg>

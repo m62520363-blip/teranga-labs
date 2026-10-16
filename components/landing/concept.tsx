@@ -3,7 +3,6 @@ import { CONCEPT, BRAND } from "@/components/landing/content";
 import { Reveal } from "@/components/reveal";
 import { Section, SectionHeader } from "@/components/landing/section";
 import { cn } from "cn";
-
 export function ConceptSection() {
   return (
     <Section ariaLabel="La marketplace inversée">
@@ -42,6 +41,18 @@ export function ConceptSection() {
           </div>
         </Reveal>
       </div>
+
+      <Reveal className="mt-14">
+        {/* Illustration du principe : le client et le développeur échangent via un Token. */}
+        <img
+          src="/illustrations/marketplace.svg"
+          alt="Un client et un développeur échangent sur TERANGA LABS via un Token, sans commission"
+          width={480}
+          height={360}
+          loading="lazy"
+          className="mx-auto w-full max-w-xl rounded-2xl border border-hairline"
+        />
+      </Reveal>
     </Section>
   );
 }

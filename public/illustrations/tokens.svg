@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360" fill="none" role="img" aria-label="Pile de Tokens, la monnaie du marché">
+  <rect width="480" height="360" rx="24" fill="#0f0f0f"/>
+  <ellipse cx="240" cy="292" rx="150" ry="26" fill="#e86a2c" opacity="0.08"/>
+  <!-- Pile de pièces -->
+  <g>
+    <ellipse cx="240" cy="268" rx="86" ry="26" fill="#9c3f12"/>
+    <rect x="154" y="238" width="172" height="30" fill="#c4531d"/>
+    <ellipse cx="240" cy="238" rx="86" ry="26" fill="#e86a2c"/>
+    <ellipse cx="240" cy="216" rx="86" ry="26" fill="#9c3f12"/>
+    <rect x="154" y="186" width="172" height="30" fill="#c4531d"/>
+    <ellipse cx="240" cy="186" rx="86" ry="26" fill="#e86a2c"/>
+    <ellipse cx="240" cy="196" rx="64" ry="18" fill="none" stroke="#ffd9a8" stroke-width="3" opacity="0.8"/>
+    <text x="240" y="204" text-anchor="middle" font-family="system-ui,sans-serif" font-size="26" font-weight="800" fill="#5b2508">T</text>
+  </g>
+  <!-- Pièce flottante -->
+  <g transform="translate(330 96) rotate(18)">
+    <circle r="34" fill="#e86a2c"/>
+    <circle r="26" fill="none" stroke="#ffd9a8" stroke-width="3" opacity="0.85"/>
+    <text y="9" text-anchor="middle" font-family="system-ui,sans-serif" font-size="24" font-weight="800" fill="#5b2508">T</text>
+  </g>
+  <g transform="translate(120 118) rotate(-14)">
+    <circle r="24" fill="#e86a2c" opacity="0.9"/>
+    <text y="7" text-anchor="middle" font-family="system-ui,sans-serif" font-size="17" font-weight="800" fill="#5b2508">T</text>
+  </g>
+  <text x="240" y="332" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="#9a9a9a">Rechargez dès 1 000 FCFA · valables 12 mois</text>
+</svg>

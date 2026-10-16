@@ -2,6 +2,12 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [Interface] — 2026-10-16 : bottom nav pour les visiteurs + animations 3D et illustrations sur les landings
+
+- **Bottom nav (dock mobile)** visible pour **tous**, visiteurs compris — elle n'existait que pour les comptes connectés. Ensembles réorganisés par rôle : visiteur (Accueil · Dévs · **Publier** · Briefs · Compte, l'action centrale en pastille primaire), client (Poster remonté au centre), dev inchangé, et un ensemble dédié aux autres rôles connectés (admin).
+- **`components/landing/scene-3d.tsx`** : vraie scène 3D **sans dépendance** (perspective + translateZ, parallax au pointeur, keyframes natives `tl-float`, `prefers-reduced-motion` honoré via `globals.css`) — 5 variantes : `marketplace`, `tokens`, `brief`, `team`, `ranking`. Intégrée sur : hero de l'accueil (fond de la carte), `/agences`, `/classement`, `/poster` (écran visiteur), `/a-propos`, `/tokens`, `/inscription-developpeur` — masquée sous `lg` pour préserver les écrans d'app utiles (briefs, annuaire).
+- **Illustrations de marque** dans `public/illustrations/` (6 SVG palette TERANGA) : `marketplace` → section Concept, `afrique-ouest` (carte des pays/villes desservis) → section Confiance, `brief` → `/poster` ; `tokens`, `agence`, `classement` dispo pour les usages futurs (OG, e-mails).
+
 ## [Disponibilité] — 2026-10-16 : écran de disponibilité dans le dashboard développeur
 
 - **`components/availability-card.tsx`** (nouveau) : interrupteur *Disponible / Indisponible* + pastilles des jours joignables (L→D, numérotation 0049 : lundi=0 … dimanche=6), branché sur `set_my_availability` — la RPC existait depuis 0049 sans aucun écran dans le front. Lecture directe sur `developer_availability` (SELECT public, RLS) ; zéro ligne = indisponible (pas d'état « jamais configuré » à distinguer, le schéma ne le permet pas).

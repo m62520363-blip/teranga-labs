@@ -7,6 +7,7 @@ import { COUNTRIES } from "@/lib/countries";
 import { Flag } from "@/components/ui/Flag";
 import { Section, SectionHeader } from "@/components/landing/section";
 import { Reveal } from "@/components/reveal";
+import { Scene3D } from "@/components/landing/scene-3d";
 import { cn } from "cn";
 
 export const metadata: Metadata = {
@@ -277,11 +278,15 @@ export default async function ClassementPage() {
   return (
     <div className="bg-background">
       <Section ariaLabel="Classement des développeurs">
-        <SectionHeader
-          eyebrow="Classement mensuel"
-          title="Le classement des développeurs"
-          lead="Chaque mois, le classement régional (Afrique de l'Ouest francophone) et le classement de chaque pays récompensent les développeurs les plus actifs, calculés sur les missions réellement terminées."
-        />
+        <div className="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr]">
+          <SectionHeader
+            align="left"
+            eyebrow="Classement mensuel"
+            title="Le classement des développeurs"
+            lead="Chaque mois, le classement régional (Afrique de l'Ouest francophone) et le classement de chaque pays récompensent les développeurs les plus actifs, calculés sur les missions réellement terminées."
+          />
+          <Scene3D variant="ranking" className="hidden lg:block" />
+        </div>
 
         {config?.enabled === false && (
           <p className="mx-auto mt-6 max-w-xl rounded-xl border border-warning/30 bg-warning/10 px-4 py-3 text-center text-xs text-warning">
