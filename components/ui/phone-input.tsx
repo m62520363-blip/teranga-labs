@@ -46,6 +46,12 @@ export interface PhoneInputProps {
   autoComplete?: string;
   /** Classes appliquées à la fois au sélecteur d'indicatif et au champ numéro. */
   className?: string;
+  /**
+   * Classes appliquées aux champs internes (indicatif + numéro) SEULEMENT,
+   * sans toucher au conteneur flex. Permet de styler les champs comme un
+   * champ unique sans bordure/padding parasite sur le wrapper.
+   */
+  fieldClassName?: string;
 }
 
 export function PhoneInput({
@@ -57,7 +63,9 @@ export function PhoneInput({
   disabled,
   autoComplete = "tel",
   className,
+  fieldClassName,
 }: PhoneInputProps) {
+  const fieldClass = fieldClassName ?? className;
   const { dial, national } = React.useMemo(() => parsePhone(value), [value]);
   const country = COUNTRIES.find((c) => c.phoneCode === dial) ?? COUNTRIES[0];
 
@@ -75,7 +83,7 @@ export function PhoneInput({
       >
         <SelectTrigger
           aria-label="Indicatif pays"
-          className={cn("shrink-0 gap-1.5", className)}
+          className={cn("shrink-0 gap-1.5", fieldClass)}
           aria-invalid={invalid || undefined}
         >
           <Flag countryCode={country.code} size={16} />
@@ -103,7 +111,7 @@ export function PhoneInput({
         placeholder={placeholder}
         disabled={disabled}
         aria-invalid={invalid || undefined}
-        className={cn("min-w-0 flex-1 tabular-nums", className)}
+        className={cn("min-w-0 flex-1 tabular-nums", fieldClass)}
       />
     </div>
   );

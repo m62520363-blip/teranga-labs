@@ -80,7 +80,7 @@ function VerificationInProgress() {
 
 export default async function InscriptionDeveloppeurPage() {
   const user = await getCurrentUser();
-  if (!user) redirect("/login?mode=signup");
+  if (!user) redirect("/login?mode=signup&role=developer");
 
   const supabase = await createClient();
   if (!supabase) return notConfigured();

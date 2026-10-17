@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/supabase/server";
+import { AuthShell } from "@/components/auth-shell";
+import { getCurrentRole, getCurrentUser } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
   title: "Créer un compte",
@@ -11,9 +12,16 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default async function SignupPage() {
-  const user = await getCurrentUser();
-  if (user) redirect("/client");
+export default async function SignupPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ role?: string }>;
+}) {
+  const [user, role] = await Promise.all([getCurrentUser(), getCurrentRole()]);
+  if (user) redirect(role === "client" ? "/client" : "/dashboard");
 
-  redirect("/login?mode=signup");
+  const params = await searchParams;
+  const initialRole = params.role === "developer" ? "developer" : "client";
+
+  return <AuthShell mode="signup" initialRole={initialRole} />;
 }

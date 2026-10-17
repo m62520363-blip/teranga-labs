@@ -35,12 +35,9 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-      {
-        source: "/signup",
-        destination: "/login?mode=signup",
-        permanent: false,
-      },
-      { source: "/inscription", destination: "/login?mode=signup", permanent: false },
+      // /signup est une vraie page (formulaire dédié) : plus de redirection
+      // vers /login?mode=signup. /inscription reste l'alias français.
+      { source: "/inscription", destination: "/signup", permanent: false },
       { source: "/connexion", destination: "/login", permanent: false },
       { source: "/profile", destination: "/dashboard?tab=profil", permanent: false },
       { source: "/profil", destination: "/dashboard?tab=profil", permanent: false },

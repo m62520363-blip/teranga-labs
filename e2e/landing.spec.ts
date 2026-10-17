@@ -49,9 +49,13 @@ test.describe("navigation visiteur (sans bottom nav)", () => {
   }) => {
     await gotoMobile(page, "/");
     const burger = page.getByRole("button", { name: /ouvrir le menu/i });
-    await burger.click();
     const menu = page.getByRole("link", { name: "Se connecter" });
-    await expect(menu).toBeVisible();
+    // Le premier clic peut précéder l'hydratation React : comme le menu est
+    // fermé, réessayer ne peut qu'ouvrir le tiroir, jamais le refermer.
+    await expect(async () => {
+      await burger.click();
+      await expect(menu).toBeVisible({ timeout: 2000 });
+    }).toPass({ timeout: 15_000 });
   });
 
   test("desktop inchangé : navbar principale visible, dock absent", async ({

@@ -12,6 +12,14 @@ import { phoneOtpSchema } from "@/lib/validations";
 
 type Step = "phone" | "code";
 
+/* Même vocabulaire visuel que les pages de connexion : champ `rounded-xl`
+   sur surface, boutons pilules — pas de chrome importé ailleurs. */
+const otpPhoneClass =
+  "h-11 min-h-11 data-[size=default]:h-11 rounded-xl border border-border bg-surface px-3 text-sm text-foreground placeholder:text-muted-foreground outline-none transition-colors focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/30";
+
+const otpSubmitClass =
+  "inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-[filter] outline-none hover:brightness-110 active:brightness-95 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-primary/50";
+
 /**
  * Connexion par code SMS, en complément de l'email (jamais à la place).
  *
@@ -115,7 +123,7 @@ export function PhoneOtpForm({ onBack }: { onBack: () => void }) {
   return (
     <div className="flex flex-col gap-5">
       <div>
-        <h2 className="text-xl font-bold tracking-tight">
+        <h2 className="font-headings text-xl! font-bold tracking-tight">
           {step === "phone" ? "Connexion par SMS" : "Saisir le code"}
         </h2>
         <p className="mt-1 text-sm text-muted-foreground">
@@ -127,14 +135,17 @@ export function PhoneOtpForm({ onBack }: { onBack: () => void }) {
 
       {step === "phone" ? (
         <form onSubmit={sendCode} className="flex flex-col gap-4" noValidate>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="otp-phone">Numéro de téléphone</Label>
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="otp-phone" className="text-foreground">
+              Numéro de téléphone
+            </Label>
             <PhoneInput
               id="otp-phone"
               value={phone}
               onChange={setPhone}
               autoComplete="tel"
               aria-invalid={Boolean(error)}
+              fieldClassName={otpPhoneClass}
             />
             <p className="text-xs text-muted-foreground">
               Choisissez votre pays puis saisissez votre numéro (format
@@ -143,12 +154,12 @@ export function PhoneOtpForm({ onBack }: { onBack: () => void }) {
           </div>
 
           {error ? (
-            <p role="alert" className="text-xs text-destructive">
+            <p role="alert" className="text-sm text-[var(--error)]">
               {error}
             </p>
           ) : null}
 
-          <button type="submit" disabled={busy} className="btn btn-primary btn-lg w-full">
+          <button type="submit" disabled={busy} className={otpSubmitClass}>
             {busy ? <Loader2 className="size-4 animate-spin" aria-hidden="true" /> : null}
             {busy ? "Envoi en cours…" : "Recevoir le code"}
           </button>

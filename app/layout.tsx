@@ -4,6 +4,7 @@ import { Bodoni_Moda, DM_Sans, Geist_Mono, Outfit } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
+import { SiteShell } from "@/components/site-shell";
 import { Providers } from "@/components/providers";
 import { getCurrentRole, getCurrentUser } from "@/lib/supabase/server";
 import { absoluteUrl } from "@/lib/utils";
@@ -171,15 +172,18 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
         <Providers isAuthed={Boolean(user)}>
-          <div className="flex min-h-screen flex-col">
-            <Navbar
-              user={user ? { name: user.user_metadata?.full_name ?? null } : null}
-              role={role}
-              userId={user?.id ?? null}
-            />
-            <main className="flex-1 pt-16 pb-28 md:pb-0">{children}</main>
-            <Footer />
-          </div>
+          <SiteShell
+            navbar={
+              <Navbar
+                user={user ? { name: user.user_metadata?.full_name ?? null } : null}
+                role={role}
+                userId={user?.id ?? null}
+              />
+            }
+            footer={<Footer />}
+          >
+            {children}
+          </SiteShell>
         </Providers>
       </body>
     </html>
