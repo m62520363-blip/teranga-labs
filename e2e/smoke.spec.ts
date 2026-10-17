@@ -29,9 +29,21 @@ test.describe("navigation d'en-tête du site", () => {
   test("les liens du header mènent à des pages valides", async ({ page }) => {
     await page.goto("/a-propos", { waitUntil: "domcontentloaded" });
     const header = page.locator("header").first();
-    for (const target of ["/agences", "/dev", "/briefs", "/faq"]) {
+    // Nav visiteur façon Montaaj : Accueil + 3 ancres de sections.
+    for (const target of ["/", "/#comment-ca-marche", "/#tarifs", "/#faq"]) {
       const link = header.locator(`a[href="${target}"]`).first();
       await expect(link, `lien ${target} présent dans le header`).toBeVisible();
+      // goto(#) ne fait qu'un déplacement dans le document → response null.
+      await page.goto(target.split("#")[0]);
+      if (target.includes("#")) {
+        const id = target.split("#")[1];
+        await expect(page.locator(`#${id}`), `section #${id} présente`).toHaveCount(1);
+      } else {
+        await expect(page.locator("body")).toBeVisible();
+      }
+    }
+    // Les destinations métier restent atteignables depuis la home.
+    for (const target of ["/agences", "/dev", "/briefs"]) {
       await expect(page.goto(target)).resolves.toBeTruthy();
     }
   });

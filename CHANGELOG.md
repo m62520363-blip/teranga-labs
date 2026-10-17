@@ -2,6 +2,18 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [Landing-Montaaj] — 2026-10-17 : la home refaite à l'identique de montaaj.net
+
+Reprise complète de la structure et de la finition de [montaaj.net](https://montaaj.net) (HTML + CSS analysés ligne à ligne), avec adaptation minimale : marque TERANGA, textes métier et routes d'origine ; thème sombre conservé (pas de bascule clair/sombre), polices DM Sans/Outfit conservées pour le corps.
+
+- **Structure identique** (`app/page.tsx`) : hero `#accueil` → `#comment-ca-marche` (5 cartes en **sticky stacking** : `top: calc(6rem + n×0.75rem)`, z-index croissants, section en `rounded-t-[2.5rem]`, révélation `.is-in` par `IntersectionObserver`) → `#tarifs` (2 cartes, la seconde highlightée `border-primary/20 bg-primary-deep/20`) → `#faq` (5 `<details>` natifs avec icône `+` qui pivote en `group-open:rotate-45`) → 2 cartes rôles (checklist + CTA). Les anciennes sections (Concept, Marquee, Buyer, Sellers, Trust, Stats, Briefs récents, CTA final) sont retirées et leurs composants supprimés (`concept`, `buyer`, `sellers`, `trust`, `stats`, `cta`, `west-africa-map`, `faq-item`, `marquee-strip`).
+- **Hero façon Montaaj** (`components/landing/hero.tsx` + `rotating-words.tsx`) : badge `ShieldCheck`, H1 avec **mots en rotation** en sérif italique primaire (« sans commission. / avec 1 Token. / sans intermédiaire. »), entrées échelonnées (`animate-rise`, 1100→1550 ms), halo `hero-glow` radial qui respire, voile bas vers le fond, variante mobile `min-h-[100svh]` centrée + variante desktop `grid`, CTAs en pills `rounded-full` avec `btn-shine`.
+- **Design system** (`app/globals.css`) : `rounded-card` (1rem) / `rounded-control`, `font-headings` / `font-serif-display` (Bodoni Moda italic ajouté dans `app/layout.tsx` : `--font-bodoni`, Outfit enrichi du poids 900), `@keyframes rise` + `.animate-rise`, `btn-shine` (reflet qui traverse le bouton), `hero-glow`, `.stack-card`/`.is-in`, marker du résumé FAQ — tous en garde `prefers-reduced-motion`.
+- **Navbar visiteur** (`components/navbar.tsx`) : liens centrés absolus (Accueil · Comment ça marche · Tarifs · FAQ), actions en pills arrondies (« Se connecter » + « Publier une demande » en `btn-shine`), menu hamburger enrichi des mêmes entrées. La branche authentifiée (dock, notifications, Tokens, déconnexion) est inchangée.
+- **Footer** (`components/footer.tsx`) : marque + description, 3 colonnes (Plateforme · Compte · Aide), barre légale © TERANGA LABS Dakar, liens légaux et « Édité par Walty Group-SUARL ». La rangée de drapeaux et les réseaux sociaux sont retirés (pas de comptes sociaux TERANGA).
+- **SEO** : le `FAQPage` structuré de la home reprend les 5 questions de la nouvelle FAQ.
+- **E2E** (33 tests, tous verts) : 4 nouveaux tests verrouillent les 5 cartes empilées, les 5 accordéons, les 2 cartes tarifs et les 3 colonnes du footer ; test illustrations déplacé sur `/poster` (l'illustration est désormais aussi servie à l'écran visiteur) ; test header aligné sur la nouvelle nav. `npm run check` : RPC 154 ✓, typecheck ✓, lint 0 warning, 181 tests unitaires ✓.
+
 ## [Immersif-3D] — 2026-10-16 : hero orbite, carte Afrique vivante, CTA et footer enrichis
 
 Refonte immersive de la landing **sans dépendance** (zéro WebGL/three.js, CSS 3D + SVG animé, `prefers-reduced-motion` partout, thème sombre premium conservé sur décision) :

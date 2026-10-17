@@ -1,48 +1,121 @@
-import { CheckCircle2, Inbox, PenLine } from "lucide-react";
-import { STEPS } from "@/components/landing/content";
-import { Reveal } from "@/components/reveal";
-import { Section, SectionHeader } from "@/components/landing/section";
+"use client";
 
-const ICONS = {
-  pen: PenLine,
-  inbox: Inbox,
-  check: CheckCircle2,
-} as const;
+import * as React from "react";
+import {
+  CircleCheck,
+  FileText,
+  MessageCircle,
+  Search,
+  ShieldCheck,
+  type LucideIcon,
+} from "lucide-react";
+import { HOW_IT_WORKS } from "@/components/landing/content";
 
+const ICONS: Record<string, LucideIcon> = {
+  search: Search,
+  "file-text": FileText,
+  "shield-check": ShieldCheck,
+  "message-circle": MessageCircle,
+  "circle-check": CircleCheck,
+};
+
+/**
+ * Section « Comment ça marche » : cartes empilées en sticky stacking
+ * (chaque carte reste collée sous la précédente pendant le scroll).
+ */
 export function HowItWorks() {
-  return (
-    <Section id="comment-ca-marche" className="bg-card" ariaLabel="Comment ça marche">
-      <SectionHeader
-        eyebrow="Comment ça marche"
-        title="Simple. Rapide. Direct."
-        lead="Trois étapes suffisent pour lancer votre recherche — ou trouver vos prochains clients."
-      />
+  const steps = HOW_IT_WORKS.steps;
+  const last = steps.length - 1;
 
-      <div className="relative mt-16 grid gap-8 md:grid-cols-3 md:gap-6">
-        <div
-          className="pointer-events-none absolute left-[16.66%] right-[16.66%] top-10 hidden h-px bg-gradient-to-r from-primary/0 via-primary/40 to-primary/0 md:block"
-          aria-hidden="true"
-        />
-        {STEPS.map((step, index) => {
-          const Icon = ICONS[step.icon];
-          return (
-            <Reveal key={step.num} delay={(index % 3) as 0 | 1 | 2}>
-              <div className="card card-interactive relative h-full p-7 text-center">
-                <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-primary-soft">
-                  <Icon className="size-6 text-primary" aria-hidden="true" />
+  return (
+    <section
+      id="comment-ca-marche"
+      className="relative z-10 scroll-mt-24 rounded-t-[2.5rem] bg-background py-20 sm:py-28"
+    >
+      <div className="mx-auto max-w-6xl px-5 sm:px-6">
+        <div className="mx-auto max-w-2xl text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 px-3 py-1 text-sm text-foreground">
+            <ShieldCheck className="size-4 text-primary" aria-hidden="true" />
+            {HOW_IT_WORKS.badge}
+          </span>
+          <h2 className="mt-4 font-headings text-3xl font-bold tracking-tight sm:text-4xl">
+            {HOW_IT_WORKS.titleA} <span className="text-primary">{HOW_IT_WORKS.titleB}</span>
+          </h2>
+          <p className="mt-4 text-muted-foreground">{HOW_IT_WORKS.lead}</p>
+        </div>
+
+        <div className="mt-12 lg:mt-16">
+          <div className="mx-auto max-w-2xl">
+            {steps.map((step, i) => {
+              const Icon = ICONS[step.icon] ?? Search;
+              return (
+                <div
+                  key={step.num}
+                  data-stack-card="true"
+                  className="sticky stack-card"
+                  style={{
+                    top: `calc(6rem + ${(i * 0.75).toFixed(2).replace(/\.?0+$/, "")}rem)`,
+                    marginBottom: i === last ? 0 : "2rem",
+                    zIndex: i + 1,
+                  }}
+                >
+                  <div className="flex items-start gap-4 rounded-card border border-hairline bg-card p-6 shadow-lg shadow-black/5 sm:gap-5 sm:p-8">
+                    <div className="flex flex-col items-center gap-2">
+                      <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                        <Icon className="size-5" aria-hidden="true" />
+                      </span>
+                      <span className="font-headings text-sm font-bold text-muted-foreground tabular-nums">
+                        {step.num}
+                      </span>
+                    </div>
+                    <div className="pt-1">
+                      <h3 className="font-headings text-lg font-semibold tracking-tight sm:text-xl">
+                        {step.title}
+                      </h3>
+                      <p className="mt-2 text-sm leading-relaxed text-muted-foreground sm:text-base">
+                        {step.text}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <p className="mt-6 font-display text-sm font-bold tracking-[0.2em] text-primary">
-                  {step.num}
-                </p>
-                <h3 className="mt-2 text-lg font-semibold tracking-tight">{step.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  {step.text}
-                </p>
-              </div>
-            </Reveal>
-          );
-        })}
+              );
+            })}
+          </div>
+        </div>
       </div>
-    </Section>
+
+      {/* Révélation progressive des cartes empilées au scroll */}
+      <StackCardObserver />
+    </section>
   );
+}
+
+/** Ajoute `.is-in` aux cartes empilées quand elles entrent dans le viewport. */
+function StackCardObserver() {
+  const rootRef = React.useRef<HTMLElement>(null);
+
+  React.useEffect(() => {
+    const root = rootRef.current?.closest("section");
+    if (!root) return;
+    const cards = Array.from(root.querySelectorAll<HTMLElement>("[data-stack-card]"));
+    if (typeof IntersectionObserver === "undefined") {
+      cards.forEach((c) => c.classList.add("is-in"));
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-in");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    cards.forEach((c) => observer.observe(c));
+    return () => observer.disconnect();
+  }, []);
+
+  return <span ref={rootRef} hidden />;
 }

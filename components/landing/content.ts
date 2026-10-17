@@ -18,120 +18,138 @@ export const META = {
 };
 
 export const HERO = {
-  badge: "LE MARKETPLACE DES PROJETS WEB DE L'AFRIQUE DE L'OUEST FRANCOPHONE",
-  titleA: "Des entreprises qui cherchent",
-  titleB: "un développeur web.",
+  badge: "Aucune commission, jamais",
+  title: "Trouve ton développeur web, paie",
+  /** Mots en rotation (sérif italique, primaire) après « paie ». */
+  rotating: ["sans commission.", "avec 1 Token.", "sans intermédiaire."],
   subtitle:
-    "Publiez votre besoin en 2 minutes. Les développeurs sérieux viennent à vous, sans commission et sans intermédiaire.",
-  ctaPrimary: { label: "Je cherche un développeur", href: "/poster" },
-  ctaSecondary: { label: "Je cherche des missions", href: "/briefs" },
-  chips: [
-    "Paiement en ligne : Wave, Max It, carte",
-    "Aucune commission sur les projets",
-    "9 pays d'Afrique de l'Ouest francophone",
-  ],
+    "Publie ton brief en 2 minutes. Les développeurs sérieux viennent à toi — ton WhatsApp reste privé.",
+  ctaPrimary: { label: "Trouver un développeur", href: "/dev" },
+  ctaSecondary: { label: "Publier un brief", href: "/poster" },
 };
 
-export const HERO_DEMO = {
-  label: "Comment ça marche",
-  request: { title: "Je veux un site e-commerce pour ma boutique", budget: "Budget : 150 000 FCFA", location: "Afrique de l'Ouest francophone - Discussion privée" },
-  flow: [
-    { step: "01 - Brief publié", detail: "1 Token - 2 minutes", delay: 0.6 },
-    { step: "02 - Le dev paie 1 Token", detail: "Il démarre la discussion", delay: 1.6 },
-    { step: "03 - Discussion sécurisée", detail: "Messagerie interne en direct", delay: 2.6 },
+export const HOW_IT_WORKS = {
+  badge: "Aucune commission, jamais",
+  titleA: "Comment ça marche",
+  titleB: "vraiment.",
+  lead: "Ni les groupes WhatsApp ni les plateformes étrangères ne garantissent le bon match au bon prix — TERANGA le fait au même endroit.",
+  steps: [
+    {
+      num: "01",
+      title: "Trouve le bon développeur",
+      text: "Filtre par pays, compétence et note. Chaque profil affiche un portfolio de projets réels livrés en Afrique de l'Ouest.",
+      icon: "search",
+    },
+    {
+      num: "02",
+      title: "Publie ton brief",
+      text: "Brief structuré : type de site, budget en FCFA, délai de livraison. 1 Token, sans abonnement.",
+      icon: "file-text",
+    },
+    {
+      num: "03",
+      title: "Le contact se débloque en 1 Token",
+      text: "Le développeur intéressé paie 1 Token pour t'écrire. Ta discussion privée s'ouvre — plus de candidatures sauvages.",
+      icon: "shield-check",
+    },
+    {
+      num: "04",
+      title: "Discutez en direct",
+      text: "Devis, détails, calendrier : tout passe par la messagerie interne. Ton WhatsApp reste privé jusqu'à ton accord.",
+      icon: "message-circle",
+    },
+    {
+      num: "05",
+      title: "Choisis et paie sans commission",
+      text: "Vous traitez ensemble, en Wave, Orange Money ou Max It. TERANGA ne prélève rien sur ton projet.",
+      icon: "circle-check",
+    },
   ],
-};
+} as const;
 
-export const CONCEPT = {
-  eyebrow: "LE CONCEPT",
-  title: "On ne vend pas des sites. On vend l'accès aux clients qui veulent des sites.",
-  lead: `${TOKEN_RULE} = 1 contact client. Vous ne payez que pour ce qui vous intéresse. Le client paie 1 Token pour publier son brief.`,
-  classic: [
-    { label: "Le client poste un besoin" },
-    { label: "Des dizaines de devs se battent" },
-    { label: "Le client est spammé" },
-    { label: "Les devs perdent leur temps" },
-    { label: "Commission prélevée sur le projet" },
+export const PRICING = {
+  titleA: "Des tarifs",
+  titleB: "sans surprise.",
+  lead: "Pas d'abonnement, pas de frais cachés. TERANGA ne gagne de l'argent que quand tu utilises un Token.",
+  cards: [
+    {
+      eyebrow: "Client",
+      price: "1 Token",
+      text: "Tu paies 1 Token pour publier ton brief. Rien de plus — ton budget part entièrement au développeur.",
+      highlighted: false,
+    },
+    {
+      eyebrow: "Développeur",
+      price: "0 %",
+      text: "Aucune commission sur les projets. 1 Token débloque un contact client — bien moins que les 20 % de Fiverr, et rien tant que tu ne gagnes pas.",
+      highlighted: true,
+    },
   ],
-  inverted: [
-    { label: "Le client poste son brief pour 1 Token", highlight: true },
-    { label: "Le brief entre dans /briefs" },
-    { label: "Le dev paie 1 Token" },
-    { label: "Discussion interne ouverte en direct" },
-    { label: "Zéro commission, zéro intermédiaire", highlight: true },
-  ],
-};
+} as const;
 
-export const STEPS = [
+export const FAQS_LANDING = [
   {
-    num: "01",
-    title: "Décrivez votre besoin",
-    text: "Publiez votre brief en 2 minutes : type de site, budget, région et votre WhatsApp restent privés. 1 Token, sans abonnement.",
-    icon: "pen",
+    q: "Qu'est-ce que TERANGA LABS ?",
+    a: "TERANGA LABS est le marketplace des projets web de l'Afrique de l'Ouest francophone : tu publies le brief de ton site pour 1 Token, et le développeur intéressé débloque ton contact avec 1 Token. Ensuite, vous traitez directement — aucune commission.",
   },
   {
-    num: "02",
-    title: "Seuls les devs sérieux vous contactent",
-    text: "Le développeur qui voit votre brief paie 1 Token pour démarrer une discussion privée. Pas de touristes.",
-    icon: "inbox",
+    q: "Combien coûte un Token ?",
+    a: `${TOKEN_LABEL_PRICED}. L'inscription est gratuite : tu commandes tes Tokens en ligne (Wave, Orange Money, Max It ou carte), puis tu publies ton brief ou tu débloques un contact.`,
   },
   {
-    num: "03",
-    title: "Choisissez votre meilleure offre",
-    text: "Vous comparez les développeurs qui vous ont contacté dans votre messagerie interne, et vous choisissez en toute liberté.",
-    icon: "check",
+    q: "Y a-t-il une commission sur les projets ?",
+    a: "Non. TERANGA LABS ne prélève aucune commission sur les projets : le développeur et le client traitent ensemble, sans intermédiaire. Contre 15 à 20 % prélevés ailleurs, ici tu gardes 100 % de ton budget.",
   },
-] as const;
-
-export const BUYER = {
-  eyebrow: "POUR LES CLIENTS",
-  title: "Vous cherchez un développeur de confiance ?",
-  lead: "Dites ce dont vous avez besoin : type de site, budget, région. Les développeurs sérieux viennent à vous dans votre messagerie.",
-  cta: { label: "Publier mon brief", href: "/poster" },
-  caption: "1 brief publié. Plusieurs développeurs sérieux.",
-  form: {
-    questionLabel: "Quel type de site à",
-    questionValue: "Ex. Site e-commerce",
-    budgetLabel: "Votre budget",
-    budgetValue: "Ex. 150 000 FCFA",
-    cityLabel: "Votre région",
-    cityValue: "Ex. Dakar",
-    contactLabel: "Votre WhatsApp (reste privé)",
-    contactValue: "Ex. +225 07 07 07 07 07",
+  {
+    q: "Mon WhatsApp reste-t-il privé ?",
+    a: "Oui. Ton numéro n'apparaît jamais sur les briefs ni dans les résultats de recherche : les échanges passent par la messagerie interne, et tu décides seul de quand donner ton contact.",
   },
-};
-
-export const SELLERS = {
-  eyebrow: "POUR LES DÉVELOPPEURS",
-  title: "Arrêtez de courir après les clients.",
-  lead: "Les briefs publiés vous attendent, avec leur budget et leur région. Et vous ne payez que pour ceux qui vous intéressent.",
-  benefits: [
-    "Développeur : 1 Token = 1 contact client, sans commission sur le projet",
-    "Fini de vendre sur Facebook : les briefs arrivent tout seuls",
-    "Vous ne payez que pour ce qui vous intéresse",
-    "Paiement en ligne : Wave, Max It ou carte bancaire",
-    "Des clients sérieux, filtrés par le Token",
-  ],
-  cta: { label: "Découvrir les briefs", href: "/briefs" },
-  notification: {
-    title: "Brief intéressant",
-    text: "Site e-commerce pour boutique à Thiès",
-    budget: "Budget : 150 000 FCFA",
-    location: "Région : Thiès - Discussion privée",
-    reply: "Démarrer la discussion à 1 Token",
+  {
+    q: "Dans quels pays le service est-il disponible ?",
+    a: "Dans les 9 pays d'Afrique de l'Ouest francophone : Sénégal, Côte d'Ivoire, Mali, Burkina Faso, Niger, Guinée, Guinée-Bissau, Bénin et Togo. Les prix sont affichés en FCFA.",
   },
-};
-
-export const TRUST_FEATURES = [
-  { title: "Publication simple", text: "Le client décrit son besoin et son budget. Son WhatsApp reste privé. 1 Token par brief, aucun abonnement.", status: "Disponible" as const },
-  { title: "Développeur : 1 Token = 1 contact", text: "Vous débloquez le contact client d'un brief qui vous intéresse, puis la discussion démarre en direct.", status: "Disponible" as const },
-  { title: "Messagerie interne sécurisée", text: "Aucun intermédiaire, aucune commission : la discussion se fait en direct sur la plateforme, le WhatsApp reste privé.", status: "Disponible" as const },
-  { title: "Paiement en ligne des Tokens", text: "Réglez vos Tokens par Wave, Max It ou carte bancaire. Confirmation immédiate, Tokens crédités automatiquement.", status: "Disponible" as const },
-  { title: "Avis et réputation", text: "Notes et avis vérifiés après mission, pour savoir qui est sérieux avant de choisir.", status: "Disponible" as const },
-  { title: "Signalement et modération", text: "Signalez un abus en un clic. Chaque signalement est lu et traité par l'équipe.", status: "Disponible" as const },
 ];
 
-export const STATS_PLACEHOLDER_LEGEND = "Les chiffres ci-dessous s'affichent en direct dès la connexion de la base de données.";
+export const HERO_DEMO = {
+  label: "Démo",
+  request: {
+    title: "Site e-commerce pour une boutique de Dakar",
+    budget: "Budget : 450 000 FCFA",
+    location: "Dakar, Sénégal",
+  },
+  flow: [
+    { step: "Brief publié", detail: "1 Token", delay: 0 },
+    { step: "Contact débloqué", detail: "1 Token", delay: 1.6 },
+    { step: "Deal conclu", detail: "0 % de commission", delay: 3.2 },
+  ],
+};
+
+export const ROLE_CARDS = {
+  client: {
+    eyebrow: "Client",
+    title: "Arrête de chercher sur WhatsApp.",
+    text: "En 5 minutes, décris ton projet, mets ton budget et rejoins les développeurs sérieux de toute la région. Ton argent reste le tien jusqu'à ce que tu choisisses.",
+    bullets: [
+      "Brief publié pour 1 Token, sans abonnement",
+      "Dev sérieux : ils paient 1 Token pour t'écrire",
+      "Aucune commission sur ton projet",
+      "Wave, Orange Money ou Max It",
+    ],
+    cta: { label: "Publier mon brief", href: "/poster" },
+  },
+  developer: {
+    eyebrow: "Développeur",
+    title: "Sois trouvé sur ta compétence réelle.",
+    text: "Crée ton profil avec ton portfolio. Les clients te trouvent selon ta spécialité et ton pays. Tu es payé directement, sans friction.",
+    bullets: [
+      "Profil public avec portfolio de projets",
+      "Reçois des briefs par pays et par niche",
+      "1 Token = 1 contact client, 0 commission",
+      "Paiement direct Wave / Orange Money",
+    ],
+    cta: { label: "Voir les briefs", href: "/briefs" },
+  },
+};
 
 export const FAQS = [
   { q: "Qu'est-ce que TERANGA LABS ?", a: "TERANGA LABS est le marketplace des projets web de l'Afrique de l'Ouest francophone : les clients publient le brief de leur site web pour 1 Token, et les développeurs sérieux viennent vers eux." },
@@ -144,10 +162,4 @@ export const FAQS = [
   { q: "Y a-t-il une commission sur les projets ?", a: "Non. TERANGA LABS ne prélève aucune commission sur les projets : le développeur et le client traitent ensemble, sans intermédiaire." },
 ];
 
-export const CTA = {
-  titleA: "Un projet vous attend peut-être",
-  titleB: "sur TERANGA LABS.",
-  text: "Publiez le brief de votre site pour 1 Token. Ou découvrez les briefs qui recherchent déjà un développeur, partout en Afrique de l'Ouest francophone.",
-  ctaPrimary: { label: "Publier mon brief", href: "/poster" },
-  ctaSecondary: { label: "Je suis développeur", href: "/briefs" },
-};
+export { TOKEN_RULE };

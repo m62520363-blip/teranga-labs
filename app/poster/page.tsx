@@ -46,6 +46,17 @@ export default async function PosterPage() {
                 </Link>{" "}
                 — l’inscription est gratuite, seule la publication consomme 1 Token.
               </p>
+
+              {/* SVG local de marque : next/image n'apporterait rien sur du vectoriel. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/illustrations/brief.svg"
+                alt="Exemple de brief de projet web publié en deux minutes sur TERANGA LABS"
+                width={480}
+                height={360}
+                loading="lazy"
+                className="mt-10 w-full max-w-md rounded-2xl border border-hairline"
+              />
             </div>
             <Scene3D variant="brief" className="hidden lg:block" />
           </div>

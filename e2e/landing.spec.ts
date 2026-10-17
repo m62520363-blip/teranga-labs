@@ -91,11 +91,13 @@ test.describe("scènes 3D des pages d'atterrissage", () => {
 });
 
 test.describe("illustrations de marque", () => {
-  test("la home charge ses illustrations (pas d'URL morte)", async ({ page }) => {
-    await page.goto("/", { waitUntil: "networkidle" });
+  test("la page /poster charge ses illustrations (pas d'URL morte)", async ({
+    page,
+  }) => {
+    await page.goto("/poster", { waitUntil: "networkidle" });
     const illustrations = page.locator('img[src^="/illustrations/"]');
     const count = await illustrations.count();
-    expect(count, "au moins une illustration externe sur la home").toBeGreaterThanOrEqual(1);
+    expect(count, "au moins une illustration sur /poster").toBeGreaterThanOrEqual(1);
     for (let i = 0; i < count; i++) {
       const img = illustrations.nth(i);
       await img.scrollIntoViewIfNeeded();
@@ -106,15 +108,38 @@ test.describe("illustrations de marque", () => {
         .toBeGreaterThan(0);
     }
   });
+});
 
-  test("la carte de l'Afrique de l'Ouest est présente et vivante", async ({ page }) => {
+test.describe("landing Montaaj (nouvelle structure)", () => {
+  test("les 5 cartes empilées de « Comment ça marche » sont présentes", async ({
+    page,
+  }) => {
     await page.goto("/", { waitUntil: "domcontentloaded" });
-    const map = page.getByTestId("west-africa-map");
-    await expect(map).toBeAttached();
-    // Les connexions entre villes doivent être animées (dashflow CSS).
-    const animated = await map.locator(".tl-dash-flow").first().evaluate(
-      (el) => getComputedStyle(el).animationName,
-    );
-    expect(animated, "animation tl-dash-flow active").toBe("tl-dash-flow");
+    const cards = page.locator("[data-stack-card]");
+    await expect(cards).toHaveCount(5);
+    // La dernière carte ne doit pas être en sticky collant (fin de pile).
+    const firstCard = cards.first();
+    await expect(firstCard).toHaveClass(/stack-card/);
+  });
+
+  test("les 5 accordéons FAQ natifs sont présents", async ({ page }) => {
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    const details = page.locator("#faq details");
+    await expect(details).toHaveCount(5);
+  });
+
+  test("les 2 cartes tarifs sont présentes avec la mise en avant secondaire", async ({
+    page,
+  }) => {
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    const cards = page.locator("#tarifs [class*='rounded-card']");
+    await expect(cards).toHaveCount(2);
+  });
+
+  test("le footer a bien 3 colonnes de liens", async ({ page }) => {
+    await page.goto("/", { waitUntil: "networkidle" });
+    const footer = page.locator("footer");
+    const columns = footer.locator("nav");
+    await expect(columns).toHaveCount(3);
   });
 });

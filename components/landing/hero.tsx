@@ -1,9 +1,11 @@
+import * as React from "react";
 import Link from "next/link";
-import { ArrowRight, Check, MapPin, Wallet } from "lucide-react";
+import { Check, MapPin, ShieldCheck, Wallet } from "lucide-react";
 import { HERO, HERO_DEMO } from "@/components/landing/content";
 import { TOKEN_LABEL, TOKEN_RULE } from "@/lib/formatting";
 import { Scene3D } from "@/components/landing/scene-3d";
 import { HeroOrbit } from "@/components/landing/hero-orbit";
+import { RotatingWords } from "@/components/landing/rotating-words";
 
 export function Hero({
   realBrief,
@@ -15,76 +17,129 @@ export function Hero({
   } | null;
 }) {
   return (
-    <section className="relative overflow-hidden" aria-label="Présentation">
+    <section id="accueil" className="relative scroll-mt-24 overflow-hidden">
+      {/* Halo de marque : radial primaire en haut, respiration lente */}
       <div
-        className="pointer-events-none absolute inset-0"
         aria-hidden="true"
+        className="hero-glow pointer-events-none absolute inset-0 -z-10"
         style={{
           background:
-            "radial-gradient(58rem 30rem at 88% -10%, rgba(232,106,44,0.12), transparent 62%), radial-gradient(44rem 28rem at -5% 35%, rgba(232,106,44,0.07), transparent 60%), radial-gradient(34rem 22rem at 100% 90%, rgba(232,106,44,0.06), transparent 60%)",
+            "radial-gradient(60% 50% at 50% 0%, color-mix(in srgb, var(--primary) 18%, transparent), transparent)",
         }}
       />
-      <div className="bg-grid pointer-events-none absolute inset-0" aria-hidden="true" />
-      <div className="glow-orb pointer-events-none absolute -top-20 right-[4%] size-80 rounded-full" aria-hidden="true" />
 
-      <div className="container-tl relative grid items-center gap-16 pb-20 pt-24 md:pt-32 lg:grid-cols-[1.02fr_0.98fr] lg:gap-14">
+      {/* Variante mobile : colonne centrée pleine hauteur */}
+      <div className="flex min-h-[100svh] flex-col items-center justify-center px-5 pt-24 pb-16 text-center sm:px-6 lg:hidden">
+        <span
+          className="animate-rise mb-5 inline-flex items-center gap-2 rounded-full border border-primary/30 px-3 py-1 text-sm text-foreground"
+          style={{ "--rise-delay": "1100ms" } as React.CSSProperties}
+        >
+          <ShieldCheck className="size-4 text-primary" aria-hidden="true" />
+          {HERO.badge}
+        </span>
+
+        <HeroTitle className="animate-rise" delay="1250ms" />
+
+        <p
+          className="animate-rise mt-5 max-w-sm text-base text-muted-foreground"
+          style={{ "--rise-delay": "1350ms" } as React.CSSProperties}
+        >
+          {HERO.subtitle}
+        </p>
+
+        <div
+          className="animate-rise mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row"
+          style={{ "--rise-delay": "1550ms" } as React.CSSProperties}
+        >
+          <Link
+            href={HERO.ctaPrimary.href}
+            className="btn-shine inline-flex min-h-11 items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-[filter] outline-none hover:brightness-110 active:brightness-95 focus-visible:ring-2 focus-visible:ring-primary/50"
+          >
+            {HERO.ctaPrimary.label}
+          </Link>
+          <Link
+            href={HERO.ctaSecondary.href}
+            className="inline-flex min-h-11 items-center gap-2 rounded-full border border-primary/60 px-5 py-2.5 text-sm text-foreground transition-colors outline-none hover:border-primary hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
+          >
+            {HERO.ctaSecondary.label}
+          </Link>
+        </div>
+      </div>
+
+      {/* Variante desktop : texte + showcase du brief réel */}
+      <div className="container-tl relative grid items-center gap-16 pb-24 pt-32 lg:grid-cols-[1.02fr_0.98fr] lg:gap-14 lg:min-h-[100svh]">
         <div className="max-w-2xl">
-          <span className="tl-blur-in chip gap-2 bg-card/85 border-hairline backdrop-blur">
-            <span className="relative flex size-2">
-              <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary opacity-60" aria-hidden="true" />
-              <span className="relative inline-flex size-2 rounded-full bg-primary" aria-hidden="true" />
-            </span>
+          <span
+            className="animate-rise inline-flex items-center gap-2 rounded-full border border-primary/30 px-3 py-1 text-sm text-foreground"
+            style={{ "--rise-delay": "1100ms" } as React.CSSProperties}
+          >
+            <ShieldCheck className="size-4 text-primary" aria-hidden="true" />
             {HERO.badge}
           </span>
 
-          <h1
-            className="tl-blur-in mt-8 text-[42px] font-bold leading-[1.02] tracking-[-0.035em] sm:text-[56px] md:text-[68px] lg:text-[76px]"
-            style={{ animationDelay: "0.12s" }}
-          >
-            {HERO.titleA}
-            <br />
-            <span className="text-accent-gradient">{HERO.titleB}</span>
-          </h1>
+          <HeroTitle className="animate-rise mt-5" delay="1250ms" />
 
           <p
-            className="tl-blur-in mt-7 max-w-xl text-lg leading-relaxed text-muted-foreground"
-            style={{ animationDelay: "0.24s" }}
+            className="animate-rise mt-5 max-w-xl text-lg leading-relaxed text-muted-foreground"
+            style={{ "--rise-delay": "1350ms" } as React.CSSProperties}
           >
             {HERO.subtitle}
           </p>
 
           <div
-            className="tl-blur-in mt-10 flex flex-wrap items-center gap-3"
-            style={{ animationDelay: "0.36s" }}
+            className="animate-rise mt-9 flex flex-wrap items-center justify-center gap-3 lg:justify-start"
+            style={{ "--rise-delay": "1550ms" } as React.CSSProperties}
           >
-            <Link href={HERO.ctaPrimary.href} className="btn btn-primary btn-lg">
+            <Link
+              href={HERO.ctaPrimary.href}
+              className="btn-shine inline-flex min-h-11 items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-[filter] outline-none hover:brightness-110 active:brightness-95 focus-visible:ring-2 focus-visible:ring-primary/50"
+            >
               {HERO.ctaPrimary.label}
-              <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
-            <Link href={HERO.ctaSecondary.href} className="btn btn-secondary btn-lg">
+            <Link
+              href={HERO.ctaSecondary.href}
+              className="inline-flex min-h-11 items-center gap-2 rounded-full border border-primary/60 px-5 py-2.5 text-sm text-foreground transition-colors outline-none hover:border-primary hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
+            >
               {HERO.ctaSecondary.label}
             </Link>
-          </div>
-
-          <div
-            className="tl-blur-in mt-8 flex flex-wrap items-center gap-2"
-            style={{ animationDelay: "0.48s" }}
-          >
-            {HERO.chips.map((s) => (
-              <span
-                key={s}
-                className="inline-flex items-center gap-1.5 rounded-full border border-hairline bg-card/85 px-3 py-1.5 text-[13px] font-medium text-muted-foreground"
-              >
-                <Check className="size-3.5 text-primary" aria-hidden="true" />
-                {s}
-              </span>
-            ))}
           </div>
         </div>
 
         <HeroVisual realBrief={realBrief} />
       </div>
+
+      {/* Voile de bas de section : fondu vers le fond */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-40 bg-gradient-to-b from-transparent to-background sm:h-56"
+      />
     </section>
+  );
+}
+
+function HeroTitle({ className, delay }: { className?: string; delay: string }) {
+  return (
+    <h1
+      className={
+        "flex flex-col items-center text-balance font-headings text-4xl leading-[1.05] font-black tracking-tight sm:text-4xl md:text-5xl lg:text-6xl " +
+        (className ?? "")
+      }
+      style={{ "--rise-delay": delay } as React.CSSProperties}
+    >
+      <span className="sr-only">
+        Trouve ton développeur web, paie {HERO.rotating[0]}
+      </span>
+      <span aria-hidden="true" className="lg:text-left text-center">
+        Trouve ton développeur web,
+      </span>
+      <span
+        aria-hidden="true"
+        className="flex flex-wrap items-baseline justify-center gap-x-3 lg:justify-start"
+      >
+        <span>paie</span>
+        <RotatingWords words={HERO.rotating} className="align-baseline" />
+      </span>
+    </h1>
   );
 }
 
@@ -94,7 +149,11 @@ function HeroVisual({
   realBrief?: { title: string; budget: string; location: string } | null;
 }) {
   return (
-    <div className="tl-blur-in relative mx-auto w-full max-w-md" style={{ animationDelay: "0.32s" }} aria-hidden="true">
+    <div
+      className="animate-rise relative mx-auto w-full max-w-md"
+      style={{ "--rise-delay": "1400ms" } as React.CSSProperties}
+      aria-hidden="true"
+    >
       {/* Scène 3D de fond : profondeur réelle (translateZ) et objets flottants,
           parallax désactivé ici pour laisser la carte du brief cliquable. */}
       <Scene3D
@@ -106,7 +165,7 @@ function HeroVisual({
       <HeroOrbit />
       <div className="absolute -inset-10 -z-10 rounded-full bg-[radial-gradient(closest-side,rgba(232,106,44,0.16),transparent)]" />
 
-      <div className="card-elevated relative rounded-2xl border border-hairline bg-card p-6 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.6)]">
+      <div className="rounded-card border border-hairline bg-card p-6 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.6)]">
         <div className="flex items-center justify-between">
           <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
             {HERO_DEMO.label}

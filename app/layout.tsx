@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { DM_Sans, Geist_Mono, Outfit } from "next/font/google";
+import { Bodoni_Moda, DM_Sans, Geist_Mono, Outfit } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
@@ -11,7 +11,16 @@ import { absoluteUrl } from "@/lib/utils";
 const outfit = Outfit({
   variable: "--font-outfit",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  display: "swap",
+});
+
+/* Accent sérif italique du hero : rotation de phrases façon Montaaj. */
+const bodoni = Bodoni_Moda({
+  variable: "--font-bodoni",
+  subsets: ["latin"],
+  style: ["italic"],
+  weight: ["400", "500", "600", "700", "800", "900"],
   display: "swap",
 });
 
@@ -150,7 +159,7 @@ export default async function RootLayout({
   return (
     <html lang="fr">
       <body
-        className={`${outfit.variable} ${dmSans.variable} ${geistMono.variable} bg-background font-sans text-foreground antialiased`}
+        className={`${outfit.variable} ${bodoni.variable} ${dmSans.variable} ${geistMono.variable} bg-background font-sans text-foreground antialiased`}
       >
         <script
           type="application/ld+json"

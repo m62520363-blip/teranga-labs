@@ -130,15 +130,15 @@ export function Navbar({
     <>
       <header
         className={cn(
-          "fixed inset-x-0 top-0 z-40 transition-all duration-300",
+          "fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,backdrop-filter] duration-300",
           scrolled || open
             ? "border-b border-white/10 bg-background/85 shadow-[0_10px_36px_-18px_rgba(0,0,0,0.8)] backdrop-blur-md"
-            : "border-b border-transparent bg-transparent"
+            : "border-b border-transparent bg-transparent shadow-none"
         )}
       >
         <nav
           aria-label="Navigation principale"
-          className="container-tl flex h-16 items-center justify-between"
+          className="container-tl relative flex h-16 items-center justify-between gap-4"
         >
           <Link
             href={homeHref}
@@ -148,13 +148,39 @@ export function Navbar({
             <Logo />
           </Link>
 
-          <DesktopNavLinks
-            pathname={pathname}
-            authed={authed}
-            appLinks={appLinks}
-          />
+          {authed ? (
+            <DesktopNavLinks pathname={pathname} authed appLinks={appLinks} />
+          ) : (
+            /* Nav visiteur façon Montaaj : liens centrés, pills arrondies. */
+            <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 lg:flex">
+              <Link
+                href="/"
+                className="text-sm font-medium text-foreground/80 transition-colors outline-none hover:text-foreground focus-visible:text-foreground"
+              >
+                Accueil
+              </Link>
+              <Link
+                href="/#comment-ca-marche"
+                className="text-sm font-medium text-foreground/80 transition-colors outline-none hover:text-foreground focus-visible:text-foreground"
+              >
+                Comment ça marche
+              </Link>
+              <Link
+                href="/#tarifs"
+                className="text-sm font-medium text-foreground/80 transition-colors outline-none hover:text-foreground focus-visible:text-foreground"
+              >
+                Tarifs
+              </Link>
+              <Link
+                href="/#faq"
+                className="text-sm font-medium text-foreground/80 transition-colors outline-none hover:text-foreground focus-visible:text-foreground"
+              >
+                FAQ
+              </Link>
+            </div>
+          )}
 
-          <div className="hidden items-center gap-2 md:flex">
+          <div className="hidden items-center gap-2 lg:flex">
 {user ? (
                 <>
                   {userId ? <NotificationBell userId={userId} /> : null}
@@ -168,19 +194,15 @@ export function Navbar({
               <>
                 <Link
                   href="/login"
-                  className="inline-flex h-8 items-center rounded-lg px-3 font-display text-[15px] font-medium text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
+                  className="inline-flex items-center rounded-full px-3.5 py-1.5 text-sm font-medium text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
                 >
                   Se connecter
                 </Link>
                 <Link
                   href="/poster"
-                  className="group inline-flex h-8 items-center gap-1.5 rounded-lg bg-primary px-3.5 font-display text-[15px] font-semibold text-ink transition-colors outline-none hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50"
+                  className="btn-shine inline-flex items-center gap-1.5 rounded-full bg-primary px-3.5 py-1.5 text-sm font-medium text-primary-foreground transition-[filter] outline-none hover:brightness-110 active:brightness-95 focus-visible:ring-2 focus-visible:ring-primary/50"
                 >
                   Publier une demande
-                  <ArrowRight
-                    className="size-4 transition-transform duration-200 group-hover:translate-x-0.5"
-                    aria-hidden="true"
-                  />
                 </Link>
               </>
             )}
@@ -189,7 +211,7 @@ export function Navbar({
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            className="inline-flex size-9 items-center justify-center rounded-lg text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50 md:hidden"
+            className="inline-flex size-9 items-center justify-center rounded-control p-2 text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50 lg:hidden"
             aria-expanded={open}
             aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
           >
@@ -198,7 +220,7 @@ export function Navbar({
         </nav>
 
         {open && (
-          <div className="border-t border-white/10 bg-surface/95 px-5 pb-6 pt-3 backdrop-blur-md md:hidden">
+          <div className="border-t border-white/10 bg-surface/95 px-5 pb-6 pt-3 backdrop-blur-md lg:hidden">
             <div className="flex flex-col gap-1">
               {authed ? (
                 <>
@@ -223,17 +245,20 @@ export function Navbar({
               ) : (
                 <>
                   <MobileNavLink href="/">Accueil</MobileNavLink>
+                  <MobileNavLink href="/#comment-ca-marche">
+                    Comment ça marche
+                  </MobileNavLink>
+                  <MobileNavLink href="/#tarifs">Tarifs</MobileNavLink>
+                  <MobileNavLink href="/#faq">FAQ</MobileNavLink>
                   <MobileNavLink href="/dev">Trouver un développeur</MobileNavLink>
                   <MobileNavLink href="/agences">Agences</MobileNavLink>
-                  <MobileNavLink href="/#comment-ca-marche">Comment ça marche</MobileNavLink>
                   <MobileNavLink href="/poster">Pour les clients</MobileNavLink>
                   <MobileNavLink href="/briefs">Pour les développeurs</MobileNavLink>
-                  <MobileNavLink href="/faq">FAQ</MobileNavLink>
                   <div className="my-2 h-px bg-border-strong" />
                   <MobileNavLink href="/login">Se connecter</MobileNavLink>
                   <Link
                     href="/poster"
-                    className="mt-2 inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 font-display text-[15px] font-semibold text-ink outline-none hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50"
+                    className="btn-shine mt-2 inline-flex h-9 items-center justify-center gap-1.5 rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground outline-none hover:brightness-110 focus-visible:ring-2 focus-visible:ring-primary/50"
                   >
                     Publier une demande
                     <ArrowRight className="size-4" aria-hidden="true" />

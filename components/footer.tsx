@@ -1,107 +1,116 @@
-﻿import Image from "next/image"
-import Link from "next/link"
-import { BRAND, LEGAL_PUBLISHER } from "@/components/landing/content"
+﻿import Link from "next/link";
+import { BRAND, LEGAL_PUBLISHER } from "@/components/landing/content";
 
 const columns = [
   {
-    title: "Navigation",
+    title: "Plateforme",
     links: [
-      { label: "Accueil", href: "/" },
       { label: "Comment ça marche", href: "/#comment-ca-marche" },
-      { label: "Pour les clients", href: "/poster" },
-      { label: "Pour les développeurs", href: "/briefs" },
+      { label: "Tarifs", href: "/#tarifs" },
+      { label: "FAQ", href: "/#faq" },
+      { label: "Briefs", href: "/briefs" },
+    ],
+  },
+  {
+    title: "Compte",
+    links: [
+      { label: "Publier un brief", href: "/poster" },
+      { label: "Devenir développeur", href: "/inscription-developpeur" },
+      { label: "Connexion", href: "/login" },
+    ],
+  },
+  {
+    title: "Aide",
+    links: [
+      { label: "Questions fréquentes", href: "/#faq" },
       { label: "Acheter des Tokens", href: "/tokens" },
+      { label: "Nous contacter", href: "/contact" },
     ],
   },
-  {
-    title: "Découvrir",
-    links: [
-      { label: "Classement", href: "/classement" },
-      { label: "À propos", href: "/a-propos" },
-      { label: "FAQ", href: "/faq" },
-      { label: "Contact", href: "/contact" },
-      { label: "Support", href: "/support" },
-      { label: "Plan du site", href: "/plan-du-site" },
-    ],
-  },
-  {
-    title: "Légal",
-    links: [
-      { label: "Mentions légales", href: "/mentions-legales" },
-      { label: "Politique de confidentialité", href: "/politique-de-confidentialite" },
-      { label: "Conditions d'utilisation", href: "/conditions-utilisation" },
-      { label: "Politique de cookies", href: "/cookies" },
-    ],
-  },
-]
+];
 
 export function Footer() {
   return (
-    <footer className="relative overflow-hidden bg-surface text-white border-t border-hairline">
-      {/* Décor technologique léger : grille masquée + halo orange en haut. */}
-      <div
-        className="pointer-events-none absolute inset-0 bg-grid opacity-30"
-        aria-hidden="true"
-        style={{
-          maskImage: "radial-gradient(ellipse 70% 55% at 50% 0%, black, transparent)",
-        }}
-      />
-      <div
-        className="glow-orb pointer-events-none absolute -top-28 right-[12%] size-64 rounded-full"
-        aria-hidden="true"
-      />
-      <div className="container-tl relative grid gap-12 py-16 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
-        <div className="max-w-xs">
-          <span className="inline-flex">
-            <span className="sr-only">{BRAND}</span>
-            <Image src="/logo.png" alt="" width={2172} height={724} className="h-16 w-auto" />
-          </span>
-          <p className="mt-4 text-sm leading-relaxed text-white/60">
-            Le marketplace inversé de l&apos;Afrique de l&apos;Ouest francophone.{" "}
-            <span className="text-white/90">Vous cherchez. Le marché répond.</span>
-          </p>
-        </div>
+    <footer className="border-t border-hairline bg-surface">
+      <div className="container-tl py-16">
+        <div className="lg:flex lg:items-start lg:gap-12">
+          <div className="shrink-0">
+            <Link
+              href="/"
+              className="inline-flex items-center outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+              aria-label={BRAND}
+            >
+              <span className="sr-only">{BRAND}</span>
+              {/* eslint-disable-next-line @next/next/no-img-element -- logo simple, pas de next/image pour un PNG statique */}
+              <img src="/logo.png" alt="" className="h-10 w-auto" />
+            </Link>
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
+              Le marketplace des projets web de l&apos;Afrique de l&apos;Ouest
+              francophone. Tu paies en Tokens, ton argent ne bouge jamais en
+              commission.
+            </p>
+          </div>
 
-        {columns.map((column) => (
-          <nav key={column.title} aria-label={column.title}>
-            <h3 className="text-sm font-semibold text-white">{column.title}</h3>
-            <ul className="mt-4 space-y-3">
-              {column.links.map((link) => (
-                <li key={link.label}>
-                  <Link href={link.href} className="text-sm text-white/60 transition-colors outline-none hover:text-white focus-visible:text-white">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        ))}
-      </div>
-
-      <div className="border-t border-white/10">
-        <div className="container-tl flex flex-col items-center gap-3 py-6 text-center text-sm text-white/60">
-          <div className="flex flex-wrap items-center justify-center gap-2" aria-label="Pays d’Afrique de l’Ouest francophone">
-            {[
-{ code: "sn", name: "Sénégal" },
-              { code: "bj", name: "Bénin" },
-              { code: "bf", name: "Burkina Faso" },
-              { code: "ci", name: "Côte d'Ivoire" },
-              { code: "gn", name: "Guinée" },
-              { code: "gw", name: "Guinée-Bissau" },
-              { code: "ml", name: "Mali" },
-              { code: "ne", name: "Niger" },
-              { code: "tg", name: "Togo" },
-            ].map((country) => (
-              <Link key={country.code} href={`/briefs?country=${country.code.toUpperCase()}`} aria-label={country.name} className="inline-flex">
-                <Image src={`https://flagcdn.com/w40/${country.code}.png`} alt={country.name} width={30} height={20} className="h-5 w-auto rounded-sm shadow-sm" />
-              </Link>
+          <div className="mt-12 grid grid-cols-2 gap-8 lg:mt-0 lg:flex-1 lg:grid-cols-3 lg:gap-y-16">
+            {columns.map((column) => (
+              <nav key={column.title} aria-label={column.title}>
+                <h3 className="font-headings text-sm font-semibold text-foreground">
+                  {column.title}
+                </h3>
+                <ul className="mt-6 flex flex-col gap-4 text-sm">
+                  {column.links.map((link) => (
+                    <li key={link.label}>
+                      <Link
+                        href={link.href}
+                        className="text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:text-foreground"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
             ))}
           </div>
-          <p className="text-sm text-white/60">Réservé aux pays d&apos;Afrique de l&apos;Ouest francophone</p>
-          <p>© {new Date().getFullYear()} {BRAND}. Tous droits réservés.</p>
-          <p className="text-xs text-white/40">Édité par {LEGAL_PUBLISHER}.</p>
+        </div>
+
+        <div className="mt-12 border-t border-hairline pt-8">
+          <div className="sm:flex sm:items-center sm:justify-between">
+            <p className="text-xs text-muted-foreground">
+              © {new Date().getFullYear()} {BRAND}. Dakar, Sénégal.
+            </p>
+            <ul className="mt-6 flex flex-wrap justify-start gap-4 text-xs sm:mt-0 lg:justify-end">
+              <li>
+                <Link
+                  href="/mentions-legales"
+                  className="text-muted-foreground transition-colors outline-none hover:text-foreground"
+                >
+                  Mentions légales
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/politique-de-confidentialite"
+                  className="text-muted-foreground transition-colors outline-none hover:text-foreground"
+                >
+                  Confidentialité
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/conditions-utilisation"
+                  className="text-muted-foreground transition-colors outline-none hover:text-foreground"
+                >
+                  Conditions
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <p className="mt-4 text-xs text-muted-foreground/70">
+            Édité par {LEGAL_PUBLISHER}.
+          </p>
         </div>
       </div>
     </footer>
-  )
+  );
 }

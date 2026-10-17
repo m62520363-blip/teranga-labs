@@ -1,29 +1,32 @@
-import { FaqItem } from "@/components/faq-item";
-import { FAQS } from "@/components/landing/content";
-import { Reveal } from "@/components/reveal";
-import { Section, SectionHeader } from "@/components/landing/section";
+import { Plus } from "lucide-react";
+import { FAQS_LANDING } from "@/components/landing/content";
 
+/** Section FAQ : accordéons natifs <details>, « + » pivotant à l'ouverture. */
 export function FaqSection() {
   return (
-    <Section id="faq" className="border-y border-hairline bg-surface" ariaLabel="Questions fréquentes">
-      <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
-        <Reveal>
-          <SectionHeader
-            align="left"
-            eyebrow="FAQ"
-            title="Questions fréquentes"
-            lead="Tout ce qu’il faut savoir avant de publier votre premier brief, ou de débloquer votre premier contact en tant que développeur."
-          />
-        </Reveal>
-
-        <Reveal delay={1}>
-          <div className="card rounded-2xl bg-card p-6 sm:p-8">
-            {FAQS.map((f) => (
-              <FaqItem key={f.q} question={f.q} answer={f.a} />
-            ))}
-          </div>
-        </Reveal>
+    <section id="faq" className="scroll-mt-24 border-t border-hairline py-20 sm:py-28">
+      <div className="mx-auto max-w-3xl px-5 sm:px-6">
+        <h2 className="text-center font-headings text-3xl font-bold tracking-tight sm:text-4xl">
+          Questions <span className="text-primary">fréquentes.</span>
+        </h2>
+        <div className="mt-10 flex flex-col gap-3">
+          {FAQS_LANDING.map((f) => (
+            <details
+              key={f.q}
+              className="group rounded-card border border-hairline bg-card open:border-primary/30"
+            >
+              <summary className="tl-details-marker flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-headings text-base font-semibold">
+                {f.q}
+                <Plus
+                  aria-hidden="true"
+                  className="size-4 shrink-0 text-primary transition-transform group-open:rotate-45"
+                />
+              </summary>
+              <p className="px-5 pb-5 text-sm text-muted-foreground">{f.a}</p>
+            </details>
+          ))}
+        </div>
       </div>
-    </Section>
+    </section>
   );
 }
