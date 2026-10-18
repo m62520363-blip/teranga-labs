@@ -146,4 +146,32 @@ test.describe("landing Montaaj (nouvelle structure)", () => {
     const columns = footer.locator("nav");
     await expect(columns).toHaveCount(3);
   });
+
+  test("le hero affiche l'ordinateur façon Montaaj avec la capture du produit", async ({
+    page,
+  }) => {
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    // Capture réelle de l'interface (marketplace /briefs) dans l'écran.
+    const img = page.locator('img[src*="briefs-desktop"]');
+    await expect(img).toHaveCount(1);
+    await expect(img).toBeVisible();
+    // Écran incliné : le conteneur pose une vraie perspective CSS.
+    const perspective = await page
+      .locator('[class*="perspective:800px"]')
+      .first()
+      .evaluate((el) => getComputedStyle(el).perspective);
+    expect(perspective, "perspective CSS active").not.toBe("none");
+  });
+
+  test("mobile : l'ordinateur s'adapte sans débordement horizontal", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/", { waitUntil: "networkidle" });
+    await expect(page.locator('img[src*="briefs-desktop"]')).toBeVisible();
+    const scrollWidth = await page.evaluate(
+      () => document.documentElement.scrollWidth,
+    );
+    expect(scrollWidth, "pas de débordement horizontal").toBeLessThanOrEqual(390);
+  });
 });

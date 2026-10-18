@@ -110,20 +110,6 @@ export const FAQS_LANDING = [
   },
 ];
 
-export const HERO_DEMO = {
-  label: "Démo",
-  request: {
-    title: "Site e-commerce pour une boutique de Dakar",
-    budget: "Budget : 450 000 FCFA",
-    location: "Dakar, Sénégal",
-  },
-  flow: [
-    { step: "Brief publié", detail: "1 Token", delay: 0 },
-    { step: "Contact débloqué", detail: "1 Token", delay: 1.6 },
-    { step: "Deal conclu", detail: "0 % de commission", delay: 3.2 },
-  ],
-};
-
 export const ROLE_CARDS = {
   client: {
     eyebrow: "Client",

@@ -2,6 +2,18 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [Hero-Laptop-Montaaj] — 2026-10-18 : l'ordinateur du hero reproduit comme montaaj.net
+
+Effet « grand ordinateur » du hero de [montaaj.net](https://montaaj.net) rejoué dans la home TERANGA, avec une **vraie capture du produit Teranga** dans l'écran, sans toucher au reste du site ni au backend. Marqueurs HTML/CSS extraits ligne à ligne du site de référence (scripts Playwright sur la page live, aucune vidéo disponible dans l'environnement).
+
+- **Silhouette 3D identique** (`components/landing/hero-laptop.tsx`, nouveau) : conteneur `[perspective:800px]`, capot `perspective(800px) rotateX(-25deg)` depuis `transform-origin: center bottom` (inset `rgb(23,23,23) 0 2px 0 2px`), écran `scaleX(1.2) scaleY(0.6) rotateX(-28deg)` depuis `center top` — exactement les valeurs mesurées sur la référence.
+- **Capture réelle à l'écran** : `public/hero/briefs-desktop.png` (1280×800 de `/briefs`, navbar + marketplace) en `object-cover object-left-top` sur fond `#272729` — l'écran montre le vrai produit Teranga, pas une maquette.
+- **Base de clavier dessinée en pur CSS**, mot pour mot d'après l'extraction : charnière (`h-10` + barre `h-4 w-[80%] #050505`), grilles perforées latérales (`radial-gradient` 3 px), 6 rangées AZERTY ≈ 78 touches (contour `bg-white/[0.2] p-[0.5px] shadow-white`, touche `#0A090D` avec double ombre interne, libellés `text-[5px]`, `translateZ(0)` + `will-change` comme la référence), touche `option` avec glyphe ⌥ en SVG, barre espace qui prend la largeur restante, **cluster de 4 flèches** au bloc exact `mt-[2px] h-6 w-[4.9rem]` + paths SVG `M12 6l6 8H6z`, `M6 12l8-6v12z`, `M12 18l6-8H6z`, `M18 12l-8 6V6z` ; trackpad `h-32 w-[40%]` avec inset `rgba(0,0,0,.125)`, lèvre avant dégradée `h-2 w-20`.
+- **Hero refondu en colonne centrée** (`components/landing/hero.tsx`) : badge 1100 ms, H1 1250 ms, sous-titre 1350 ms, CTAs 1550 ms, puis l'ordinateur `animate-rise` à 1700 ms (entrée unique et fluide, `prefers-reduced-motion` honoré par la garde de `@keyframes rise`). **Statique ensuite** : ni parallaxe ni flottement — vérifié par probe sur la référence (matrices de transform identiques avant/après mouvement de souris). Variante `Scene3D marketplace` conservée en fond atténué (`-z-10 opacity-40`) avec halo radial, voile bas identique.
+- **Responsive** (demande explicite : afficher l'ordinateur aussi sur mobile, là où la référence le masque) : `scale-[0.62] / 0.78 / 0.9 / 1.0` (mobile/tablette/portrait/laptop) avec marges négatives compensatoires, largeur 32 rem figée — captures à 1440, 834 et 390 px sans aucun débordement horizontal (`scrollWidth` = largeur du viewport).
+- **Nettoyage** : l'ancien visuel orbité (`hero-orbit.tsx`, supprimé via `git rm`), la carte « brief réel » (`RealBrief` + `getRealBrief` dans `app/page.tsx`), `HERO_DEMO` (`content.ts`) et les imports Supabase de la page d'accueil sont retirés — la home ne sert plus de données à l'affichage.
+- **E2E** : +2 tests dans `e2e/landing.spec.ts` — présence de l'ordinateur (capture `briefs-desktop` visible + conteneur `[perspective:800px]`) et absence de débordement horizontal à 390 px — **49/49 e2e**, `tsc --noEmit` et `eslint` verts sur les fichiers touchés.
+
 ## [Auth-Montaaj] — 2026-10-17 : /login et /signup refaits à l'identique de montaaj.net
 
 Reprise du parcours d'inscription/connexion de [montaaj.net](https://montaaj.net) (captures comparées pixel par pixel, desktop 1280×800 et mobile 390×844), en conservant **100 % du backend Teranga** (Supabase, rôles client/développeur, OTP SMS, RPC `is_phone_taken`). Aucun bouton fictif, aucun design inventé.
