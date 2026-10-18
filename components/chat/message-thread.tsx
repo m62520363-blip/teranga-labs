@@ -71,6 +71,9 @@ export function MessageThread({
   const [messages, setMessages] = React.useState<ThreadMessage[]>(initialMessages);
   const [offers, setOffers] = React.useState<ThreadOffer[]>(initialOffers);
   const [draft, setDraft] = React.useState("");
+  const [channelKey] = React.useState(() =>
+    Math.random().toString(36).slice(2, 10)
+  );
   const [sending, setSending] = React.useState(false);
   const [offerOpen, setOfferOpen] = React.useState(false);
   const [offerForm, setOfferForm] = React.useState({
@@ -132,40 +135,46 @@ export function MessageThread({
 
   React.useEffect(() => {
     const supabase = createClient();
-    const channel = supabase
-      .channel(`room:${conversationId}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "messages",
-          filter: `conversation_id=eq.${conversationId}`,
-        },
-        (payload) => {
-          const row = payload.new as ThreadMessage;
-          setMessages((prev) => (prev.some((m) => m.id === row.id) ? prev : [...prev, row]));
-        }
-      )
-      .on(
-        "postgres_changes",
-        {
-          event: "UPDATE",
-          schema: "public",
-          table: "messages",
-          filter: `conversation_id=eq.${conversationId}`,
-        },
-        (payload) => {
-          const row = payload.new as ThreadMessage;
-          setMessages((prev) => prev.map((m) => (m.id === row.id ? row : m)));
-        }
-      )
-      .subscribe();
+    const channel = supabase.channel(`room:${conversationId}-${channelKey}`);
+    try {
+      channel
+        .on(
+          "postgres_changes",
+          {
+            event: "INSERT",
+            schema: "public",
+            table: "messages",
+            filter: `conversation_id=eq.${conversationId}`,
+          },
+          (payload) => {
+            const row = payload.new as ThreadMessage;
+            setMessages((prev) =>
+              prev.some((m) => m.id === row.id) ? prev : [...prev, row]
+            );
+          }
+        )
+        .on(
+          "postgres_changes",
+          {
+            event: "UPDATE",
+            schema: "public",
+            table: "messages",
+            filter: `conversation_id=eq.${conversationId}`,
+          },
+          (payload) => {
+            const row = payload.new as ThreadMessage;
+            setMessages((prev) => prev.map((m) => (m.id === row.id ? row : m)));
+          }
+        )
+        .subscribe();
+    } catch {
+      // Realtime indisponible : les messages restent accessibles via le fetch initial.
+    }
 
     return () => {
       void supabase.removeChannel(channel);
     };
-  }, [conversationId]);
+  }, [conversationId, channelKey]);
 
   const sendMessage = async () => {
     const content = draft.trim();

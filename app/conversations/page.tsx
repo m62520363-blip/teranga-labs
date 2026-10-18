@@ -38,7 +38,7 @@ export default async function ConversationsPage() {
       <div className="container-tl">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
+            <h1 className="text-3xl font-semibold leading-tight tracking-tight">
               Mes discussions
             </h1>
             <p className="mt-2 text-base text-muted-foreground">

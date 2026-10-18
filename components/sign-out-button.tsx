@@ -18,7 +18,7 @@ import {
 export function SignOutButton({
   variant = "desktop",
 }: {
-  variant?: "desktop" | "mobile";
+  variant?: "desktop" | "mobile" | "menu";
 }) {
   const router = useRouter();
   const { reset } = useBalance();
@@ -35,6 +35,28 @@ export function SignOutButton({
     router.push("/");
     router.refresh();
   };
+
+  if (variant === "menu") {
+    return (
+      <>
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          disabled={signingOut}
+          className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm font-medium text-destructive outline-none hover:bg-destructive/10 focus-visible:ring-2 focus-visible:ring-destructive/40 disabled:opacity-60"
+        >
+          <LogOut className="size-4" aria-hidden="true" />
+          Se déconnecter
+        </button>
+        <ConfirmSignOutDialog
+          open={open}
+          onOpenChange={setOpen}
+          signingOut={signingOut}
+          onConfirm={confirmSignOut}
+        />
+      </>
+    );
+  }
 
   if (variant === "mobile") {
     return (

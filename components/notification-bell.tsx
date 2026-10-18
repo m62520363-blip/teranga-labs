@@ -57,6 +57,9 @@ export function NotificationBell({ userId }: { userId: string }) {
   const [unread, setUnread] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
   const rootRef = React.useRef<HTMLDivElement>(null);
+  const [channelKey] = React.useState(() =>
+    Math.random().toString(36).slice(2, 10)
+  );
 
   const refresh = React.useCallback(async () => {
     const supabase = createClient();
@@ -86,43 +89,47 @@ export function NotificationBell({ userId }: { userId: string }) {
       setLoading(false);
     })();
 
-    const channel = supabase
-      .channel(`notifications-${userId}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "notifications",
-          filter: `user_id=eq.${userId}`,
-        },
-        (payload) => {
-          if (!mounted) return;
-          const row = payload.new as InAppNotification;
-          setItems((prev) => [row, ...prev].slice(0, 50));
-          setUnread((u) => u + 1);
-        }
-      )
-      .on(
-        "postgres_changes",
-        {
-          event: "UPDATE",
-          schema: "public",
-          table: "notifications",
-          filter: `user_id=eq.${userId}`,
-        },
-        async () => {
-          if (!mounted) return;
-          await refresh();
-        }
-      )
-      .subscribe();
+    const channel = supabase.channel(`notifications-${userId}-${channelKey}`);
+    try {
+      channel
+        .on(
+          "postgres_changes",
+          {
+            event: "INSERT",
+            schema: "public",
+            table: "notifications",
+            filter: `user_id=eq.${userId}`,
+          },
+          (payload) => {
+            if (!mounted) return;
+            const row = payload.new as InAppNotification;
+            setItems((prev) => [row, ...prev].slice(0, 50));
+            setUnread((u) => u + 1);
+          }
+        )
+        .on(
+          "postgres_changes",
+          {
+            event: "UPDATE",
+            schema: "public",
+            table: "notifications",
+            filter: `user_id=eq.${userId}`,
+          },
+          async () => {
+            if (!mounted) return;
+            await refresh();
+          }
+        )
+        .subscribe();
+    } catch {
+      // Realtime indisponible : les notifications restent accessibles via refresh.
+    }
 
     return () => {
       mounted = false;
       supabase.removeChannel(channel);
     };
-  }, [userId, refresh]);
+  }, [userId, refresh, channelKey]);
 
   React.useEffect(() => {
     if (!open) return;

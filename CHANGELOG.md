@@ -2,6 +2,21 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [Refonte-Espace-Client] — 2026-10-18 : espace client reproduit d'après les captures Desktop + Mobile de montaaj.net
+
+Refonte complète de l'espace connecté (client) conforme aux captures de référence Desktop (1376×728) et Mobile (iPhone), avec **fonctionnement réel de chaque élément** (menus, toggles, navigation, publication), fond blanc clair + accent orange Teranga, sans changement de schéma DB ni reprise de la marque Montaaj.
+
+- **Thème clair applicatif** (`app/globals.css`, `app/layout.tsx`) : tokens `html[data-app-theme="light"]` (fond `#ffffff`), script anti-flash posé avant le premier paint sur les routes app, `suppressHydrationWarning` sur `<html>` ; typo `h1..h6` scindée : la landing publique garde son clamp Montaaj, l'app n'utilise plus que la famille Outfit (les utilitaires Tailwind `text-*` reprennent la main).
+- **Shell applicatif** (`components/site-shell.tsx`, `components/client/client-shell.tsx` + `app-routes.ts`) : les routes `CLIENT_APP_ROUTES` rendent un shell dédié pour le rôle client — sidebar desktop `w-52`/`w-16` (labels complets Tableau de bord / Catalogue / Messages / Mes projets / Mes briefs / Mon profil, actif = carré plein + fond teinté, avatar bas → menu Mon profil / Paramètres / Thème / Se déconnecter), header mobile (logo, support, cloche, avatar initiales), bottom nav 5 items avec FAB + central ; logo shell = `LogoMark` + « TERANGA LABS ».
+- **Dashboard** (`app/client/page.tsx`) : greeting « Heureux de te revoir, {prenom} ✨ » (mobile « Bonjour/Bonsoir » selon l'heure), carte état vide mint (icône search `rounded-2xl`, 2 pilules Publier/Catalogue), carte Tokens, cloche de notifications desktop.
+- **Profil** (`app/client/profil/` + `components/client/profile-form.tsx`) : sans H1 (comme la ref), carte `max-w-3xl`, avatar solide initiales, champ nom + pilule Enregistrer inline, sauvegarde réelle via `auth.updateUser`.
+- **Mes briefs** (`app/client/briefs/`) : liste des briefs du client avec états vides.
+- **Paramètres** (`components/settings-content.tsx`) : H1 `text-3xl` + sous-titre gauche, cartes centrées `max-w-2xl` à petits titres icône+label, **carte E-mails** (intro « paiement, livraison, validation » + 4 toggles verts persistés en `user_metadata.email_prefs` via `auth.updateUser`, aucune migration), sécurité, suppression de compte.
+- **Missions** (`components/missions/missions-dashboard.tsx`) : état vide = carte centrée seule (pas d'eyebrow/H1/chips), copy adaptée au rôle.
+- **Catalogue / poster / tokens / conversations / notifications** : H1 `text-3xl` normalisés, chrome authed sur `/poster`, banner poster wrappé dans un `<span>` (fix flex cassé), grille catalogue 3 colonnes.
+- **Fix hydration #418** : le déclencheur sidebar du menu compte était un `<button>` dans le `<button>` du `AccountMenu` (HTML invalide → mismatch sur toutes les pages client) → `<span>` ; variantes temps réel rendues **uniques par instance** (`notification-bell`, `notifications-page`, `message-thread`) pour éviter le doublement des topics Supabase sur le client singleton.
+- **Vérifié** : dev 0 erreur / 11 pages, e2e **49/49**, `check` complet vert (181 tests, typecheck, lint, rpc), captures desktop/mobile/320-1280px/dark/menus sur build de prod, login réel Supabase.
+
 ## [Hero-Laptop-Montaaj] — 2026-10-18 : l'ordinateur du hero reproduit comme montaaj.net
 
 Effet « grand ordinateur » du hero de [montaaj.net](https://montaaj.net) rejoué dans la home TERANGA, avec une **vraie capture du produit Teranga** dans l'écran, sans toucher au reste du site ni au backend. Marqueurs HTML/CSS extraits ligne à ligne du site de référence (scripts Playwright sur la page live, aucune vidéo disponible dans l'environnement).

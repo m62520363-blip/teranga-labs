@@ -3,6 +3,7 @@
 import * as React from "react";
 import { toast } from "sonner";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Building2,
@@ -13,6 +14,7 @@ import {
   History,
   Loader2,
   MapPin,
+  Search,
   UserRound,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
@@ -172,42 +174,59 @@ export function MissionsDashboard({ missions, userId, role, focusId = null }: Pr
   return (
     <div className="bg-surface">
       <div className="container-tl py-8 md:py-12">
-        <div className="flex flex-col gap-2">
-          <p className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-primary">
-            <ClipboardList className="size-3.5" aria-hidden="true" />
-            Suivi de projet
-          </p>
-          <h1 className="text-2xl font-semibold tracking-tight">Mes missions</h1>
-          <p className="max-w-xl text-sm text-muted-foreground">
-            Les missions réelles issues de vos offres acceptées : suivez leur statut, démarrez-les
-            et archivez chaque étape avec le client.
-          </p>
-        </div>
+        {visible.length === 0 ? null : (
+          <>
+            <div className="flex flex-col gap-2">
+              <p className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-primary">
+                <ClipboardList className="size-3.5" aria-hidden="true" />
+                Suivi de projet
+              </p>
+              <h1 className="text-2xl font-semibold tracking-tight">Mes missions</h1>
+              <p className="max-w-xl text-sm text-muted-foreground">
+                {isDeveloper
+                  ? "Les missions réelles issues de vos offres acceptées : suivez leur statut, démarrez-les et archivez chaque étape avec le client."
+                  : "Suis l’avancée des projets que tu confies : statut, jalons et livraison au même endroit."}
+              </p>
+            </div>
 
-        <div className="mt-8 flex flex-wrap gap-1.5">
-          {FILTERS.map((f) => (
-            <button
-              key={f.key}
-              type="button"
-              onClick={() => setFilter(f.key)}
-              className={cn(
-                "rounded-xl border px-3.5 py-1.5 text-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
-                filter === f.key
-                  ? "border-primary/40 bg-primary text-white"
-                  : "border-hairline bg-card text-muted-foreground hover:text-foreground",
-              )}
-            >
-              {f.label}
-            </button>
-          ))}
-        </div>
+            <div className="mt-8 flex flex-wrap gap-1.5">
+              {FILTERS.map((f) => (
+                <button
+                  key={f.key}
+                  type="button"
+                  onClick={() => setFilter(f.key)}
+                  className={cn(
+                    "rounded-xl border px-3.5 py-1.5 text-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+                    filter === f.key
+                      ? "border-primary/40 bg-primary text-white"
+                      : "border-hairline bg-card text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
 
         {visible.length === 0 ? (
-          <div className="mt-8 rounded-2xl border border-hairline bg-card p-10 text-center">
-            <p className="text-sm text-muted-foreground">
-              Aucune mission dans cette catégorie. Les missions se créent depuis une offre acceptée
-              dans vos discussions.
+          <div className="mx-auto flex max-w-3xl flex-col items-center rounded-2xl border border-hairline bg-card px-6 py-12 text-center">
+            <ClipboardList className="size-7 text-muted-foreground" aria-hidden="true" />
+            <p className="mt-4 text-base font-semibold tracking-tight">
+              {isDeveloper ? "Aucune mission pour le moment" : "Aucun projet pour le moment"}
             </p>
+            <p className="mt-1.5 max-w-sm text-sm leading-relaxed text-muted-foreground">
+              {isDeveloper
+                ? "Les missions démarrent quand un client accepte une de tes propositions dans la messagerie."
+                : "Parcours le catalogue, discute avec un développeur, puis confie-lui ton premier projet. Ton paiement reste bloqué jusqu’à ce que tu valides la livraison."}
+            </p>
+            <Link
+              href={isDeveloper ? "/briefs" : "/dev"}
+              className="mt-6 inline-flex h-11 items-center gap-2 rounded-full bg-primary px-6 text-sm font-semibold text-primary-foreground outline-none transition-colors hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50"
+            >
+              <Search className="size-4" aria-hidden="true" />
+              {isDeveloper ? "Voir les briefs" : "Parcourir le catalogue"}
+            </Link>
           </div>
         ) : (
           <div className="mt-6 grid gap-4 lg:grid-cols-2">

@@ -105,7 +105,7 @@ export default async function BriefsPage({
       <div className="container-tl">
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
-            <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
+            <h1 className="text-3xl font-semibold leading-tight tracking-tight">
               {total} brief{total > 1 ? "s" : ""} disponible{total > 1 ? "s" : ""} sur le marketplace
             </h1>
             <p className="mt-3 text-base leading-relaxed text-muted-foreground">

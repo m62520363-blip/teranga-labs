@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth/guards";
-import { SettingsContent } from "@/components/settings-content";
+import { SettingsContent, type EmailPrefs } from "@/components/settings-content";
 
 export const metadata: Metadata = {
   title: "Paramètres",
@@ -49,6 +49,7 @@ export default async function SettingsPage() {
   const company = String(meta.company_name ?? "").trim() || null;
   const city = String(meta.city ?? "").trim() || null;
   const whatsapp = String(meta.whatsapp ?? "").trim() || null;
+  const emailPrefs = (meta.email_prefs ?? null) as Partial<EmailPrefs> | null;
 
   return (
     <SettingsContent
@@ -62,6 +63,7 @@ export default async function SettingsPage() {
       emailConfirmed={Boolean(user.email_confirmed_at)}
       lastSignIn={user.last_sign_in_at ?? null}
       devPublicUrl={devPublicUrl}
+      emailPrefs={emailPrefs}
     />
   );
 }

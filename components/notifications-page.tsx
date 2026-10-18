@@ -46,6 +46,9 @@ export function NotificationsPage({ userId }: { userId: string }) {
   const [items, setItems] = React.useState<InAppNotification[]>([]);
   const [unread, setUnread] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
+  const [channelKey] = React.useState(() =>
+    Math.random().toString(36).slice(2, 10)
+  );
 
   const refresh = React.useCallback(async () => {
     const supabase = createClient();
@@ -73,43 +76,49 @@ export function NotificationsPage({ userId }: { userId: string }) {
       setLoading(false);
     })();
 
-    const channel = supabase
-      .channel(`notifications-page-${userId}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "notifications",
-          filter: `user_id=eq.${userId}`,
-        },
-        (payload) => {
-          if (!mounted) return;
-          const row = payload.new as InAppNotification;
-          setItems((prev) => [row, ...prev].slice(0, 200));
-          setUnread((u) => u + 1);
-        }
-      )
-      .on(
-        "postgres_changes",
-        {
-          event: "UPDATE",
-          schema: "public",
-          table: "notifications",
-          filter: `user_id=eq.${userId}`,
-        },
-        async () => {
-          if (!mounted) return;
-          await refresh();
-        }
-      )
-      .subscribe();
+    const channel = supabase.channel(
+      `notifications-page-${userId}-${channelKey}`
+    );
+    try {
+      channel
+        .on(
+          "postgres_changes",
+          {
+            event: "INSERT",
+            schema: "public",
+            table: "notifications",
+            filter: `user_id=eq.${userId}`,
+          },
+          (payload) => {
+            if (!mounted) return;
+            const row = payload.new as InAppNotification;
+            setItems((prev) => [row, ...prev].slice(0, 200));
+            setUnread((u) => u + 1);
+          }
+        )
+        .on(
+          "postgres_changes",
+          {
+            event: "UPDATE",
+            schema: "public",
+            table: "notifications",
+            filter: `user_id=eq.${userId}`,
+          },
+          async () => {
+            if (!mounted) return;
+            await refresh();
+          }
+        )
+        .subscribe();
+    } catch {
+      // Realtime indisponible : les notifications restent accessibles via refresh.
+    }
 
     return () => {
       mounted = false;
       supabase.removeChannel(channel);
     };
-  }, [userId, refresh]);
+  }, [userId, refresh, channelKey]);
 
   const markAll = async () => {
     const supabase = createClient();
@@ -139,7 +148,7 @@ export function NotificationsPage({ userId }: { userId: string }) {
       <div className="container-tl max-w-2xl">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
+            <h1 className="text-3xl font-semibold leading-tight tracking-tight">
               Notifications
             </h1>
             <p className="mt-2 text-base text-muted-foreground">

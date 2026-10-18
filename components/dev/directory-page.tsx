@@ -304,7 +304,7 @@ export function DirectoryPage({
         </div>
       ) : (
         <>
-          <ul className="grid grid-cols-1 gap-4 md:grid-cols-2" aria-live="polite">
+          <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3" aria-live="polite">
           {items.map((dev) => (
             <li key={dev.id} className="h-full">
               <DirectoryCard

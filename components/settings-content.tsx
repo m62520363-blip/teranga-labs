@@ -28,6 +28,20 @@ import { Label } from "@/components/ui/label";
 import { formatDate } from "@/lib/formatting";
 import { cn } from "cn";
 
+export type EmailPrefs = {
+  contact: boolean;
+  replies: boolean;
+  unreadReminders: boolean;
+  priceOffers: boolean;
+};
+
+const DEFAULT_EMAIL_PREFS: EmailPrefs = {
+  contact: true,
+  replies: true,
+  unreadReminders: true,
+  priceOffers: true,
+};
+
 export function SettingsContent({
   email,
   name,
@@ -39,6 +53,7 @@ export function SettingsContent({
   emailConfirmed,
   lastSignIn,
   devPublicUrl,
+  emailPrefs,
 }: {
   email: string;
   name: string | null;
@@ -50,6 +65,7 @@ export function SettingsContent({
   emailConfirmed: boolean;
   lastSignIn: string | null;
   devPublicUrl: string | null;
+  emailPrefs?: Partial<EmailPrefs> | null;
 }) {
   const router = useRouter();
   const [currentPassword, setCurrentPassword] = React.useState("");
@@ -81,6 +97,33 @@ export function SettingsContent({
     setReduceMotion(enabled);
     window.localStorage.setItem("tl-reduce-motion", enabled ? "1" : "0");
     document.documentElement.toggleAttribute("data-reduce-motion", enabled);
+  };
+
+  const [prefs, setPrefs] = React.useState<EmailPrefs>(() => ({
+    ...DEFAULT_EMAIL_PREFS,
+    ...(emailPrefs ?? {}),
+  }));
+  const [prefsSaving, setPrefsSaving] = React.useState(false);
+  const [prefsError, setPrefsError] = React.useState<string | null>(null);
+
+  const togglePref = async (key: keyof EmailPrefs, value: boolean) => {
+    const previous = prefs;
+    const next: EmailPrefs = { ...prefs, [key]: value };
+    setPrefs(next);
+    setPrefsError(null);
+    if (!isSupabaseConfigured()) return;
+    setPrefsSaving(true);
+    const supabase = createClient();
+    const { error } = await supabase.auth.updateUser({
+      data: { email_prefs: next },
+    });
+    setPrefsSaving(false);
+    if (error) {
+      setPrefs(previous);
+      setPrefsError("Impossible d’enregistrer cette préférence. Réessayez.");
+      return;
+    }
+    router.refresh();
   };
 
   const exportData = () => {
@@ -223,62 +266,76 @@ export function SettingsContent({
   const homeHref = isClient ? "/client" : "/dashboard";
 
   return (
-    <div className="bg-surface py-16 md:py-24">
+    <div className="bg-surface py-6 md:py-10">
       <div className="container-tl">
         <div>
-          <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
+          <h1 className="text-3xl font-semibold leading-tight tracking-tight">
             Paramètres
           </h1>
           <p className="mt-2 text-base text-muted-foreground">
-            Gérez votre compte, votre mot de passe et accédez à votre espace.
+            {isClient
+              ? "Gère ton profil et la sécurité de ton compte."
+              : "Gérez votre compte, votre mot de passe et accédez à votre espace."}
           </p>
         </div>
 
-        <div className="mt-10 grid gap-6 lg:grid-cols-2">
-          <section
-            className="rounded-2xl border border-hairline bg-card p-6 sm:p-8"
-            aria-label="Mon espace"
-          >
-            <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
-              <Settings className="size-4 text-primary" aria-hidden="true" />
-              Ma navigation
-            </h2>
-            <ul className="mt-5 flex flex-col gap-2">
-              <SideLink href={homeHref} label="Accueil de mon espace" />
-              <SideLink href="/conversations" label="Messages" />
-              {isClient ? (
-                <SideLink href="/poster" label="Publier un brief" icon={<Plus className="size-4" aria-hidden="true" />} />
-              ) : null}
-              {isDev ? (
-                <>
-                  <SideLink href="/briefs" label="Voir les briefs" />
-                  <SideLink href="/dashboard?tab=profil" label="Compléter mon profil" icon={<User className="size-4" aria-hidden="true" />} />
-                  {devPublicUrl ? (
-                    <Link
-                      href={devPublicUrl}
+        <div
+          className={cn(
+            "mt-8 grid gap-6",
+            !isClient && "lg:grid-cols-2"
+          )}
+        >
+          {isClient ? null : (
+            <section
+              className="rounded-2xl border border-hairline bg-card p-6 sm:p-8"
+              aria-label="Mon espace"
+            >
+              <h2 className="flex items-center gap-2 text-base font-semibold tracking-tight">
+                <Settings className="size-4 text-primary" aria-hidden="true" />
+                Ma navigation
+              </h2>
+              <ul className="mt-5 flex flex-col gap-2">
+                <SideLink href={homeHref} label="Accueil de mon espace" />
+                <SideLink href="/conversations" label="Messages" />
+                {isClient ? (
+                  <SideLink href="/poster" label="Publier un brief" icon={<Plus className="size-4" aria-hidden="true" />} />
+                ) : null}
+                {isDev ? (
+                  <>
+                    <SideLink href="/briefs" label="Voir les briefs" />
+                    <SideLink href="/dashboard?tab=profil" label="Compléter mon profil" icon={<User className="size-4" aria-hidden="true" />} />
+                    {devPublicUrl ? (
+                      <Link
+                        href={devPublicUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
-                    >
-                      <Share2 className="size-4 text-primary" aria-hidden="true" />
-                      Voir mon profil public
-                    </Link>
-                  ) : null}
-                </>
-              ) : null}
-              <div className="my-2 h-px bg-hairline" />
-              <li>
-                <SignOutButton />
-              </li>
-            </ul>
-          </section>
+                      >
+                        <Share2 className="size-4 text-primary" aria-hidden="true" />
+                        Voir mon profil public
+                      </Link>
+                    ) : null}
+                  </>
+                ) : null}
+                <div className="my-2 h-px bg-hairline" />
+                <li>
+                  <SignOutButton />
+                </li>
+              </ul>
+            </section>
+          )}
 
-          <div className="flex flex-col gap-6">
+          <div
+            className={cn(
+              "flex flex-col gap-6",
+              isClient && "mx-auto w-full max-w-2xl"
+            )}
+          >
             <section
               className="rounded-2xl border border-hairline bg-card p-6 sm:p-8"
               aria-label="Informations du compte"
             >
-              <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
+              <h2 className="flex items-center gap-2 text-base font-semibold tracking-tight">
                 {isClient ? (
                   <Store className="size-4 text-primary" aria-hidden="true" />
                 ) : (
@@ -286,8 +343,22 @@ export function SettingsContent({
                 )}
                 Mon compte
               </h2>
-              <dl className="mt-5 flex flex-col gap-3 text-sm">
-                <InfoRow label="Email" value={email} />
+              <div className="mt-5 flex flex-col gap-2">
+                <Label htmlFor="account-email">Email</Label>
+                <Input
+                  id="account-email"
+                  value={email}
+                  readOnly
+                  aria-readonly
+                  className="h-10 rounded-xl bg-muted text-muted-foreground"
+                />
+                <p className="text-xs leading-relaxed text-muted-foreground">
+                  {isClient
+                    ? "Ton identifiant de connexion — change-le dans « Email de connexion » plus bas. Ton nom s’édite depuis Mon profil."
+                    : "Votre identifiant de connexion — changez-le dans « Email de connexion » ci-dessous."}
+                </p>
+              </div>
+              <dl className="mt-4 flex flex-col gap-3 text-sm">
                 <InfoRow label="Email confirmé" value={emailConfirmed ? "Oui" : "Non — vérifiez votre boîte mail"} />
                 <InfoRow
                   label="Nom"
@@ -315,7 +386,7 @@ export function SettingsContent({
               className="rounded-2xl border border-hairline bg-card p-6 sm:p-8"
               aria-label="Changer le mot de passe"
             >
-              <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
+              <h2 className="flex items-center gap-2 text-base font-semibold tracking-tight">
                 <KeyRound className="size-4 text-primary" aria-hidden="true" />
                 Sécurité
               </h2>
@@ -385,7 +456,7 @@ export function SettingsContent({
               className="rounded-2xl border border-hairline bg-card p-6 sm:p-8"
               aria-label="Changer l'adresse email"
             >
-              <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
+              <h2 className="flex items-center gap-2 text-base font-semibold tracking-tight">
                 <Mail className="size-4 text-primary" aria-hidden="true" />
                 Email de connexion
               </h2>
@@ -437,9 +508,64 @@ export function SettingsContent({
 
             <section
               className="rounded-2xl border border-hairline bg-card p-6 sm:p-8"
+              aria-label="E-mails"
+            >
+              <h2 className="flex items-center gap-2 text-base font-semibold tracking-tight">
+                <Mail className="size-4 text-primary" aria-hidden="true" />
+                E-mails
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Les e-mails liés à ton argent (paiement, livraison, validation)
+                restent toujours actifs.
+              </p>
+              <div className="mt-4 flex flex-col gap-3">
+                <PrefRow
+                  id="pref-contact"
+                  label="Nouvelles prises de contact"
+                  hint="Quand un développeur entre en contact avec toi."
+                  checked={prefs.contact}
+                  onChange={(v) => void togglePref("contact", v)}
+                />
+                <PrefRow
+                  id="pref-replies"
+                  label="Réponses dans les discussions"
+                  hint="À chaque nouveau message reçu."
+                  checked={prefs.replies}
+                  onChange={(v) => void togglePref("replies", v)}
+                />
+                <PrefRow
+                  id="pref-unread"
+                  label="Rappels de messages non lus"
+                  hint="Si un message t’attend depuis 24 h."
+                  checked={prefs.unreadReminders}
+                  onChange={(v) => void togglePref("unreadReminders", v)}
+                />
+                <PrefRow
+                  id="pref-offers"
+                  label="Propositions de prix"
+                  hint="Quand une proposition attend ta réponse."
+                  checked={prefs.priceOffers}
+                  onChange={(v) => void togglePref("priceOffers", v)}
+                />
+              </div>
+              {prefsSaving ? (
+                <p role="status" className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
+                  Enregistrement…
+                </p>
+              ) : null}
+              {prefsError ? (
+                <p role="alert" className="mt-3 text-xs text-destructive">
+                  {prefsError}
+                </p>
+              ) : null}
+            </section>
+
+            <section
+              className="rounded-2xl border border-hairline bg-card p-6 sm:p-8"
               aria-label="Préférences"
             >
-              <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
+              <h2 className="flex items-center gap-2 text-base font-semibold tracking-tight">
                 <Moon className="size-4 text-primary" aria-hidden="true" />
                 Préférences
               </h2>
@@ -475,7 +601,7 @@ export function SettingsContent({
               className="rounded-2xl border border-hairline bg-card p-6 sm:p-8"
               aria-label="Mes données"
             >
-              <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
+              <h2 className="flex items-center gap-2 text-base font-semibold tracking-tight">
                 <Download className="size-4 text-primary" aria-hidden="true" />
                 Mes données
               </h2>
@@ -506,7 +632,7 @@ export function SettingsContent({
               className="rounded-2xl border border-hairline bg-card p-6 sm:p-8"
               aria-label="Aide et légal"
             >
-              <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
+              <h2 className="flex items-center gap-2 text-base font-semibold tracking-tight">
                 <MessageCircle className="size-4 text-primary" aria-hidden="true" />
                 Aide &amp; légal
               </h2>
@@ -573,6 +699,49 @@ export function SettingsContent({
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function PrefRow({
+  id,
+  label,
+  hint,
+  checked,
+  onChange,
+}: {
+  id: string;
+  label: string;
+  hint: string;
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-4 rounded-xl border border-hairline bg-surface p-4">
+      <label htmlFor={id} className="cursor-pointer">
+        <span className="block text-sm font-medium text-foreground">
+          {label}
+        </span>
+        <span className="block text-sm text-muted-foreground">{hint}</span>
+      </label>
+      <button
+        id={id}
+        type="button"
+        role="switch"
+        aria-checked={checked}
+        onClick={() => onChange(!checked)}
+        className={cn(
+          "relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-primary/60",
+          checked ? "bg-success" : "bg-hairline"
+        )}
+      >
+        <span
+          className={cn(
+            "inline-block size-4 translate-x-1 rounded-full bg-white transition-transform duration-200",
+            checked && "translate-x-6"
+          )}
+        />
+      </button>
     </div>
   );
 }

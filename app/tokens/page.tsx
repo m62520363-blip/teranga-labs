@@ -28,7 +28,7 @@ export default async function TokensPage() {
     <div className="bg-surface py-16 md:py-24">
       <div className="container-tl">
         <div className="mx-auto max-w-2xl text-center">
-          <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
+          <h1 className="text-3xl font-semibold leading-tight tracking-tight">
             Commandez vos Tokens
           </h1>
           <p className="mt-3 text-base leading-relaxed text-muted-foreground">

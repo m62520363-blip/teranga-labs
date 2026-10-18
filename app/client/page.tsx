@@ -7,8 +7,10 @@ import {
   Coins,
   FileSearch,
   Inbox,
+  Megaphone,
   MessageCircle,
   Plus,
+  Search,
   ShieldCheck,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
@@ -16,7 +18,7 @@ import { getConversations } from "@/lib/conversations";
 import { requireUser } from "@/lib/auth/guards";
 import { formatFCFA, formatRelativeTime } from "@/lib/formatting";
 import type { TokenHistoryItem } from "@/types/database";
-import { EmptyState } from "@/components/empty-state";
+import { NotificationBell } from "@/components/notification-bell";
 import {
   ClientProjects,
   type ClientProjectItem,
@@ -165,29 +167,63 @@ export default async function ClientPage() {
     };
   });
 
+  const isEmpty = requests.length === 0;
+  const hour = new Date().getHours();
+  const firstName = clientName.split(/\s+/)[0] || "toi";
+
   return (
-    <div className="bg-surface py-16 md:py-24">
+    <div className="bg-surface py-6 md:py-10">
       <div className="container-tl">
-        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
-              Mon espace client
-            </h1>
-            <p className="mt-2 text-base text-muted-foreground">
-              Suivez vos projets, comparez les développeurs et acceptez une
-              proposition en quelques clics.
-            </p>
-          </div>
-          <Link
-            href="/poster"
-            className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50"
-          >
-            <Plus className="size-4" aria-hidden="true" />
-            Publier un nouveau brief
-          </Link>
+        <div className="flex items-center justify-between gap-4">
+          <h1 className="text-2xl font-medium leading-tight tracking-tight md:text-3xl">
+            <span className="md:hidden">
+              {hour >= 18 || hour < 5 ? "Bonsoir" : "Bonjour"}, {firstName}
+            </span>
+            <span className="hidden md:inline">
+              Heureux de te revoir, {firstName} ✨
+            </span>
+          </h1>
+          <span className="hidden size-10 shrink-0 place-items-center rounded-full border border-border md:grid">
+            <NotificationBell userId={user.id} />
+          </span>
         </div>
 
-        {(company || clientName) && (
+        {isEmpty ? (
+          <section
+            className="mt-8 rounded-2xl border border-success/30 bg-success-soft/40 px-6 py-10 text-center sm:py-14"
+            aria-label="Bienvenue dans votre espace client"
+          >
+            <span className="mx-auto grid size-14 place-items-center rounded-2xl bg-success-soft">
+              <Search className="size-6 text-success" aria-hidden="true" />
+            </span>
+            <h2 className="mt-5 text-lg font-semibold tracking-tight sm:text-xl">
+              Prêt à publier ton prochain projet ?
+            </h2>
+            <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-muted-foreground">
+              Trouve un développeur qui correspond à ton besoin et ton budget.
+              Ton paiement reste bloqué en sécurité jusqu’à ce que tu valides la
+              livraison.
+            </p>
+            <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+              <Link
+                href="/poster"
+                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-primary px-6 text-sm font-semibold text-primary-foreground outline-none transition-colors hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50 sm:w-auto"
+              >
+                <Megaphone className="size-4" aria-hidden="true" />
+                Publier un brief
+              </Link>
+              <Link
+                href="/dev"
+                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full border border-border bg-card px-6 text-sm font-semibold text-foreground outline-none transition-colors hover:border-primary/40 hover:bg-accent focus-visible:ring-2 focus-visible:ring-primary/50 sm:w-auto"
+              >
+                <Search className="size-4" aria-hidden="true" />
+                Parcourir le catalogue
+              </Link>
+            </div>
+          </section>
+        ) : (
+          <>
+            {(company || clientName) && (
           <div className="mt-6 flex flex-wrap items-center gap-3 rounded-2xl border border-hairline bg-card p-4">
             <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary font-display text-lg font-bold text-ink">
               {(company || clientName).charAt(0).toUpperCase()}
@@ -250,7 +286,9 @@ export default async function ClientPage() {
               </p>
             </div>
           </div>
-        ) : null}
+            ) : null}
+          </>
+        )}
 
         <section className="mt-8 rounded-2xl border border-hairline bg-card p-5 sm:p-6" aria-label="Mes Tokens">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -320,29 +358,32 @@ export default async function ClientPage() {
           )}
         </section>
 
-        <section className="mt-10">
-          <div className="flex items-center gap-2">
-            <ClipboardPen className="size-5 text-primary" aria-hidden="true" />
-            <h2 className="text-xl font-semibold tracking-tight">Mes projets publiés</h2>
-          </div>
+        {!isEmpty ? (
+          <>
+            <section className="mt-10">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <ClipboardPen
+                    className="size-5 text-primary"
+                    aria-hidden="true"
+                  />
+                  <h2 className="text-xl font-semibold tracking-tight">
+                    Mes projets publiés
+                  </h2>
+                </div>
+                <Link
+                  href="/poster"
+                  className="inline-flex h-9 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground outline-none transition-colors hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50"
+                >
+                  <Plus className="size-4" aria-hidden="true" />
+                  Publier un nouveau brief
+                </Link>
+              </div>
 
-          {requests.length === 0 ? (
-            <div className="mt-5">
-              <EmptyState
-                title="Vous n’avez pas encore publié de brief"
-                description="Publier un projet coûte 1 Token : les développeurs vous contactent dans la messagerie interne, sans jamais voir votre WhatsApp tant que vous n’acceptez pas."
-                action={
-                  <Link href="/poster" className="btn btn-primary">
-                    <Plus className="size-4" aria-hidden="true" />
-                    Publier mon premier brief
-                  </Link>
-                }
-              />
-            </div>
-          ) : (
-            <ClientProjects items={projectItems} />
-          )}
-        </section>
+              <div className="mt-5">
+                <ClientProjects items={projectItems} />
+              </div>
+            </section>
 
         <section className="mt-14">
           <div className="flex items-center gap-2">
@@ -470,6 +511,8 @@ export default async function ClientPage() {
               ))}
             </ul>
           </section>
+            ) : null}
+          </>
         ) : null}
       </div>
     </div>

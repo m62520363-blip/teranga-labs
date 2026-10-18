@@ -394,8 +394,10 @@ export function PosterForm() {
       <div className="rounded-2xl border border-primary/20 bg-primary-soft p-4 sm:p-5">
         <p className="flex items-start gap-3 text-sm leading-relaxed text-foreground/90">
           <Sparkles className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
-          Publier un brief coûte <strong>1 Token</strong>. Un assistant calcule
-          avec vous les besoins et le budget réaliste de votre projet.
+          <span>
+            Publier un brief coûte <strong>1 Token</strong>. Un assistant calcule
+            avec vous les besoins et le budget réaliste de votre projet.
+          </span>
         </p>
       </div>
 

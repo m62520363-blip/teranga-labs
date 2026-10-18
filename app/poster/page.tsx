@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { PosterForm } from "@/components/poster-form";
-import { getCurrentUser } from "@/lib/supabase/server";
+import { getCurrentRole, getCurrentUser } from "@/lib/supabase/server";
 import { Scene3D } from "@/components/landing/scene-3d";
 
 export const metadata: Metadata = {
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
 
 export default async function PosterPage() {
   const user = await getCurrentUser();
+  const role = user ? await getCurrentRole() : null;
 
   if (!user) {
     return (
@@ -65,48 +67,32 @@ export default async function PosterPage() {
     );
   }
 
+  const backHref = role === "client" ? "/client" : role === "developer" ? "/briefs" : "/";
+
   return (
-    <div className="bg-surface py-16 md:py-24">
+    <div className="bg-surface py-6 md:py-10">
       <div className="container-tl">
         <div className="mx-auto max-w-xl">
           <div>
-            <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
-              Poster un brief — 1 Token, 2 min
+            <Link
+              href={backHref}
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
+            >
+              <ArrowLeft className="size-4" aria-hidden="true" />
+              Retour
+            </Link>
+            <h1 className="mt-3 text-3xl font-semibold leading-tight tracking-tight">
+              Publier un brief
             </h1>
             <p className="mt-3 text-base leading-relaxed text-muted-foreground">
-              Décrivez votre projet. Les développeurs intéressés vous
-              écrivent dans la messagerie interne.
+              Décris ton besoin. Les développeurs intéressés pourront te
+              contacter directement dans la messagerie interne.
             </p>
           </div>
 
-          <div className="mt-10 rounded-2xl border border-hairline bg-card p-6 shadow-sm sm:p-8">
+          <div className="mt-6 rounded-2xl border border-hairline bg-card p-6 shadow-sm sm:p-8">
             <PosterForm />
           </div>
-
-          <h2 className="mt-8 text-sm font-semibold tracking-tight">
-            En quelques points
-          </h2>
-          <ul className="mt-3 grid gap-3 sm:grid-cols-3">
-            {["1 Token par brief", "2 minutes", "Sans engagement"].map((item) => (
-              <li
-                key={item}
-                className="rounded-xl border border-hairline bg-card px-4 py-3 text-center text-sm font-medium"
-              >
-                {item}
-              </li>
-            ))}
-          </ul>
-
-          {/* SVG local de marque : next/image n'apporterait rien sur du vectoriel. */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/illustrations/brief.svg"
-            alt="Exemple de brief de projet web publié en deux minutes sur TERANGA LABS"
-            width={480}
-            height={360}
-            loading="lazy"
-            className="mx-auto mt-10 w-full max-w-md rounded-2xl border border-hairline"
-          />
         </div>
       </div>
     </div>

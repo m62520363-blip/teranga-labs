@@ -157,11 +157,19 @@ export default async function RootLayout({
 }>) {
   const [user, role] = await Promise.all([getCurrentUser(), getCurrentRole()]);
 
+  /* Thème clair de l'espace app posé avant le premier paint (évite le flash
+     sombre sur /client, /dev, …). Même liste que CLIENT_APP_ROUTES. */
+  const themeBootScript = `(() => { try { var seg = location.pathname.split("/")[1];
+    var app = ["client","dev","poster","missions","conversations","parametres","notifications","support","tokens"].indexOf(seg) >= 0;
+    if (app) document.documentElement.setAttribute("data-app-theme", localStorage.getItem("tl-app-theme") === "dark" ? "dark" : "light");
+  } catch (e) {} })();`;
+
   return (
-    <html lang="fr">
+    <html lang="fr" suppressHydrationWarning>
       <body
         className={`${outfit.variable} ${bodoni.variable} ${dmSans.variable} ${geistMono.variable} bg-background font-sans text-foreground antialiased`}
       >
+        <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
         <script
           type="application/ld+json"
           // Contenu statique défini ici, aucune donnée utilisateur ni saisie.
@@ -181,6 +189,16 @@ export default async function RootLayout({
               />
             }
             footer={<Footer />}
+            role={role}
+            user={
+              user
+                ? {
+                    name: user.user_metadata?.full_name ?? null,
+                    email: user.email ?? null,
+                  }
+                : null
+            }
+            userId={user?.id ?? null}
           >
             {children}
           </SiteShell>
