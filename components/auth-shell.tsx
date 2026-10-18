@@ -11,9 +11,11 @@ import { cn } from "cn";
 export function AuthShell({
   mode,
   initialRole = "client",
+  next = null,
 }: {
   mode: "login" | "signup";
   initialRole?: AuthRole;
+  next?: string | null;
 }) {
   const isLogin = mode === "login";
 
@@ -51,7 +53,7 @@ export function AuthShell({
           )}
         </div>
 
-        <AuthCard mode={mode} initialRole={initialRole} />
+        <AuthCard mode={mode} initialRole={initialRole} next={next} />
       </div>
     </main>
   );

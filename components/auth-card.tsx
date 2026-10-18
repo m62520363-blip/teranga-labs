@@ -165,17 +165,19 @@ function buildSignupResolver(role: AuthRole): Resolver<AuthInput> {
 export function AuthCard({
   mode,
   initialRole = "client",
+  next = null,
 }: {
   mode: AuthMode;
   initialRole?: AuthRole;
+  next?: string | null;
 }) {
-  if (mode === "login") return <LoginForm />;
+  if (mode === "login") return <LoginForm next={next} />;
   return <SignupForm initialRole={initialRole} />;
 }
 
 /* -------------------------------- LOGIN -------------------------------- */
 
-function LoginForm() {
+function LoginForm({ next = null }: { next?: string | null }) {
   const router = useRouter();
   const [formError, setFormError] = React.useState<string | null>(null);
   const [notice, setNotice] = React.useState<string | null>(null);
@@ -216,7 +218,7 @@ function LoginForm() {
       return;
     }
     const signupRole = data.user?.user_metadata?.role;
-    router.push(signupRole === "client" ? "/client" : "/dashboard");
+    router.push(next ?? (signupRole === "client" ? "/client" : "/dashboard"));
     router.refresh();
   };
 

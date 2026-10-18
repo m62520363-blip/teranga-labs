@@ -15,14 +15,20 @@ export const dynamic = "force-dynamic";
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ mode?: string; role?: string }>;
+  searchParams: Promise<{ mode?: string; role?: string; next?: string }>;
 }) {
   const [user, role] = await Promise.all([getCurrentUser(), getCurrentRole()]);
-  if (user) redirect(role === "client" ? "/client" : "/dashboard");
-
   const params = await searchParams;
+  /* `next` = retour après connexion (ex. milieu du parcours développeur) :
+     chemin interne uniquement, jamais une URL externe (open redirect). */
+  const rawNext = params.next;
+  const next =
+    rawNext && rawNext.startsWith("/") && !rawNext.startsWith("//") ? rawNext : null;
+
+  if (user) redirect(next ?? (role === "client" ? "/client" : "/dashboard"));
+
   const mode = params.mode === "signup" ? "signup" : "login";
   const initialRole = params.role === "developer" ? "developer" : "client";
 
-  return <AuthShell mode={mode} initialRole={initialRole} />;
+  return <AuthShell mode={mode} initialRole={initialRole} next={next} />;
 }

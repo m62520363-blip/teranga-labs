@@ -2,6 +2,16 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [Parcours-Inscription-Developpeur] — 2026-10-18 : parcours guidé « Devenir développeur » reproduit d'après la vidéo Montaaj
+
+Le bouton « Devenir développeur » (footer, /briefs) lance désormais un vrai tunnel d'inscription en 3 temps calqué sur la démonstration de référence, **100 % branché sur l'auth Supabase existante** (aucun nouveau service, aucune migration, /signup et /login intacts, 0 régression e2e).
+
+- **Étape 1 « Crée ton compte »** (`components/dev/register-funnel.tsx`, nouveau) : email, mot de passe + jauge de robustesse, confirmation, CGU — validations zod/messages FR, protection double soumission, pilules « Je suis développeur » (actif) / « Je suis client » (→ `/signup?role=client`), création réelle `auth.signUp` avec `role=developer` (trigger `handle_new_user` inchangé) ; compte existant → actions « Se connecter pour continuer » (avec `?next=`) + « Renvoyer un code de vérification ».
+- **Étape 2 « Vérifie ton email »** : interface fidèle (6 cases auto-avance + collage, « Vérifier », « Code non reçu ? Renvoie le code » avec cooldown 60 s persistant, 5 essais limités, astuce lien valable 10 min, Retour), mécanisme sécurisé réel `signInWithOtp`/`verifyOtp` Supabase ; **la session de création (auto-confirm) est close en local** pour imposer la vérification — le wizard ne s'ouvre qu'après vérification réelle ; détection de session liens (onglet distant/focus) → finalisation auto ; reprise du parcours au rafraîchissement (`sessionStorage`), anti-requête au montage (rate-limit).
+- **Étape 3** : le wizard existant `OnboardingForm` (identité → profil pro + portfolio + RPC `submit_developer_application`) prend le relais — enregistrement, validation admin et statuts conservés tels quels (pas d'étape paiement ajoutée, pas de donnée sensible demandée).
+- **Routes/points d'entrée** : `/inscription-developpeur` rend le funnel pour les anonymes (au lieu du redirect /login), wizard/statuts identiques pour les connectés ; CTA `/briefs` → funnel ; `?next=` ajouté à `/login` (AuthShell/AuthCard/LoginForm, chemin interne uniquement) pour revenir au milieu du parcours.
+- **Tests** : nouveau `e2e/dev-register.spec.ts` (9 tests : structure, validation FR, jauge, liens, OTP mocké Supabase via regex de routes, reprise/reload, retour, mobile 390 px sans overflow) → **58/58 e2e**, `check` complet vert (181 tests, typecheck, lint) ; **test réel backend dev** exécuté de bout en bout (compte créé → OTP envoyé → email reçu via boîte externe → lien cliqué → session → wizard, persistant au reload).
+
 ## [Refonte-Espace-Client] — 2026-10-18 : espace client reproduit d'après les captures Desktop + Mobile de montaaj.net
 
 Refonte complète de l'espace connecté (client) conforme aux captures de référence Desktop (1376×728) et Mobile (iPhone), avec **fonctionnement réel de chaque élément** (menus, toggles, navigation, publication), fond blanc clair + accent orange Teranga, sans changement de schéma DB ni reprise de la marque Montaaj.

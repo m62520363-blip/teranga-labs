@@ -114,7 +114,7 @@ export default async function BriefsPage({
           </div>
           {!user && (
             <Link
-              href="/login?mode=signup&role=developer"
+              href="/inscription-developpeur"
               className="inline-flex h-10 shrink-0 items-center gap-2 rounded-xl bg-foreground px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
             >
               Créer un compte développeur

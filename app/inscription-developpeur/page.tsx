@@ -3,13 +3,14 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ArrowRight, BadgeCheck, CheckCircle2, Clock3 } from "lucide-react";
 import { OnboardingForm, type OnboardingData } from "@/components/dev/onboarding-form";
+import { RegisterFunnel } from "@/components/dev/register-funnel";
 import { getCurrentUser, createClient } from "@/lib/supabase/server";
 import { Scene3D } from "@/components/landing/scene-3d";
 
 export const metadata: Metadata = {
   title: "Inscription développeur",
   description:
-    "Complétez votre profil développeur en deux étapes : vos coordonnées, puis votre profil professionnel. TERANGA LABS valide chaque dossier avant activation.",
+    "Rejoignez TERANGA LABS en tant que développeur : créez votre compte, vérifiez votre email, complétez votre profil professionnel. Chaque dossier est examiné avant activation.",
   robots: { index: false, follow: false },
 };
 
@@ -80,7 +81,26 @@ function VerificationInProgress() {
 
 export default async function InscriptionDeveloppeurPage() {
   const user = await getCurrentUser();
-  if (!user) redirect("/login?mode=signup&role=developer");
+
+  /* Visiteur non connecté : parcours guidé complet (compte → vérification
+     email → wizard profil), calqué sur la démonstration Montaaj. */
+  if (!user) {
+    return (
+      <div className="bg-surface py-14">
+        <div className="container-tl">
+          <div className="mx-auto max-w-3xl text-center">
+            <span className="chip gap-2 border-hairline bg-card">
+              <span className="size-1.5 rounded-full bg-primary" aria-hidden="true" />
+              INSCRIPTION DÉVELOPPEUR
+            </span>
+          </div>
+          <div className="mt-8">
+            <RegisterFunnel />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const supabase = await createClient();
   if (!supabase) return notConfigured();
