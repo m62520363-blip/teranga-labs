@@ -106,6 +106,7 @@ test.describe("page d'inscription (/signup)", () => {
 
     await expect(page.locator("#signup-name")).toBeVisible();
     await expect(page.locator("#signup-company")).toBeVisible();
+    await expect(page.locator("#signup-country")).toBeVisible();
     await expect(page.locator("#signup-city")).toBeVisible();
     await expect(page.locator("#signup-email")).toBeVisible();
     await expect(page.locator("#signup-password")).toBeVisible();
@@ -133,6 +134,7 @@ test.describe("page d'inscription (/signup)", () => {
     );
     await expect(page.locator("#signup-skills")).toBeVisible();
     await expect(page.locator("#signup-company")).toHaveCount(0);
+    await expect(page.locator("#signup-country")).toHaveCount(0);
     await expect(page.locator("#signup-city")).toHaveCount(0);
     // WhatsApp devient requis : le libellé perd sa mention « optionnel ».
     const whatsappLabel = page.locator('label[for="signup-whatsapp"]');
@@ -191,6 +193,28 @@ test.describe("page d'inscription (/signup)", () => {
 
     await expect(page.getByText("Les mots de passe ne correspondent pas.")).toBeVisible();
     expect(page.url()).toContain("/signup");
+  });
+
+  test("Pays puis Région : la liste de régions suit le pays choisi", async ({ page }) => {
+    await gotoAuth(page, "/signup");
+
+    // Par défaut : Sénégal, avec la région Dakar pré-remplie.
+    await expect(page.locator("#signup-country")).toContainText("Sénégal");
+    await expect(page.locator("#signup-city")).toContainText("Dakar");
+
+    // Changer de pays vide la région et ne propose que ses régions.
+    await page.locator("#signup-country").click();
+    await page.getByRole("option", { name: "Mali" }).click();
+
+    await expect(page.locator("#signup-country")).toContainText("Mali");
+    await expect(page.locator("#signup-city")).not.toContainText("Dakar");
+
+    await page.locator("#signup-city").click();
+    await expect(page.getByRole("option", { name: "Bamako" })).toBeVisible();
+    await expect(page.getByRole("option", { name: "Dakar" })).toHaveCount(0);
+
+    await page.getByRole("option", { name: "Bamako" }).click();
+    await expect(page.locator("#signup-city")).toContainText("Bamako");
   });
 
   test("navigation croisée login ↔ signup", async ({ page }) => {

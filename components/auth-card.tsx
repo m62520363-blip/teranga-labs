@@ -25,19 +25,25 @@ import {
   type LoginFormValues,
   type SignupFormValues,
 } from "@/lib/validations";
-import { ALL_REGION_ITEMS } from "@/lib/countries";
+import {
+  COUNTRIES,
+  getFlagUrl,
+  getRegionsByCountry,
+} from "@/lib/countries";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { PhoneOtpForm } from "@/components/phone-otp-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PhoneInput } from "@/components/ui/phone-input";
-import { RegionSelectContent } from "@/components/ui/region-select";
 import {
   Select,
+  SelectContent,
+  SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "cn";
+import Image from "next/image";
 
 export type AuthMode = "login" | "signup";
 export type AuthRole = "developer" | "client";
@@ -64,6 +70,31 @@ const submitClass =
 
 const secondaryClass =
   "flex w-full items-center justify-center gap-2.5 rounded-full border border-border bg-surface px-5 py-3 text-sm font-medium text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50";
+
+/* Select du formulaire d'inscription : même gabarit que les champs texte. */
+const selectTriggerClass =
+  "h-11 min-h-11 data-[size=default]:h-11 w-full rounded-xl border border-border bg-surface px-4 text-sm text-foreground outline-none transition-colors focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/30";
+
+/* Inscription client : on choisit d'abord le PAYS, ensuite la RÉGION — la
+   liste de régions se réduit aux frontières du pays choisi. Le champ stocké
+   reste `city` = nom de région (le pays est dérivé par lib/geography.ts). */
+const DEFAULT_COUNTRY = "SN";
+
+const COUNTRY_ITEMS: Record<string, string> = Object.fromEntries(
+  COUNTRIES.map((c) => [c.code, c.nameFr])
+);
+
+function FlagImg({ code }: { code: string }) {
+  return (
+    <Image
+      src={getFlagUrl(code, 20)}
+      alt=""
+      width={20}
+      height={14}
+      className="h-3.5 w-5 shrink-0 rounded-[2px] object-cover"
+    />
+  );
+}
 
 function translateAuthError(message: string): string {
   const m = message.toLowerCase();
@@ -363,6 +394,14 @@ function SignupForm({ initialRole }: { initialRole: AuthRole }) {
     formState: { errors, isSubmitting },
   } = form;
 
+  /* Pays d'abord, région ensuite (UI seule : `city` garde le nom de région). */
+  const [countryCode, setCountryCode] = React.useState<string>(DEFAULT_COUNTRY);
+  const regionItems = React.useMemo(() => {
+    const items: Record<string, string> = {};
+    for (const region of getRegionsByCountry(countryCode)) items[region.name] = region.name;
+    return items;
+  }, [countryCode]);
+
   const onSubmit = async (values: AuthInput) => {
     if (!isSupabaseConfigured()) {
       setFormError("Configuration Supabase manquante. Renseignez les variables d'environnement.");
@@ -493,6 +532,33 @@ function SignupForm({ initialRole }: { initialRole: AuthRole }) {
         )}
 
         {role === "client" && (
+          <Field label="Pays" htmlFor="signup-country" required>
+            <Select
+              value={countryCode}
+              onValueChange={(v) => {
+                if (!v || v === countryCode) return;
+                setCountryCode(v);
+                setValue("city", "", { shouldDirty: true });
+              }}
+              items={COUNTRY_ITEMS}
+            >
+              <SelectTrigger id="signup-country" className={selectTriggerClass}>
+                <FlagImg code={countryCode} />
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent align="start" className="max-h-72">
+                {COUNTRIES.map((country) => (
+                  <SelectItem key={country.code} value={country.code}>
+                    <FlagImg code={country.code} />
+                    {country.nameFr}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </Field>
+        )}
+
+        {role === "client" && (
           <Field label="Région" htmlFor="signup-city" required error={errors.city?.message}>
             <Select
               value={(watch("city") as string) ?? ""}
@@ -502,15 +568,19 @@ function SignupForm({ initialRole }: { initialRole: AuthRole }) {
                   shouldValidate: true,
                 })
               }
-              items={ALL_REGION_ITEMS}
+              items={regionItems}
             >
-              <SelectTrigger
-                id="signup-city"
-                className="h-11 min-h-11 data-[size=default]:h-11 w-full rounded-xl border border-border bg-surface px-4 text-sm text-foreground outline-none transition-colors focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/30"
-              >
-                <SelectValue />
+              <SelectTrigger id="signup-city" className={selectTriggerClass}>
+                <SelectValue placeholder="Choisir une région" />
               </SelectTrigger>
-              <RegionSelectContent />
+              <SelectContent align="start" className="max-h-72">
+                {getRegionsByCountry(countryCode).map((region) => (
+                  <SelectItem key={region.code} value={region.name}>
+                    {region.name}
+                    {region.note ? " — (à confirmer)" : ""}
+                  </SelectItem>
+                ))}
+              </SelectContent>
             </Select>
           </Field>
         )}
