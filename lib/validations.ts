@@ -58,6 +58,10 @@ export const developerIdentitySchema = z.object({
     .min(2, "Pays requis.")
     .max(60, "Pays trop long."),
   city: regionField(),
+  languages: z
+    .array(z.string().trim().min(2, "Langue trop courte.").max(40, "40 caractères max."))
+    .max(10, "10 langues maximum.")
+    .default([]),
 });
 
 export type DeveloperIdentityFormValues = z.infer<
@@ -98,6 +102,12 @@ export const developerProjectSchema = z.object({
     .array(z.string().trim().url("URL invalide.").max(500))
     .max(10, "10 captures maximum.")
     .default([]),
+  role: z
+    .string()
+    .trim()
+    .max(200, "Rôle trop long (200 caractères max).")
+    .optional()
+    .default(""),
 });
 
 export type DeveloperProjectFormValues = z.infer<

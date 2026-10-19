@@ -2,6 +2,19 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [Profil-Developpeur-Complet] — 2026-10-19 : langues, rôle projet, captures/portfolio téléversables, profil public enrichi
+
+Combler les écarts du parcours d'inscription développeur (§ profil) tout en gardant une base **non destructive et déployable avant/après migration** : `supabase/migrations/0053_dev_languages_role_assets.sql` est prête (additive, idempotente : colonne `developers.languages`, bucket `developer-assets` + politiques propriétaire, et `CREATE OR REPLACE` des 3 RPCs `get_my_developer_application` / `submit_developer_application` / `get_public_developer_profile` enrichis).
+
+- **Langues parlées** : champ « Langues parlées » en étape 1 du wizard (TagListInput, 10 max, schéma zod `languages`), sauvé directement sur `developers` ; **tolérance intégrée** : si la colonne n'existe pas encore (migration non appliquée), la mise à jour est retentée sans ce champ et une info claire s'affiche (« Langues non enregistrées (migration en attente)… ») — aucun blocage du parcours.
+- **Rôle dans le projet** : champ « Mon rôle sur ce projet » par carte du portfolio (la colonne `developer_projects.role` existait depuis 0029 mais n'était jamais renseignée par l'inscription) ; inclus au payload `submit_developer_application` (le RPC 0025 l'écrivait déjà côté missions, pas côté candidature).
+- **Captures d'écran du portfolio** : saisie par URLs (0–10, zod `screenshots` déjà présent) **+ téléversement réel** (bouton « Téléverser une image ») vers le bucket `developer-assets` (JPG/PNG/WebP, 2 Mo, chemin `{uid}/…`, extension validée serveur via politique storage) ; avatar idem sous « Photo de profil » ; **échec propre et explicite** (« Téléversement indisponible (stockage à configurer) — renseignez une URL. ») tant que la migration 0053 n'est pas appliquée — les URLs restent utilisables.
+- **Profil public** : section « Langues » (chips) + « Rôle : … » sur chaque mission du portfolio.
+- **Correction bloquante découverte en test réel** : `services: initial?.services ?? défaut` ne se déclenchait jamais (le RPC renvoie `[]`, pas `null`) → aucun service pré-sélectionné → zod `min(1)` **bloquait toute soumission** du wizard ; fallback corrigé (2 services proposés par défaut si la liste est vide).
+- **État « dossier déposé »** : après soumission, `/inscription-developpeur` affiche le panneau « Vérification en cours » (au lieu de rouvrir le wizard) dès qu'une candidature `pending` existe (distinction par `application`, le statut `pending` étant aussi celui des profils neufs) ; `types/database.ts` enrichi (`languages` en Row/Insert et `PublicDeveloperProfile`).
+- **Vérifications exécutées** : typecheck ✓, lint ✓, **181/181 tests unitaires**, **e2e 58/58** ; **tests réels backend dev** de bout en bout (funnel OTP → wizard → identité avec langues → étape 2 → téléversement (refus propre) → **soumission RPC « Inscription envoyée ! » → rechargement**) ; **login réel d'un compte existant** en local et **en prod Vercel** (`teranga-labs.vercel.app` : funnel déployé, `?next=` respecté, zéro erreur console).
+- **Action requise avant activation** : appliquer `0053_dev_languages_role_assets.sql` (SQL Editor Supabase) pour activer la persistance des langues/rôle, les RPC enrichis et le téléversement.
+
 ## [Parcours-Inscription-Developpeur] — 2026-10-18 : parcours guidé « Devenir développeur » reproduit d'après la vidéo Montaaj
 
 Le bouton « Devenir développeur » (footer, /briefs) lance désormais un vrai tunnel d'inscription en 3 temps calqué sur la démonstration de référence, **100 % branché sur l'auth Supabase existante** (aucun nouveau service, aucune migration, /signup et /login intacts, 0 régression e2e).

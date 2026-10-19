@@ -110,6 +110,7 @@ export interface Database {
           whatsapp: string | null;
           phone?: string | null;
           skills: string[] | null;
+          languages?: string[] | null;
           city: string | null;
           country?: string | null;
           address?: string | null;
@@ -139,6 +140,7 @@ export interface Database {
           whatsapp?: string | null;
           phone?: string | null;
           skills?: string[] | null;
+          languages?: string[] | null;
           city?: string | null;
           country?: string | null;
           address?: string | null;
@@ -1492,6 +1494,7 @@ export type PublicDeveloperProfile = {
   rate_min_fcfa: number | null;
   rate_max_fcfa: number | null;
   skills: string[] | null;
+  languages?: string[] | null;
   experience_years: number;
   is_verified: boolean;
   created_at: string;

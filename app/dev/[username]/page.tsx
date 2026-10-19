@@ -362,6 +362,24 @@ export default async function DeveloperProfilePage({
             </section>
           ) : null}
 
+          {profile.languages && profile.languages.length > 0 ? (
+            <section className="mt-8 border-t border-hairline pt-8" aria-label="Langues">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                Langues
+              </h2>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {profile.languages.map((lang) => (
+                  <span
+                    key={lang}
+                    className="rounded-full border border-hairline bg-muted px-3 py-1 text-sm text-muted-foreground"
+                  >
+                    {lang}
+                  </span>
+                ))}
+              </div>
+            </section>
+          ) : null}
+
           {profile.portfolio_links.length > 0 ? (
             <section className="mt-8 border-t border-hairline pt-8" aria-label="Portfolio">
               <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
@@ -475,6 +493,12 @@ export default async function DeveloperProfilePage({
                             </span>
                           ) : null}
                         </div>
+                      ) : null}
+                      {mission.role ? (
+                        <p className="mt-3 text-xs text-muted-foreground">
+                          Rôle&nbsp;:{" "}
+                          <span className="font-medium text-foreground">{mission.role}</span>
+                        </p>
                       ) : null}
                       <p className="mt-3 text-xs text-muted-foreground">
                         {formatProjectDate(mission.completion_date)}

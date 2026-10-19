@@ -135,7 +135,8 @@ export default async function InscriptionDeveloppeurPage() {
 
         {status === "active" || status === "verified" ? (
           <AlreadyValidated />
-        ) : status === "verification_pending" ? (
+        ) : status === "verification_pending" ||
+          (status === "pending" && data?.application) ? (
           <VerificationInProgress />
         ) : (
           <div className="mt-8">

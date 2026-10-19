@@ -18,6 +18,7 @@ import {
   Plus,
   Send,
   Trash2,
+  Upload,
   UserRound,
   X,
 } from "lucide-react";
@@ -63,6 +64,7 @@ export type OnboardingData = {
   avatar_url?: string | null;
   bio?: string | null;
   skills?: string[] | null;
+  languages?: string[] | null;
   experience_years?: number | null;
   status?: string | null;
   is_verified?: boolean | null;
@@ -83,6 +85,7 @@ export type OnboardingData = {
     technologies?: string[] | null;
     url?: string | null;
     screenshots?: string[] | null;
+    role?: string | null;
   }[];
   documents?: {
     id?: string;
@@ -173,6 +176,7 @@ export function OnboardingForm({
         ) : (
           <ProfessionalStep
             initial={initial}
+            userId={userId}
             onBack={() => setStep(1)}
             onDone={() => setSubmitted(true)}
           />
@@ -259,6 +263,7 @@ function IdentityStep({
       address: initial?.address ?? "",
       country: initial?.country ?? "Sénégal",
       city: (initial?.city as DeveloperIdentityFormValues["city"]) ?? "Dakar",
+      languages: initial?.languages ?? [],
     },
   });
 
@@ -287,19 +292,33 @@ function IdentityStep({
       return;
     }
 
-    const { error } = await supabase
+    const baseUpdate = {
+      first_name: values.first_name.trim(),
+      last_name: values.last_name.trim(),
+      username: values.username.trim().toLowerCase(),
+      phone: values.phone.trim() || null,
+      whatsapp: values.whatsapp.trim(),
+      address: values.address.trim() || null,
+      country: values.country.trim(),
+      city: values.city,
+    };
+
+    let { error } = await supabase
       .from("developers")
-      .update({
-        first_name: values.first_name.trim(),
-        last_name: values.last_name.trim(),
-        username: values.username.trim().toLowerCase(),
-        phone: values.phone.trim() || null,
-        whatsapp: values.whatsapp.trim(),
-        address: values.address.trim() || null,
-        country: values.country.trim(),
-        city: values.city,
-      })
+      .update({ ...baseUpdate, languages: values.languages })
       .eq("id", userId);
+
+    if (
+      error &&
+      (error.code === "PGRST204" ||
+        error.code === "42703" ||
+        error.message?.includes("languages"))
+    ) {
+      toast.info(
+        "Langues non enregistrées (migration en attente) — vos autres informations sont sauvegardées."
+      );
+      ({ error } = await supabase.from("developers").update(baseUpdate).eq("id", userId));
+    }
 
     if (error) {
       if (error.message?.includes("developers_username_uidx")) {
@@ -500,6 +519,21 @@ function IdentityStep({
             />
           </div>
         </Field>
+
+        <div className="sm:col-span-2">
+          <Field
+            label="Langues parlées"
+            error={errors.languages?.message}
+            hint="Ex : Français, Anglais, Wolof… (10 maximum)"
+          >
+            <TagListInput
+              values={watch("languages") ?? []}
+              onChange={(next) => setValue("languages", next, { shouldValidate: true })}
+              placeholder="Français, Anglais…"
+              max={10}
+            />
+          </Field>
+        </div>
       </div>
 
       {formError ? (
@@ -531,15 +565,45 @@ function IdentityStep({
 
 function ProfessionalStep({
   initial,
+  userId,
   onBack,
   onDone,
 }: {
   initial: OnboardingData | null;
+  userId: string;
   onBack: () => void;
   onDone: () => void;
 }) {
   const [formError, setFormError] = React.useState<string | null>(null);
   const [skillInput, setSkillInput] = React.useState("");
+
+  const uploadImage = async (file: File, onUrl: (url: string) => void) => {
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      toast.error("Format accepté : JPG, PNG ou WebP.");
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Image trop lourde (2 Mo max).");
+      return;
+    }
+    const supabase = createClient();
+    const ext = file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : "jpg";
+    const path = `${userId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+    const { error } = await supabase.storage
+      .from("developer-assets")
+      .upload(path, file, { cacheControl: "3600", upsert: false });
+    if (error) {
+      const missingBucket = /bucket|not found|404|403/i.test(error.message ?? "");
+      toast.error(
+        missingBucket
+          ? "Téléversement indisponible (stockage à configurer) — renseignez une URL."
+          : "Téléversement échoué. Réessayez."
+      );
+      return;
+    }
+    const { data } = supabase.storage.from("developer-assets").getPublicUrl(path);
+    if (data?.publicUrl) onUrl(data.publicUrl);
+  };
 
   const defaultProjects =
     initial?.projects?.map((p) => ({
@@ -549,6 +613,7 @@ function ProfessionalStep({
       technologies: p.technologies ?? [],
       url: p.url ?? "",
       screenshots: p.screenshots ?? [],
+      role: p.role ?? "",
     })) ?? [];
   const defaultDocuments =
     initial?.documents
@@ -583,7 +648,9 @@ function ProfessionalStep({
       rate_max_fcfa: initial?.rate_max_fcfa ?? 0,
       bio: initial?.bio ?? "",
       avatar_url: initial?.avatar_url ?? "",
-      services: (initial?.services ?? DEVELOPER_SERVICES.slice(0, 2).map((s) => s)) as string[],
+      services: (initial?.services?.length
+        ? initial.services
+        : DEVELOPER_SERVICES.slice(0, 2).map((s) => s)) as string[],
       skills: initial?.skills ?? [],
       projects: defaultProjects,
       documents: defaultDocuments,
@@ -677,6 +744,7 @@ function ProfessionalStep({
           technologies: p.technologies,
           url: p.url || null,
           screenshots: p.screenshots,
+          role: p.role || null,
         })),
       documents: values.documents.filter((d) => d.url.trim()),
       links: values.links.filter((l) => l.url.trim()),
@@ -865,6 +933,24 @@ function ProfessionalStep({
                 placeholder="https://…/ma-photo.jpg (optionnel)"
                 aria-invalid={Boolean(errors.avatar_url)}
               />
+              <label className="inline-flex h-9 w-fit cursor-pointer items-center gap-1.5 rounded-xl border border-hairline bg-surface px-3 text-xs font-medium text-muted-foreground transition-colors outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50">
+                <Upload className="size-3.5" aria-hidden="true" />
+                Téléverser une photo (JPG/PNG/WebP · 2 Mo max.)
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  className="sr-only"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    e.target.value = "";
+                    if (file) {
+                      void uploadImage(file, (url) =>
+                        setValue("avatar_url", url, { shouldValidate: true })
+                      );
+                    }
+                  }}
+                />
+              </label>
             </Field>
           </div>
         </div>
@@ -1055,6 +1141,20 @@ function ProfessionalStep({
                 </div>
                 <div className="sm:col-span-2">
                   <Field
+                    label="Mon rôle sur ce projet"
+                    hint="Ex : Lead développeur, Frontend, Design… (optionnel)"
+                    htmlFor={`prj-role-${i}`}
+                  >
+                    <Input
+                      id={`prj-role-${i}`}
+                      {...register(`projects.${i}.role`)}
+                      className="h-10 rounded-xl border-hairline bg-background/70"
+                      placeholder="Lead développeur"
+                    />
+                  </Field>
+                </div>
+                <div className="sm:col-span-2">
+                  <Field
                     label="Technologies"
                     error={undefined}
                     hint="Séparées par des virgules"
@@ -1083,6 +1183,49 @@ function ProfessionalStep({
                     />
                   </Field>
                 </div>
+                <div className="sm:col-span-2">
+                  <Field
+                    label="Captures d’écran"
+                    error={undefined}
+                    hint="Jusqu’à 10 images (JPG, PNG ou WebP, 2 Mo max. chacune)."
+                  >
+                    <div className="flex flex-col gap-2">
+                      <TagListInput
+                        values={getValues(`projects.${i}.screenshots`) ?? []}
+                        onChange={(next) =>
+                          setValue(`projects.${i}.screenshots`, next, { shouldValidate: true })
+                        }
+                        placeholder="https://…/capture.png"
+                        max={10}
+                      />
+                      <label className="inline-flex h-9 w-fit cursor-pointer items-center gap-1.5 rounded-xl border border-hairline bg-surface px-3 text-xs font-medium text-muted-foreground transition-colors outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50">
+                        <Upload className="size-3.5" aria-hidden="true" />
+                        Téléverser une image
+                        <input
+                          type="file"
+                          accept="image/jpeg,image/png,image/webp"
+                          className="sr-only"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            e.target.value = "";
+                            if (file) {
+                              void uploadImage(file, (url) => {
+                                const current = getValues(`projects.${i}.screenshots`) ?? [];
+                                if (current.length >= 10) {
+                                  toast.error("10 captures maximum.");
+                                  return;
+                                }
+                                setValue(`projects.${i}.screenshots`, [...current, url], {
+                                  shouldValidate: true,
+                                });
+                              });
+                            }
+                          }}
+                        />
+                      </label>
+                    </div>
+                  </Field>
+                </div>
               </div>
             </div>
           ))}
@@ -1098,6 +1241,7 @@ function ProfessionalStep({
               technologies: [],
               url: "",
               screenshots: [],
+              role: "",
             })
           }
           className="mt-4 inline-flex h-10 items-center gap-2 rounded-xl border border-hairline bg-surface px-4 text-sm font-medium text-muted-foreground transition-colors outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
