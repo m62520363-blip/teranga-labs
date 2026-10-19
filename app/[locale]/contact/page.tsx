@@ -1,21 +1,31 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Clock, HelpCircle, Send } from "lucide-react";
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { ContactForm } from "@/components/contact-form";
 
-export const metadata: Metadata = {
-  title: "Contact",
-  description:
-    "Contactez l’équipe TERANGA LABS : question, signalement d’abus ou besoin d’acheter des Tokens.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Pages.contact");
+  return {
+    title: t("metaTitle"),
+    description: t("metaDesc"),
+  };
+}
 
-const topics = [
-  { title: "Acheter des Tokens", text: "Sur commande, transaction par l’équipe. Paiement en ligne bientôt." },
-  { title: "Signaler un abus", text: "Faux profil, brief fictif, sollicitation hors sujet : on vérifie chaque signalement." },
-  { title: "Problème technique", text: "Connexion, messagerie, compte : décrivez le problème, on corrige." },
-];
+export default async function ContactPage() {
+  const t = await getTranslations("Pages.contact");
+  const topics = t.raw("topics") as { title: string; text: string }[];
+  const faqHint = t.rich("faqHint", {
+    faq: (chunks) => (
+      <Link
+        href="/faq"
+        className="font-medium text-primary underline underline-offset-2"
+      >
+        {chunks}
+      </Link>
+    ),
+  });
 
-export default function ContactPage() {
   return (
     <div className="bg-surface py-16 md:py-24">
       <div className="container-tl">
@@ -25,26 +35,29 @@ export default function ContactPage() {
             Support
           </span>
           <h1 className="mt-6 text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
-            Contact
+            {t("h1")}
           </h1>
           <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-            Une question, un signalement d’abus, ou besoin d’acheter des Tokens
-            ? Écrivez-nous, on répond vite.
+            {t("intro")}
           </p>
 
           <div className="mt-10 space-y-4">
             <ContactForm />
 
             <div className="rounded-2xl border border-hairline bg-card p-6">
-              <h2 className="text-sm font-semibold tracking-tight">À quoi sert le contact ?</h2>
+              <h2 className="text-sm font-semibold tracking-tight">
+                {t("topicsTitle")}
+              </h2>
               <div className="mt-4 space-y-4">
-                {topics.map((t) => (
-                  <div key={t.title} className="flex items-start gap-3">
+                {topics.map((topic) => (
+                  <div key={topic.title} className="flex items-start gap-3">
                     <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
                     <p className="text-sm leading-relaxed text-muted-foreground">
-                      <strong className="font-semibold text-foreground">{t.title}</strong>
+                      <strong className="font-semibold text-foreground">
+                        {topic.title}
+                      </strong>
                       {" — "}
-                      {t.text}
+                      {topic.text}
                     </p>
                   </div>
                 ))}
@@ -53,22 +66,15 @@ export default function ContactPage() {
 
             <p className="flex items-center gap-2 rounded-2xl border border-hairline bg-card p-6 text-sm leading-relaxed text-muted-foreground">
               <Send className="size-4 shrink-0 text-primary" aria-hidden="true" />
-              L’achat de Tokens se fait auprès de l’équipe par écrit. Le paiement
-              en ligne arrive bientôt.
+              {t("purchase")}
             </p>
           </div>
 
           <div className="mt-8 flex flex-col gap-2 rounded-2xl border border-hairline bg-card p-5 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-            <span>
-              Consultez d’abord la{" "}
-              <Link href="/faq" className="font-medium text-primary underline underline-offset-2">
-                FAQ
-              </Link>
-              , votre réponse s’y trouve peut-être déjà.
-            </span>
+            <span>{faqHint}</span>
             <span className="inline-flex items-center gap-1.5">
               <Clock className="size-4 text-primary" aria-hidden="true" />
-              Lundi – samedi, 9 h – 19 h GMT
+              {t("hours")}
             </span>
           </div>
         </div>

@@ -23,7 +23,7 @@ export function LegalPage({
             {lead}
           </p>
           <p className="mt-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            Dernière mise à jour : {updated}
+            {updated}
           </p>
 
           <div className="mt-10 space-y-10">

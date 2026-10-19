@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import {
   ArrowRight,
   HelpCircle,
@@ -7,41 +6,34 @@ import {
   UserPlus,
   Wallet,
 } from "lucide-react";
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { FaqItem } from "@/components/faq-item";
 import { Reveal } from "@/components/reveal";
-import { FAQS } from "@/components/landing/content";
+import { TOKEN_LABEL_PRICED } from "@/lib/formatting";
 
-export const metadata: Metadata = {
-  title: "FAQ",
-  description:
-    "Toutes les réponses sur TERANGA LABS : prix des Tokens, publication d’un brief, rôle du développeur et fonctionnement du marketplace inversé.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Pages.faq");
+  return {
+    title: t("metaTitle"),
+    description: t("metaDesc"),
+  };
+}
 
-const groups = [
-  {
-    icon: UserPlus,
-    title: "Pour les clients",
-    text: "Publier un brief coûte 1 Token et prend 2 minutes. Seuls les développeurs sérieux — ceux qui ont débloqué votre contact avec 1 Token — peuvent vous écrire.",
-    href: "/poster",
-    cta: "Publier un brief",
-  },
-  {
-    icon: Wallet,
-    title: "Pour les développeurs",
-    text: "Chaque brief vous montre le budget et la région. Vous investissez 1 Token pour débloquer le contact et ouvrir la discussion privée. Zéro commission sur le projet.",
-    href: "/briefs",
-    cta: "Voir les briefs",
-  },
-  {
-    icon: MessageCircle,
-    title: "Discussions privées",
-    text: "Tout se passe dans la messagerie interne : devis, détails du projet, questions. Votre WhatsApp reste masqué tant que vous n’acceptez pas d’échanger.",
-    href: "/login",
-    cta: "Créer un compte",
-  },
-];
+const GROUP_ICONS = [UserPlus, Wallet, MessageCircle];
+const GROUP_HREFS = ["/poster", "/briefs", "/login"];
 
-export default function FaqPage() {
+export default async function FaqPage() {
+  const t = await getTranslations("Pages.faq");
+  const groups = (
+    t.raw("groups") as { title: string; text: string; cta: string }[]
+  ).map((group, index) => ({
+    ...group,
+    icon: GROUP_ICONS[index],
+    href: GROUP_HREFS[index],
+  }));
+  const faqs = t.raw("faqs") as { q: string; a: string }[];
+
   return (
     <div className="bg-surface py-16 md:py-24">
       <div className="container-tl">
@@ -51,11 +43,10 @@ export default function FaqPage() {
             FAQ
           </span>
           <h1 className="mt-6 text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
-            Questions fréquentes
+            {t("h1")}
           </h1>
           <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
-            Tout ce qu’il faut savoir avant de publier votre premier brief, ou
-            de débloquer votre premier contact en tant que développeur.
+            {t("intro")}
           </p>
         </div>
 
@@ -88,8 +79,12 @@ export default function FaqPage() {
 
           <Reveal className="mt-12">
             <div className="rounded-2xl border border-hairline bg-card p-6 sm:p-8">
-              {FAQS.map((f) => (
-                <FaqItem key={f.q} question={f.q} answer={f.a} />
+              {faqs.map((f, index) => (
+                <FaqItem
+                  key={f.q}
+                  question={f.q}
+                  answer={t(`faqs.${index}.a`, { token: TOKEN_LABEL_PRICED })}
+                />
               ))}
             </div>
           </Reveal>
@@ -97,14 +92,14 @@ export default function FaqPage() {
           <div className="mt-12 flex flex-col items-start justify-between gap-4 rounded-2xl bg-muted p-6 sm:flex-row sm:items-center sm:p-8">
             <div>
               <h2 className="text-lg font-semibold tracking-tight">
-                Vous n’avez pas trouvé votre réponse ?
+                {t("notFoundTitle")}
               </h2>
               <p className="mt-1 text-sm leading-relaxed text-white/70">
-                Écrivez-nous, on répond vite à chaque demande.
+                {t("notFoundText")}
               </p>
             </div>
             <Link href="/contact" className="btn btn-invert">
-              Contacter l’équipe
+              {t("notFoundCta")}
               <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
           </div>

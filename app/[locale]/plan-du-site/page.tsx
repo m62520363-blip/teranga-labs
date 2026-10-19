@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import {
   ArrowRight,
   FileText,
@@ -12,58 +11,54 @@ import {
   ShoppingBag,
   UserPlus,
 } from "lucide-react";
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 
-export const metadata: Metadata = {
-  title: "Plan du site",
-  description:
-    "Retrouvez toutes les pages et sections de TERANGA LABS : navigation, pages découverte et documents légaux.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Pages.sitemap");
+  return {
+    title: t("metaTitle"),
+    description: t("metaDesc"),
+  };
+}
 
-const groups = [
-  {
-    title: "Navigation",
-    links: [
-      { label: "Accueil", href: "/", icon: Home },
-      {
-        label: "Comment ça marche",
-        href: "/#comment-ca-marche",
-        icon: HelpCircle,
-      },
-      { label: "Pour les clients", href: "/poster", icon: ShoppingBag },
-      { label: "Pour les développeurs", href: "/briefs", icon: UserPlus },
-      { label: "Acheter des Tokens", href: "/tokens", icon: ShoppingBag },
-    ],
-  },
-  {
-    title: "Découvrir",
-    links: [
-      { label: "À propos", href: "/a-propos", icon: Info },
-      { label: "FAQ", href: "/faq", icon: HelpCircle },
-      { label: "Contact", href: "/contact", icon: Mail },
-      { label: "Développeurs par région", href: "/ville", icon: MapPin },
-      { label: "Plan du site", href: "/plan-du-site", icon: MapPin },
-    ],
-  },
-  {
-    title: "Légal",
-    links: [
-      { label: "Mentions légales", href: "/mentions-legales", icon: FileText },
-      {
-        label: "Politique de confidentialité",
-        href: "/politique-de-confidentialite",
-        icon: FileText,
-      },
-      {
-        label: "Conditions d’utilisation",
-        href: "/conditions-utilisation",
-        icon: FileText,
-      },
-      { label: "Politique de cookies", href: "/cookies", icon: FileText },
-    ],
-  },
+// Icônes et hrefs (langue-neutres) alignés sur l'ordre de Pages.sitemap.groups.
+const GROUP_LINKS = [
+  [
+    { href: "/", icon: Home },
+    { href: "/#comment-ca-marche", icon: HelpCircle },
+    { href: "/poster", icon: ShoppingBag },
+    { href: "/briefs", icon: UserPlus },
+    { href: "/tokens", icon: ShoppingBag },
+  ],
+  [
+    { href: "/a-propos", icon: Info },
+    { href: "/faq", icon: HelpCircle },
+    { href: "/contact", icon: Mail },
+    { href: "/ville", icon: MapPin },
+    { href: "/plan-du-site", icon: MapPin },
+  ],
+  [
+    { href: "/mentions-legales", icon: FileText },
+    { href: "/politique-de-confidentialite", icon: FileText },
+    { href: "/conditions-utilisation", icon: FileText },
+    { href: "/cookies", icon: FileText },
+  ],
 ];
 
-export default function PlanDuSitePage() {
+export default async function PlanDuSitePage() {
+  const t = await getTranslations("Pages.sitemap");
+  const groups = (
+    t.raw("groups") as { title: string; links: { label: string }[] }[]
+  ).map((group, groupIndex) => ({
+    ...group,
+    links: group.links.map((link, linkIndex) => ({
+      ...link,
+      href: GROUP_LINKS[groupIndex][linkIndex].href,
+      icon: GROUP_LINKS[groupIndex][linkIndex].icon,
+    })),
+  }));
+
   return (
     <div className="bg-surface py-16 md:py-24">
       <div className="container-tl">
@@ -73,11 +68,10 @@ export default function PlanDuSitePage() {
             TERANGA LABS
           </span>
           <h1 className="mt-6 text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
-            Plan du site
+            {t("h1")}
           </h1>
           <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
-            Tout est accessible en quelques clics : les pages principales, la
-            découverte et les documents légaux.
+            {t("intro")}
           </p>
 
           <div className="mt-12 space-y-8">
@@ -118,7 +112,7 @@ export default function PlanDuSitePage() {
 
           <p className="mt-12 flex items-center gap-2 text-sm text-muted-foreground">
             <Send className="size-4 text-primary" aria-hidden="true" />
-            Une question ? Écrivez-nous via la page Contact.
+            {t("footer")}
           </p>
         </div>
       </div>

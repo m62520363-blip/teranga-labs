@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { Bodoni_Moda, DM_Sans, Geist_Mono, Outfit } from "next/font/google";
 import { hasLocale } from "next-intl";
 import { NextIntlClientProvider } from "next-intl";
-import { getLocale, getMessages } from "next-intl/server";
+import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
@@ -41,118 +41,114 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  metadataBase: absoluteUrl("/"),
-  title: {
-    default: "TERANGA LABS — Le marketplace des projets web de l'Afrique de l'Ouest francophone",
-    template: "%s — TERANGA LABS",
-  },
-  description:
-    "TERANGA LABS met en relation les entreprises d'Afrique de l'Ouest francophone et des développeurs web : le client publie son brief pour 1 Token, le développeur débloque le contact avec 1 Token. Aucune commission.",
-  keywords: [
-    "développeur",
-    "Afrique de l'Ouest francophone",
-    "Sénégal",
-    "Côte d'Ivoire",
-    "Mali",
-    "Burkina Faso",
-    "Guinée",
-    "Guinée-Bissau",
-    "Bénin",
-    "Togo",
-    "Niger",
-    "création de site web",
-    "Dakar",
-    "Abidjan",
-    "marketplace",
-    "freelance",
-    "Tokens",
-  ],
-  manifest: "/manifest.json",
-  icons: {
-    icon: "/icon.png",
-    apple: "/apple-icon.png",
-  },
-  openGraph: {
-    type: "website",
-    locale: "fr",
-    url: absoluteUrl("/"),
-    title: "TERANGA LABS — Des clients qui veulent un site",
-    description:
-      "Le client publie son besoin pour 1 Token. Le développeur utilise 1 Token pour débloquer le contact. Zéro commission.",
-    siteName: "TERANGA LABS",
-    images: [
-      {
-        url: absoluteUrl("/og.png"),
-        width: 1200,
-        height: 630,
-        alt: "TERANGA LABS — Le marketplace des projets web de l'Afrique de l'Ouest francophone.",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "TERANGA LABS — Des clients qui veulent un site",
-    description:
-      "Marketplace des projets web de l'Afrique de l'Ouest francophone : briefs, Tokens, zéro commission.",
-    images: [absoluteUrl("/og.png")],
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-};
+/**
+ * Métadonnées racine localisées (CP3).
+ *
+ * Elles servent de défaut à toutes les pages qui n'en définissent pas
+ * (les pages sous [locale] qui ne surchargent rien, les 404, /admin…).
+ * `getLocale()` lit l'en-tête `x-next-intl-locale` du middleware, avec le
+ * fallback fr de i18n/request.ts — le layout racine fait déjà ce même
+ * appel dans son corps, donc aucun coût dynamique supplémentaire.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("RootMeta");
+  const rawLocale = await getLocale();
+  const locale = hasLocale(routing.locales, rawLocale)
+    ? rawLocale
+    : routing.defaultLocale;
+  return {
+    metadataBase: absoluteUrl("/"),
+    title: {
+      default: t("default"),
+      template: "%s — TERANGA LABS",
+    },
+    description: t("description"),
+    keywords: t.raw("keywords") as string[],
+    manifest: "/manifest.json",
+    icons: {
+      icon: "/icon.png",
+      apple: "/apple-icon.png",
+    },
+    openGraph: {
+      type: "website",
+      locale,
+      url: absoluteUrl(locale === "en" ? "/en" : "/"),
+      title: t("ogTitle"),
+      description: t("ogDescription"),
+      siteName: "TERANGA LABS",
+      images: [
+        {
+          url: absoluteUrl("/og.png"),
+          width: 1200,
+          height: 630,
+          alt: t("ogAlt"),
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t("ogTitle"),
+      description: t("twitterDescription"),
+      images: [absoluteUrl("/og.png")],
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
+}
 
 export const viewport: Viewport = {
   themeColor: "#0A0A0A",
 };
 
 /**
- * Données structurées pour les moteurs de recherche.
+ * Données structurées pour les moteurs de recherche (localisées, CP3).
  *
  * Volontairement minimal : aucune note moyenne, aucun effectif et aucune
  * donnée d'immatriculation, qui seraient invérifiables. Les coordonnées
- * légales complètes restent à renseigner dans app/mentions-legales/page.tsx.
+ * légales complètes restent à renseigner dans
+ * app/[locale]/mentions-legales/page.tsx.
+ *
+ * Construites dans le composant : `locale` et `RootMeta` (descriptions,
+ * noms de pays) suivent la locale de la requête, comme <html lang>.
  */
-const organizationJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "TERANGA LABS",
-  url: absoluteUrl("/").origin,
-  logo: absoluteUrl("/icon.png"),
-  description:
-    "Marketplace qui met en relation les entreprises d'Afrique de l'Ouest francophone et des développeurs web, sur un modèle inversé où les clients publient leurs besoins.",
-  areaServed: [
-    { "@type": "Country", name: "Sénégal" },
-    { "@type": "Country", name: "Côte d'Ivoire" },
-    { "@type": "Country", name: "Mali" },
-    { "@type": "Country", name: "Burkina Faso" },
-    { "@type": "Country", name: "Niger" },
-    { "@type": "Country", name: "Guinée" },
-    { "@type": "Country", name: "Guinée-Bissau" },
-    { "@type": "Country", name: "Bénin" },
-    { "@type": "Country", name: "Togo" },
-  ],
-  knowsLanguage: "fr",
-  contactPoint: {
-    "@type": "ContactPoint",
-    contactType: "customer support",
-    availableLanguage: ["fr"],
-    areaServed: ["SN", "CI", "ML", "BF", "NE", "GN", "GW", "BJ", "TG"],
-  },
-};
+const COUNTRY_CODES = ["SN", "CI", "ML", "BF", "NE", "GN", "GW", "BJ", "TG"];
 
-const websiteJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  name: "TERANGA LABS",
-  url: absoluteUrl("/").origin,
-  inLanguage: "fr",
-  publisher: { "@type": "Organization", name: "TERANGA LABS" },
-  // Pas de SearchAction : la recherche des briefs est faite côté client
-  // et n'est pas adressable par une URL (?q=), donc la déclarer ici
-  // serait une promesse que le site ne tient pas.
-};
+function buildJsonLd(locale: string, metaT: Awaited<ReturnType<typeof getTranslations>>) {
+  const areaServed = (metaT.raw("countries") as string[]).map((name) => ({
+    "@type": "Country",
+    name,
+  }));
+  const organizationJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "TERANGA LABS",
+    url: absoluteUrl("/").origin,
+    logo: absoluteUrl("/icon.png"),
+    description: metaT("orgDescription"),
+    areaServed,
+    knowsLanguage: locale,
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer support",
+      availableLanguage: [locale],
+      areaServed: COUNTRY_CODES,
+    },
+  };
+  const websiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "TERANGA LABS",
+    url: absoluteUrl("/").origin,
+    inLanguage: locale,
+    publisher: { "@type": "Organization", name: "TERANGA LABS" },
+    // Pas de SearchAction : la recherche des briefs est faite côté client
+    // et n'est pas adressable par une URL (?q=), donc la déclarer ici
+    // serait une promesse que le site ne tient pas.
+  };
+  return { organizationJsonLd, websiteJsonLd };
+}
 
 export default async function RootLayout({
   children,
@@ -168,6 +164,8 @@ export default async function RootLayout({
     ? rawLocale
     : routing.defaultLocale;
   const messages = await getMessages();
+  const metaT = await getTranslations("RootMeta");
+  const { organizationJsonLd, websiteJsonLd } = buildJsonLd(locale, metaT);
 
   return (
     <html lang={locale} suppressHydrationWarning>

@@ -74,7 +74,11 @@
     "hero": {
       "badge": "No commission, ever",
       "title": "Find your web developer, pay",
-      "rotating": ["without commission.", "with 1 Token.", "without middlemen."],
+      "rotating": [
+        "without commission.",
+        "with 1 Token.",
+        "without middlemen."
+      ],
       "subtitle": "Post your brief in 2 minutes. Serious developers come to you — your WhatsApp stays private.",
       "ctaPrimary": "Find a developer",
       "ctaSecondary": "Post a brief"
@@ -186,6 +190,434 @@
           "Direct payment Wave / Orange Money"
         ],
         "cta": "View briefs"
+      }
+    }
+  },
+  "RootMeta": {
+    "default": "TERANGA LABS — West Africa's francophone web projects marketplace",
+    "description": "TERANGA LABS, the marketplace of web projects for francophone West Africa. The client posts their brief for 1 Token, the developer unlocks contact with 1 Token and everything is settled directly. No commission.",
+    "keywords": [
+      "developer",
+      "francophone West Africa",
+      "Senegal",
+      "Ivory Coast",
+      "Mali",
+      "Burkina Faso",
+      "Guinea",
+      "Guinea-Bissau",
+      "Benin",
+      "Togo",
+      "Niger",
+      "web design",
+      "Dakar",
+      "Abidjan",
+      "marketplace",
+      "freelance",
+      "Tokens"
+    ],
+    "ogTitle": "TERANGA LABS — Clients looking for a website",
+    "ogDescription": "The client posts their need for 1 Token. The developer spends 1 Token to unlock contact. Zero commission.",
+    "ogAlt": "TERANGA LABS — West Africa's francophone web projects marketplace.",
+    "twitterDescription": "West Africa's francophone web projects marketplace: briefs, Tokens, zero commission.",
+    "orgDescription": "Marketplace connecting businesses in francophone West Africa with web developers, on an inverted model where clients post their needs.",
+    "countries": [
+      "Senegal",
+      "Ivory Coast",
+      "Mali",
+      "Burkina Faso",
+      "Niger",
+      "Guinea",
+      "Guinea-Bissau",
+      "Benin",
+      "Togo"
+    ]
+  },
+  "Pages": {
+    "faq": {
+      "metaTitle": "FAQ",
+      "metaDesc": "All the answers about TERANGA LABS: Token pricing, posting a brief, the developer's role and how the inverted marketplace works.",
+      "h1": "Frequently asked questions",
+      "intro": "Everything you need to know before posting your first brief, or unlocking your first contact as a developer.",
+      "groups": [
+        {
+          "title": "For clients",
+          "text": "Posting a brief costs 1 Token and takes 2 minutes. Only serious developers — those who have unlocked your contact with 1 Token — can write to you.",
+          "cta": "Post a brief"
+        },
+        {
+          "title": "For developers",
+          "text": "Each brief shows you the budget and the region. You invest 1 Token to unlock the contact and open the private conversation. Zero commission on the project.",
+          "cta": "Browse briefs"
+        },
+        {
+          "title": "Private conversations",
+          "text": "Everything happens in the built-in messenger: quotes, project details, questions. Your WhatsApp stays hidden until you agree to share it.",
+          "cta": "Create an account"
+        }
+      ],
+      "faqs": [
+        {
+          "q": "What is TERANGA LABS?",
+          "a": "TERANGA LABS is the marketplace for web projects in francophone West Africa: clients post their website brief for 1 Token, and serious developers come to them."
+        },
+        {
+          "q": "How does the model work?",
+          "a": "The client posts their brief in 2 minutes: type of site, budget and region. The brief appears in /briefs. The developer who is interested spends 1 Token to open a private conversation with the client, then the exchange continues directly on the platform."
+        },
+        {
+          "q": "How much does a Token cost?",
+          "a": "{token}. Registration is free: you order your Tokens, then post your brief or unlock a contact."
+        },
+        {
+          "q": "How do I pay for my Tokens?",
+          "a": "Payment is made online from the Tokens page: bank card or mobile money, depending on your country. As soon as the payment is confirmed, your Tokens are credited to your account automatically."
+        },
+        {
+          "q": "Does my WhatsApp number stay private?",
+          "a": "Yes. Your number never appears on briefs or in search results: exchanges go through the built-in messenger, and you alone decide when to share your contact."
+        },
+        {
+          "q": "Which countries is the service available in?",
+          "a": "In the 9 countries of francophone West Africa: Senegal, Ivory Coast, Mali, Burkina Faso, Niger, Guinea, Guinea-Bissau, Benin and Togo. Prices are shown in FCFA."
+        },
+        {
+          "q": "Is there a developer ranking?",
+          "a": "Yes: a monthly ranking, plus regional and country rankings. Only the top 2 are rewarded in Tokens, and you need at least 2 projects completed and confirmed in the month to appear in it."
+        },
+        {
+          "q": "Is there a commission on projects?",
+          "a": "No. TERANGA LABS takes no commission on projects: the developer and the client deal directly, with no middleman."
+        }
+      ],
+      "notFoundTitle": "Didn't find your answer?",
+      "notFoundText": "Write to us — we reply quickly to every request.",
+      "notFoundCta": "Contact the team"
+    },
+    "about": {
+      "metaTitle": "About",
+      "metaDesc": "TERANGA LABS is the inverted marketplace of West Africa: clients post the brief for their website for 1 Token, developers unlock the contact with 1 Token.",
+      "h1": "About TERANGA LABS",
+      "leadBold": "We don't sell websites. We sell access to clients who want websites.",
+      "leadRest": "TERANGA LABS is the inverted marketplace of West Africa: a shop in Thiès, a restaurant in Dakar, a school in Abidjan posts the brief for their project (1 Token), and serious developers come to them.",
+      "values": [
+        {
+          "title": "The client saves time",
+          "text": "Posting a brief takes 2 minutes and costs 1 Token. Only serious developers — those who have invested a Token — contact you."
+        },
+        {
+          "title": "The developer pays fairly",
+          "text": "{tokenRule} = 1 contact. You only pay for the briefs that truly interest you, with no commission on the project."
+        },
+        {
+          "title": "A direct exchange",
+          "text": "Built-in messaging, zero middleman. Client and developer decide together, in full privacy."
+        }
+      ],
+      "ctaTitle": "Ready to try it?",
+      "ctaText": "Post your first brief (1 Token), or browse the briefs that are already looking for a developer.",
+      "ctaPrimary": "Post my brief",
+      "ctaSecondary": "Browse briefs"
+    },
+    "contact": {
+      "metaTitle": "Contact",
+      "metaDesc": "Contact the TERANGA LABS team: a question, a report, or a need to buy Tokens.",
+      "h1": "Contact",
+      "intro": "A question, a report, or a need to buy Tokens? Write to us — we reply quickly.",
+      "topicsTitle": "What is the contact for?",
+      "topics": [
+        {
+          "title": "Buy Tokens",
+          "text": "By order, handled by the team. Online payment coming soon."
+        },
+        {
+          "title": "Report an abuse",
+          "text": "Fake profile, fake brief, off-topic solicitation: we review every report."
+        },
+        {
+          "title": "Technical problem",
+          "text": "Login, messaging, account: describe the problem and we'll fix it."
+        }
+      ],
+      "purchase": "Token purchases are handled in writing by the team. Online payment is coming soon.",
+      "faqHint": "Check the <faq>FAQ</faq> first — your answer may already be there.",
+      "hours": "Monday – Saturday, 9 AM – 7 PM GMT",
+      "form": {
+        "subjects": {
+          "tokens": "Buy Tokens",
+          "report": "Report an abuse",
+          "technical": "Technical problem",
+          "other": "Other request"
+        },
+        "errDb": "Database connection unavailable. Write to us at contact@terangalabs.sn.",
+        "errGeneric": "An error occurred. Please try again.",
+        "successTitle": "Message sent",
+        "successBody": "Thank you {name}! We'll reply within 24 working hours.",
+        "successAnon": "for writing to us",
+        "again": "Send another message",
+        "title": "Write to us",
+        "sub": "Reply within 24 working hours, Monday to Saturday.",
+        "name": "Your name",
+        "email": "Your email",
+        "subject": "Subject",
+        "message": "Your message",
+        "phName": "e.g. Awa Diop",
+        "phEmail": "you@example.com",
+        "phMessage": "Describe your request: buying Tokens, reporting an abuse, a technical problem…",
+        "direct": "Prefer to write an email directly? <mail>contact@terangalabs.sn</mail>",
+        "submit": "Send"
+      }
+    },
+    "sitemap": {
+      "metaTitle": "Sitemap",
+      "metaDesc": "Find all TERANGA LABS pages and sections: navigation, discovery pages and legal documents.",
+      "h1": "Sitemap",
+      "intro": "Everything is a few clicks away: the main pages, discovery and legal documents.",
+      "groups": [
+        {
+          "title": "Navigation",
+          "links": [
+            {
+              "label": "Home"
+            },
+            {
+              "label": "How it works"
+            },
+            {
+              "label": "For clients"
+            },
+            {
+              "label": "For developers"
+            },
+            {
+              "label": "Buy Tokens"
+            }
+          ]
+        },
+        {
+          "title": "Discover",
+          "links": [
+            {
+              "label": "About"
+            },
+            {
+              "label": "FAQ"
+            },
+            {
+              "label": "Contact"
+            },
+            {
+              "label": "Developers by region"
+            },
+            {
+              "label": "Sitemap"
+            }
+          ]
+        },
+        {
+          "title": "Legal",
+          "links": [
+            {
+              "label": "Legal notice"
+            },
+            {
+              "label": "Privacy policy"
+            },
+            {
+              "label": "Terms of use"
+            },
+            {
+              "label": "Cookie policy"
+            }
+          ]
+        }
+      ],
+      "footer": "A question? Write to us via the Contact page."
+    },
+    "legal": {
+      "mentions": {
+        "metaTitle": "Legal notice",
+        "metaDesc": "Legal notice of TERANGA LABS, the inverted marketplace for West Africa.",
+        "title": "Legal notice",
+        "lead": "Information about the publisher of the TERANGA LABS service.",
+        "updated": "Last updated: September 24, 2026",
+        "s1": {
+          "h": "Service publisher",
+          "b": "<p>The TERANGA LABS website is published by <strong>Walty Group-SUARL</strong>, a digital services company based in <strong>Dakar, Senegal</strong>. The TERANGA LABS brand is the trading name of the service.</p><p>Contact email: <mail>contact@terangalabs.sn</mail></p>"
+        },
+        "s2": {
+          "h": "Publication director",
+          "b": "<p>The publication director is the legal representative of Walty Group-SUARL.</p>"
+        },
+        "s3": {
+          "h": "Legal identity",
+          "b": "<p>Registered office address, NINEA and RCCM of Walty Group-SUARL: <it>[to be completed]</it>. This information is published upon receipt of administrative registration. In the meantime, for any request, write to <mail>contact@terangalabs.sn</mail>.</p>"
+        },
+        "s4": {
+          "h": "Hosting",
+          "b": "<p>The website is hosted by <strong>Vercel Inc.</strong>, 340 S Lemon Ave #4133, Walnut, CA 91789, United States — <vercel>vercel.com</vercel>.</p><p>The service's database is managed by <strong>Supabase Inc.</strong> through secure cloud infrastructure, separate from the website hosting.</p>"
+        },
+        "s5": {
+          "h": "Personal data and cookies",
+          "b": "<p>Personal data (name, WhatsApp, brief content) is processed solely for the matching described in the <privacy>privacy policy</privacy>. Cookies are detailed in the <cookies>cookie policy</cookies>.</p>"
+        },
+        "s6": {
+          "h": "Liabilities",
+          "b": "<p>Exchanges between clients and developers take place under their own responsibility. TERANGA LABS provides the matching (Tokens, briefs, messaging) and takes no part in the conclusion of contracts or in financial transactions between the parties. Reasonable efforts are made to prevent abuse and fraud, without any guarantee of outcome.</p>"
+        },
+        "s7": {
+          "h": "Governing law",
+          "b": "<p>These notices are subject to Senegalese law. In the event of a dispute, and failing an amicable settlement, the courts of Dakar have jurisdiction.</p>"
+        },
+        "s8": {
+          "h": "Intellectual property",
+          "b": "<p>All elements of the website — texts, visuals, logo, structure, layout — are the exclusive property of TERANGA LABS or its partners. Any reproduction, representation or distribution without prior authorization is prohibited.</p><p>Brands and names cited as examples (marketplace applications) belong to their respective owners.</p>"
+        },
+        "s9": {
+          "h": "Changes to these notices",
+          "b": "<p>TERANGA LABS reserves the right to modify these notices at any time. They become binding upon publication.</p>"
+        }
+      },
+      "terms": {
+        "metaTitle": "Terms of use",
+        "metaDesc": "The rules for using the TERANGA LABS service: briefs, Tokens and matching.",
+        "title": "Terms of use",
+        "lead": "By using TERANGA LABS, you accept the following rules.",
+        "updated": "Last updated: September 24, 2026",
+        "s1": {
+          "h": "Purpose of the service",
+          "b": "<p>TERANGA LABS is a matching service between clients who post the need for a website for 1 Token and developers who unlock the contact with a Token.</p>"
+        },
+        "s2": {
+          "h": "Posting a brief",
+          "b": "<p>Posting a brief costs 1 Token and is reserved for people able to take on the commitments described.</p><ul><li>the information provided must be accurate;</li><li>the brief must relate to a real and serious project;</li><li>any abusive or fraudulent use is penalized by account deletion.</li></ul>"
+        },
+        "s3": {
+          "h": "Tokens",
+          "b": "<p>A Token unlocks a contact on a brief. Usual rate: <strong>1 Token = 2,500 FCFA</strong>.</p><ul><li>a Token is consumed when the contact is unlocked;</li><li>purchases are currently made through the team; online payment is coming soon;</li><li>transactions are final once the contact is unlocked, except in proven dispute.</li></ul>"
+        },
+        "s4": {
+          "h": "Direct contact",
+          "b": "<p>Direct contact with the client is the very purpose of the service: the developer who unlocks a brief with 1 Token obtains the contact and continues the exchange in the built-in messenger, then directly (WhatsApp) after mutual agreement. Developers and clients are responsible for their exchanges and for concluding their own contract. TERANGA LABS takes no part in financial transactions between the parties and charges no commission.</p>"
+        },
+        "s5": {
+          "h": "Expected behaviour",
+          "b": "<ul><li>no spam, harassment or off-topic solicitation;</li><li>no resale of unlocked contacts to third parties;</li><li>every report is reviewed by the team.</li></ul>"
+        },
+        "s6": {
+          "h": "Intellectual property",
+          "b": "<p>The content of a brief belongs to its author (the client). Developers may use it solely to respond to that brief. The TERANGA LABS brand, texts and visual identity may not be reused without written permission.</p>"
+        },
+        "s7": {
+          "h": "Refunds and disputes",
+          "b": "<p>A Token spent on a contact cannot be refunded. In case of a fraudulent contact or a fictitious brief, the report must be made within the <strong>48 hours</strong> following the unlocking of the contact.</p><p>Reports are made from the conversation via the “Report” button. The team reviews the exchanges and refunds in Tokens if the dispute is confirmed.</p>"
+        },
+        "s8": {
+          "h": "Liability",
+          "b": "<p>TERANGA LABS provides a matching service. The quality of the work delivered, adherence to deadlines and project content are the sole responsibility of the developer, and the accuracy of the brief that of the client. Our liability is limited to the amount of Tokens involved.</p>"
+        },
+        "s9": {
+          "h": "Service changes",
+          "b": "<p>TERANGA LABS evolves continuously: pricing, rules and features may change. The terms in force are those published on this page. Using the service after an update constitutes acceptance of the new rules.</p>"
+        },
+        "s10": {
+          "h": "Report a problem",
+          "b": "<p>To report abuse, fraud or a breach of these terms, write to us at <mail>contact@terangalabs.sn</mail> or use the report button present on each piece of content.</p>"
+        },
+        "s11": {
+          "h": "Notification contact details",
+          "b": "<p>All legal notifications are addressed to contact@terangalabs.sn. Please keep valid access to your login email address.</p>"
+        },
+        "s12": {
+          "h": "Changes and suspension",
+          "b": "<p>TERANGA LABS may suspend any account in case of non-compliance with these terms, and reserves the right to evolve the service and its pricing. In the event of a dispute, Senegalese law applies and the courts of Dakar have jurisdiction.</p>"
+        }
+      },
+      "privacy": {
+        "metaTitle": "Privacy policy",
+        "metaDesc": "How TERANGA LABS collects, uses and protects your personal data.",
+        "title": "Privacy policy",
+        "lead": "Your data, your privacy: here is how TERANGA LABS handles them.",
+        "updated": "Last updated: September 24, 2026",
+        "s1": {
+          "h": "Data we collect",
+          "b": "<p>When you use the service, we collect:</p><ul><li>your brief data: name, region, project type, budget and description;</li><li>your WhatsApp number, used for direct contact;</li><li>navigation data strictly necessary for operation.</li></ul>"
+        },
+        "s2": {
+          "h": "Why do we collect this data?",
+          "b": "<p>This data is used solely to:</p><ul><li>match clients and developers;</li><li>let you unlock a contact with a Token;</li><li>ensure moderation and prevent abuse.</li></ul><p>We do not sell your data, and we never share it for advertising purposes.</p>"
+        },
+        "s3": {
+          "h": "Sharing and visibility",
+          "b": "<p>A brief's contact (WhatsApp number) is only visible to developers who unlock the contact with a Token. No other disclosure is made without your consent.</p>"
+        },
+        "s4": {
+          "h": "Retention",
+          "b": "<p>Data is kept for as long as necessary to provide the service: your session stays active for 30 days (see the <cookies>cookie policy</cookies>), your briefs stay visible while they are open, and account data is deleted upon request. Security logs are kept for 12 months, then anonymized.</p>"
+        },
+        "s5": {
+          "h": "Subprocessors",
+          "b": "<p>Our infrastructure is hosted with a web provider such as Supabase (database, authentication, storage). These providers may not use your data for their own purposes and only access it to ensure the proper functioning of the service.</p>"
+        },
+        "s6": {
+          "h": "Security",
+          "b": "<p>We apply technical and organizational measures suited to the sensitivity of the data:</p><ul><li>passwords hashed, never stored in plaintext;</li><li>secure sessions with httpOnly cookies;</li><li>data access restricted by role (client or developer);</li><li>WhatsApp hidden by default, revealed only during a conversation.</li></ul>"
+        },
+        "s7": {
+          "h": "Minors",
+          "b": "<p>The service is reserved for people able to take on contractual commitments. A minor may not use TERANGA LABS without the consent of a legal representative.</p>"
+        },
+        "s8": {
+          "h": "Cookies",
+          "b": "<p>The cookies we use serve exclusively for authentication and technical operation. They are never used for advertising purposes.</p>"
+        },
+        "s9": {
+          "h": "Your rights",
+          "b": "<p>Under Senegalese law No. 2008-12 on the protection of personal data, you may request access to, rectification or deletion of your data by writing to <mail>contact@terangalabs.sn</mail>.</p>"
+        }
+      },
+      "cookies": {
+        "metaTitle": "Cookie policy",
+        "metaDesc": "How TERANGA LABS uses cookies and trackers to run the service and keep you signed in.",
+        "title": "Cookie policy",
+        "lead": "We keep your session signed in with cookies, and nothing else.",
+        "updated": "Last updated: September 24, 2026",
+        "groups": [
+          {
+            "name": "Essential authentication cookies",
+            "description": "Created by Supabase Auth, they keep your session active and secure (30 days). Deleted when you sign out. They are strictly necessary for the service: without them, signing in or accessing your space is impossible."
+          },
+          {
+            "name": "Next.js technical cookies",
+            "description": "Used only for rendering pages and navigation. No personal data is stored in them."
+          },
+          {
+            "name": "Local preferences (localStorage)",
+            "description": "Interface settings such as “reduce animations” are stored on your device. They never leave your browser."
+          },
+          {
+            "name": "No advertising or tracking cookies",
+            "description": "TERANGA LABS does not use targeted advertising, does not pass any cookie to ad networks and does not resell any data."
+          }
+        ],
+        "s1": {
+          "h": "What cookies are",
+          "b": "<p>A cookie is a small file stored by your browser. At TERANGA LABS, cookies serve one single purpose: <strong>keeping you signed in</strong> securely for up to 30 days, as you requested.</p>"
+        },
+        "s2": {
+          "h": "Cookies we use"
+        },
+        "s3": {
+          "h": "Persistent session (30 days)",
+          "b": "<p>By default, when you sign in, a session cookie with a duration of <strong>30 days</strong> is set. You stay signed in between visits, so you do not have to type your password again.</p><p>You can end this session at any time using the <strong>“Sign out”</strong> button in the navigation bar: the cookie is then immediately deleted from your device.</p>"
+        },
+        "s4": {
+          "h": "Management and consent",
+          "b": "<p>Essential authentication cookies do not require consent: they are indispensable to the service. Local preferences can be erased at any time from your browser settings. If you block all cookies, signing in to TERANGA LABS will be impossible.</p>"
+        },
+        "s5": {
+          "h": "Contact",
+          "b": "<p>A question about this policy? Write to us at <mail>contact@terangalabs.sn</mail>.</p>"
+        }
       }
     }
   }
