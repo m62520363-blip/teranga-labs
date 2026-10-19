@@ -380,6 +380,18 @@ export function DashboardContent({
       ? "crm"
       : "profil";
   const [tab, setTab] = React.useState<TabKey>(defaultTab);
+  /* ?tab=profil vient du menu latéral : suivre l'URL même après le montage
+     (navigation depuis /dashboard lui-même, retour arrière, lien depuis
+     /parametres…). L'onglet initial seul ne suffisait pas. */
+  React.useEffect(() => {
+    if (
+      (
+        ["crm", "profil", "activite", "devis", "missions", "avis", "agence", "pro"] as TabKey[]
+      ).includes(initialTab as TabKey)
+    ) {
+      setTab(initialTab as TabKey);
+    }
+  }, [initialTab]);
   const [refundFor, setRefundFor] = React.useState<UnlockHistoryItem | null>(null);
   const [refundReason, setRefundReason] = React.useState("");
   const [refunding, setRefunding] = React.useState(false);

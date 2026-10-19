@@ -4,6 +4,8 @@ import * as React from "react";
 import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { ClientShell } from "@/components/client/client-shell";
+import { DashboardShell } from "@/components/nav/dashboard-shell";
+import { isAppShellRoute } from "@/components/nav/app-nav";
 import {
   isClientAppRoute,
   THEME_STORAGE_KEY,
@@ -20,6 +22,11 @@ import {
  * dédié (sidebar desktop / header + bottom nav mobile) à la place de la
  * navbar publique, et le thème clair de l'espace app est activé (la
  * landing et les pages publiques restent sur le thème sombre).
+ *
+ * V8 dashboard : un utilisateur connecté non-client obtient le shell du
+ * dashboard (barre latérale verticale sur ordinateur, en-tête sticky +
+ * menu coulissant sur mobile) sur les routes du menu — au lieu de la
+ * navbar publique.
  */
 const BARE_ROUTES = new Set(["/login", "/signup"]);
 
@@ -82,6 +89,14 @@ export function SiteShell({
       >
         {children}
       </ClientShell>
+    );
+  }
+
+  if (user && role !== "client" && isAppShellRoute(pathname)) {
+    return (
+      <DashboardShell user={user ?? null} userId={userId ?? null} footer={footer}>
+        {children}
+      </DashboardShell>
     );
   }
 
