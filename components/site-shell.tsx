@@ -1,15 +1,11 @@
 "use client";
 
-import * as React from "react";
 import type { ReactNode } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname } from "@/i18n/navigation";
 import { ClientShell } from "@/components/client/client-shell";
 import { DashboardShell } from "@/components/nav/dashboard-shell";
 import { isAppShellRoute } from "@/components/nav/app-nav";
-import {
-  isClientAppRoute,
-  THEME_STORAGE_KEY,
-} from "@/components/client/app-routes";
+import { isClientAppRoute } from "@/components/client/app-routes";
 
 /**
  * Chrome du site (navbar + padding principal + footer).
@@ -19,14 +15,16 @@ import {
  * aucune barre de navigation ni de footer ne doit parasiter le formulaire.
  *
  * Sur les routes de l'espace applicatif, un rôle client obtient le shell
- * dédié (sidebar desktop / header + bottom nav mobile) à la place de la
- * navbar publique, et le thème clair de l'espace app est activé (la
- * landing et les pages publiques restent sur le thème sombre).
+ * dédié (sidebar V8 + tiroir mobile + dock d'action rapide) à la place de
+ * la navbar publique.
  *
  * V8 dashboard : un utilisateur connecté non-client obtient le shell du
  * dashboard (barre latérale verticale sur ordinateur, en-tête sticky +
  * menu coulissant sur mobile) sur les routes du menu — au lieu de la
  * navbar publique.
+ *
+ * Thème : sombre unique partout (décision projet), sans bascule — il n'y
+ * a donc plus d'attribut `data-app-theme` à synchroniser.
  */
 const BARE_ROUTES = new Set(["/login", "/signup"]);
 
@@ -46,47 +44,12 @@ export function SiteShell({
   userId?: string | null;
 }) {
   const pathname = usePathname();
-  const [theme, setTheme] = React.useState<"light" | "dark">("light");
-
-  React.useEffect(() => {
-    try {
-      const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
-      if (stored === "dark" || stored === "light") setTheme(stored);
-    } catch {
-      /* stockage indisponible : thème clair par défaut */
-    }
-  }, []);
-
-  React.useEffect(() => {
-    if (isClientAppRoute(pathname)) {
-      document.documentElement.setAttribute("data-app-theme", theme);
-    } else {
-      document.documentElement.removeAttribute("data-app-theme");
-    }
-  }, [pathname, theme]);
-
-  const toggleTheme = React.useCallback(() => {
-    setTheme((prev) => {
-      const next = prev === "light" ? "dark" : "light";
-      try {
-        window.localStorage.setItem(THEME_STORAGE_KEY, next);
-      } catch {
-        /* ignore */
-      }
-      return next;
-    });
-  }, []);
 
   if (BARE_ROUTES.has(pathname)) return <>{children}</>;
 
   if (role === "client" && isClientAppRoute(pathname)) {
     return (
-      <ClientShell
-        user={user ?? null}
-        userId={userId ?? null}
-        theme={theme}
-        onToggleTheme={toggleTheme}
-      >
+      <ClientShell user={user ?? null} userId={userId ?? null}>
         {children}
       </ClientShell>
     );

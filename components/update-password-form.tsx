@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -94,12 +95,12 @@ export function UpdatePasswordForm() {
         <p role="alert" className="text-sm">
           Ce lien de réinitialisation est invalide ou expiré.
         </p>
-        <a
+        <Link
           href="/login"
           className="inline-flex h-10 items-center justify-center rounded-xl bg-foreground px-5 text-sm font-medium text-ink"
         >
           Retour à la connexion
-        </a>
+        </Link>
       </div>
     );
   }

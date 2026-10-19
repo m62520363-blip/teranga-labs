@@ -2,10 +2,11 @@ import { NextResponse } from "next/server";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { apiRequireUser } from "@/lib/auth/guards";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { createChariowCheckout, isChariowApiError } from "@/lib/payments/chariow";
 import {
-  getPreferredProvider,
-  getProviderByName,
-} from "@/lib/payments/provider";
+  getTokenProductSlug,
+  isChariowConfigured,
+} from "@/lib/payments/chariow-config";
 import { paymentCheckoutSchema } from "@/lib/validations";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { log } from "@/lib/log";
@@ -15,21 +16,18 @@ export const dynamic = "force-dynamic";
 
 /**
  * POST /api/payments/checkout
- * Initialise une session de paiement pour le pack demandé par le
- * développeur connecté. Crée d'abord une "intention de paiement"
- * (montant gelé côté serveur), puis redirige vers le prestataire.
- * Aucun crédit ici : seul le webhook/IPN signé crédite les Tokens.
+ * Initialise une session de paiement Chariow pour le pack demandé par
+ * l'utilisateur connecté. Crée d'abord une "intention de paiement"
+ * (montant gelé côté serveur), puis ouvre la session Chariow et renvoie
+ * l'URL de redirection. Aucun crédit ici : seul le Pulse signé, après
+ * re-vérification serveur de la vente, crédite les Tokens.
  *
- * Deux prestataires sont gérés, choisis via `provider` :
- *   - `wave`     : Checkout Session + webhook HMAC.
- *   - `paydunya` : facture PAR + IPN par hash SHA-512 de la MasterKey.
- *
- * `provider` est résolu côté serveur à partir de la configuration : le
- * client ne choisit pas librement son prestataire, il ne fait que
- * demander. Incohérent, il retombe sur celui qui est configuré.
+ * Le prix facturé vient du produit Chariow (slugs = ids des packs) : le
+ * Pulse compare ensuite le montant confirmé à l'intention gelée, ce qui
+ * détecte toute divergence de prix entre base et boutique Chariow.
  */
 export async function POST(request: Request) {
-  if (getPreferredProvider("auto") === null) {
+  if (!isChariowConfigured()) {
     return NextResponse.json(
       {
         code: "PAYMENT_NOT_CONFIGURED",
@@ -172,82 +170,128 @@ export async function POST(request: Request) {
   const origin = process.env.NEXT_PUBLIC_APP_URL ?? new URL(request.url).origin;
   const admin = createAdminClient();
 
-  // Prestataire effectif : PayDunya prioritaire (Mobile Money et carte déjà
-  // activés côté compte), Wave en repli. Le client ne choisit pas librement :
-  // `paydunya`, `wave` sinon fallback, et tout autre valeur (max_it/card)
-  // retombe sur l'ordre de préférence serveur.
-  const requested = parsed.data.provider;
-  const providerName = getPreferredProvider(
-    requested === "wave" || requested === "paydunya" ? requested : "auto"
-  );
-
-  if (!providerName) {
+  const email = user.email?.trim();
+  if (!email) {
     return NextResponse.json(
-      {
-        code: "PAYMENT_NOT_CONFIGURED",
-        message: "Le paiement en ligne n'est pas encore activé sur ce serveur.",
-      },
-      { status: 503 }
+      { code: "EMAIL_REQUIRED", message: "Ajoutez une adresse e-mail à votre compte pour payer." },
+      { status: 400 }
     );
   }
-  const impl = getProviderByName(providerName);
+  const phone = profile?.whatsapp?.trim() ?? user.phone?.trim();
+  if (!phone) {
+    return NextResponse.json(
+      {
+        code: "PHONE_REQUIRED",
+        message:
+          "Renseignez votre numéro WhatsApp dans votre profil pour payer en ligne.",
+      },
+      { status: 400 }
+    );
+  }
 
   try {
-    const customer: { name?: string; email?: string; phone?: string } = {};
-    const fullName = profile?.full_name?.trim();
-    const email = user.email?.trim();
-    const phone = profile?.whatsapp?.trim() ?? user.phone?.trim();
-    if (fullName) customer.name = fullName;
-    if (email) customer.email = email;
-    if (phone) customer.phone = phone;
-
-    const checkout = await impl.createCheckout({
-      amountFcfa: pkg.price_fcfa,
-      description: `Pack ${pkg.name} - ${pkg.tokens} Token(s) TERANGA LABS`,
-      itemName: pkg.name,
-      itemQuantity: pkg.tokens,
-      reference: intent.id,
-      origin,
-      returnPath: `/tokens?intent=${intent.id}`,
-      cancelPath: `/tokens?intent=${intent.id}&cancelled=1`,
-      ...(Object.keys(customer).length > 0 ? { customer } : {}),
+    const checkout = await createChariowCheckout({
+      productSlug: getTokenProductSlug(pkg.id),
+      email,
+      fullName: profile?.full_name ?? null,
+      phone,
+      redirectUrl: `${origin}/tokens?intent=${intent.id}`,
+      metadata: {
+        reference: intent.id,
+        kind: "token",
+        package_id: pkg.id,
+      },
+      customerIp: request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null,
     });
 
-    // Mémorise la session prestataire côté serveur (concordance IPN/webhook).
+    if (checkout.step === "already_purchased") {
+      // Impossible avec des produits de type Licence (achats répétés
+      // autorisés), mais refusé proprement plutôt que de créditer.
+      return NextResponse.json(
+        { code: "ALREADY_PURCHASED", message: "Vous possédez déjà ce produit." },
+        { status: 409 }
+      );
+    }
+
+    // Mémorise la vente Chariow côté serveur (concordance du Pulse).
     if (admin) {
       await admin
         .from("payment_intents")
         .update({
-          provider: checkout.provider,
-          provider_session_id: checkout.sessionId,
+          provider: "chariow",
+          provider_session_id: checkout.saleId,
         })
         .eq("id", intent.id);
     }
 
+    // Produit gratuit / remise à zéro : finalisé immédiatement, on
+    // crédite tout de suite (la RPC est idempotente).
+    if (checkout.step === "completed") {
+      if (!admin) {
+        return NextResponse.json(
+          { code: "SERVER_ERROR", message: "Service de paiement indisponible." },
+          { status: 503 }
+        );
+      }
+      const { data: creditResult, error: creditError } = await admin.rpc(
+        "credit_from_payment",
+        { p_intent_id: intent.id }
+      );
+      if (creditError) {
+        log.error({
+          action: "payment.checkout.immediate_credit",
+          provider: "chariow",
+          user: user.id,
+          request_id: intent.id,
+          message: creditError.message,
+        });
+        return NextResponse.json(
+          { code: "SERVER_ERROR", message: "Erreur lors du crédit du paiement." },
+          { status: 500 }
+        );
+      }
+      return NextResponse.json({
+        intentId: intent.id,
+        launchUrl: `${origin}/tokens?intent=${intent.id}`,
+        sessionId: checkout.saleId,
+        provider: "chariow",
+        result: creditResult,
+      });
+    }
+
     return NextResponse.json({
       intentId: intent.id,
-      launchUrl: checkout.launchUrl,
-      sessionId: checkout.sessionId,
-      provider: checkout.provider,
+      launchUrl: checkout.checkoutUrl,
+      sessionId: checkout.saleId,
+      provider: "chariow",
     });
   } catch (err) {
-    if (impl.isApiError(err)) {
+    if (isChariowApiError(err)) {
       log.error({
         action: "payment.checkout",
-        provider: impl.name,
+        provider: "chariow",
         user: user.id,
         request_id: intent.id,
-        status: 502,
-        message: err instanceof Error ? err.message : String(err),
+        status: err.status,
+        message: err.message,
       });
       return NextResponse.json(
-        { code: "PROVIDER_ERROR", message: "Le prestataire de paiement a refusé la demande." },
-        { status: 502 }
+        {
+          code:
+            err.code === "chariow_invalid_phone"
+              ? "PHONE_REQUIRED"
+              : "PROVIDER_ERROR",
+          message:
+            err.code === "chariow_invalid_phone"
+              ? "Votre numéro de téléphone est invalide : corrigez-le dans votre profil."
+              : "Le prestataire de paiement a refusé la demande.",
+        },
+        { status: err.code === "chariow_invalid_phone" ? 400 : 502 }
       );
     }
     log.error({
       action: "payment.checkout",
-      provider: impl.name,
+      provider: "chariow",
       user: user.id,
       request_id: intent.id,
       status: 500,

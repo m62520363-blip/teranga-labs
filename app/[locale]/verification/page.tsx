@@ -7,7 +7,7 @@ import {
   type VerificationRequestStatus,
 } from "@/components/dev/verification-form";
 import { getCurrentUser, createClient } from "@/lib/supabase/server";
-import { isWaveConfigured } from "@/lib/payments/config";
+import { isChariowConfigured } from "@/lib/payments/chariow-config";
 
 export const metadata: Metadata = {
   title: "Vérification de profil",
@@ -42,7 +42,7 @@ export default async function VerificationPage({
 }) {
   const params = await searchParams;
   const paymentReturned = Boolean(params.request);
-  const waveFailed = params.error === "wave";
+  const paymentFailed = params.error === "payment";
 
   const user = await getCurrentUser();
   if (!user) redirect("/login?mode=signup&role=developer");
@@ -66,7 +66,7 @@ export default async function VerificationPage({
   const { data: price } = await supabase.rpc("get_verification_price");
   const { data: lastReq } = await supabase.rpc("get_my_verification_status");
 
-  const waveConfigured = isWaveConfigured();
+  const paymentsConfigured = isChariowConfigured();
 
   const eligible = dev.status === "active" || dev.status === "verified";
   const verified = Boolean(dev.is_verified) || dev.status === "verified";
@@ -100,15 +100,15 @@ export default async function VerificationPage({
           ) : (
             <VerificationForm
               priceFcfa={typeof price === "number" ? price : null}
-              waveConfigured={waveConfigured}
+              paymentsConfigured={paymentsConfigured}
               isVerified={verified}
               lastRequest={(lastReq ?? null) as VerificationRequestStatus}
               paymentReturned={paymentReturned}
             />
           )}
-          {waveFailed ? (
+          {paymentFailed ? (
             <p className="mx-auto mt-6 max-w-lg rounded-xl border border-[var(--error)]/30 bg-[var(--error-soft)] px-4 py-3 text-sm text-[var(--error)]">
-              Le paiement Wave n’a pas pu aboutir. Vous pouvez réessayer ou utiliser un autre moyen.
+              Le paiement n’a pas pu aboutir. Vous pouvez réessayer ou utiliser un autre moyen.
             </p>
           ) : null}
         </div>
@@ -120,8 +120,8 @@ export default async function VerificationPage({
                 <BadgeCheck className="size-4 text-primary" aria-hidden="true" />
               </span>
               <p className="text-sm leading-relaxed text-muted-foreground">
-                <span className="font-medium text-foreground">Paiement unique.</span> Wave ou
-                Max It, en toute sécurité.
+                <span className="font-medium text-foreground">Paiement unique.</span> Carte
+                bancaire ou mobile money, en toute sécurité.
               </p>
             </div>
             <div className="flex items-start gap-3 rounded-2xl border border-hairline bg-card p-5">

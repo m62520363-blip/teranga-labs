@@ -1,12 +1,9 @@
 /**
- * Routes de l'espace client « applicatif » (chrome sidebar / bottom nav).
+ * Routes de l'espace client « applicatif » (chrome sidebar / dock).
  *
- * La liste sert à deux choses :
- *  1. décider d'afficher le ClientShell (sidebar desktop + header/bottom-nav
- *     mobile) à la place de la navbar publique + footer ;
- *  2. activer le thème clair de l'espace app (l'attribut data-app-theme),
- *     uniquement sur ces routes — la landing et les pages publiques
- *     restent sur le thème sombre d'origine.
+ * La liste sert à décider d'afficher le ClientShell (sidebar V8 +
+ * tiroir mobile + dock d'action rapide) à la place de la navbar
+ * publique + footer.
  */
 export const CLIENT_APP_ROUTES = [
   "/client",
@@ -25,6 +22,3 @@ export function isClientAppRoute(pathname: string): boolean {
     (route) => pathname === route || pathname.startsWith(route + "/")
   );
 }
-
-export const THEME_STORAGE_KEY = "tl-app-theme";
-export const SIDEBAR_STORAGE_KEY = "tl-sidebar";

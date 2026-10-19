@@ -33,7 +33,9 @@ export type VerificationRequestStatus = {
 } | null;
 
 const METHOD_LABELS: Record<string, string> = {
-  wave: "Wave",
+  chariow: "Paiement en ligne",
+  // Anciennes demandes créées avant le passage à Chariow.
+  wave: "Paiement en ligne",
   max_it: "Max It",
 };
 
@@ -43,20 +45,20 @@ function methodLabel(method?: string | null): string {
 
 export function VerificationForm({
   priceFcfa,
-  waveConfigured,
+  paymentsConfigured,
   isVerified,
   lastRequest,
   paymentReturned,
 }: {
   priceFcfa: number | null;
-  waveConfigured: boolean;
+  paymentsConfigured: boolean;
   isVerified: boolean;
   lastRequest: VerificationRequestStatus;
   paymentReturned: boolean;
 }) {
   const router = useRouter();
-  const [method, setMethod] = React.useState<"wave" | "max_it">("wave");
-  const [busy, setBusy] = React.useState<"wave" | "manual" | null>(null);
+  const [method, setMethod] = React.useState<"chariow" | "max_it">("chariow");
+  const [busy, setBusy] = React.useState<"online" | "manual" | null>(null);
   const [actionError, setActionError] = React.useState<string | null>(null);
   const [reRequesting, setReRequesting] = React.useState(false);
 
@@ -64,12 +66,12 @@ export function VerificationForm({
 
   const supabaseReady = isSupabaseConfigured();
 
-  const startWave = async () => {
+  const startOnline = async () => {
     if (!supabaseReady) {
       setActionError("Configuration Supabase manquante.");
       return;
     }
-    setBusy("wave");
+    setBusy("online");
     setActionError(null);
     try {
       const res = await fetch("/api/verification/checkout", {
@@ -168,7 +170,8 @@ export function VerificationForm({
     (lastRequest.verification_status === "pending" || !lastRequest.verification_status) &&
     lastRequest.payment_status !== "confirmed"
   ) {
-    // Paiement en attente (dont retour Wave sans confirmation webhook).
+    // Paiement en attente (dont retour de la page de paiement sans
+    // confirmation du Pulse).
     return (
       <Panel icon={<ReceiptText className="size-7 text-muted-foreground" />}>
         <h2 className="text-xl font-bold tracking-tight">Paiement de la vérification en attente</h2>
@@ -195,19 +198,21 @@ export function VerificationForm({
         {actionError ? <ErrorBanner message={actionError} /> : null}
 
         <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-          {waveConfigured ? (
+          {paymentsConfigured ? (
             <button
               type="button"
-              onClick={startWave}
+              onClick={startOnline}
               disabled={busy !== null}
               className="btn btn-primary flex-1"
             >
-              {busy === "wave" ? (
+              {busy === "online" ? (
                 <Loader2 className="size-4 animate-spin" aria-hidden="true" />
               ) : (
-                <Smartphone className="size-4" aria-hidden="true" />
+                <CreditCard className="size-4" aria-hidden="true" />
               )}
-              {busy === "wave" ? "Redirection Wave…" : "Relancer le paiement Wave"}
+              {busy === "online"
+                ? "Redirection vers le paiement…"
+                : "Relancer le paiement en ligne"}
             </button>
           ) : null}
           <button
@@ -265,7 +270,7 @@ export function VerificationForm({
   // Offre d’inscription à la vérification (aucune demande, ou relance).
   return (
     <div className="flex flex-col gap-6">
-      {!waveConfigured ? (
+      {!paymentsConfigured ? (
         <p className="flex items-start gap-2 rounded-xl border border-warning/30 bg-primary-soft px-4 py-3 text-sm leading-relaxed text-warning">
           <Phone className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
           Le paiement en ligne n’est pas encore activé : envoyez votre paiement par
@@ -301,7 +306,7 @@ export function VerificationForm({
         <div className="mt-6">
           <p className="text-sm font-medium">Moyen de paiement</p>
           <div className="mt-3 grid gap-3 sm:grid-cols-2" role="radiogroup" aria-label="Moyen de paiement">
-            {(["wave", "max_it"] as const).map((m) => {
+            {(["chariow", "max_it"] as const).map((m) => {
               const active = method === m;
               return (
                 <button
@@ -318,7 +323,11 @@ export function VerificationForm({
                   )}
                 >
                   <span className="inline-flex items-center gap-2.5">
-                    <Smartphone className="size-4 text-primary" aria-hidden="true" />
+                    {m === "chariow" ? (
+                      <CreditCard className="size-4 text-primary" aria-hidden="true" />
+                    ) : (
+                      <Smartphone className="size-4 text-primary" aria-hidden="true" />
+                    )}
                     {METHOD_LABELS[m]}
                   </span>
                   {active ? <CheckCircle2 className="size-4 text-primary" aria-hidden="true" /> : null}
@@ -331,19 +340,19 @@ export function VerificationForm({
         {actionError ? <ErrorBanner message={actionError} /> : null}
 
         <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-          {waveConfigured && method === "wave" ? (
+          {paymentsConfigured && method === "chariow" ? (
             <button
               type="button"
-              onClick={startWave}
+              onClick={startOnline}
               disabled={busy !== null || !price}
               className="btn btn-primary flex-1"
             >
-              {busy === "wave" ? (
+              {busy === "online" ? (
                 <Loader2 className="size-4 animate-spin" aria-hidden="true" />
               ) : (
-                <Smartphone className="size-4" aria-hidden="true" />
+                <CreditCard className="size-4" aria-hidden="true" />
               )}
-              {busy === "wave" ? "Redirection Wave…" : `Payer via ${methodLabel(method)}`}
+              {busy === "online" ? "Redirection vers le paiement…" : "Payer en ligne"}
             </button>
           ) : (
             <button
@@ -359,7 +368,9 @@ export function VerificationForm({
               )}
               {busy === "manual"
                 ? "Enregistrement…"
-                : `Je paie via ${methodLabel(method)} (manuellement)`}
+                : method === "chariow"
+                  ? "Je paie manuellement"
+                  : `Je paie via ${methodLabel(method)} (manuellement)`}
             </button>
           )}
           <Link href="/dashboard" className="btn btn-secondary sm:w-auto">
@@ -367,9 +378,9 @@ export function VerificationForm({
           </Link>
         </div>
 
-        {!waveConfigured && method === "wave" ? (
+        {!paymentsConfigured && method === "chariow" ? (
           <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
-            Le paiement Wave automatisé n’est pas disponible pour l’instant. Choisissez
+            Le paiement en ligne automatisé n’est pas disponible pour l’instant. Choisissez
             « Je paie manuellement » et suivez les consignes de confirmation.
           </p>
         ) : null}

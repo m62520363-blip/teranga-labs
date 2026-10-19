@@ -24,9 +24,9 @@ describe("paymentCheckoutSchema", () => {
     expect(r.success).toBe(false);
   });
 
-  it("accepte un provider connu", () => {
-    expect(paymentCheckoutSchema.safeParse({ packageId: "pro", provider: "wave" }).success).toBe(true);
-    expect(paymentCheckoutSchema.safeParse({ packageId: "pro", provider: "paydunya" }).success).toBe(true);
+  it("rejette un prestataire résiduel (strict, prestataire unique Chariow)", () => {
+    expect(paymentCheckoutSchema.safeParse({ packageId: "pro", provider: "wave" }).success).toBe(false);
+    expect(paymentCheckoutSchema.safeParse({ packageId: "pro", provider: "chariow" }).success).toBe(false);
   });
 });
 
@@ -49,12 +49,14 @@ describe("verificationCheckoutSchema", () => {
     expect(verificationCheckoutSchema.safeParse({}).success).toBe(true);
   });
 
-  it("accepte max_it", () => {
+  it("accepte chariow (paiement en ligne) et max_it", () => {
+    expect(verificationCheckoutSchema.safeParse({ method: "chariow" }).success).toBe(true);
     expect(verificationCheckoutSchema.safeParse({ method: "max_it" }).success).toBe(true);
   });
 
-  it("rejette un champ inconnu (strict)", () => {
-    expect(verificationCheckoutSchema.safeParse({ method: "wave", x: 1 }).success).toBe(false);
+  it("rejette une méthode inconnue et un champ inconnu (strict)", () => {
+    expect(verificationCheckoutSchema.safeParse({ method: "wave" }).success).toBe(false);
+    expect(verificationCheckoutSchema.safeParse({ method: "chariow", x: 1 }).success).toBe(false);
   });
 });
 

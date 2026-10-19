@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useTranslations } from "next-intl";
 import {
   CircleCheck,
   FileText,
@@ -9,7 +10,6 @@ import {
   ShieldCheck,
   type LucideIcon,
 } from "lucide-react";
-import { HOW_IT_WORKS } from "@/components/landing/content";
 
 const ICONS: Record<string, LucideIcon> = {
   search: Search,
@@ -19,12 +19,15 @@ const ICONS: Record<string, LucideIcon> = {
   "circle-check": CircleCheck,
 };
 
+type Step = { num: string; title: string; text: string; icon: string };
+
 /**
  * Section « Comment ça marche » : cartes empilées en sticky stacking
  * (chaque carte reste collée sous la précédente pendant le scroll).
  */
 export function HowItWorks() {
-  const steps = HOW_IT_WORKS.steps;
+  const t = useTranslations("Landing.howItWorks");
+  const steps = t.raw("steps") as Step[];
   const last = steps.length - 1;
 
   return (
@@ -36,12 +39,12 @@ export function HowItWorks() {
         <div className="mx-auto max-w-2xl text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 px-3 py-1 text-sm text-foreground">
             <ShieldCheck className="size-4 text-primary" aria-hidden="true" />
-            {HOW_IT_WORKS.badge}
+            {t("badge")}
           </span>
           <h2 className="mt-4 font-headings text-3xl font-bold tracking-tight sm:text-4xl">
-            {HOW_IT_WORKS.titleA} <span className="text-primary">{HOW_IT_WORKS.titleB}</span>
+            {t("titleA")} <span className="text-primary">{t("titleB")}</span>
           </h2>
-          <p className="mt-4 text-muted-foreground">{HOW_IT_WORKS.lead}</p>
+          <p className="mt-4 text-muted-foreground">{t("lead")}</p>
         </div>
 
         <div className="mt-12 lg:mt-16">

@@ -1,0 +1,192 @@
+{
+  "Meta": {
+    "title": "Le marketplace des projets web de l'Afrique de l'Ouest francophone | TERANGA LABS",
+    "description": "TERANGA LABS, le marketplace des projets web de l'Afrique de l'Ouest francophone. Le client publie son brief pour 1 Token, le développeur débloque le contact avec 1 Token et tout se règle en direct. Aucune commission.",
+    "keywords": "marketplace Afrique de l'Ouest francophone, développeurs Sénégal, développeurs Côte d'Ivoire, freelance Dakar, Abidjan, Bamako, brief web, trouver des clients web, acheter des tokens, classement développeurs, site e-commerce Dakar, TERANGA LABS",
+    "ogTitle": "TERANGA LABS — Des clients qui veulent un site",
+    "ogDescription": "Le client publie son besoin pour 1 Token. Le développeur utilise 1 Token pour débloquer le contact. Zéro commission."
+  },
+  "Nav": {
+    "home": "Accueil",
+    "howItWorks": "Comment ça marche",
+    "pricing": "Tarifs",
+    "faq": "FAQ",
+    "findDev": "Trouver un développeur",
+    "findDevShort": "Trouver un dev",
+    "agencies": "Agences",
+    "forClients": "Pour les clients",
+    "forDevs": "Pour les développeurs",
+    "signIn": "Se connecter",
+    "publishRequest": "Publier une demande",
+    "messages": "Messages",
+    "missions": "Missions",
+    "publishBrief": "Publier un brief",
+    "myProfile": "Mon profil",
+    "verifyProfile": "Vérifier mon profil",
+    "buyTokens": "Acheter des Tokens",
+    "settings": "Paramètres",
+    "briefs": "Briefs",
+    "briefsView": "Voir les briefs",
+    "notifications": "Notifications",
+    "admin": "Admin",
+    "account": "Compte",
+    "mySpace": "Mon espace",
+    "myAccount": "Mon compte",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "mainNav": "Navigation principale",
+    "quickNav": "Navigation rapide",
+    "homeLink": "TERANGA LABS — accueil",
+    "devs": "Dévs",
+    "publish": "Publier",
+    "profile": "Profil",
+    "tokens": "Tokens",
+    "langGroup": "Choisir la langue",
+    "langToEn": "English",
+    "langToFr": "Français"
+  },
+  "Footer": {
+    "tagline": "Le marketplace des projets web de l'Afrique de l'Ouest francophone. Tu paies en Tokens, ton argent ne bouge jamais en commission.",
+    "columns": {
+      "platform": "Plateforme",
+      "account": "Compte",
+      "help": "Aide"
+    },
+    "links": {
+      "howItWorks": "Comment ça marche",
+      "pricing": "Tarifs",
+      "faq": "FAQ",
+      "briefs": "Briefs",
+      "publishBrief": "Publier un brief",
+      "becomeDev": "Devenir développeur",
+      "login": "Connexion",
+      "faqFull": "Questions fréquentes",
+      "buyTokens": "Acheter des Tokens",
+      "contact": "Nous contacter",
+      "legal": "Mentions légales",
+      "privacy": "Confidentialité",
+      "terms": "Conditions"
+    },
+    "copyright": "Dakar, Sénégal.",
+    "publishedBy": "Édité par"
+  },
+  "Landing": {
+    "hero": {
+      "badge": "Aucune commission, jamais",
+      "title": "Trouve ton développeur web, paie",
+      "rotating": ["sans commission.", "avec 1 Token.", "sans intermédiaire."],
+      "subtitle": "Publie ton brief en 2 minutes. Les développeurs sérieux viennent à toi — ton WhatsApp reste privé.",
+      "ctaPrimary": "Trouver un développeur",
+      "ctaSecondary": "Publier un brief"
+    },
+    "howItWorks": {
+      "badge": "Aucune commission, jamais",
+      "titleA": "Comment ça marche",
+      "titleB": "vraiment.",
+      "lead": "Ni les groupes WhatsApp ni les plateformes étrangères ne garantissent le bon match au bon prix — TERANGA le fait au même endroit.",
+      "steps": [
+        {
+          "num": "01",
+          "title": "Trouve le bon développeur",
+          "text": "Filtre par pays, compétence et note. Chaque profil affiche un portfolio de projets réels livrés en Afrique de l'Ouest.",
+          "icon": "search"
+        },
+        {
+          "num": "02",
+          "title": "Publie ton brief",
+          "text": "Brief structuré : type de site, budget en FCFA, délai de livraison. 1 Token, sans abonnement.",
+          "icon": "file-text"
+        },
+        {
+          "num": "03",
+          "title": "Le contact se débloque en 1 Token",
+          "text": "Le développeur intéressé paie 1 Token pour t'écrire. Ta discussion privée s'ouvre — plus de candidatures sauvages.",
+          "icon": "shield-check"
+        },
+        {
+          "num": "04",
+          "title": "Discutez en direct",
+          "text": "Devis, détails, calendrier : tout passe par la messagerie interne. Ton WhatsApp reste privé jusqu'à ton accord.",
+          "icon": "message-circle"
+        },
+        {
+          "num": "05",
+          "title": "Choisis et paie sans commission",
+          "text": "Vous traitez ensemble, en Wave, Orange Money ou Max It. TERANGA ne prélève rien sur ton projet.",
+          "icon": "circle-check"
+        }
+      ]
+    },
+    "pricing": {
+      "titleA": "Des tarifs",
+      "titleB": "sans surprise.",
+      "lead": "Pas d'abonnement, pas de frais cachés. TERANGA ne gagne de l'argent que quand tu utilises un Token.",
+      "cards": [
+        {
+          "eyebrow": "Client",
+          "price": "1 Token",
+          "text": "Tu paies 1 Token pour publier ton brief. Rien de plus — ton budget part entièrement au développeur.",
+          "highlighted": false
+        },
+        {
+          "eyebrow": "Développeur",
+          "price": "0 %",
+          "text": "Aucune commission sur les projets. 1 Token débloque un contact client — bien moins que les 20 % de Fiverr, et rien tant que tu ne gagnes pas.",
+          "highlighted": true
+        }
+      ]
+    },
+    "faqHeading": {
+      "a": "Questions",
+      "b": "fréquentes."
+    },
+    "faqs": [
+      {
+        "q": "Qu'est-ce que TERANGA LABS ?",
+        "a": "TERANGA LABS est le marketplace des projets web de l'Afrique de l'Ouest francophone : tu publies le brief de ton site pour 1 Token, et le développeur intéressé débloque ton contact avec 1 Token. Ensuite, vous traitez directement — aucune commission."
+      },
+      {
+        "q": "Combien coûte un Token ?",
+        "a": "{token}. L'inscription est gratuite : tu commandes tes Tokens en ligne (carte bancaire ou mobile money), puis tu publies ton brief ou tu débloques un contact."
+      },
+      {
+        "q": "Y a-t-il une commission sur les projets ?",
+        "a": "Non. TERANGA LABS ne prélève aucune commission sur les projets : le développeur et le client traitent ensemble, sans intermédiaire. Contre 15 à 20 % prélevés ailleurs, ici tu gardes 100 % de ton budget."
+      },
+      {
+        "q": "Mon WhatsApp reste-t-il privé ?",
+        "a": "Oui. Ton numéro n'apparaît jamais sur les briefs ni dans les résultats de recherche : les échanges passent par la messagerie interne, et tu décides seul de quand donner ton contact."
+      },
+      {
+        "q": "Dans quels pays le service est-il disponible ?",
+        "a": "Dans les 9 pays d'Afrique de l'Ouest francophone : Sénégal, Côte d'Ivoire, Mali, Burkina Faso, Niger, Guinée, Guinée-Bissau, Bénin et Togo. Les prix sont affichés en FCFA."
+      }
+    ],
+    "roleCards": {
+      "client": {
+        "eyebrow": "Client",
+        "title": "Arrête de chercher sur WhatsApp.",
+        "text": "En 5 minutes, décris ton projet, mets ton budget et rejoins les développeurs sérieux de toute la région. Ton argent reste le tien jusqu'à ce que tu choisisses.",
+        "bullets": [
+          "Brief publié pour 1 Token, sans abonnement",
+          "Dev sérieux : ils paient 1 Token pour t'écrire",
+          "Aucune commission sur ton projet",
+          "Wave, Orange Money ou Max It"
+        ],
+        "cta": "Publier mon brief"
+      },
+      "developer": {
+        "eyebrow": "Développeur",
+        "title": "Sois trouvé sur ta compétence réelle.",
+        "text": "Crée ton profil avec ton portfolio. Les clients te trouvent selon ta spécialité et ton pays. Tu es payé directement, sans friction.",
+        "bullets": [
+          "Profil public avec portfolio de projets",
+          "Reçois des briefs par pays et par niche",
+          "1 Token = 1 contact client, 0 commission",
+          "Paiement direct Wave / Orange Money"
+        ],
+        "cta": "Voir les briefs"
+      }
+    }
+  }
+}

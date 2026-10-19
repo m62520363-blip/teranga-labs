@@ -1,4 +1,4 @@
-﻿import { TOKEN_LABEL_PRICED, TOKEN_RULE } from "@/lib/formatting";
+import { TOKEN_LABEL_PRICED, TOKEN_RULE } from "@/lib/formatting";
 
 /* --------------------------------------------------------------------------- */
 /*  Données éditables de la landing page à TERANGA LABS.                        */
@@ -94,7 +94,7 @@ export const FAQS_LANDING = [
   },
   {
     q: "Combien coûte un Token ?",
-    a: `${TOKEN_LABEL_PRICED}. L'inscription est gratuite : tu commandes tes Tokens en ligne (Wave, Orange Money, Max It ou carte), puis tu publies ton brief ou tu débloques un contact.`,
+    a: `${TOKEN_LABEL_PRICED}. L'inscription est gratuite : tu commandes tes Tokens en ligne (carte bancaire ou mobile money), puis tu publies ton brief ou tu débloques un contact.`,
   },
   {
     q: "Y a-t-il une commission sur les projets ?",
@@ -141,7 +141,7 @@ export const FAQS = [
   { q: "Qu'est-ce que TERANGA LABS ?", a: "TERANGA LABS est le marketplace des projets web de l'Afrique de l'Ouest francophone : les clients publient le brief de leur site web pour 1 Token, et les développeurs sérieux viennent vers eux." },
   { q: "Comment fonctionne le modèle ?", a: "Le client poste son brief en 2 minutes : type de site, budget et région. Le brief apparaît dans /briefs. Le développeur qui s'intéresse paie 1 Token pour ouvrir une discussion privée avec le client, puis l'échange se fait en direct sur la plateforme." },
   { q: "Combien coûte un Token ?", a: `${TOKEN_LABEL_PRICED}. L'inscription est gratuite : vous commandez vos Tokens, puis vous publiez votre brief ou débloquez un contact.` },
-  { q: "Comment je paie mes Tokens ?", a: "Le paiement se fait en ligne depuis la page Tokens : Wave, Max It ou carte bancaire. Dès la confirmation du paiement, vos Tokens sont crédités automatiquement sur votre compte." },
+  { q: "Comment je paie mes Tokens ?", a: "Le paiement se fait en ligne depuis la page Tokens : carte bancaire ou mobile money, selon votre pays. Dès la confirmation du paiement, vos Tokens sont crédités automatiquement sur votre compte." },
   { q: "Mon numéro WhatsApp reste-t-il privé ?", a: "Oui. Votre numéro n'apparaît jamais sur les briefs ni dans les résultats de recherche : les échanges passent par la messagerie interne, et vous décidez seul de quand donner votre contact." },
       { q: "Dans quels pays le service est-il disponible ?", a: "Dans les 9 pays d'Afrique de l'Ouest francophone : Sénégal, Côte d'Ivoire, Mali, Burkina Faso, Niger, Guinée, Guinée-Bissau, Bénin et Togo. Les prix sont affichés en FCFA." },
   { q: "Existe-t-il un classement des développeurs ?", a: "Oui : un classement mensuel, régional et par pays. Seuls les 2 premiers sont récompensés en Tokens, et il faut au moins 2 projets terminés et confirmés dans le mois pour y figurer." },

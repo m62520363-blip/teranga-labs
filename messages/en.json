@@ -1,0 +1,192 @@
+{
+  "Meta": {
+    "title": "West Africa's francophone web projects marketplace | TERANGA LABS",
+    "description": "TERANGA LABS, the marketplace of web projects for francophone West Africa. The client posts their brief for 1 Token, the developer unlocks contact with 1 Token and everything is settled directly. No commission.",
+    "keywords": "francophone West Africa marketplace, Senegal developers, Ivory Coast developers, Dakar freelance, Abidjan, Bamako, web brief, find web clients, buy tokens, developer rankings, Dakar e-commerce site, TERANGA LABS",
+    "ogTitle": "TERANGA LABS — Clients looking for a website",
+    "ogDescription": "The client posts their need for 1 Token. The developer spends 1 Token to unlock contact. Zero commission."
+  },
+  "Nav": {
+    "home": "Home",
+    "howItWorks": "How it works",
+    "pricing": "Pricing",
+    "faq": "FAQ",
+    "findDev": "Find a developer",
+    "findDevShort": "Find a dev",
+    "agencies": "Agencies",
+    "forClients": "For clients",
+    "forDevs": "For developers",
+    "signIn": "Sign in",
+    "publishRequest": "Post a request",
+    "messages": "Messages",
+    "missions": "Missions",
+    "publishBrief": "Post a brief",
+    "myProfile": "My profile",
+    "verifyProfile": "Verify my profile",
+    "buyTokens": "Buy Tokens",
+    "settings": "Settings",
+    "briefs": "Briefs",
+    "briefsView": "View briefs",
+    "notifications": "Notifications",
+    "admin": "Admin",
+    "account": "Account",
+    "mySpace": "My space",
+    "myAccount": "My account",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "mainNav": "Main navigation",
+    "quickNav": "Quick navigation",
+    "homeLink": "TERANGA LABS — home",
+    "devs": "Devs",
+    "publish": "Post",
+    "profile": "Profile",
+    "tokens": "Tokens",
+    "langGroup": "Choose language",
+    "langToEn": "English",
+    "langToFr": "Français"
+  },
+  "Footer": {
+    "tagline": "The marketplace of web projects for francophone West Africa. You pay in Tokens, your money never moves as commission.",
+    "columns": {
+      "platform": "Platform",
+      "account": "Account",
+      "help": "Help"
+    },
+    "links": {
+      "howItWorks": "How it works",
+      "pricing": "Pricing",
+      "faq": "FAQ",
+      "briefs": "Briefs",
+      "publishBrief": "Post a brief",
+      "becomeDev": "Become a developer",
+      "login": "Sign in",
+      "faqFull": "Frequently asked questions",
+      "buyTokens": "Buy Tokens",
+      "contact": "Contact us",
+      "legal": "Legal notice",
+      "privacy": "Privacy",
+      "terms": "Terms"
+    },
+    "copyright": "Dakar, Senegal.",
+    "publishedBy": "Published by"
+  },
+  "Landing": {
+    "hero": {
+      "badge": "No commission, ever",
+      "title": "Find your web developer, pay",
+      "rotating": ["without commission.", "with 1 Token.", "without middlemen."],
+      "subtitle": "Post your brief in 2 minutes. Serious developers come to you — your WhatsApp stays private.",
+      "ctaPrimary": "Find a developer",
+      "ctaSecondary": "Post a brief"
+    },
+    "howItWorks": {
+      "badge": "No commission, ever",
+      "titleA": "How it works",
+      "titleB": "for real.",
+      "lead": "Neither WhatsApp groups nor foreign platforms guarantee the right match at the right price — TERANGA does it in one place.",
+      "steps": [
+        {
+          "num": "01",
+          "title": "Find the right developer",
+          "text": "Filter by country, skill and rating. Every profile shows a portfolio of real projects delivered across francophone West Africa.",
+          "icon": "search"
+        },
+        {
+          "num": "02",
+          "title": "Post your brief",
+          "text": "Structured brief: site type, budget in FCFA, delivery deadline. 1 Token, no subscription.",
+          "icon": "file-text"
+        },
+        {
+          "num": "03",
+          "title": "Contact unlocks with 1 Token",
+          "text": "The interested developer pays 1 Token to write to you. Your private conversation opens — no more cold applications.",
+          "icon": "shield-check"
+        },
+        {
+          "num": "04",
+          "title": "Talk it out directly",
+          "text": "Quotes, details, schedule: everything goes through the internal messaging. Your WhatsApp stays private until you agree.",
+          "icon": "message-circle"
+        },
+        {
+          "num": "05",
+          "title": "Choose and pay with no commission",
+          "text": "You deal together, via Wave, Orange Money or Max It. TERANGA takes nothing from your project.",
+          "icon": "circle-check"
+        }
+      ]
+    },
+    "pricing": {
+      "titleA": "Pricing",
+      "titleB": "with no surprises.",
+      "lead": "No subscription, no hidden fees. TERANGA only earns money when you use a Token.",
+      "cards": [
+        {
+          "eyebrow": "Client",
+          "price": "1 Token",
+          "text": "You pay 1 Token to post your brief. Nothing more — your whole budget goes to the developer.",
+          "highlighted": false
+        },
+        {
+          "eyebrow": "Developer",
+          "price": "0 %",
+          "text": "No commission on projects. 1 Token unlocks a client contact — far less than Fiverr's 20 %, and nothing until you earn.",
+          "highlighted": true
+        }
+      ]
+    },
+    "faqHeading": {
+      "a": "Frequently asked",
+      "b": "questions."
+    },
+    "faqs": [
+      {
+        "q": "What is TERANGA LABS?",
+        "a": "TERANGA LABS is the marketplace of web projects for francophone West Africa: you post your website brief for 1 Token, and the interested developer unlocks your contact with 1 Token. Then you deal directly — no commission."
+      },
+      {
+        "q": "How much does a Token cost?",
+        "a": "{token}. Registration is free: you order your Tokens online (bank card or mobile money), then post your brief or unlock a contact."
+      },
+      {
+        "q": "Is there a commission on projects?",
+        "a": "No. TERANGA LABS takes no commission on projects: the developer and the client deal together, with no middleman. Against 15 to 20 % taken elsewhere, here you keep 100 % of your budget."
+      },
+      {
+        "q": "Does my WhatsApp stay private?",
+        "a": "Yes. Your number never appears on briefs or in search results: exchanges go through the internal messaging, and you alone decide when to share your contact."
+      },
+      {
+        "q": "Where is the service available?",
+        "a": "Across the 9 countries of francophone West Africa: Senegal, Ivory Coast, Mali, Burkina Faso, Niger, Guinea, Guinea-Bissau, Benin and Togo. Prices are shown in FCFA."
+      }
+    ],
+    "roleCards": {
+      "client": {
+        "eyebrow": "Client",
+        "title": "Stop hunting on WhatsApp.",
+        "text": "In 5 minutes, describe your project, set your budget and join serious developers from across the region. Your money stays yours until you choose.",
+        "bullets": [
+          "Brief posted for 1 Token, no subscription",
+          "Serious devs: they pay 1 Token to write to you",
+          "No commission on your project",
+          "Wave, Orange Money or Max It"
+        ],
+        "cta": "Post my brief"
+      },
+      "developer": {
+        "eyebrow": "Developer",
+        "title": "Be found on your real skills.",
+        "text": "Create your profile with your portfolio. Clients find you by your specialty and country. You get paid directly, no friction.",
+        "bullets": [
+          "Public profile with project portfolio",
+          "Receive briefs by country and niche",
+          "1 Token = 1 client contact, 0 commission",
+          "Direct payment Wave / Orange Money"
+        ],
+        "cta": "View briefs"
+      }
+    }
+  }
+}

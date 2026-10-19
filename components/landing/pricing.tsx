@@ -1,8 +1,12 @@
-import { PRICING } from "@/components/landing/content";
+import { useTranslations } from "next-intl";
 import { cn } from "cn";
+
+type PricingCard = { eyebrow: string; price: string; text: string; highlighted: boolean };
 
 /** Section tarifs : deux cartes (Client / Développeur), mise en avant secondaire. */
 export function PricingSection() {
+  const t = useTranslations("Landing.pricing");
+  const cards = t.raw("cards") as PricingCard[];
   return (
     <section
       id="tarifs"
@@ -11,15 +15,15 @@ export function PricingSection() {
       <div className="mx-auto w-full max-w-6xl px-5 sm:px-6">
         <div className="text-center">
           <h2 className="font-headings text-4xl font-bold tracking-tight sm:text-5xl">
-            {PRICING.titleA} <span className="text-primary">{PRICING.titleB}</span>
+            {t("titleA")} <span className="text-primary">{t("titleB")}</span>
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-lg text-muted-foreground">
-            {PRICING.lead}
+            {t("lead")}
           </p>
         </div>
 
         <div className="mx-auto mt-14 grid max-w-4xl gap-6 sm:grid-cols-2">
-          {PRICING.cards.map((card) => (
+          {cards.map((card) => (
             <div
               key={card.eyebrow}
               className={cn(

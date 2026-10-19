@@ -1,35 +1,38 @@
-﻿import Link from "next/link";
+﻿import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { BRAND, LEGAL_PUBLISHER } from "@/components/landing/content";
+import { ImageLogoMark } from "@/components/logo";
 
 const columns = [
   {
-    title: "Plateforme",
+    titleKey: "columns.platform",
     links: [
-      { label: "Comment ça marche", href: "/#comment-ca-marche" },
-      { label: "Tarifs", href: "/#tarifs" },
-      { label: "FAQ", href: "/#faq" },
-      { label: "Briefs", href: "/briefs" },
+      { linkKey: "howItWorks", href: "/#comment-ca-marche" },
+      { linkKey: "pricing", href: "/#tarifs" },
+      { linkKey: "faq", href: "/#faq" },
+      { linkKey: "briefs", href: "/briefs" },
     ],
   },
   {
-    title: "Compte",
+    titleKey: "columns.account",
     links: [
-      { label: "Publier un brief", href: "/poster" },
-      { label: "Devenir développeur", href: "/inscription-developpeur" },
-      { label: "Connexion", href: "/login" },
+      { linkKey: "publishBrief", href: "/poster" },
+      { linkKey: "becomeDev", href: "/inscription-developpeur" },
+      { linkKey: "login", href: "/login" },
     ],
   },
   {
-    title: "Aide",
+    titleKey: "columns.help",
     links: [
-      { label: "Questions fréquentes", href: "/#faq" },
-      { label: "Acheter des Tokens", href: "/tokens" },
-      { label: "Nous contacter", href: "/contact" },
+      { linkKey: "faqFull", href: "/#faq" },
+      { linkKey: "buyTokens", href: "/tokens" },
+      { linkKey: "contact", href: "/contact" },
     ],
   },
 ];
 
 export function Footer() {
+  const t = useTranslations("Footer");
   return (
     <footer className="border-t border-hairline bg-surface">
       <div className="container-tl py-16">
@@ -41,30 +44,27 @@ export function Footer() {
               aria-label={BRAND}
             >
               <span className="sr-only">{BRAND}</span>
-              {/* eslint-disable-next-line @next/next/no-img-element -- logo simple, pas de next/image pour un PNG statique */}
-              <img src="/logo.png" alt="" className="h-10 w-auto" />
+              <ImageLogoMark className="h-10 w-auto" alt="" />
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
-              Le marketplace des projets web de l&apos;Afrique de l&apos;Ouest
-              francophone. Tu paies en Tokens, ton argent ne bouge jamais en
-              commission.
+              {t("tagline")}
             </p>
           </div>
 
           <div className="mt-12 grid grid-cols-2 gap-8 lg:mt-0 lg:flex-1 lg:grid-cols-3 lg:gap-y-16">
             {columns.map((column) => (
-              <nav key={column.title} aria-label={column.title}>
+              <nav key={column.titleKey} aria-label={t(column.titleKey)}>
                 <h3 className="font-headings text-sm font-semibold text-foreground">
-                  {column.title}
+                  {t(column.titleKey)}
                 </h3>
                 <ul className="mt-6 flex flex-col gap-4 text-sm">
                   {column.links.map((link) => (
-                    <li key={link.label}>
+                    <li key={link.linkKey}>
                       <Link
                         href={link.href}
                         className="text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:text-foreground"
                       >
-                        {link.label}
+                        {t(`links.${link.linkKey}`)}
                       </Link>
                     </li>
                   ))}
@@ -77,7 +77,7 @@ export function Footer() {
         <div className="mt-12 border-t border-hairline pt-8">
           <div className="sm:flex sm:items-center sm:justify-between">
             <p className="text-xs text-muted-foreground">
-              © {new Date().getFullYear()} {BRAND}. Dakar, Sénégal.
+              © {new Date().getFullYear()} {BRAND}. {t("copyright")}
             </p>
             <ul className="mt-6 flex flex-wrap justify-start gap-4 text-xs sm:mt-0 lg:justify-end">
               <li>
@@ -85,7 +85,7 @@ export function Footer() {
                   href="/mentions-legales"
                   className="text-muted-foreground transition-colors outline-none hover:text-foreground"
                 >
-                  Mentions légales
+                  {t("links.legal")}
                 </Link>
               </li>
               <li>
@@ -93,7 +93,7 @@ export function Footer() {
                   href="/politique-de-confidentialite"
                   className="text-muted-foreground transition-colors outline-none hover:text-foreground"
                 >
-                  Confidentialité
+                  {t("links.privacy")}
                 </Link>
               </li>
               <li>
@@ -101,13 +101,13 @@ export function Footer() {
                   href="/conditions-utilisation"
                   className="text-muted-foreground transition-colors outline-none hover:text-foreground"
                 >
-                  Conditions
+                  {t("links.terms")}
                 </Link>
               </li>
             </ul>
           </div>
           <p className="mt-4 text-xs text-muted-foreground/70">
-            Édité par {LEGAL_PUBLISHER}.
+            {t("publishedBy")} {LEGAL_PUBLISHER}.
           </p>
         </div>
       </div>

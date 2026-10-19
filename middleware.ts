@@ -1,5 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import createMiddleware from "next-intl/middleware";
+import { routing } from "@/i18n/routing";
 import { cookieOptionsWithAge } from "@/lib/supabase/cookies";
 
 /**
@@ -30,14 +32,24 @@ function applySecurityHeaders(response: NextResponse): NextResponse {
   return response;
 }
 
-export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({ request });
+/**
+ * Rafraichit la session Supabase (tokens d'acces expires).
+ *
+ * Effets recherches, dans cet ordre :
+ * 1. `request.cookies.set(...)` mute `request.headers` en place — les
+ *    en-tetes frais seront donc captures par le middleware next-intl, qui
+ *    les propage au rendu des server components (evite un double rafraichissement
+ *    du refresh token a usage unique).
+ * 2. La reponse retournee porte les `Set-Cookie` a renvoyer au navigateur.
+ */
+async function refreshSession(request: NextRequest): Promise<NextResponse> {
+  let response = NextResponse.next({ request });
 
   if (
     !process.env.NEXT_PUBLIC_SUPABASE_URL ||
     !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   ) {
-    return applySecurityHeaders(supabaseResponse);
+    return response;
   }
 
   const supabase = createServerClient(
@@ -52,13 +64,9 @@ export async function updateSession(request: NextRequest) {
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           );
-          supabaseResponse = NextResponse.next({ request });
+          response = NextResponse.next({ request });
           cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(
-              name,
-              value,
-              cookieOptionsWithAge(options)
-            )
+            response.cookies.set(name, value, cookieOptionsWithAge(options))
           );
         },
       },
@@ -66,13 +74,43 @@ export async function updateSession(request: NextRequest) {
   );
 
   await supabase.auth.getUser();
-
-  // applique apres le rafraichissement de session : setAll remplace
-  // supabaseResponse, donc les en-tetes doivent partir sur l'objet final
-  return applySecurityHeaders(supabaseResponse);
+  return response;
 }
 
-export const middleware = updateSession;
+/** Routage i18n next-intl (FR sans préfixe, `/en` pour l'anglais). */
+const handleI18nRouting = createMiddleware(routing);
+
+export async function middleware(request: NextRequest) {
+  // 1. Session Supabase EN PREMIER : mute `request.cookies` (donc
+  //    `request.headers`) avant que next-intl ne copie les en-tetes frais
+  //    dans sa reponse de reecriture.
+  const supabaseResponse = await refreshSession(request);
+
+  const pathname = request.nextUrl.pathname;
+  // Routes NON localisees :
+  // - `/api/*` : URLs externes fixes (webhooks, callbacks) qui ne doivent
+  //   pas etre reecrites vers `/fr/api/…` (inexistant → 404) ;
+  // - fichiers pointes (`manifest.json`, `robots.txt`, `*.xml`…) absents de
+  //   la branche `[locale]` : idem, une reecriture les casserait.
+  const shouldLocalize =
+    !pathname.startsWith("/api") && !pathname.includes(".");
+
+  let response: NextResponse;
+  if (shouldLocalize) {
+    response = handleI18nRouting(request);
+    // 2. Conserve les cookies d'auth fraichis sur la reponse intl
+    //    (reecriture / redirection), au lieu d'une `NextResponse.next()`
+    //    fraiche qui ecraserait la reecriture du routage i18n.
+    for (const cookie of supabaseResponse.cookies.getAll()) {
+      response.cookies.set(cookie);
+    }
+  } else {
+    response = supabaseResponse;
+  }
+
+  // 3. En-tetes de securite en DERNIER, sur la reponse finale.
+  return applySecurityHeaders(response);
+}
 
 export const config = {
   matcher: [

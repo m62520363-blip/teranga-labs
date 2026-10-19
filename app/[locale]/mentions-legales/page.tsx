@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { LegalPage } from "@/components/legal-page";
 import { BRAND, LEGAL_PUBLISHER } from "@/components/landing/content";
 
@@ -95,19 +96,19 @@ export default function MentionsLegalesPage() {
               <p>
                 Les données personnelles (nom, WhatsApp, contenu des briefs)
                 sont traitées pour la seule mise en relation décrite dans la{" "}
-                <a
+                <Link
                   href="/politique-de-confidentialite"
                   className="font-medium text-primary underline underline-offset-2"
                 >
                   politique de confidentialité
-                </a>
+                </Link>
                 . Le détail des cookies est expliqué dans la{" "}
-                <a
+                <Link
                   href="/cookies"
                   className="font-medium text-primary underline underline-offset-2"
                 >
                   politique de cookies
-                </a>
+                </Link>
                 .
               </p>
             </>

@@ -277,7 +277,9 @@ npm run build       # build de production
 
 ## Roadmap (limites actuelles)
 
-- Paiement réel Wave (actif) / Max It (hors service pour le moment) à brancher (webhook → `credit_tokens`).
+- Configurer la boutique Chariow : produits des packs (slugs = ids des packs,
+  type Licence, prix XOF), clé API + secret Pulse dans `.env`, Pulse branché sur
+  `/api/payments/webhook` (voir `.env.example` et `docs/DEPLOIEMENT.md`).
 - Modération auto des briefs.
 - Suppression définitive de `token_refund_requests` (table vide, verrouillée
   par la migration 0031) si la fonctionnalité n'est pas reprise.

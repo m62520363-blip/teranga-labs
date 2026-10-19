@@ -2,62 +2,79 @@ import { NextResponse } from "next/server";
 import { createAdminClient, isServiceConfigured } from "@/lib/supabase/admin";
 import { log } from "@/lib/log";
 import {
-  isCheckoutCompleted,
-  verifyWaveSignature,
-  amountMatches,
-  type WaveWebhookEvent,
-} from "@/lib/payments/wave";
-import { isWaveConfigured } from "@/lib/payments/config";
+  amountMatchesSale,
+  getChariowSale,
+  getPulseReference,
+  isChariowApiError,
+  isSaleCompleted,
+  verifyPulseSignature,
+} from "@/lib/payments/chariow";
+import { isChariowConfigured, isPulseConfigured } from "@/lib/payments/chariow-config";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /**
- * POST /api/payments/webhook — endpoint IPN Wave.
+ * POST /api/payments/webhook — point de terminaison des Pulses Chariow.
  *
- * Sécurité :
- *   1. Vérification HMAC-SHA256 (header `Wave-Signature`) sur le corps
- *      BRUT + horodatage borné à 300s. Toute signature invalide → 401.
- *   2. On ne traite QUE `checkout.session.completed`.
- *   3. Le montant et la devise de l'événement doivent correspondre à
- *      l'intention de paiement enregistrée côté serveur.
- *   4. Le crédit passe par la RPC `credit_from_payment` (service_role
- *      uniquement, idempotente) : un rejeu du webhook ne recrédite pas.
- *   5. Répondre vite (timeout Wave 10s) : crédit synchrone + 200.
+ * Sécurité, dans l'ordre :
+ *   1. `x-chariow-signature` = HMAC-SHA256 du corps BRUT avec le secret
+ *      du Pulse (`whsec_...`), comparaison en temps constant — sinon 401.
+ *      Le corps est capturé AVANT tout parsing JSON.
+ *   2. Seul `successful.sale` est traité ; les autres événements sont
+ *      acquittés 200 sans effet (failed/abandoned ne créditent rien).
+ *   3. L'intention ou la demande de vérification est retrouvée via
+ *      `sale.custom_metadata` (posée à l'initiation du checkout).
+ *   4. RE-VÉRIFICATION serveur `GET /v1/sales/{id}` : c'est la réponse
+ *      de l'API Chariow qui fait foi pour le statut et le montant, pas
+ *      le corps du webhook. API injoignable → 502, Chariow réessaie.
+ *   5. Le montant confirmé (XOF) doit être strictement égal au montant
+ *      gelé côté serveur.
+ *   6. Crédit via `credit_from_payment` / `admin_confirm_verification_payment`
+ *      (service_role, idempotents) : un rejeu (5 tentatives Chariow + rejeu
+ *      manuel) ne recrédite pas — c'est cette garantie atomique qui remplace
+ *      la table de déduplication, `x-pulse-delivery-id` étant journalisé.
+ *   7. Réponse rapide 200 (timeout Pulse : 30s), aucune tâche longue.
  */
 export async function POST(request: Request) {
-  if (!isWaveConfigured() || !isServiceConfigured()) {
-    return NextResponse.json(
-      { error: "webhook_not_configured" },
-      { status: 503 }
-    );
+  if (!isChariowConfigured() || !isPulseConfigured() || !isServiceConfigured()) {
+    return NextResponse.json({ error: "webhook_not_configured" }, { status: 503 });
   }
 
   const rawBody = await request.text();
-  const signature = request.headers.get("wave-signature");
+  const signature = request.headers.get("x-chariow-signature");
 
-  if (!verifyWaveSignature(rawBody, signature)) {
+  if (!verifyPulseSignature(rawBody, signature)) {
     return NextResponse.json({ error: "invalid_signature" }, { status: 401 });
   }
 
-  let event: WaveWebhookEvent;
+  let payload: Record<string, unknown>;
   try {
-    event = JSON.parse(rawBody) as WaveWebhookEvent;
+    payload = JSON.parse(rawBody) as Record<string, unknown>;
   } catch {
     return NextResponse.json({ error: "invalid_payload" }, { status: 400 });
   }
 
-  if (!isCheckoutCompleted(event)) {
-    // Ack des autres événements (test ping, failures...) sans effet.
-    return NextResponse.json({ ok: true });
+  const eventType =
+    typeof payload.event === "string"
+      ? payload.event
+      : (request.headers.get("x-pulse-event") ?? "");
+
+  if (eventType !== "successful.sale") {
+    // failed / abandoned / license.* / tests : acquittés sans effet.
+    return NextResponse.json({ ok: true, ignored: eventType || "unknown" });
   }
 
-  const data = event.data ?? {};
-  const clientReference = data.client_reference;
-  const eventAmount = data.amount;
-  const currency = data.currency;
+  const sale = (payload.sale ?? null) as {
+    id?: string;
+    custom_metadata?: Record<string, string> | null;
+  } | null;
+  if (!sale?.id) {
+    return NextResponse.json({ error: "missing_sale" }, { status: 400 });
+  }
 
-  if (typeof clientReference !== "string" || !clientReference) {
+  const { reference, kind } = getPulseReference(sale);
+  if (!reference) {
     return NextResponse.json({ error: "missing_reference" }, { status: 400 });
   }
 
@@ -66,97 +83,147 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "service_unavailable" }, { status: 503 });
   }
 
-  // Vérifie si la référence correspond à une intention de paiement Tokens
-  // ou à une demande de vérification de profil.
-  const { data: intent, error: intentError } = await admin
-    .from("payment_intents")
-    .select("id, developer_id, tokens, amount_fcfa, currency, status")
-    .eq("id", clientReference)
-    .maybeSingle();
+  const deliveryId = request.headers.get("x-pulse-delivery-id") ?? null;
 
-  if (!intentError && intent) {
-    if (intent.status === "paid") {
-      return NextResponse.json({ ok: true, credited: false });
+  // Source de vérité : l'API Chariow, jamais le corps du webhook seul.
+  let confirmed;
+  try {
+    confirmed = await getChariowSale(sale.id);
+  } catch (err) {
+    if (isChariowApiError(err)) {
+      log.error({
+        action: "pulse.sale.refused",
+        provider: "chariow",
+        status: err.status,
+        message: err.message,
+      });
+      if (err.status === 404) {
+        return NextResponse.json({ error: "sale_not_found" }, { status: 404 });
+      }
+    } else {
+      log.error({
+        action: "pulse.sale.unreachable",
+        provider: "chariow",
+        message: err instanceof Error ? err.message : String(err),
+      });
     }
+    // 502 : Chariow réessaiera la livraison — mieux vaut retarder un
+    // crédit que le calculer sur une donnée non vérifiée.
+    return NextResponse.json({ error: "confirm_unavailable" }, { status: 502 });
+  }
 
-    if (
-      currency !== "XOF" ||
-      !amountMatches(eventAmount, intent.amount_fcfa)
-    ) {
+  if (!isSaleCompleted(confirmed)) {
+    return NextResponse.json(
+      { error: "status_mismatch", status: confirmed.status },
+      { status: 409 }
+    );
+  }
+
+  if (kind === "verification") {
+    const { data: verification, error } = await admin
+      .from("verification_requests")
+      .select("id, developer_id, amount_fcfa, payment_status")
+      .eq("id", reference)
+      .maybeSingle();
+
+    if (error || !verification) {
+      return NextResponse.json({ error: "request_not_found" }, { status: 404 });
+    }
+    if (verification.payment_status === "confirmed") {
+      return NextResponse.json({ ok: true, confirmed: false, alreadyPaid: true });
+    }
+    if (!amountMatchesSale(confirmed, verification.amount_fcfa)) {
       return NextResponse.json({ error: "amount_mismatch" }, { status: 400 });
     }
 
-    const { data: creditResult, error: creditError } = await admin.rpc(
-      "credit_from_payment",
-      { p_intent_id: intent.id }
+    const { data: confirmResult, error: confirmError } = await admin.rpc(
+      "admin_confirm_verification_payment",
+      { p_verification: verification.id }
     );
-
-    if (creditError) {
-      log.error({ action: "webhook.credit.failed", provider: "wave", message: creditError.message });
-      return NextResponse.json({ error: "credit_failed" }, { status: 500 });
+    if (confirmError) {
+      log.error({
+        action: "pulse.verification.confirm.failed",
+        provider: "chariow",
+        message: confirmError.message,
+      });
+      return NextResponse.json({ error: "confirm_failed" }, { status: 500 });
     }
 
-    void (async () => {
-      const { error } = await admin.rpc("track_event", {
-        p_event: "payment.credited",
-        p_metadata: { flow: "webhook_wave", amount_fcfa: intent.amount_fcfa },
-      });
-      if (error)
-        log.error({ action: "webhook.credit.track", provider: "wave", message: error.message });
-    })();
+    void trackCredit(admin, {
+      flow: "pulse_chariow_verification",
+      amount_fcfa: verification.amount_fcfa,
+      sale_id: confirmed.id,
+      delivery_id: deliveryId,
+      developer_id: verification.developer_id,
+    });
 
-    return NextResponse.json({ ok: true, credited: true, result: creditResult });
+    return NextResponse.json({ ok: true, confirmed: true, result: confirmResult });
   }
 
-  // Référence d'une demande de vérification : confirme le paiement via
-  // admin_confirm_verification_payment (idempotent, service_role).
-  const { data: verification, error: verificationError } = await admin
-    .from("verification_requests")
-    .select("id, developer_id, amount_fcfa, payment_status")
-    .eq("id", clientReference)
+  const { data: intent, error: intentError } = await admin
+    .from("payment_intents")
+    .select("id, developer_id, tokens, amount_fcfa, status")
+    .eq("id", reference)
     .maybeSingle();
 
-  if (verificationError || !verification) {
+  if (intentError || !intent) {
     return NextResponse.json({ error: "intent_not_found" }, { status: 404 });
   }
-
-  if (verification.payment_status === "confirmed") {
-    return NextResponse.json({ ok: true, confirmed: false });
+  if (intent.status === "paid") {
+    // Livraison en double (retry Chariow / rejeu manuel) : déjà crédité.
+    return NextResponse.json({ ok: true, credited: false, alreadyPaid: true });
   }
-
-  if (
-    currency !== "XOF" ||
-    !amountMatches(eventAmount, verification.amount_fcfa)
-  ) {
+  if (!amountMatchesSale(confirmed, intent.amount_fcfa)) {
     return NextResponse.json({ error: "amount_mismatch" }, { status: 400 });
   }
 
-  const { data: confirmResult, error: confirmError } = await admin.rpc(
-    "admin_confirm_verification_payment",
-    { p_verification: verification.id }
+  const { data: creditResult, error: creditError } = await admin.rpc(
+    "credit_from_payment",
+    { p_intent_id: intent.id }
   );
-
-  if (confirmError) {
+  if (creditError) {
     log.error({
-      action: "webhook.verification.confirm.failed",
-      provider: "wave",
-      message: confirmError.message,
+      action: "pulse.credit.failed",
+      provider: "chariow",
+      message: creditError.message,
     });
-    return NextResponse.json({ error: "confirm_failed" }, { status: 500 });
+    return NextResponse.json({ error: "credit_failed" }, { status: 500 });
   }
 
-  void (async () => {
-    const { error } = await admin.rpc("track_event", {
-      p_event: "payment.credited",
-      p_metadata: { flow: "verification", amount_fcfa: verification.amount_fcfa },
-    });
-    if (error)
-      log.error({
-        action: "webhook.verification.track",
-        provider: "wave",
-        message: error.message,
-      });
-  })();
+  void trackCredit(admin, {
+    flow: "pulse_chariow",
+    amount_fcfa: intent.amount_fcfa,
+    tokens: intent.tokens,
+    sale_id: confirmed.id,
+    delivery_id: deliveryId,
+    developer_id: intent.developer_id,
+  });
 
-  return NextResponse.json({ ok: true, confirmed: true, result: confirmResult });
+  return NextResponse.json({ ok: true, credited: true, result: creditResult });
+}
+
+/**
+ * Chariow sert parfois un GET de diagnostic sur l'URL de Pulse.
+ * Répondre 200 évite une erreur 404 côté tableau de bord, sans jamais
+ * toucher à la logique de crédit.
+ */
+export async function GET() {
+  return NextResponse.json({ ok: true, service: "chariow-pulse" });
+}
+
+function trackCredit(
+  admin: NonNullable<ReturnType<typeof createAdminClient>>,
+  metadata: Record<string, unknown>
+) {
+  void admin
+    .rpc("track_event", { p_event: "payment.credited", p_metadata: metadata })
+    .then(({ error }) => {
+      if (error) {
+        log.error({
+          action: "pulse.credit.track",
+          provider: "chariow",
+          message: error.message,
+        });
+      }
+    });
 }

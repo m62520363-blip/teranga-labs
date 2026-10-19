@@ -1,12 +1,13 @@
 import * as React from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { ShieldCheck } from "lucide-react";
-import { HERO } from "@/components/landing/content";
 import { Scene3D } from "@/components/landing/scene-3d";
 import { HeroLaptop } from "@/components/landing/hero-laptop";
 import { RotatingWords } from "@/components/landing/rotating-words";
 
 export function Hero() {
+  const t = useTranslations("Landing.hero");
   return (
     <section id="accueil" className="relative scroll-mt-24 overflow-hidden">
       {/* Halo de marque : radial primaire en haut, respiration lente */}
@@ -27,7 +28,7 @@ export function Hero() {
           style={{ "--rise-delay": "1100ms" } as React.CSSProperties}
         >
           <ShieldCheck className="size-4 text-primary" aria-hidden="true" />
-          {HERO.badge}
+          {t("badge")}
         </span>
 
         <HeroTitle className="animate-rise" delay="1250ms" />
@@ -36,7 +37,7 @@ export function Hero() {
           className="animate-rise mt-5 max-w-xl text-base text-muted-foreground sm:text-lg sm:leading-relaxed"
           style={{ "--rise-delay": "1350ms" } as React.CSSProperties}
         >
-          {HERO.subtitle}
+          {t("subtitle")}
         </p>
 
         <div
@@ -44,16 +45,16 @@ export function Hero() {
           style={{ "--rise-delay": "1550ms" } as React.CSSProperties}
         >
           <Link
-            href={HERO.ctaPrimary.href}
+            href="/dev"
             className="btn-shine inline-flex min-h-11 items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-[filter] outline-none hover:brightness-110 active:brightness-95 focus-visible:ring-2 focus-visible:ring-primary/50"
           >
-            {HERO.ctaPrimary.label}
+            {t("ctaPrimary")}
           </Link>
           <Link
-            href={HERO.ctaSecondary.href}
+            href="/poster"
             className="inline-flex min-h-11 items-center gap-2 rounded-full border border-primary/60 px-5 py-2.5 text-sm text-foreground transition-colors outline-none hover:border-primary hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
           >
-            {HERO.ctaSecondary.label}
+            {t("ctaSecondary")}
           </Link>
         </div>
 
@@ -78,6 +79,13 @@ export function Hero() {
 }
 
 function HeroTitle({ className, delay }: { className?: string; delay: string }) {
+  const t = useTranslations("Landing.hero");
+  const title = t("title");
+  const rotating = t.raw("rotating") as string[];
+  // Le titre se scinde sur le dernier espace : « … web, paie » / « …, pay ».
+  const splitAt = title.lastIndexOf(" ");
+  const head = splitAt > 0 ? title.slice(0, splitAt) : title;
+  const tail = splitAt > 0 ? title.slice(splitAt + 1) : "";
   return (
     <h1
       className={
@@ -87,17 +95,17 @@ function HeroTitle({ className, delay }: { className?: string; delay: string }) 
       style={{ "--rise-delay": delay } as React.CSSProperties}
     >
       <span className="sr-only">
-        Trouve ton développeur web, paie {HERO.rotating[0]}
+        {title} {rotating[0]}
       </span>
       <span aria-hidden="true" className="text-center">
-        Trouve ton développeur web,
+        {head}
       </span>
       <span
         aria-hidden="true"
         className="flex flex-wrap items-baseline justify-center gap-x-3"
       >
-        <span>paie</span>
-        <RotatingWords words={HERO.rotating} className="align-baseline" />
+        <span>{tail}</span>
+        <RotatingWords words={rotating} className="align-baseline" />
       </span>
     </h1>
   );

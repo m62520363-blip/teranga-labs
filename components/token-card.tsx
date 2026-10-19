@@ -41,11 +41,13 @@ function useBuyFlow(pkg: TokenPackage) {
   /**
    * Paiement en ligne via /api/payments/checkout.
    *
-   * Aucune commande manuelle n'est creee ici : on demande une facture au
-   * prestataire et on redirige. Le credit se fait a l'arrivee de l'IPN.
+   * Aucune commande manuelle n'est creee ici : on demande une session de
+   * paiement Chariow et on redirige. Le credit se fait a l'arrivee du
+   * Pulse signe, apres re-verification serveur de la vente.
    *
-   * `window.location.assign` et non un <Link> : l'URL est une page externe
-   * (app.paydunya.com) et doit quitter le site, pas etre routee par Next.
+   * `window.location.assign` et non un <Link> : l'URL est une page
+   * tierce (paiement Chariow) et doit quitter le site, pas etre routee
+   * par Next.
    */
   const payOnline = async () => {
     setErrorMessage("");
@@ -170,12 +172,12 @@ export function TokenCard({ pkg }: { pkg: TokenPackage }) {
                   Paiement sécurisé, Tokens crédités automatiquement
                 </div>
                 <ol className="list-inside list-decimal space-y-1.5 text-sm leading-relaxed text-muted-foreground">
-                  <li>Vous réglez sur la page de paiement (carte, Wave, Orange Money).</li>
+                  <li>Vous réglez sur la page de paiement sécurisée (carte ou mobile money).</li>
                   <li>Vos Tokens sont crédités dès que le paiement est confirmé.</li>
                 </ol>
                 <p className="border-t border-hairline pt-3 text-xs leading-relaxed text-muted-foreground">
-                  Le debit est effectu chez PayDunya. Vos Tokens sont credites
-                  des la confirmation du paiement.
+                  Le règlement est encaissé par Chariow, prestataire de paiement.
+                  Vos Tokens sont crédités dès la confirmation du paiement.
                 </p>
               </div>
 

@@ -87,11 +87,11 @@ export function BriefCard({
 
       <div className="min-h-6 grow" aria-hidden="true" />
 
-      <div className="flex items-center justify-between gap-3 border-t border-hairline pt-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-hairline pt-4">
         <span className="text-xs text-muted-foreground">
           {formatRelativeTime(brief.created_at)}
         </span>
-        <div className="flex items-center">{footer}</div>
+        <div className="flex flex-wrap items-center gap-1">{footer}</div>
       </div>
     </article>
   );

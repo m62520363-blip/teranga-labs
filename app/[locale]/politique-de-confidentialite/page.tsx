@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { LegalPage } from "@/components/legal-page";
 
 export const metadata: Metadata = {
@@ -60,12 +61,12 @@ export default function PolitiqueDeConfidentialitePage() {
             <p>
               Les données sont conservées le temps nécessaire à la fourniture
               du service : votre session reste active 30 jours (voir la{" "}
-              <a
+              <Link
                 href="/cookies"
                 className="font-medium text-primary underline underline-offset-2"
               >
                 politique de cookies
-              </a>
+              </Link>
               ), vos briefs restent visibles tant qu’ils sont ouverts, et les
               données de compte sont supprimées sur demande. Les journaux de
               sécurité sont conservés 12 mois, puis anonymisés.

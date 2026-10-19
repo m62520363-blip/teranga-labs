@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
+import { Link, usePathname } from "@/i18n/navigation";
 import {
   ArrowRight,
   Briefcase,
@@ -46,6 +46,7 @@ export function Navbar({
   const [scrolled, setScrolled] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const pathname = usePathname();
+  const t = useTranslations("Nav");
 
   const isClient = role === "client";
   const isDev = role === "developer";
@@ -64,33 +65,33 @@ export function Navbar({
   }, [pathname]);
 
   const displayName =
-    user?.name?.trim() || (authed ? (isClient ? "Mon espace" : "Mon compte") : null);
+    user?.name?.trim() || (authed ? (isClient ? t("mySpace") : t("myAccount")) : null);
 
   const appLinks: { href: string; label: string; adminOnly?: boolean }[] = [];
-  appLinks.push({ href: "/dev", label: "Trouver un développeur" });
-  appLinks.push({ href: "/agences", label: "Agences" });
+  appLinks.push({ href: "/dev", label: t("findDev") });
+  appLinks.push({ href: "/agences", label: t("agencies") });
   if (authed) {
-    appLinks.push({ href: homeHref, label: "Accueil" });
-    appLinks.push({ href: "/conversations", label: "Messages" });
-    appLinks.push({ href: "/missions", label: "Missions" });
+    appLinks.push({ href: homeHref, label: t("home") });
+    appLinks.push({ href: "/conversations", label: t("messages") });
+    appLinks.push({ href: "/missions", label: t("missions") });
     if (isClient) {
-      appLinks.push({ href: "/poster", label: "Publier un brief" });
+      appLinks.push({ href: "/poster", label: t("publishBrief") });
     } else if (isDev) {
-      appLinks.push({ href: "/briefs", label: "Voir les briefs" });
-      appLinks.push({ href: "/dashboard?tab=profil", label: "Mon profil" });
-      appLinks.push({ href: "/verification", label: "Vérifier mon profil" });
+      appLinks.push({ href: "/briefs", label: t("briefsView") });
+      appLinks.push({ href: "/dashboard?tab=profil", label: t("myProfile") });
+      appLinks.push({ href: "/verification", label: t("verifyProfile") });
     } else {
-      appLinks.push({ href: "/briefs", label: "Voir les briefs" });
+      appLinks.push({ href: "/briefs", label: t("briefsView") });
     }
     if (role === "admin") {
       appLinks.push({
         href: process.env.NEXT_PUBLIC_ADMIN_URL || "http://localhost:3001",
-        label: "Admin",
+        label: t("admin"),
         adminOnly: true,
       });
     }
-    appLinks.push({ href: "/tokens", label: "Acheter des Tokens" });
-    appLinks.push({ href: "/parametres", label: "Paramètres" });
+    appLinks.push({ href: "/tokens", label: t("buyTokens") });
+    appLinks.push({ href: "/parametres", label: t("settings") });
   }
 
   /** null = pas de dock (visiteurs non connectés : navigation via la navbar + menu). */
@@ -99,32 +100,32 @@ export function Navbar({
     if (isClient) {
       // Espace client : trouver un dev, publier, suivre ses missions.
       return [
-        { href: "/client", label: "Accueil", icon: Home },
-        { href: "/dev", label: "Dévs", icon: UsersRound },
-        { href: "/poster", label: "Publier", icon: Plus, emphasis: true },
-        { href: "/missions", label: "Missions", icon: Briefcase },
-        { href: "/conversations", label: "Messages", icon: MessageCircle },
+        { href: "/client", label: t("home"), icon: Home },
+        { href: "/dev", label: t("devs"), icon: UsersRound },
+        { href: "/poster", label: t("publish"), icon: Plus, emphasis: true },
+        { href: "/missions", label: t("missions"), icon: Briefcase },
+        { href: "/conversations", label: t("messages"), icon: MessageCircle },
       ];
     }
     if (isDev) {
       // Espace développeur : décrocher des briefs, gagner des tokens, profil.
       // Pas d'action centrale « + » : le cœur du métier est la réponse aux briefs.
       return [
-        { href: "/dashboard", label: "Accueil", icon: Home },
-        { href: "/briefs", label: "Briefs", icon: Briefcase },
-        { href: "/tokens", label: "Tokens", icon: Coins },
-        { href: "/conversations", label: "Messages", icon: MessageCircle },
-        { href: "/dashboard?tab=profil", label: "Profil", icon: UserRound },
+        { href: "/dashboard", label: t("home"), icon: Home },
+        { href: "/briefs", label: t("briefs"), icon: Briefcase },
+        { href: "/tokens", label: t("tokens"), icon: Coins },
+        { href: "/conversations", label: t("messages"), icon: MessageCircle },
+        { href: "/dashboard?tab=profil", label: t("profile"), icon: UserRound },
       ];
     }
     // Autres rôles connectés (admin, …) : pas d'espace dédié sur le site.
     return [
-      { href: "/briefs", label: "Briefs", icon: Briefcase },
-      { href: "/dev", label: "Dévs", icon: UsersRound },
-      { href: "/conversations", label: "Messages", icon: MessageCircle },
-      { href: "/parametres", label: "Compte", icon: Settings2 },
+      { href: "/briefs", label: t("briefs"), icon: Briefcase },
+      { href: "/dev", label: t("devs"), icon: UsersRound },
+      { href: "/conversations", label: t("messages"), icon: MessageCircle },
+      { href: "/parametres", label: t("account"), icon: Settings2 },
     ];
-  }, [isClient, isDev, authed]);
+  }, [isClient, isDev, authed, t]);
 
   return (
     <>
@@ -137,13 +138,13 @@ export function Navbar({
         )}
       >
         <nav
-          aria-label="Navigation principale"
+          aria-label={t("mainNav")}
           className="container-tl relative flex h-16 items-center justify-between gap-4"
         >
           <Link
             href={homeHref}
             className="rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
-            aria-label="TERANGA LABS — accueil"
+            aria-label={t("homeLink")}
           >
             <Logo />
           </Link>
@@ -157,36 +158,37 @@ export function Navbar({
                 href="/"
                 className="text-sm font-medium text-foreground/80 transition-colors outline-none hover:text-foreground focus-visible:text-foreground"
               >
-                Accueil
+                {t("home")}
               </Link>
               <Link
                 href="/#comment-ca-marche"
                 className="text-sm font-medium text-foreground/80 transition-colors outline-none hover:text-foreground focus-visible:text-foreground"
               >
-                Comment ça marche
+                {t("howItWorks")}
               </Link>
               <Link
                 href="/#tarifs"
                 className="text-sm font-medium text-foreground/80 transition-colors outline-none hover:text-foreground focus-visible:text-foreground"
               >
-                Tarifs
+                {t("pricing")}
               </Link>
               <Link
                 href="/#faq"
                 className="text-sm font-medium text-foreground/80 transition-colors outline-none hover:text-foreground focus-visible:text-foreground"
               >
-                FAQ
+                {t("faq")}
               </Link>
             </div>
           )}
 
           <div className="hidden items-center gap-2 lg:flex">
+            <LanguageSwitcher />
 {user ? (
                 <>
                   {userId ? <NotificationBell userId={userId} /> : null}
                   <TokenBalance />
                 <NavLink href={homeHref} active={isActiveLink(pathname, homeHref)}>
-                  {displayName ?? "Mon espace"}
+                  {displayName ?? t("mySpace")}
                 </NavLink>
                 <SignOutButton />
               </>
@@ -196,13 +198,13 @@ export function Navbar({
                   href="/login"
                   className="inline-flex items-center rounded-full px-3.5 py-1.5 text-sm font-medium text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
                 >
-                  Se connecter
+                  {t("signIn")}
                 </Link>
                 <Link
                   href="/poster"
                   className="btn-shine inline-flex items-center gap-1.5 rounded-full bg-primary px-3.5 py-1.5 text-sm font-medium text-primary-foreground transition-[filter] outline-none hover:brightness-110 active:brightness-95 focus-visible:ring-2 focus-visible:ring-primary/50"
                 >
-                  Publier une demande
+                  {t("publishRequest")}
                 </Link>
               </>
             )}
@@ -213,7 +215,7 @@ export function Navbar({
             onClick={() => setOpen((v) => !v)}
             className="inline-flex size-9 items-center justify-center rounded-control p-2 text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50 lg:hidden"
             aria-expanded={open}
-            aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
+            aria-label={open ? t("closeMenu") : t("openMenu")}
           >
             {open ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>
@@ -230,39 +232,45 @@ export function Navbar({
                     </MobileNavLink>
                   ))}
                   <MobileNavLink href="/notifications">
-                    Notifications
+                    {t("notifications")}
                   </MobileNavLink>
                   <div className="my-2 h-px bg-border-strong" />
                   <MobileNavLink href={homeHref}>
-                    {displayName ?? "Mon espace"}
+                    {displayName ?? t("mySpace")}
                   </MobileNavLink>
                   <div className="flex items-center justify-between px-3 py-2">
-                    <span className="text-sm text-muted-foreground">Tokens</span>
+                    <span className="text-sm text-muted-foreground">{t("tokens")}</span>
                     <TokenBalance />
+                  </div>
+                  <div className="px-3 pb-1">
+                    <LanguageSwitcher />
                   </div>
                   <SignOutButton variant="mobile" />
                 </>
               ) : (
                 <>
-                  <MobileNavLink href="/">Accueil</MobileNavLink>
+                  <MobileNavLink href="/">{t("home")}</MobileNavLink>
                   <MobileNavLink href="/#comment-ca-marche">
-                    Comment ça marche
+                    {t("howItWorks")}
                   </MobileNavLink>
-                  <MobileNavLink href="/#tarifs">Tarifs</MobileNavLink>
-                  <MobileNavLink href="/#faq">FAQ</MobileNavLink>
-                  <MobileNavLink href="/dev">Trouver un développeur</MobileNavLink>
-                  <MobileNavLink href="/agences">Agences</MobileNavLink>
-                  <MobileNavLink href="/poster">Pour les clients</MobileNavLink>
-                  <MobileNavLink href="/briefs">Pour les développeurs</MobileNavLink>
+                  <MobileNavLink href="/#tarifs">{t("pricing")}</MobileNavLink>
+                  <MobileNavLink href="/#faq">{t("faq")}</MobileNavLink>
+                  <MobileNavLink href="/dev">{t("findDev")}</MobileNavLink>
+                  <MobileNavLink href="/agences">{t("agencies")}</MobileNavLink>
+                  <MobileNavLink href="/poster">{t("forClients")}</MobileNavLink>
+                  <MobileNavLink href="/briefs">{t("forDevs")}</MobileNavLink>
                   <div className="my-2 h-px bg-border-strong" />
-                  <MobileNavLink href="/login">Se connecter</MobileNavLink>
+                  <MobileNavLink href="/login">{t("signIn")}</MobileNavLink>
                   <Link
                     href="/poster"
                     className="btn-shine mt-2 inline-flex h-9 items-center justify-center gap-1.5 rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground outline-none hover:brightness-110 focus-visible:ring-2 focus-visible:ring-primary/50"
                   >
-                    Publier une demande
+                    {t("publishRequest")}
                     <ArrowRight className="size-4" aria-hidden="true" />
                   </Link>
+                  <div className="px-3 pb-1 pt-2">
+                    <LanguageSwitcher />
+                  </div>
                 </>
               )}
             </div>
@@ -286,6 +294,7 @@ function DesktopNavLinks({
   authed: boolean;
   appLinks: { href: string; label: string; adminOnly?: boolean }[];
 }) {
+  const t = useTranslations("Nav");
   const rowRef = React.useRef<HTMLDivElement>(null);
   const itemRefs = React.useRef(new Map<string, HTMLAnchorElement>());
   const [indicator, setIndicator] = React.useState<{
@@ -300,10 +309,11 @@ function DesktopNavLinks({
       if (!row) return;
       const rowRect = row.getBoundingClientRect();
       let foundEl: HTMLAnchorElement | null = null;
-      for (const el of itemRefs.current.values()) {
-        const href = el.getAttribute("href") ?? "";
+      // Clés brutes (sans préfixe de locale) : le href du DOM porte le
+      // préfixe `/en` en anglais, incompatible avec `pathname` strippé.
+      for (const href of itemRefs.current.keys()) {
         if (isActiveLink(pathname, href.split("?")[0])) {
-          foundEl = el;
+          foundEl = itemRefs.current.get(href) ?? null;
           break;
         }
       }
@@ -329,13 +339,13 @@ function DesktopNavLinks({
   const links = authed
     ? appLinks
     : [
-        { href: "/", label: "Accueil" },
-        { href: "/dev", label: "Trouver un dev" },
-        { href: "/agences", label: "Agences" },
-        { href: "/#comment-ca-marche", label: "Comment ça marche" },
-        { href: "/poster", label: "Pour les clients" },
-        { href: "/briefs", label: "Pour les développeurs" },
-        { href: "/faq", label: "FAQ" },
+        { href: "/", label: t("home") },
+        { href: "/dev", label: t("findDevShort") },
+        { href: "/agences", label: t("agencies") },
+        { href: "/#comment-ca-marche", label: t("howItWorks") },
+        { href: "/poster", label: t("forClients") },
+        { href: "/briefs", label: t("forDevs") },
+        { href: "/faq", label: t("faq") },
       ];
 
   return (
@@ -384,6 +394,7 @@ function DesktopNavLinks({
    icône active qui « pop », pression tactile qui resserre l'élément. */
 
 function MobileDock({ items, pathname }: { items: DockItem[]; pathname: string }) {
+  const t = useTranslations("Nav");
   const rowRef = React.useRef<HTMLDivElement>(null);
   const itemRefs = React.useRef(new Map<string, HTMLAnchorElement>());
   const [pos, setPos] = React.useState<{ x: number; w: number; active: boolean }>({
@@ -424,7 +435,7 @@ function MobileDock({ items, pathname }: { items: DockItem[]; pathname: string }
 
   return (
     <nav
-      aria-label="Navigation rapide"
+      aria-label={t("quickNav")}
       className="fixed inset-x-0 bottom-0 z-40 flex justify-center px-4 pb-[calc(0.6rem+env(safe-area-inset-bottom))] pt-2 md:hidden"
     >
       <div
@@ -499,6 +510,77 @@ function MobileDock({ items, pathname }: { items: DockItem[]; pathname: string }
         </div>
       </div>
     </nav>
+  );
+}
+
+/* --------------------------- SWITCHER DE LANGUE --------------------------- */
+/* Sélecteur FR/EN compact : la langue courante est une pastille active,
+   l'autre langue est un lien qui préserve la page courante (next-intl
+   préfixe automatiquement en `/en` ; `/fr/…` est normalisé par le
+   middleware en `as-needed`).
+
+   La bascule s'exprime en navigation COMPLÈTE : le NextIntlClientProvider
+   vit dans le layout racine (couverture des 404 hors branche `[locale]`)
+   et le layout racine ne se re-rend pas lors d'une navigation client —
+   seul un rechargement serveur applique la nouvelle locale partout
+   (navbar, footer, sections client). */
+
+function LanguageSwitcher() {
+  const locale = useLocale();
+  const pathname = usePathname();
+  const t = useTranslations("Nav");
+  const switchLocale = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    window.location.assign(event.currentTarget.href);
+  };
+  const base =
+    "px-2 py-1 text-[11px] font-semibold leading-none tracking-wide outline-none transition-colors";
+  const currentClass = cn(base, "bg-primary text-primary-foreground");
+  const linkClass = cn(
+    base,
+    "rounded-full text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
+  );
+  return (
+    <div
+      role="group"
+      aria-label={t("langGroup")}
+      className="flex w-fit items-center rounded-full border border-white/10 bg-white/[0.05] p-0.5"
+    >
+      {locale === "fr" ? (
+        <span lang="fr" aria-current="true" className={currentClass}>
+          FR
+        </span>
+      ) : (
+        <Link
+          href={pathname}
+          locale="fr"
+          lang="fr"
+          hrefLang="fr"
+          aria-label={t("langToFr")}
+          className={linkClass}
+          onClick={switchLocale}
+        >
+          FR
+        </Link>
+      )}
+      {locale === "en" ? (
+        <span lang="en" aria-current="true" className={currentClass}>
+          EN
+        </span>
+      ) : (
+        <Link
+          href={pathname}
+          locale="en"
+          lang="en"
+          hrefLang="en"
+          aria-label={t("langToEn")}
+          className={linkClass}
+          onClick={switchLocale}
+        >
+          EN
+        </Link>
+      )}
+    </div>
   );
 }
 

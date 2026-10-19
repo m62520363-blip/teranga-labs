@@ -1,6 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Bodoni_Moda, DM_Sans, Geist_Mono, Outfit } from "next/font/google";
+import { hasLocale } from "next-intl";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
@@ -8,6 +11,7 @@ import { SiteShell } from "@/components/site-shell";
 import { Providers } from "@/components/providers";
 import { getCurrentRole, getCurrentUser } from "@/lib/supabase/server";
 import { absoluteUrl } from "@/lib/utils";
+import { routing } from "@/i18n/routing";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -157,19 +161,19 @@ export default async function RootLayout({
 }>) {
   const [user, role] = await Promise.all([getCurrentUser(), getCurrentRole()]);
 
-  /* Thème clair de l'espace app posé avant le premier paint (évite le flash
-     sombre sur /client, /dev, …). Même liste que CLIENT_APP_ROUTES. */
-  const themeBootScript = `(() => { try { var seg = location.pathname.split("/")[1];
-    var app = ["client","dev","poster","missions","conversations","parametres","notifications","support","tokens"].indexOf(seg) >= 0;
-    if (app) document.documentElement.setAttribute("data-app-theme", localStorage.getItem("tl-app-theme") === "dark" ? "dark" : "light");
-  } catch (e) {} })();`;
+  // Locale fournie par le middleware next-intl (en-tête `x-next-intl-locale`).
+  // `getLocale()` est garanti valide par le fallback de i18n/request.ts.
+  const rawLocale = await getLocale();
+  const locale = hasLocale(routing.locales, rawLocale)
+    ? rawLocale
+    : routing.defaultLocale;
+  const messages = await getMessages();
 
   return (
-    <html lang="fr" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <body
         className={`${outfit.variable} ${bodoni.variable} ${dmSans.variable} ${geistMono.variable} bg-background font-sans text-foreground antialiased`}
       >
-        <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
         <script
           type="application/ld+json"
           // Contenu statique défini ici, aucune donnée utilisateur ni saisie.
@@ -179,30 +183,32 @@ export default async function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
-        <Providers isAuthed={Boolean(user)}>
-          <SiteShell
-            navbar={
-              <Navbar
-                user={user ? { name: user.user_metadata?.full_name ?? null } : null}
-                role={role}
-                userId={user?.id ?? null}
-              />
-            }
-            footer={<Footer />}
-            role={role}
-            user={
-              user
-                ? {
-                    name: user.user_metadata?.full_name ?? null,
-                    email: user.email ?? null,
-                  }
-                : null
-            }
-            userId={user?.id ?? null}
-          >
-            {children}
-          </SiteShell>
-        </Providers>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <Providers isAuthed={Boolean(user)}>
+            <SiteShell
+              navbar={
+                <Navbar
+                  user={user ? { name: user.user_metadata?.full_name ?? null } : null}
+                  role={role}
+                  userId={user?.id ?? null}
+                />
+              }
+              footer={<Footer />}
+              role={role}
+              user={
+                user
+                  ? {
+                      name: user.user_metadata?.full_name ?? null,
+                      email: user.email ?? null,
+                    }
+                  : null
+              }
+              userId={user?.id ?? null}
+            >
+              {children}
+            </SiteShell>
+          </Providers>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

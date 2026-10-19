@@ -2,9 +2,9 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname } from "@/i18n/navigation";
 import { Menu, X } from "lucide-react";
-import { LogoMark } from "@/components/logo";
+import { ImageLogoMark } from "@/components/logo";
 import { NotificationBell } from "@/components/notification-bell";
 import { TokenBalance } from "@/components/token-balance";
 import { SignOutButton } from "@/components/sign-out-button";
@@ -14,20 +14,15 @@ import {
   isAppNavLinkActive,
   type AppNavLink,
 } from "@/components/nav/app-nav";
-import { cn } from "cn";
+import {
+  NavSections,
+  ProfileBlock,
+} from "@/components/nav/shell-parts";
 
 type ShellUser = {
   name: string | null;
   email: string | null;
 } | null;
-
-function initialsOf(name: string | null): string {
-  const parts = (name ?? "").trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return "?";
-  const first = parts[0].charAt(0);
-  const second = parts.length > 1 ? parts[parts.length - 1].charAt(0) : "";
-  return (first + second).toUpperCase();
-}
 
 /**
  * Shell de l'espace dashboard (V8) — inspiré de la hiérarchie de navigation
@@ -125,19 +120,32 @@ export function DashboardShell({
     setDrawerOpen(false);
   }, []);
 
+  const isLinkActive = React.useCallback(
+    (link: AppNavLink) => isAppNavLinkActive(pathname, link, profileTab),
+    [pathname, profileTab]
+  );
+
   const sections = (
     <NavSections
-      pathname={pathname}
-      profileTab={profileTab}
+      sections={APP_NAV_SECTIONS}
+      isLinkActive={isLinkActive}
       onLinkClick={handleLinkClick}
     />
   );
 
   const profileBlock = (
     <ProfileBlock
-      user={user}
-      name={displayName}
-      onLinkClick={handleLinkClick}
+      href="/dashboard?tab=profil"
+      name={displayName ?? user?.name ?? null}
+      email={user?.email ?? null}
+      onLinkClick={() => handleLinkClick("/dashboard?tab=profil")}
+      extra={
+        <>
+          {/* Solde réel (RPC get_token_balance via BalanceProvider). */}
+          <TokenBalance />
+          <SignOutButton variant="menu" />
+        </>
+      }
     />
   );
 
@@ -154,10 +162,7 @@ export function DashboardShell({
             aria-label="TERANGA LABS — accueil"
             className="flex min-w-0 items-center gap-2 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
           >
-            <LogoMark className="size-7 shrink-0 text-foreground" aria-hidden="true" />
-            <span className="truncate font-display text-sm font-bold tracking-tight text-foreground">
-              TERANGA LABS
-            </span>
+            <ImageLogoMark priority className="h-7 w-auto" alt="" />
           </Link>
           {userId ? <NotificationBell userId={userId} /> : null}
         </div>
@@ -181,10 +186,7 @@ export function DashboardShell({
             aria-label="TERANGA LABS — accueil"
             className="flex min-w-0 items-center gap-2 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
           >
-            <LogoMark className="size-7 shrink-0 text-foreground" aria-hidden="true" />
-            <span className="truncate font-display text-[13px] font-bold tracking-tight text-foreground">
-              TERANGA LABS
-            </span>
+            <ImageLogoMark className="h-7 w-auto" alt="" />
           </Link>
           <div className="flex shrink-0 items-center gap-1.5">
             {userId ? <NotificationBell userId={userId} /> : null}
@@ -229,13 +231,7 @@ export function DashboardShell({
                 aria-label="TERANGA LABS — accueil"
                 className="flex min-w-0 items-center gap-2 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
               >
-                <LogoMark
-                  className="size-7 shrink-0 text-foreground"
-                  aria-hidden="true"
-                />
-                <span className="truncate font-display text-[13px] font-bold tracking-tight text-foreground">
-                  TERANGA LABS
-                </span>
+                <ImageLogoMark className="h-7 w-auto" alt="" />
               </Link>
               <button
                 type="button"
@@ -258,124 +254,6 @@ export function DashboardShell({
           </div>
         </div>
       ) : null}
-    </div>
-  );
-}
-
-/* --------------------------------- Sous-vues -------------------------------- */
-
-function NavSections({
-  pathname,
-  profileTab,
-  onLinkClick,
-}: {
-  pathname: string;
-  profileTab: boolean;
-  onLinkClick: (href: string) => void;
-}) {
-  return (
-    <>
-      {APP_NAV_SECTIONS.map((section) => (
-        <div key={section.title} className="mb-5 last:mb-0">
-          <p className="px-3 pb-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-            {section.title}
-          </p>
-          <ul className="flex flex-col gap-1">
-            {section.links.map((link) => (
-              <SideLink
-                key={link.href}
-                link={link}
-                active={isAppNavLinkActive(pathname, link, profileTab)}
-                onClick={() => onLinkClick(link.href)}
-              />
-            ))}
-          </ul>
-        </div>
-      ))}
-    </>
-  );
-}
-
-function SideLink({
-  link,
-  active,
-  onClick,
-}: {
-  link: AppNavLink;
-  active: boolean;
-  onClick: () => void;
-}) {
-  const Icon = link.icon;
-  return (
-    <li>
-      <Link
-        href={link.href}
-        onClick={onClick}
-        aria-current={active ? "page" : undefined}
-        className={cn(
-          "group flex h-10 items-center gap-3 rounded-xl px-3 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
-          active
-            ? "bg-primary-soft font-semibold text-foreground"
-            : "font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
-        )}
-      >
-        <span
-          className={cn(
-            "grid size-7 shrink-0 place-items-center rounded-lg transition-colors",
-            active
-              ? "bg-primary text-white"
-              : "text-muted-foreground group-hover:text-foreground"
-          )}
-        >
-          <Icon
-            className={active ? "size-4" : "size-5"}
-            aria-hidden="true"
-          />
-        </span>
-        <span className="truncate">{link.label}</span>
-        {active ? (
-          <span
-            aria-hidden="true"
-            className="ml-auto size-1.5 shrink-0 rounded-full bg-primary"
-          />
-        ) : null}
-      </Link>
-    </li>
-  );
-}
-
-function ProfileBlock({
-  user,
-  name,
-  onLinkClick,
-}: {
-  user: ShellUser;
-  name: string | null;
-  onLinkClick: (href: string) => void;
-}) {
-  const displayName = name?.trim() || "Mon espace";
-  return (
-    <div className="flex flex-col gap-2">
-      <Link
-        href="/dashboard?tab=profil"
-        onClick={() => onLinkClick("/dashboard?tab=profil")}
-        className="flex items-center gap-2.5 rounded-xl p-2 outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
-      >
-        <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary-soft text-xs font-bold text-primary-light">
-          {initialsOf(name ?? user?.name ?? null)}
-        </span>
-        <span className="min-w-0 flex-1 text-left">
-          <span className="block truncate text-sm font-semibold text-foreground">
-            {displayName}
-          </span>
-          <span className="block truncate text-xs text-muted-foreground">
-            {user?.email ?? "Mon compte"}
-          </span>
-        </span>
-      </Link>
-      {/* Solde réel (RPC get_token_balance via BalanceProvider). */}
-      <TokenBalance />
-      <SignOutButton variant="menu" />
     </div>
   );
 }

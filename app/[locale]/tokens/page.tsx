@@ -8,7 +8,7 @@ import { Scene3D } from "@/components/landing/scene-3d";
 export const metadata: Metadata = {
   title: "Tokens",
   description:
-    "Commandez vos Tokens en ligne (carte, Wave, Orange Money) et débloquez les coordonnées des clients qui cherchent un développeur.",
+    "Commandez vos Tokens en ligne (carte bancaire ou mobile money) et débloquez les coordonnées des clients qui cherchent un développeur.",
   robots: { index: false, follow: false },
 };
 
@@ -64,27 +64,18 @@ export default async function TokensPage() {
             </p>
             <div className="mt-3 grid gap-2 sm:grid-cols-2">
               <div className="flex items-center justify-between rounded-xl bg-muted px-4 py-3 text-sm">
-                <span className="font-medium">Wave</span>
-                <span className="text-xs text-muted-foreground">Mobile money</span>
-              </div>
-              <div className="flex items-center justify-between rounded-xl bg-muted px-4 py-3 text-sm">
-                <span className="font-medium">Orange Money</span>
-                <span className="text-xs text-muted-foreground">Mobile money</span>
-              </div>
-              <div className="flex items-center justify-between rounded-xl bg-muted px-4 py-3 text-sm">
                 <span className="font-medium">Carte bancaire</span>
                 <span className="text-xs text-muted-foreground">Visa, Mastercard</span>
               </div>
               <div className="flex items-center justify-between rounded-xl bg-muted px-4 py-3 text-sm">
-                <span className="font-medium">Max It</span>
-                <span className="text-xs text-muted-foreground">Mobile money</span>
+                <span className="font-medium">Mobile money</span>
+                <span className="text-xs text-muted-foreground">Selon votre pays</span>
               </div>
             </div>
             <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-              Le règlement passe par PayDunya, prestataire de paiement agréé
-              au Sénégal et dans la sous-région. Vous recevez une facture PDF
-              par email, et vos Tokens sont crédités dès que le paiement est
-              confirmé.
+              Le règlement passe par Chariow, prestataire de paiement : les moyens
+              proposés (carte, mobile money) dépendent de votre pays. Vos Tokens
+              sont crédités dès que le paiement est confirmé, sans attendre.
             </p>
             <p className="mt-4 rounded-xl border border-hairline bg-muted/60 px-4 py-3 text-xs leading-relaxed text-muted-foreground">
               <span className="font-medium text-foreground">

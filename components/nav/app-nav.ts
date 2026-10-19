@@ -6,6 +6,8 @@ import {
   Coins,
   FileText,
   Home,
+  LayoutGrid,
+  Megaphone,
   MessageSquare,
   Settings,
   UserRound,
@@ -77,6 +79,44 @@ const SHELL_SEGMENTS = new Set([
   "tokens",
   "parametres",
 ]);
+
+/**
+ * Menu de l'espace client (shell V8) : mêmes sections que le dashboard,
+ * destinations propres au client (Tableau de bord, Catalogue, Mes projets,
+ * Mes briefs, Mon profil).
+ */
+export const CLIENT_NAV_SECTIONS: AppNavSection[] = [
+  {
+    title: "ESPACE PRINCIPAL",
+    links: [
+      { href: "/client", label: "Tableau de bord", icon: LayoutGrid, match: "exact" },
+      { href: "/dev", label: "Catalogue", icon: UsersRound },
+      { href: "/missions", label: "Mes projets", icon: ClipboardList },
+      { href: "/client/briefs", label: "Mes briefs", icon: Megaphone },
+    ],
+  },
+  {
+    title: "COMMUNICATION",
+    links: [{ href: "/conversations", label: "Messages", icon: MessageSquare }],
+  },
+  {
+    title: "MON ESPACE",
+    links: [
+      { href: "/client/profil", label: "Mon profil", icon: UserRound },
+      { href: "/tokens", label: "Acheter des Tokens", icon: Coins },
+      { href: "/parametres", label: "Paramètres", icon: Settings },
+    ],
+  },
+];
+
+/** État actif d'un lien du menu client. */
+export function isClientNavLinkActive(
+  pathname: string,
+  link: AppNavLink
+): boolean {
+  if (link.match === "exact") return pathname === link.href;
+  return pathname === link.href || pathname.startsWith(link.href + "/");
+}
 
 /** Routes sur lesquelles le shell du dashboard remplace la navbar publique. */
 export function isAppShellRoute(pathname: string): boolean {

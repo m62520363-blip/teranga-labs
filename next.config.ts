@@ -1,4 +1,8 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+
+/** Charge la config de requête i18n depuis ./i18n/request.ts (emplacement par défaut). */
+const withNextIntl = createNextIntlPlugin();
 
 const securityHeaders = [
   { key: "X-Frame-Options", value: "DENY" },
@@ -51,4 +55,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

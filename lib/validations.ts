@@ -331,7 +331,6 @@ export const phoneOtpSchema = z.object({
 export const paymentCheckoutSchema = z
   .object({
     packageId: z.string().trim().min(1, "packageId manquant.").max(64, "packageId invalide."),
-    provider: z.enum(["wave", "paydunya", "max_it", "card"]).optional(),
   })
   .strict();
 
@@ -345,7 +344,7 @@ export const paymentStatusSchema = z.object({
 /** Corps de POST /api/verification/checkout (audit C5). */
 export const verificationCheckoutSchema = z
   .object({
-    method: z.enum(["wave", "max_it"]).optional(),
+    method: z.enum(["chariow", "max_it"]).optional(),
   })
   .strict();
 

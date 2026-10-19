@@ -7,7 +7,7 @@
 
 - **Node.js 22** et npm (CI et local).
 - Un projet **Supabase** (Postgres + Auth) avec les rôles `anon`, `authenticated`, `service_role` (créés par défaut).
-- Des clés **PayDunya** (sandbox ou live) et/ou **Wave** (voir `.env.example`).
+- Une boutique **Chariow** avec une clé API (`sk_…`) et un Pulse configuré (voir `.env.example`).
 - Un dépôt **GitHub** avec CI active (`.github/workflows/ci.yml`).
 
 ## 2. Variables d'environnement
@@ -19,14 +19,14 @@ dans un commit, une issue ou une conversation.
 | --- | --- | --- |
 | `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Vercel + CI (repo vars `SUPABASE_URL`, `SUPABASE_ANON_KEY`) | Connexion publique (build + navigateur) |
 | `SUPABASE_SERVICE_ROLE_KEY` | **Vercel uniquement** (serveur) | Crédits post-paiement, webhooks. Jamais côté client. |
-| `PAYDUNYA_*` / `WAVE_*` | Vercel | Prestataires de paiement (mode `PAYDUNYA_MODE=test|live`) |
+| `CHARIOW_API_KEY` / `CHARIOW_PULSE_SECRET` / `CHARIOW_BASE_URL` | Vercel | Prestataire de paiement unique Chariow (checkout + Pulse webhook) |
 | `NEXT_PUBLIC_APP_URL` | Vercel | URL publique (retours de paiement) |
 | `SUPABASE_ACCESS_TOKEN` + `SUPABASE_PROJECT_REF` | Local (optionnel) | `npm run test:db` via l'API Management |
 
 ## 3. Migrations
 
-1. Ordre strict : `supabase/migrations/0001_…` → `0052_…` (dernière : normalisation
-   téléphone multi-pays).
+1. Ordre strict : `supabase/migrations/0001_…` → `0055_…` (dernières : méthode
+   de vérification Chariow, correctif des types de transactions Tokens).
 2. Application via le **SQL Editor Supabase** (un fichier à la fois, dans l'ordre), ou
    `supabase db push` pour les équipes outillées CLI.
 3. Règles **non destructives** : `CREATE … IF NOT EXISTS`, `ALTER`, jamais `DROP` sur
@@ -40,7 +40,8 @@ dans un commit, une issue ou une conversation.
 2. Renseigner les variables de l'article 2 (Production et Preview).
 3. Build : `npm run build` (Turbopack, pas de commande custom requise).
 4. Après déploiement : vérifier `/`, `/login`, une page publique (`/faq`) et le
-   webhook IPN : l'URL déclarée chez PayDunya (`/api/payments/ipn`) doit répondre.
+   webhook : l'URL du Pulse déclarée chez Chariow (`/api/payments/webhook`)
+   doit répondre (GET → `{"ok":true,"service":"chariow-pulse"}`).
 
 Console admin : même principe sur `teranga-labs-admin`, avec `NEXT_PUBLIC_ADMIN_URL`
 cohérent côté site.
@@ -62,8 +63,9 @@ Le job `e2e` nécessite les **repo variables** `SUPABASE_URL` et `SUPABASE_ANON_
 
 - Pages publiques : accueil, `/faq`, `/plan-du-site` (200), route inconnue (404).
 - `/dashboard` sans session → redirection `/login`.
-- Un paiement de test (mode `test`) : intention créée, IPN reçu, crédit posé une
-  seule fois (idempotence `credit_from_payment`).
+- Un paiement de test : intention créée, Pulse Chariow reçu, re-vérification
+  `GET /v1/sales/{id}` concluante, crédit posé une seule fois (idempotence
+  `credit_from_payment`), rejeu du Pulse sans double crédit.
 - `npm run check` vert avant chaque push ; CI verte après.
 
 ## 7. Rappels sécurité
@@ -72,6 +74,9 @@ Le job `e2e` nécessite les **repo variables** `SUPABASE_URL` et `SUPABASE_ANON_
 - Les RPC sensibles sont révoquées de `PUBLIC` (migration `0047`) : toute nouvelle
   fonction privée doit être `REVOKE … FROM PUBLIC` + `GRANT` ciblé, sous peine
   d'être exécutable par tous (voir `supabase/tests/permissions.sql`, surface figée).
-- Le hash IPN PayDunya ne couvre pas le contenu : la re-vérification montant côté
-  serveur est **indispensable**, ne jamais la retirer.
-- Rotation des clés PayDunya/Wave en cas de doute ; `.env` Vercel jamais committé.
+- La signature du Pulse Chariow (HMAC-SHA256 du corps brut) et la
+  re-vérification montant côté serveur (`GET /v1/sales/{id}`) sont
+  **indispensables**, ne jamais les retirer : les Tokens ne sont crédités
+  qu'après confirmation.
+- Rotation des clés Chariow (API + secret Pulse) en cas de doute ;
+  `.env` Vercel jamais committé.

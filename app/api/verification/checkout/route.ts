@@ -2,8 +2,11 @@ import { NextResponse } from "next/server";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { apiRequireUser } from "@/lib/auth/guards";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { isWaveConfigured } from "@/lib/payments/config";
-import { getProviderByName } from "@/lib/payments/provider";
+import {
+  getVerificationProductSlug,
+  isChariowConfigured,
+} from "@/lib/payments/chariow-config";
+import { createChariowCheckout, isChariowApiError } from "@/lib/payments/chariow";
 import { verificationCheckoutSchema } from "@/lib/validations";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { log } from "@/lib/log";
@@ -13,14 +16,14 @@ export const dynamic = "force-dynamic";
 
 /**
  * POST /api/verification/checkout
- * Initialise une session de paiement Wave pour la vérification de
+ * Initialise une session de paiement Chariow pour la vérification de
  * profil du développeur connecté. Crée (ou récupère) la demande de
- * vérification côté serveur, puis redirige vers Wave.
- * Aucune confirmation ici : seul le webhook signé (ou l'admin, en
- * rapprochement manuel) confirme le paiement.
+ * vérification côté serveur, puis redirige vers la page de paiement
+ * Chariow. Aucune confirmation ici : seul le Pulse signé (ou l'admin,
+ * en rapprochement manuel) confirme le paiement.
  */
 export async function POST(request: Request) {
-  if (!isWaveConfigured()) {
+  if (!isChariowConfigured()) {
     return NextResponse.json(
       { code: "PAYMENT_NOT_CONFIGURED", message: "Le paiement en ligne n'est pas encore activé." },
       { status: 503 }
@@ -66,7 +69,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const method = parsed.data.method === "max_it" ? "max_it" : "wave";
+  const method = parsed.data.method === "max_it" ? "max_it" : "chariow";
 
   const guard = await apiRequireUser();
   if (guard.response) return guard.response;
@@ -82,7 +85,7 @@ export async function POST(request: Request) {
 
   const { data: dev } = await supabase
     .from("developers")
-    .select("id, status")
+    .select("id, status, full_name, whatsapp")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -120,7 +123,7 @@ export async function POST(request: Request) {
   let requestId: string;
   if (createError && createError.code === "TLDUP") {
     // Demande déjà en cours : récupère la demande 'pending' existante
-    // pour enchaîner un nouveau paiement (cas abandon / relance Wave).
+    // pour enchaîner un nouveau paiement (cas d'abandon ou de relance).
     const { data: existing } = await supabase
       .from("verification_requests")
       .select("id, method")
@@ -157,50 +160,88 @@ export async function POST(request: Request) {
   }
 
   const origin = process.env.NEXT_PUBLIC_APP_URL ?? new URL(request.url).origin;
-  const impl = getProviderByName("wave");
+
+  const email = user.email?.trim();
+  if (!email) {
+    return NextResponse.json(
+      { code: "EMAIL_REQUIRED", message: "Ajoutez une adresse e-mail à votre compte pour payer." },
+      { status: 400 }
+    );
+  }
+  const phone = dev.whatsapp?.trim() ?? user.phone?.trim();
+  if (!phone) {
+    return NextResponse.json(
+      {
+        code: "PHONE_REQUIRED",
+        message: "Renseignez votre numéro WhatsApp dans votre profil pour payer en ligne.",
+      },
+      { status: 400 }
+    );
+  }
 
   try {
-    const checkout = await impl.createCheckout({
-      amountFcfa: price,
-      description: "Vérification de profil TERANGA LABS",
-      reference: requestId,
-      origin,
-      returnPath: `/verification?request=${requestId}`,
-      cancelPath: `/verification?request=${requestId}`,
+    const checkout = await createChariowCheckout({
+      productSlug: getVerificationProductSlug(),
+      email,
+      fullName: dev.full_name ?? null,
+      phone,
+      redirectUrl: `${origin}/verification?request=${requestId}`,
+      metadata: {
+        reference: requestId,
+        kind: "verification",
+      },
+      customerIp: request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null,
     });
 
-    // Mémorise la session Wave côté serveur (concordance du webhook).
+    if (checkout.step === "already_purchased") {
+      return NextResponse.json(
+        { code: "ALREADY_PURCHASED", message: "Vous possédez déjà ce produit." },
+        { status: 409 }
+      );
+    }
+
+    // Mémorise la vente Chariow côté serveur (concordance du Pulse).
     const admin = createAdminClient();
     if (admin) {
       await admin
         .from("verification_requests")
-        .update({ provider_session_id: checkout.sessionId })
+        .update({ provider: "chariow", provider_session_id: checkout.saleId })
         .eq("id", requestId);
     }
 
     return NextResponse.json({
       requestId,
-      launchUrl: checkout.launchUrl,
-      sessionId: checkout.sessionId,
+      launchUrl:
+        checkout.step === "completed"
+          ? `${origin}/verification?request=${requestId}`
+          : checkout.checkoutUrl,
+      sessionId: checkout.saleId,
     });
   } catch (err) {
-    if (impl.isApiError(err)) {
+    if (isChariowApiError(err)) {
       log.error({
         action: "verification.checkout",
-        provider: impl.name,
+        provider: "chariow",
         user: user.id,
         request_id: requestId,
-        status: 502,
+        status: err.status,
         message: err.message,
       });
       return NextResponse.json(
-        { code: "PROVIDER_ERROR", message: "Le prestataire de paiement a refusé la demande." },
-        { status: 502 }
+        {
+          code:
+            err.code === "chariow_invalid_phone" ? "PHONE_REQUIRED" : "PROVIDER_ERROR",
+          message:
+            err.code === "chariow_invalid_phone"
+              ? "Votre numéro de téléphone est invalide : corrigez-le dans votre profil."
+              : "Le prestataire de paiement a refusé la demande.",
+        },
+        { status: err.code === "chariow_invalid_phone" ? 400 : 502 }
       );
     }
     log.error({
       action: "verification.checkout",
-      provider: impl.name,
+      provider: "chariow",
       user: user.id,
       request_id: requestId,
       status: 500,
