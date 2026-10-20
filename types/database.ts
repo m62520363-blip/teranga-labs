@@ -45,9 +45,26 @@ export type PaymentIntentStatus =
 
 export type ConversationStatus = "active" | "awarded" | "archived";
 
-export type MissionStatus = "new" | "in_progress" | "completed" | "disputed" | "cancelled";
+export type MissionStatus =
+  | "draft"
+  | "negotiating"
+  | "awaiting_agreement"
+  | "awaiting_payment"
+  | "payment_confirmed"
+  | "in_progress"
+  | "delivery_submitted"
+  | "awaiting_acceptance"
+  | "corrections_requested"
+  | "dispute_open"
+  | "completed"
+  | "cancellation_requested"
+  | "cancelled"
+  | "refund_in_progress"
+  | "refunded"
+  | "new"
+  | "disputed";
 
-export type MessageType = "text" | "offer" | "system";
+export type MessageType = "text" | "offer" | "system" | "audio";
 
 export type OfferStatus = "pending" | "accepted" | "rejected";
 
@@ -731,6 +748,102 @@ export interface Database {
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["notifications"]["Insert"]>;
+        Relationships: [];
+      };
+      user_presence: {
+        Row: {
+          user_id: string;
+          last_seen_at: string;
+        };
+        Insert: {
+          user_id: string;
+          last_seen_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["user_presence"]["Insert"]>;
+        Relationships: [];
+      };
+      mission_payments: {
+        Row: {
+          id: string;
+          mission_id: string;
+          payer_id: string;
+          amount_fcfa: number;
+          currency: string;
+          provider: string;
+          provider_sale_id: string | null;
+          status: string;
+          created_at: string;
+          confirmed_at: string | null;
+          refunded_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          mission_id: string;
+          payer_id: string;
+          amount_fcfa: number;
+          currency?: string;
+          provider?: string;
+          provider_sale_id?: string | null;
+          status?: string;
+          created_at?: string;
+          confirmed_at?: string | null;
+          refunded_at?: string | null;
+        };
+        Update: Partial<Database["public"]["Tables"]["mission_payments"]["Insert"]>;
+        Relationships: [];
+      };
+      earnings_ledger: {
+        Row: {
+          id: string;
+          developer_id: string;
+          mission_id: string | null;
+          withdrawal_id: string | null;
+          amount_fcfa: number;
+          kind: string;
+          note: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          developer_id: string;
+          mission_id?: string | null;
+          withdrawal_id?: string | null;
+          amount_fcfa: number;
+          kind: string;
+          note?: string | null;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["earnings_ledger"]["Insert"]>;
+        Relationships: [];
+      };
+      withdrawals: {
+        Row: {
+          id: string;
+          developer_id: string;
+          amount_fcfa: number;
+          method: string;
+          destination: string;
+          status: string;
+          provider_reference: string | null;
+          admin_note: string | null;
+          requested_at: string;
+          processed_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          developer_id: string;
+          amount_fcfa: number;
+          method: string;
+          destination: string;
+          status?: string;
+          provider_reference?: string | null;
+          admin_note?: string | null;
+          requested_at?: string;
+          processed_at?: string | null;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["withdrawals"]["Insert"]>;
         Relationships: [];
       };
     };
@@ -1451,6 +1564,135 @@ export interface Database {
       };
       admin_alerts: {
         Args: Record<string, never>;
+        Returns: Json;
+      };
+      touch_presence: {
+        Args: Record<string, never>;
+        Returns: undefined;
+      };
+      get_peer_presence: {
+        Args: {
+          p_conversation_id: string;
+        };
+        Returns: Json;
+      };
+      send_message: {
+        Args: {
+          p_conversation_id: string;
+          p_body?: string | null;
+          p_message_type?: string;
+          p_audio_path?: string | null;
+          p_audio_duration_seconds?: number | null;
+          p_offer_id?: string | null;
+        };
+        Returns: Json;
+      };
+      edit_message: {
+        Args: {
+          p_message_id: string;
+          p_body: string;
+        };
+        Returns: Json;
+      };
+      soft_delete_message: {
+        Args: {
+          p_message_id: string;
+        };
+        Returns: Json;
+      };
+      mark_conversation_read: {
+        Args: {
+          p_conversation_id: string;
+        };
+        Returns: Json;
+      };
+      get_message_audio_url: {
+        Args: {
+          p_message_id: string;
+        };
+        Returns: Json;
+      };
+      get_public_profile_completion: {
+        Args: Record<string, never>;
+        Returns: Json;
+      };
+      set_public_profile: {
+        Args: {
+          p_publish: boolean;
+        };
+        Returns: Json;
+      };
+      confirm_mission_payment: {
+        Args: {
+          p_mission_id: string;
+          p_provider_sale_id: string;
+          p_amount_fcfa: number;
+          p_payer_id?: string;
+        };
+        Returns: Json;
+      };
+      release_mission_funds: {
+        Args: {
+          p_mission_id: string;
+        };
+        Returns: Json;
+      };
+      get_wallet_summary: {
+        Args: Record<string, never>;
+        Returns: Json;
+      };
+      request_withdrawal: {
+        Args: {
+          p_amount_fcfa: number;
+          p_method: string;
+          p_destination: string;
+        };
+        Returns: Json;
+      };
+      admin_withdrawal_status: {
+        Args: {
+          p_withdrawal_id: string;
+          p_status: string;
+          p_provider_reference?: string;
+          p_admin_note?: string;
+        };
+        Returns: Json;
+      };
+      get_wallet_history: {
+        Args: {
+          p_limit?: number;
+        };
+        Returns: Json;
+      };
+      mission_submit_delivery: {
+        Args: {
+          p_mission_id: string;
+          p_delivery_url?: string;
+          p_delivery_notes?: string;
+          p_delivery_files?: Json;
+        };
+        Returns: Json;
+      };
+      mission_request_cancellation: {
+        Args: {
+          p_mission_id: string;
+          p_reason: string;
+        };
+        Returns: Json;
+      };
+      admin_process_mission_refund: {
+        Args: {
+          p_mission_id: string;
+          p_refund_amount_fcfa: number;
+          p_note?: string;
+        };
+        Returns: Json;
+      };
+      leaderboard_settle_month: {
+        Args: {
+          p_year: number;
+          p_month: number;
+        };
         Returns: Json;
       };
     };

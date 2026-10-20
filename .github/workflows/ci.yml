@@ -67,13 +67,13 @@ jobs:
       - name: Build
         run: npm run build
 
-db-tests:
+  db-tests:
     name: Tests SQL (pgtap)
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    # Base Supabase locale ǸphǸm��re : la CI ne touche jamais la production.
-    # `supabase start` applique aussi supabase/migrations �?" les migrations sont
-    # donc validǸes sur une base vierge �� chaque exǸcution.
+    # Base Supabase locale éphémère : la CI ne touche jamais la production.
+    # `supabase start` applique aussi supabase/migrations → les migrations sont
+    # donc validées sur une base vierge à chaque exécution.
     env:
       SUPABASE_DB_URL: postgres://postgres:postgres@localhost:54322/postgres
     steps:
@@ -87,7 +87,7 @@ db-tests:
         with:
           version: latest
 
-      - name: DǸmarrer la stack Supabase locale
+      - name: Démarrer la stack Supabase locale
         run: supabase start
 
       - name: Installer pgtap
@@ -111,7 +111,7 @@ db-tests:
           node-version: 22
           cache: npm
 
-      - name: Installer les dǸpendances
+      - name: Installer les dépendances
         run: npm ci
 
       - name: Installer les navigateurs

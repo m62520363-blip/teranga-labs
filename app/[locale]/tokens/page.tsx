@@ -3,7 +3,6 @@ import { CheckCircle2 } from "lucide-react";
 import { TokenCard } from "@/components/token-card";
 import { createClient } from "@/lib/supabase/server";
 import { EmptyState } from "@/components/empty-state";
-import { Scene3D } from "@/components/landing/scene-3d";
 
 export const metadata: Metadata = {
   title: "Tokens",
@@ -36,8 +35,6 @@ export default async function TokensPage() {
           </p>
         </div>
 
-        <Scene3D variant="tokens" className="mt-6" />
-
         {packages && packages.length > 0 ? (
           <div className="mx-auto mt-14 grid max-w-4xl gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {packages.map((pkg) => (
@@ -56,23 +53,9 @@ export default async function TokensPage() {
         <div className="mx-auto mt-8 max-w-2xl">
           <div className="rounded-2xl border border-hairline bg-card p-5 shadow-sm">
             <h2 className="text-[15px] font-semibold tracking-tight">
-              Moyens de paiement
+              Paiement sécurisé
             </h2>
             <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-              Réglez en ligne sur une page sécurisée : vos Tokens sont crédités
-              automatiquement dès confirmation du paiement, sans attendre.
-            </p>
-            <div className="mt-3 grid gap-2 sm:grid-cols-2">
-              <div className="flex items-center justify-between rounded-xl bg-muted px-4 py-3 text-sm">
-                <span className="font-medium">Carte bancaire</span>
-                <span className="text-xs text-muted-foreground">Visa, Mastercard</span>
-              </div>
-              <div className="flex items-center justify-between rounded-xl bg-muted px-4 py-3 text-sm">
-                <span className="font-medium">Mobile money</span>
-                <span className="text-xs text-muted-foreground">Selon votre pays</span>
-              </div>
-            </div>
-            <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
               Le règlement passe par Chariow, prestataire de paiement : les moyens
               proposés (carte, mobile money) dépendent de votre pays. Vos Tokens
               sont crédités dès que le paiement est confirmé, sans attendre.

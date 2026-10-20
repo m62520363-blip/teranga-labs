@@ -3,7 +3,6 @@ import Link from "next/link";
 import { Building2, MapPin, ShieldCheck, UsersRound } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { asAgencyList, type AgencyListItem } from "@/types/agency";
-import { Scene3D } from "@/components/landing/scene-3d";
 
 export const metadata: Metadata = {
   title: "Agences",
@@ -51,7 +50,6 @@ export default async function AgenciesPageRoute() {
               une même enseigne pour porter vos projets de bout en bout.
             </p>
           </div>
-          <Scene3D variant="team" className="hidden lg:block" />
         </div>
 
         {agencies.length === 0 ? (

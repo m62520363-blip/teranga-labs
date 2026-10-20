@@ -1,6 +1,5 @@
 import type { ComponentType } from "react";
 import {
-  BadgeCheck,
   Building2,
   ClipboardList,
   Coins,
@@ -42,7 +41,6 @@ export const APP_NAV_SECTIONS: AppNavSection[] = [
     title: "ESPACE PRINCIPAL",
     links: [
       { href: "/dashboard", label: "Accueil", icon: Home, match: "exact" },
-      { href: "/dev", label: "Trouver un développeur", icon: UsersRound },
       { href: "/agences", label: "Agences", icon: Building2 },
       { href: "/missions", label: "Missions", icon: ClipboardList },
       { href: "/briefs", label: "Voir les briefs", icon: FileText },
@@ -61,8 +59,7 @@ export const APP_NAV_SECTIONS: AppNavSection[] = [
         icon: UserRound,
         match: "search",
       },
-      { href: "/verification", label: "Vérifier mon profil", icon: BadgeCheck },
-      { href: "/tokens", label: "Acheter des Tokens", icon: Coins },
+      { href: "/wallet", label: "Mon wallet", icon: Coins },
       { href: "/parametres", label: "Paramètres", icon: Settings },
     ],
   },
@@ -77,6 +74,7 @@ const SHELL_SEGMENTS = new Set([
   "conversations",
   "verification",
   "tokens",
+  "wallet",
   "parametres",
 ]);
 
@@ -103,7 +101,7 @@ export const CLIENT_NAV_SECTIONS: AppNavSection[] = [
     title: "MON ESPACE",
     links: [
       { href: "/client/profil", label: "Mon profil", icon: UserRound },
-      { href: "/tokens", label: "Acheter des Tokens", icon: Coins },
+      { href: "/wallet", label: "Mon wallet", icon: Coins },
       { href: "/parametres", label: "Paramètres", icon: Settings },
     ],
   },

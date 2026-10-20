@@ -2,6 +2,45 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [Transformation-16-Etapes] — 2026-10-20 : refactor complet (wallet, missions, retraits, notifications, sécurité)
+
+Chantier de transformation complet du produit : 8 migrations SQL (0056-0063), refonte wallet/missions/retraits/notifications, correction des failles de sécurité F1-F11, tarification alignée sur le cahier des charges.
+
+### Base de données (migrations 0056-0063)
+
+- **0056_security_hardening.sql** : triggers de protection sur `developers`/`client_profiles` (F1 : `phone_verified`/`status`/`is_verified`/réputation non modifiables par l'utilisateur), policies INSERT restreintes sur `payments`/`verification_requests`/`payment_intents` (F2/F6/F7 : statut forcé à `pending`), triggers de protection sur `conversations`/`formal_offers` (F4/F5 : seuls les RPC définer peuvent modifier), `publish_brief` réécrit avec vérif rôle client (F8), `get_leaderboard` en lecture seule (STABLE, mois clos sans écriture), `_leaderboard_settle` réécrit (récompenses **10/7/4**, pays sans double reward, `pg_advisory_xact_lock`, idempotent), `verify_otp` réécrit avec `user_id = auth.uid()` (F11).
+- **0057_messaging_v2.sql** : colonnes `messages` `edited_at/deleted_at/audio_path/audio_duration_seconds`, bucket storage `message-audio` privé, trigger `protect_messages_update`, table `user_presence`, RPCs `touch_presence`, `get_peer_presence`, `send_message` (text/audio), `edit_message`, `soft_delete_message`, `mark_conversation_read`, `get_message_audio_url`.
+- **0058_public_profile.sql** : colonne `developers.is_public`, RPC `get_public_profile_completion` (4 critères serveur), `set_public_profile`, `get_public_developer_profile` réécrit (filtre `is_public`), `list_approved_developers` réécrit.
+- **0059_earnings_withdrawals.sql** : tables `mission_payments`, `earnings_ledger`, `withdrawals`, RPCs `confirm_mission_payment`, `release_mission_funds`, `get_wallet_summary`, `request_withdrawal`, `admin_withdrawal_status`, `get_wallet_history`.
+- **0060_missions_full_flow.sql** : 15 statuts de mission, contrat snapshot, `create_mission_from_offer` réécrit, `mission_update_status` réécrit (machine à états complète), `mission_submit_delivery`, `mission_request_cancellation`, `admin_process_mission_refund`.
+- **0061_leaderboard_settle.sql** : `leaderboard_settle_month`, configuration récompenses 10/7/4.
+- **0062_notifications_v2.sql** : triggers sur `missions`/`token_transactions`/`earnings_ledger`/`withdrawals`/`subscriptions`/`payment_intents` → notifications in-app automatiques.
+- **0063_pricing_space_cleanup.sql** : `pro_price_tokens=3`, `agency_price_tokens=4`, `create_agency` réécrit avec débit 4 tokens, sponsoring `REVOKE` pour authenticated.
+
+### Frontend
+
+- **Wallet centralisé** : pages `/wallet` (solde Tokens, revenus en attente/disponibles/retens/versés, historique) et `/wallet/retraits` (formulaire de demande de retrait), composants `WithdrawalForm`.
+- **Navigation** : liens « Vérifier mon profil » et « Trouver un développeur » supprimés de l'espace dev, « Acheter des Tokens » remplacé par « Mon wallet » dans les deux espaces.
+- **Dashboard** : `SponsorPanel` supprimé de l'onglet activité, upsell vérification supprimé du `DevStatusBanner` (statut `active`).
+- **Footer** : masqué dans `DashboardShell` (espace connecté développeur).
+- **Scene3D** : supprimé de `/tokens` et `/agences`.
+- **Classement** : récompenses 10/7/4 (régional + pays), FAQ FR/EN mises à jour (« top 3 » au lieu de « top 2 »).
+- **Cron** : `vercel.json` avec `/api/cron/leaderboard-settle` (mensuel, jour 1, 01h UTC), route API protégée par `CRON_SECRET`.
+- **CI** : indentation `db-tests` corrigée, mojibake réparée.
+- **Types** : `types/database.ts` étendu (4 tables + 17 RPCs), `MissionStatus`/`MessageType` mis à jour, `mission-labels.ts` réécrit pour les 15 statuts.
+
+### Vérifications exécutées
+
+- typecheck ✓, lint ✓, check-rpc-names ✓ (156 RPC), unitaires **156/156**.
+- Script consolidé `docs/UPGRADE_0056_0063.sql` (107 Ko) prêt pour le SQL Editor Supabase.
+
+### Interventions requises de l'utilisateur
+
+1. **Appliquer les migrations 0053-0055** si non faites (voir CHANGELOG précédent).
+2. **Appliquer le script consolidé** `docs/UPGRADE_0056_0063.sql` dans le SQL Editor Supabase.
+3. **Configurer `CRON_SECRET`** dans Vercel (environnement Production) pour le settle du classement.
+4. **Configurer `SUPABASE_SERVICE_ROLE_KEY`** dans Vercel (vide actuellement) pour le webhook de paiement.
+
 ## [Internationalisation-CP3] — 2026-10-19 : pages statiques traduites en anglais + metadata racine localisées
 
 Suite directe du chantier i18n (CP1 structure, CP2 navbar/footer/landing) : les 8 pages statiques publiques passent en bilingue et les metadata par défaut du site suivent la locale.

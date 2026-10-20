@@ -37,7 +37,6 @@ type ShellUser = {
 export function DashboardShell({
   user,
   userId,
-  footer,
   children,
 }: {
   user: ShellUser;
@@ -205,7 +204,6 @@ export function DashboardShell({
         </header>
 
         <main className="min-h-screen pb-16 md:pb-10">{children}</main>
-        {footer ? <div>{footer}</div> : null}
       </div>
 
       {/* ------------------------------ MENU MOBILE ------------------------------ */}

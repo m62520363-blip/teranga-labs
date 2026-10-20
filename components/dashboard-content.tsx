@@ -34,7 +34,6 @@ import { DashboardStats } from "@/components/dashboard-stats";
 import AvailabilityCard from "@/components/availability-card";
 import { MissionsManager, type TlMissionOption } from "@/components/dev/missions-manager";
 import AgencyManager from "@/components/agency/agency-manager";
-import SponsorPanel from "@/components/sponsoring/sponsor-panel";
 import ProPanel from "@/components/sponsoring/pro-panel";
 import { DevReviewsPanel } from "@/components/dev/reviews-panel";
 import { Button } from "@/components/ui/button";
@@ -197,19 +196,11 @@ function DevStatusBanner({ profile }: { profile: DeveloperProfile }) {
       <div className="mt-6 flex items-start gap-3 rounded-2xl border border-hairline bg-primary-soft p-4 sm:p-5">
         <BadgeCheck className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-semibold tracking-tight">Donnez confiance avec le badge Vérifié</p>
+          <p className="text-sm font-semibold tracking-tight">Profil actif</p>
           <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-            Une seule vérification payante distingue votre profil dans les résultats
-            et rassure les clients pendant vos candidatures.
+            Votre profil est visible dans le catalogue. Complétez-le pour maximiser vos chances.
           </p>
         </div>
-        <Link
-          href="/verification"
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-ink transition-colors outline-none hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50"
-        >
-          Faire vérifier mon profil
-          <ArrowRight className="size-3.5" aria-hidden="true" />
-        </Link>
       </div>
     );
   }
@@ -663,10 +654,10 @@ export function DashboardContent({
               Mes discussions
             </Link>
             <Link
-              href="/tokens"
+              href="/wallet"
               className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50"
             >
-              Recharger les Tokens
+              Mon wallet
               <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
           </div>
@@ -1444,9 +1435,6 @@ export function DashboardContent({
 
         {tab === "activite" ? (
           <>
-            <div className="mt-8">
-              <SponsorPanel />
-            </div>
             <div className="mt-8 grid gap-6 lg:grid-cols-2">
             <section
               className="rounded-2xl border border-hairline bg-card p-6 shadow-sm sm:p-8"
@@ -1587,7 +1575,7 @@ export function DashboardContent({
                     description="Commandez un pack de Tokens pour débloquer plus de contacts."
                     action={
                       <Link
-                        href="/tokens"
+                        href="/wallet"
                         className="inline-flex h-10 items-center gap-2 rounded-xl bg-foreground px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-foreground"
                       >
                         Voir les packs
