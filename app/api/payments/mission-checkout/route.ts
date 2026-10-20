@@ -189,7 +189,7 @@ export async function POST(request: Request) {
       email,
       fullName: profile?.full_name ?? null,
       phone,
-      redirectUrl: `${origin}/missions?focus=${mission.id}`,
+      redirectUrl: `${origin}/missions/${mission.id}?paid=1`,
       metadata: {
         reference: mission.id,
         kind: "mission",

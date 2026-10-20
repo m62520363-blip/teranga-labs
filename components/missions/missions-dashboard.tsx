@@ -9,6 +9,7 @@ import {
   Building2,
   CalendarDays,
   ChevronDown,
+  ChevronRight,
   CircleDollarSign,
   ClipboardList,
   History,
@@ -35,46 +36,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { StatusBadge } from "@/components/missions/status-badge";
+import { MissionPayButton } from "@/components/missions/mission-pay-button";
+import type { MissionEventPayload, MissionPayload } from "@/components/missions/types";
 import { cn } from "cn";
 
-export type MissionEventPayload = {
-  id: string;
-  actor_id: string;
-  status_from: string | null;
-  status_to: string;
-  comment: string | null;
-  created_at: string;
-};
-
-export type MissionPayload = {
-  id: string;
-  request_id: string;
-  conversation_id: string | null;
-  offer_id: string | null;
-  status: MissionStatus;
-  agreed_price_fcfa: number;
-  agreed_days: number;
-  description: string | null;
-  started_at: string | null;
-  completed_at: string | null;
-  created_at: string;
-  updated_at: string;
-  opponent: {
-    related_as: "developer" | "client";
-    full_name?: string | null;
-    username?: string | null;
-    city?: string | null;
-    avatar_url?: string | null;
-    company_name?: string | null;
-    contact_name?: string | null;
-  } | null;
-  request: {
-    project_type: string | null;
-    budget: number | null;
-    client_city: string | null;
-  } | null;
-  events: MissionEventPayload[];
-};
+export type { MissionEventPayload, MissionPayload };
 
 type Props = {
   missions: MissionPayload[];
@@ -99,11 +66,6 @@ function opponentName(opponent: MissionPayload["opponent"]): string {
     return opponent.full_name || opponent.username || "Développeur";
   }
   return opponent.company_name || opponent.contact_name || "Client";
-}
-
-function StatusBadge({ status }: { status: MissionStatus }) {
-  const meta = MISSION_STATUS_LABELS[status];
-  return <span className={meta.badge}>{meta.short}</span>;
 }
 
 export function MissionsDashboard({ missions, userId, role, focusId = null }: Props) {
@@ -168,30 +130,6 @@ export function MissionsDashboard({ missions, userId, role, focusId = null }: Pr
       setConfirm({ mission, transition });
     } else {
       void updateStatus(mission, to);
-    }
-  };
-
-  const payMission = async (mission: MissionPayload) => {
-    setBusyId(mission.id);
-    try {
-      const res = await fetch("/api/payments/mission-checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ missionId: mission.id }),
-      });
-      const data = (await res.json().catch(() => null)) as
-        | { launchUrl?: string; message?: string }
-        | null;
-      if (!res.ok || !data?.launchUrl) {
-        toast.error(data?.message ?? "Paiement indisponible pour l'instant.");
-        return;
-      }
-      window.location.href = data.launchUrl;
-      return;
-    } catch {
-      toast.error("Erreur lors du paiement.");
-    } finally {
-      setBusyId(null);
     }
   };
 
@@ -273,9 +211,18 @@ export function MissionsDashboard({ missions, userId, role, focusId = null }: Pr
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-semibold tracking-tight">
-                        {m.request?.project_type || "Mission"}
-                      </p>
+                      <Link
+                        href={`/missions/${m.id}`}
+                        className="group inline-flex max-w-full items-center gap-1 text-sm font-semibold tracking-tight outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                      >
+                        <span className="truncate group-hover:text-primary">
+                          {m.request?.project_type || "Mission"}
+                        </span>
+                        <ChevronRight
+                          className="size-3.5 shrink-0 text-muted-foreground transition-colors group-hover:text-primary"
+                          aria-hidden="true"
+                        />
+                      </Link>
                       <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
                         <CalendarDays className="size-3.5" aria-hidden="true" />
                         Créée le {m.created_at ? formatDate(m.created_at) : "—"}
@@ -354,20 +301,15 @@ export function MissionsDashboard({ missions, userId, role, focusId = null }: Pr
 
                   <div className="mt-4 flex flex-wrap items-center gap-2">
                     {role === "client" && m.status === "awaiting_payment" ? (
-                      <Button
-                        size="sm"
-                        className="h-8"
-                        disabled={busyId === m.id}
-                        onClick={() => void payMission(m)}
-                      >
-                        {busyId === m.id ? (
-                          <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
-                        ) : (
-                          <CircleDollarSign className="size-3.5" aria-hidden="true" />
-                        )}
-                        Payer {formatFCFA(m.agreed_price_fcfa)}
-                      </Button>
+                      <MissionPayButton missionId={m.id} amountFcfa={m.agreed_price_fcfa} />
                     ) : null}
+                    <Link
+                      href={`/missions/${m.id}`}
+                      className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-hairline bg-surface px-3 text-xs text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/40"
+                    >
+                      <ClipboardList className="size-3.5" aria-hidden="true" />
+                      Détail
+                    </Link>
                     {transitions.map((t) => (
                       <Button
                         key={t.to}

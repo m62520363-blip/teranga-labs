@@ -415,7 +415,7 @@ export function MessageThread({
             ) : null}
             {missionId ? (
               <Link
-                href={`/missions?focus=${missionId}`}
+                href={`/missions/${missionId}`}
                 className="mt-3 inline-flex h-9 items-center gap-2 rounded-xl bg-success px-4 text-xs font-semibold text-white shadow-sm transition-opacity outline-none hover:opacity-90 focus-visible:ring-2 focus-visible:ring-success/50"
               >
                 <ClipboardList className="size-3.5" aria-hidden="true" />

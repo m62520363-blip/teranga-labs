@@ -11,17 +11,21 @@ Le client peut désormais régler une mission en ligne au montant exact convenu 
 - **`POST /api/payments/mission-checkout`** (nouvelle route, `apiRequireUser`, rate-limitée) : vérifie que l'appelant est le **client** de la mission et que son statut est `awaiting_payment`, ouvre une session Chariow avec le produit `CHARIOW_MISSION_PRODUCT_ID` (ou `app_settings.mission_product_id`) + la **variante de prix** correspondant à `agreed_price_fcfa` (`app_settings.mission_price_variants` : `{"15000":"pvr_…"}`). Sans variante pour ce montant → 503 `MISSION_PRICE_NOT_AVAILABLE` (jamais de montant approché). Montant renvoyé par Chariow re-vérifié immédiatement (variante inconnue ignorée côté prestataire → refus 409 avant redirection).
 - **`createChariowCheckout`** : paramètre `price_variant_id` (doc API Chariow : variante de prix pour tarification unique) + restitution du `amount` réel de la vente dans le résultat ; `getPulseReference` accepte `kind: "mission"`.
 - **Webhook Pulse** : branche `kind === "mission"` → re-vérification serveur `GET /sales/{id}`, contrôle strict du montant (`amountMatchesSale`), puis RPC **`confirm_mission_payment`** (service_role, idempotent) + tracking `pulse_chariow_mission`.
-- **UI `missions-dashboard`** : bouton « Payer X FCFA » pour le client en `awaiting_payment` (redirection vers `checkout_url`, retour sur `/missions?focus=`) ; la transition manuelle « Paiement confirmé » est retirée de `MISSION_TRANSITIONS` (déjà interdite par `mission_update_status` : seul le webhook confirme).
+- **UI `missions-dashboard`** : bouton « Payer X FCFA » pour le client en `awaiting_payment` (composant partagé `MissionPayButton`, redirection vers `checkout_url`, retour sur `/missions/:id?paid=1`) ; la transition manuelle « Paiement confirmé » est retirée de `MISSION_TRANSITIONS` (déjà interdite par `mission_update_status` : seul le webhook confirme).
+- **Page détail `/missions/:id`** (nouvelle) : même garde `requireUser` que la liste, mission chargée via `list_my_missions` (RLS) et `notFound()` si absente ; montant, délai, description, partie adverse, historique complet et bouton « Payer ». Entrées : titre de carte cliquable + lien « Détail » sur `/missions`, lien « Suivre la mission » de la messagerie → `/missions/:id`.
 - **Config** : `CHARIOW_MISSION_PRODUCT_ID` documentée dans `.env.example` ; `app_settings` ajouté aux types ; route inscrite dans `tests/route-guards.test.ts`.
-- **Tests** : +1 (`price_variant_id` envoyé au checkout, métadonnées `kind: mission`).
+- **Migration 0064_mission_payment_settings.sql** : seeds `mission_product_id` (`''`) + `mission_price_variants` (`{}`, jamais écrasés) et RPC admin **`admin_get_mission_payment_config`** / **`admin_set_mission_payment_config`** (service_role ou `is_admin()`, validation stricte du produit `[A-Za-z0-9_-]{1,128}` et des variantes : clé numérique 1..100000000, valeur identifiant, 500 max, audit `admin_actions`). Ajoutées au script consolidé `docs/UPGRADE_0056_0063.sql` et aux types `Functions`.
+- **Tests** : +1 (`price_variant_id` envoyé au checkout, métadonnées `kind: mission`) ; e2e **`e2e/mission-payment.spec.ts`** (sans session : checkout → 401, corps invalide → 400, Pulse non signé → 401/503, `/missions/:id` → `/login` ; aucune écriture Supabase, sous le rate-limit de 10 req/min).
 
 ### Vérifications exécutées
 
-- typecheck ✓, lint ✓, unitaires **157/157**.
+- typecheck ✓, lint ✓, unitaires **157/157**, e2e **63/63**.
 
 ### Interventions requises de l'utilisateur
 
-1. Créer dans la boutique Chariow un produit (type Licence, prix XOF) + les **variantes de prix** pour chaque montant de mission négociable, renseigner `CHARIOW_MISSION_PRODUCT_ID` et `app_settings.mission_price_variants`.
+1. Créer dans la boutique Chariow un produit (type Licence, prix XOF) + les **variantes de prix** pour chaque montant de mission négociable.
+2. Appliquer `supabase/migrations/0064_mission_payment_settings.sql` (ou la section 0064 de `docs/UPGRADE_0056_0063.sql`) dans le SQL Editor.
+3. Configurer la config de paiement : `CHARIOW_MISSION_PRODUCT_ID` + `app_settings.mission_price_variants`, ou RPC `admin_set_mission_payment_config` (console admin à venir).
 
 ## [Transformation-16-Etapes] — 2026-10-20 : refactor complet (wallet, missions, retraits, notifications, sécurité)
 

@@ -1566,6 +1566,17 @@ export interface Database {
         };
         Returns: Json;
       };
+      admin_get_mission_payment_config: {
+        Args: Record<string, never>;
+        Returns: Json;
+      };
+      admin_set_mission_payment_config: {
+        Args: {
+          p_product_id: string;
+          p_price_variants: Json;
+        };
+        Returns: Json;
+      };
       admin_list_verifications: {
         Args: Record<string, never>;
         Returns: Json;
