@@ -1,8 +1,7 @@
 ﻿-- ============================================================
--- UPGRADE_0056_0063.sql — script consolidé
--- Exécuter dans le SQL Editor Supabase APRÈS 0001-0055.
--- NON destructif, idempotent. En cas d'erreur, corriger et
--- relancer : chaque bloc est transactionnel (BEGIN/COMMIT).
+-- UPGRADE_0056_0063.sql — script consolide
+-- Executer dans le SQL Editor Supabase APRES 0001-0055.
+-- NON destructif, idempotent. Chaque bloc est transactionnel.
 -- ============================================================
 
 
@@ -2477,7 +2476,8 @@ DECLARE
   v_start timestamptz;
   v_end timestamptz;
 BEGIN
-  IF NOT public.is_admin() THEN
+  IF current_setting('request.jwt.claim.role', true) IS DISTINCT FROM 'service_role'
+     AND NOT public.is_admin() THEN
     RAISE EXCEPTION 'Accès administrateur requis.' USING ERRCODE = 'TLAUT';
   END IF;
 

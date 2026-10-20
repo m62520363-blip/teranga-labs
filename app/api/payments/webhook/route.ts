@@ -160,6 +160,50 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true, confirmed: true, result: confirmResult });
   }
 
+  if (kind === "mission") {
+    const { data: mission, error } = await admin
+      .from("missions")
+      .select("id, client_id, agreed_price_fcfa, status")
+      .eq("id", reference)
+      .maybeSingle();
+
+    if (error || !mission) {
+      return NextResponse.json({ error: "mission_not_found" }, { status: 404 });
+    }
+    if (!amountMatchesSale(confirmed, mission.agreed_price_fcfa)) {
+      return NextResponse.json({ error: "amount_mismatch" }, { status: 400 });
+    }
+
+    const { data: confirmResult, error: confirmError } = await admin.rpc(
+      "confirm_mission_payment",
+      {
+        p_mission_id: mission.id,
+        p_provider_sale_id: confirmed.id,
+        p_amount_fcfa: mission.agreed_price_fcfa,
+        p_payer_id: mission.client_id,
+      }
+    );
+    if (confirmError) {
+      log.error({
+        action: "pulse.mission.confirm.failed",
+        provider: "chariow",
+        message: confirmError.message,
+      });
+      return NextResponse.json({ error: "confirm_failed" }, { status: 500 });
+    }
+
+    void trackCredit(admin, {
+      flow: "pulse_chariow_mission",
+      amount_fcfa: mission.agreed_price_fcfa,
+      sale_id: confirmed.id,
+      delivery_id: deliveryId,
+      mission_id: mission.id,
+      client_id: mission.client_id,
+    });
+
+    return NextResponse.json({ ok: true, confirmed: true, result: confirmResult });
+  }
+
   const { data: intent, error: intentError } = await admin
     .from("payment_intents")
     .select("id, developer_id, tokens, amount_fcfa, status")

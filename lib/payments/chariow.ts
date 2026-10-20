@@ -57,6 +57,8 @@ export type ChariowCheckoutResult = {
   saleId: string | null;
   checkoutUrl: string | null;
   message: string | null;
+  /** Montant réel de la vente (devise du produit), lu dans la réponse. */
+  amount: ChariowAmount | null;
 };
 
 export type ChariowPulsePayload = {
@@ -154,6 +156,8 @@ export function splitCustomerName(
  */
 export async function createChariowCheckout(params: {
   productSlug: string;
+  /** Variante de prix Chariow (montants exacts : missions, etc.). */
+  priceVariantId?: string | null;
   email: string;
   fullName?: string | null;
   /** Numéro international brut (`+22177…`), déjà contrôlé par l'appelant. */
@@ -185,6 +189,7 @@ export async function createChariowCheckout(params: {
     redirect_url: params.redirectUrl,
     custom_metadata: params.metadata,
   };
+  if (params.priceVariantId) body.price_variant_id = params.priceVariantId;
   if (params.customerIp) body.customer_ip = params.customerIp;
 
   const response = await fetch(`${config.baseUrl}/checkout`, {
@@ -204,7 +209,11 @@ export async function createChariowCheckout(params: {
         data?: {
           step?: string;
           message?: string | null;
-          purchase?: { id?: string; status?: string } | null;
+          purchase?: {
+            id?: string;
+            status?: string;
+            amount?: ChariowAmount | null;
+          } | null;
           payment?: { checkout_url?: string | null } | null;
         };
       }
@@ -243,6 +252,7 @@ export async function createChariowCheckout(params: {
     saleId,
     checkoutUrl,
     message: payload.data.message ?? null,
+    amount: payload.data.purchase?.amount ?? null,
   };
 }
 
@@ -340,11 +350,14 @@ export function verifyPulseSignature(
 /** Métadonnées de référence d'une vente (lien vers notre intention). */
 export function getPulseReference(
   sale: Pick<ChariowSale, "custom_metadata"> | null | undefined
-): { reference: string | null; kind: "token" | "verification" } {
+): { reference: string | null; kind: "token" | "verification" | "mission" } {
   const meta = sale?.custom_metadata ?? {};
   const reference = typeof meta.reference === "string" ? meta.reference : null;
-  return {
-    reference,
-    kind: meta.kind === "verification" ? "verification" : "token",
-  };
+  const kind =
+    meta.kind === "verification"
+      ? "verification"
+      : meta.kind === "mission"
+        ? "mission"
+        : "token";
+  return { reference, kind };
 }

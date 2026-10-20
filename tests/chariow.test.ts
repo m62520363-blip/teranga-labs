@@ -195,6 +195,9 @@ describe("getPulseReference", () => {
     expect(
       getPulseReference({ custom_metadata: { reference: "uuid-2", kind: "verification" } })
     ).toEqual({ reference: "uuid-2", kind: "verification" });
+    expect(
+      getPulseReference({ custom_metadata: { reference: "uuid-3", kind: "mission" } })
+    ).toEqual({ reference: "uuid-3", kind: "mission" });
   });
 
   it("retombe sur token sans métadonnées exploitables", () => {
@@ -237,6 +240,7 @@ describe("createChariowCheckout", () => {
       saleId: "sal_123",
       checkoutUrl: "https://pay.example.com/checkout/1",
       message: null,
+      amount: null,
     });
 
     const [url, init] = fetchMock.mock.calls[0];
@@ -256,6 +260,38 @@ describe("createChariowCheckout", () => {
       package_id: "pro",
     });
     expect(body.customer_ip).toBe("203.0.113.42");
+    expect(body.price_variant_id).toBeUndefined();
+  });
+
+  it("envoie price_variant_id quand une variante de prix est fournie", async () => {
+    stubChariowEnv();
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        data: {
+          step: "payment",
+          purchase: { id: "sal_456", status: "awaiting_payment" },
+          payment: { checkout_url: "https://pay.example.com/checkout/2" },
+        },
+      }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    await createChariowCheckout({
+      productSlug: "missions",
+      priceVariantId: "pvr_15000",
+      email: "client@example.com",
+      fullName: "Moussa Fall",
+      phone: "+221771234567",
+      redirectUrl: "https://site.example.com/missions?focus=abc",
+      metadata: { reference: "abc", kind: "mission" },
+    });
+
+    const body = JSON.parse(fetchMock.mock.calls[0][1].body);
+    expect(body.product_id).toBe("missions");
+    expect(body.price_variant_id).toBe("pvr_15000");
+    expect(body.custom_metadata).toEqual({ reference: "abc", kind: "mission" });
   });
 
   it("refuse un numéro invalide avant tout appel réseau", async () => {

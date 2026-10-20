@@ -59,7 +59,9 @@ export const MISSION_TRANSITIONS: Record<
     { to: "cancelled", label: "Annuler", by: "client", confirm: true },
   ],
   awaiting_payment: [
-    { to: "payment_confirmed", label: "Paiement confirmé", by: "client" },
+    // Le passage à payment_confirmed est interdit côté client : seul le
+    // Pulse Chariow (confirm_mission_payment) confirme. Le bouton « Payer »
+    // de missions-dashboard ouvre la session de paiement.
     { to: "cancellation_requested", label: "Demander l'annulation", by: "client", confirm: true, comment: true },
   ],
   payment_confirmed: [

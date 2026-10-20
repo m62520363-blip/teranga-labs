@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient, isServiceConfigured } from "@/lib/supabase/admin";
 
 export const dynamic = "force-dynamic";
 
@@ -11,9 +11,19 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const supabase = await createClient();
+  if (!isServiceConfigured()) {
+    return NextResponse.json(
+      { error: "Service role key not configured" },
+      { status: 500 }
+    );
+  }
+
+  const supabase = createAdminClient();
   if (!supabase) {
-    return NextResponse.json({ error: "Database client unavailable" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Database client unavailable" },
+      { status: 500 }
+    );
   }
 
   const now = new Date();

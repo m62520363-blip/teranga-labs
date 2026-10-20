@@ -2,6 +2,27 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [Unreleased] — 2026-10-20 : paiement Chariow des missions (client → montant convenu)
+
+Le client peut désormais régler une mission en ligne au montant exact convenu ; la confirmation ne vient que du Pulse signé (aucun crédit côté client).
+
+### Paiement de mission
+
+- **`POST /api/payments/mission-checkout`** (nouvelle route, `apiRequireUser`, rate-limitée) : vérifie que l'appelant est le **client** de la mission et que son statut est `awaiting_payment`, ouvre une session Chariow avec le produit `CHARIOW_MISSION_PRODUCT_ID` (ou `app_settings.mission_product_id`) + la **variante de prix** correspondant à `agreed_price_fcfa` (`app_settings.mission_price_variants` : `{"15000":"pvr_…"}`). Sans variante pour ce montant → 503 `MISSION_PRICE_NOT_AVAILABLE` (jamais de montant approché). Montant renvoyé par Chariow re-vérifié immédiatement (variante inconnue ignorée côté prestataire → refus 409 avant redirection).
+- **`createChariowCheckout`** : paramètre `price_variant_id` (doc API Chariow : variante de prix pour tarification unique) + restitution du `amount` réel de la vente dans le résultat ; `getPulseReference` accepte `kind: "mission"`.
+- **Webhook Pulse** : branche `kind === "mission"` → re-vérification serveur `GET /sales/{id}`, contrôle strict du montant (`amountMatchesSale`), puis RPC **`confirm_mission_payment`** (service_role, idempotent) + tracking `pulse_chariow_mission`.
+- **UI `missions-dashboard`** : bouton « Payer X FCFA » pour le client en `awaiting_payment` (redirection vers `checkout_url`, retour sur `/missions?focus=`) ; la transition manuelle « Paiement confirmé » est retirée de `MISSION_TRANSITIONS` (déjà interdite par `mission_update_status` : seul le webhook confirme).
+- **Config** : `CHARIOW_MISSION_PRODUCT_ID` documentée dans `.env.example` ; `app_settings` ajouté aux types ; route inscrite dans `tests/route-guards.test.ts`.
+- **Tests** : +1 (`price_variant_id` envoyé au checkout, métadonnées `kind: mission`).
+
+### Vérifications exécutées
+
+- typecheck ✓, lint ✓, unitaires **157/157**.
+
+### Interventions requises de l'utilisateur
+
+1. Créer dans la boutique Chariow un produit (type Licence, prix XOF) + les **variantes de prix** pour chaque montant de mission négociable, renseigner `CHARIOW_MISSION_PRODUCT_ID` et `app_settings.mission_price_variants`.
+
 ## [Transformation-16-Etapes] — 2026-10-20 : refactor complet (wallet, missions, retraits, notifications, sécurité)
 
 Chantier de transformation complet du produit : 8 migrations SQL (0056-0063), refonte wallet/missions/retraits/notifications, correction des failles de sécurité F1-F11, tarification alignée sur le cahier des charges.

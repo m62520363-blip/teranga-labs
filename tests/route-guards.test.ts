@@ -54,6 +54,7 @@ describe("gardes de route centralisées (audit C7)", () => {
       join(API, "otp", "request", "route.ts"),
       join(API, "otp", "verify", "route.ts"),
       join(API, "payments", "checkout", "route.ts"),
+      join(API, "payments", "mission-checkout", "route.ts"),
       join(API, "payments", "status", "route.ts"),
       join(API, "verification", "checkout", "route.ts"),
       join(API, "favorites", "toggle", "route.ts"),

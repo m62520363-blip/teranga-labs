@@ -846,6 +846,20 @@ export interface Database {
         Update: Partial<Database["public"]["Tables"]["withdrawals"]["Insert"]>;
         Relationships: [];
       };
+      app_settings: {
+        Row: {
+          key: string;
+          value: Json;
+          updated_at: string;
+        };
+        Insert: {
+          key: string;
+          value: Json;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["app_settings"]["Insert"]>;
+        Relationships: [];
+      };
     };
     Views: {
       welcome_offer_status: {

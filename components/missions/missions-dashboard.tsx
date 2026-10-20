@@ -171,6 +171,30 @@ export function MissionsDashboard({ missions, userId, role, focusId = null }: Pr
     }
   };
 
+  const payMission = async (mission: MissionPayload) => {
+    setBusyId(mission.id);
+    try {
+      const res = await fetch("/api/payments/mission-checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ missionId: mission.id }),
+      });
+      const data = (await res.json().catch(() => null)) as
+        | { launchUrl?: string; message?: string }
+        | null;
+      if (!res.ok || !data?.launchUrl) {
+        toast.error(data?.message ?? "Paiement indisponible pour l'instant.");
+        return;
+      }
+      window.location.href = data.launchUrl;
+      return;
+    } catch {
+      toast.error("Erreur lors du paiement.");
+    } finally {
+      setBusyId(null);
+    }
+  };
+
   return (
     <div className="bg-surface">
       <div className="container-tl py-8 md:py-12">
@@ -329,6 +353,21 @@ export function MissionsDashboard({ missions, userId, role, focusId = null }: Pr
                   </div>
 
                   <div className="mt-4 flex flex-wrap items-center gap-2">
+                    {role === "client" && m.status === "awaiting_payment" ? (
+                      <Button
+                        size="sm"
+                        className="h-8"
+                        disabled={busyId === m.id}
+                        onClick={() => void payMission(m)}
+                      >
+                        {busyId === m.id ? (
+                          <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
+                        ) : (
+                          <CircleDollarSign className="size-3.5" aria-hidden="true" />
+                        )}
+                        Payer {formatFCFA(m.agreed_price_fcfa)}
+                      </Button>
+                    ) : null}
                     {transitions.map((t) => (
                       <Button
                         key={t.to}

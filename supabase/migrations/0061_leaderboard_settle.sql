@@ -23,7 +23,8 @@ DECLARE
   v_start timestamptz;
   v_end timestamptz;
 BEGIN
-  IF NOT public.is_admin() THEN
+  IF current_setting('request.jwt.claim.role', true) IS DISTINCT FROM 'service_role'
+     AND NOT public.is_admin() THEN
     RAISE EXCEPTION 'Accès administrateur requis.' USING ERRCODE = 'TLAUT';
   END IF;
 
