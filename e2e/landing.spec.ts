@@ -76,7 +76,6 @@ test.describe("scènes 3D des pages d'atterrissage", () => {
   const pages: { path: string; name: string }[] = [
     { path: "/", name: "accueil" },
     { path: "/classement", name: "classement" },
-    { path: "/agences", name: "agences" },
     { path: "/a-propos", name: "à propos" },
   ];
 
@@ -90,6 +89,18 @@ test.describe("scènes 3D des pages d'atterrissage", () => {
         (el) => getComputedStyle(el).perspective,
       );
       expect(perspective, "perspective CSS active").not.toBe("none");
+    });
+  }
+
+  const noScenePages: { path: string; name: string }[] = [
+    { path: "/agences", name: "agences" },
+    { path: "/tokens", name: "tokens" },
+  ];
+
+  for (const p of noScenePages) {
+    test(`${p.name} : plus de scène 3D (refonte)`, async ({ page }) => {
+      await page.goto(p.path, { waitUntil: "domcontentloaded" });
+      await expect(page.locator(".scene3d")).toHaveCount(0);
     });
   }
 });

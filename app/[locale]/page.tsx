@@ -56,10 +56,10 @@ export default async function HomePage() {
         "@type": "FAQPage",
         mainEntity: faqs.map((_, i) => ({
           "@type": "Question",
-          name: faqT(`${i}.q`),
+          name: faqT(`faqs.${i}.q`),
           acceptedAnswer: {
             "@type": "Answer",
-            text: faqT(`${i}.a`, { token: TOKEN_LABEL_PRICED }),
+            text: faqT(`faqs.${i}.a`, { token: TOKEN_LABEL_PRICED }),
           },
         })),
       },

@@ -88,9 +88,7 @@ export const MISSION_TRANSITIONS: Record<
     { to: "cancellation_requested", label: "Demander l'annulation", by: "client", confirm: true, comment: true },
     { to: "dispute_open", label: "Ouvrir un litige", by: "client", confirm: true, comment: true },
   ],
-  dispute_open: [
-    { to: "completed", label: "Résoudre en faveur du client", by: "client", confirm: true },
-  ],
+  dispute_open: [],
   completed: [],
   cancellation_requested: [
     { to: "cancelled", label: "Confirmer l'annulation", by: "client", confirm: true },
