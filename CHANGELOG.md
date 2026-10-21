@@ -2,6 +2,16 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [Unreleased] — 2026-10-21 : bandeau noir supprimé de l'espace client et de l'espace développeur
+
+La navbar publique noire (Trouver un développeur, Agences, Accueil, Messages, Missions, Publier un brief, Acheter des Tokens, Paramètres, FR/EN, cloche, solde, profil, déconnexion) n'apparaît plus dans les espaces connectés client et développeur.
+
+- **`SiteShell`** : le rôle **client** obtient `ClientShell` sur **toutes** ses routes (porte par liste de routes retirée), le rôle **developer** obtient `DashboardShell` sur **toutes** ses routes (notifications, support, classement… étaient hors liste et affichaient la navbar) ; les autres rôles (visiteur, admin…) sont inchangés. La navbar fixe (`fixed inset-x-0 top-0 z-50`) et sa marge `main pt-16` ne s'appliquent plus à ces espaces : le contenu commence en haut, sans espace vide (les pages gardent leur propre rythme `py-16`).
+- **Navigation préservée** dans les sidebars/tiroirs : sidebar client complétée avec **« Publier un brief »** (`/poster`) et **« Agences »** (`/agences`) — Catalogue (`/dev` = Trouver un développeur), Mes projets, Mes briefs, Messages, Mon wallet, Paramètres, profil, cloche, solde de Tokens et déconnexion y figuraient déjà ; côté développeur, les sections (Accueil, Agences, Missions, Briefs, Messages, Mon profil, Mon wallet, Paramètres) + cloche + solde + déconnexion couvrent l'ancienne navbar.
+- **Sélecteur FR/EN déplacé** : extrait de `navbar.tsx` vers `components/language-switcher.tsx` (partagé) et ajouté au bloc profil des deux shells (sidebar basse sur ordinateur, tiroir sur mobile) — le changement de langue reste accessible.
+- **Nettoyage** : `components/client/app-routes.ts` supprimé (liste de routes morte après la suppression de la porte) ; `globals.css` et les autres layouts vérifiés (aucune règle sticky/fixed résiduelle, seul `Navbar` porte `fixed top-0`).
+- **Vérifications** : `npm run check` ✓ (177/177), build ✓, e2e **63/63** (le smoke header a montré un flake de timing en suite complète, vert en solo et au passage suivant — aucune régression visiteur : la navbar publique est intacte pour les non connectés).
+
 ## [Unreleased] — 2026-10-21 : inscription monde + devises locales, accueil dev refondu, profil, messagerie, classement mondial
 
 Lot des dernières demandes utilisateur : inscription ouverte aux ~206 pays du monde avec devises locales, accueil de l'espace développeur refondu, profil assoupli et partageable, messagerie enrichie, classement mondial et escrow automatique.

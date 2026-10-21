@@ -8,6 +8,7 @@ import { ImageLogoMark } from "@/components/logo";
 import { NotificationBell } from "@/components/notification-bell";
 import { TokenBalance } from "@/components/token-balance";
 import { SignOutButton } from "@/components/sign-out-button";
+import { LanguageSwitcher } from "@/components/language-switcher";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import {
   APP_NAV_SECTIONS,
@@ -142,6 +143,8 @@ export function DashboardShell({
         <>
           {/* Solde réel (RPC get_token_balance via BalanceProvider). */}
           <TokenBalance />
+          {/* Bascule FR/EN déplacée de la navbar noire supprimée. */}
+          <LanguageSwitcher />
           <SignOutButton variant="menu" />
         </>
       }

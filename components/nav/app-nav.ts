@@ -8,6 +8,7 @@ import {
   LayoutGrid,
   Megaphone,
   MessageSquare,
+  Plus,
   Settings,
   UserRound,
   UsersRound,
@@ -88,7 +89,9 @@ export const CLIENT_NAV_SECTIONS: AppNavSection[] = [
     title: "ESPACE PRINCIPAL",
     links: [
       { href: "/client", label: "Tableau de bord", icon: LayoutGrid, match: "exact" },
+      { href: "/poster", label: "Publier un brief", icon: Plus },
       { href: "/dev", label: "Catalogue", icon: UsersRound },
+      { href: "/agences", label: "Agences", icon: Building2 },
       { href: "/missions", label: "Mes projets", icon: ClipboardList },
       { href: "/client/briefs", label: "Mes briefs", icon: Megaphone },
     ],

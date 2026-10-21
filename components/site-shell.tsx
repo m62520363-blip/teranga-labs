@@ -5,7 +5,6 @@ import { usePathname } from "@/i18n/navigation";
 import { ClientShell } from "@/components/client/client-shell";
 import { DashboardShell } from "@/components/nav/dashboard-shell";
 import { isAppShellRoute } from "@/components/nav/app-nav";
-import { isClientAppRoute } from "@/components/client/app-routes";
 
 /**
  * Chrome du site (navbar + padding principal + footer).
@@ -14,14 +13,21 @@ import { isClientAppRoute } from "@/components/client/app-routes";
  * plein écran avec le seul logo cliquable, comme la référence Montaaj —
  * aucune barre de navigation ni de footer ne doit parasiter le formulaire.
  *
- * Sur les routes de l'espace applicatif, un rôle client obtient le shell
- * dédié (sidebar V8 + tiroir mobile + dock d'action rapide) à la place de
- * la navbar publique.
+ * ESPACES SANS BANDEAU NOIR (décision projet) : un rôle client OU
+ * développeur obtient SON shell sur toutes ses routes (plus de porte par
+ * liste de routes) — la navbar publique fixe (`fixed … top-0`) et sa marge
+ * `pt-16` ne s'appliquent donc jamais à ces espaces :
+ * - client → ClientShell (sidebar V8 + tiroir mobile + dock d'action
+ *   rapide) ; toutes les destinations (Agences, Publier un brief,
+ *   wallet, paramètres, FR/EN, cloche, solde, déconnexion) restent
+ *   accessibles depuis la sidebar et le tiroir.
+ * - développeur → DashboardShell (sidebar sections + en-tête sticky +
+ *   menu coulissant), déjà utilisé sur ses routes principales, étendu
+ *   aux routes restantes (notifications, support, classement…).
  *
- * V8 dashboard : un utilisateur connecté non-client obtient le shell du
- * dashboard (barre latérale verticale sur ordinateur, en-tête sticky +
- * menu coulissant sur mobile) sur les routes du menu — au lieu de la
- * navbar publique.
+ * V8 dashboard : un utilisateur connecté d'un autre rôle (admin, …)
+ * conserve le shell du dashboard sur les routes du menu — au lieu de la
+ * navbar publique — et la navbar publique ailleurs, comme avant.
  *
  * Footer : UNIQUEMENT sur l'accueil, et seulement pour un visiteur non
  * connecté — jamais sur les pages intérieures ni dans les espaces
@@ -51,7 +57,8 @@ export function SiteShell({
 
   if (BARE_ROUTES.has(pathname)) return <>{children}</>;
 
-  if (role === "client" && isClientAppRoute(pathname)) {
+  /* Espace client : shell dédié partout, la navbar noire est supprimée. */
+  if (role === "client") {
     return (
       <ClientShell user={user ?? null} userId={userId ?? null}>
         {children}
@@ -59,7 +66,13 @@ export function SiteShell({
     );
   }
 
-  if (user && role !== "client" && isAppShellRoute(pathname)) {
+  /* Espace développeur : shell sur toutes ses routes ; autres rôles
+     connectés (admin…) : shell limité aux routes du menu, comme avant. */
+  if (
+    user &&
+    role !== "client" &&
+    (role === "developer" || isAppShellRoute(pathname))
+  ) {
     return (
       <DashboardShell user={user ?? null} userId={userId ?? null} footer={footer}>
         {children}
