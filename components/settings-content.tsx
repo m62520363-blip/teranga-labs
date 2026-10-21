@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { SignOutButton } from "@/components/sign-out-button";
+import { ShareProfileButton } from "@/components/dev/share-profile-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -305,15 +306,18 @@ export function SettingsContent({
                     <SideLink href="/briefs" label="Voir les briefs" />
                     <SideLink href="/dashboard?tab=profil" label="Compléter mon profil" icon={<User className="size-4" aria-hidden="true" />} />
                     {devPublicUrl ? (
-                      <Link
-                        href={devPublicUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
-                      >
-                        <Share2 className="size-4 text-primary" aria-hidden="true" />
-                        Voir mon profil public
-                      </Link>
+                      <>
+                        <Link
+                          href={devPublicUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
+                        >
+                          <Share2 className="size-4 text-primary" aria-hidden="true" />
+                          Voir mon profil public
+                        </Link>
+                        <ShareProfileButton url={devPublicUrl} label="Partager mon profil" />
+                      </>
                     ) : null}
                   </>
                 ) : null}

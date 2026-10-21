@@ -154,10 +154,15 @@ describe("developerIdentitySchema", () => {
     );
   });
 
-  it("rejette une région inconnue", () => {
-    expect(developerIdentitySchema.safeParse({ ...valid, city: "Paris" }).success).toBe(
-      false
-    );
+  it("accepte une ville hors périmètre (inscription monde) et borne la longueur", () => {
+    // Le profil développeur s'inscrit dans le monde entier : la région n'est
+    // plus restreinte au périmètre 9 pays (lib/world-countries.ts).
+    expect(developerIdentitySchema.safeParse({ ...valid, city: "Paris" }).success).toBe(true);
+    expect(developerIdentitySchema.safeParse({ ...valid, city: "Austin" }).success).toBe(true);
+    expect(developerIdentitySchema.safeParse({ ...valid, city: "x" }).success).toBe(false);
+    expect(
+      developerIdentitySchema.safeParse({ ...valid, city: "a".repeat(61) }).success
+    ).toBe(false);
   });
 });
 

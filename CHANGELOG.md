@@ -2,6 +2,52 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [Unreleased] — 2026-10-21 : inscription monde + devises locales, accueil dev refondu, profil, messagerie, classement mondial
+
+Lot des dernières demandes utilisateur : inscription ouverte aux ~206 pays du monde avec devises locales, accueil de l'espace développeur refondu, profil assoupli et partageable, messagerie enrichie, classement mondial et escrow automatique.
+
+### Inscription monde + devises locales
+
+- **`lib/world-countries.ts`** (nouveau) : 206 pays (Afrique 54, Asie 49, Europe 46, Amériques 41, Océanie 16) avec nom FR, indicatif et devise ; `WORLD_PHONE_COUNTRIES` déduplique les indicatifs partagés (+1 US/CA, +7 RU/KZ → ≈ 204 options), `parseWorldDial` gère `+`, `00` et le sans-préfixe (+221 par défaut), régions curées pour ~44 pays (`getWorldRegions`) ; les 9 pays du périmètre restent servis par `lib/countries.ts` (**inchangé** : `/ville`, `/pays`, briefs).
+- **`lib/currency.ts`** (nouveau) : taux statiques indicatifs ancrés USD (~110 devises, pegs EUR/XAF/XPF/BGN/BAM/DKK/NAD…), `convertFcfa`, `formatLocalPrice` (Intl, locale fr-FR), `isKnownCurrency`.
+- **Inscription client et développeur** : sélecteur de pays du monde (ISO2 en UI, **nom FR** stocké — `users.country` groupe le classement par nom), région conditionnelle (Select si le pays a des régions curées, champ libre sinon ; ville legacy hors liste préservée en champ libre), ordre Pays → Région → Adresse ; `cityField()` (2–60 car.) remplace `regionField` pour l'inscription, `regionField` strict conservé pour `briefSchema.client_city`.
+- **`PhoneInput`** : tous les indicatifs du monde (drapeau par ISO2), aria-label inchangé.
+- **Wallet** : `TokenCard` affiche le prix local « ≈ X · taux indicatif » sous le prix FCFA (devise depuis le profil développeur, sinon `user_metadata.country` ; masqué en XOF).
+- **Tests** : `tests/world-countries.test.ts` (+20 : unicité ISO2/noms, tri FR, cohérence du périmètre, dials, régions, conversions) ; e2e `multipays.spec.ts` : toutes les options d'indicatif sont proposées.
+
+### Espace développeur
+
+- **Accueil `/dashboard` refondu** : sous-titre dynamique (Tokens disponibles · contacts débloqués · missions en cours), raccourci « Acheter des Tokens » (`/wallet#acheter-tokens`), carte **« Profil X % complet »** (barre de progression + puces de critères, photo et portfolio comptés comme recommandations) avec retour à l'onglet profil ; aucun décor 3D dans l'espace dev.
+- **Photo de profil** : libellé « optionnelle, recommandée » (inscription) et critère de recommandation du profil.
+- **Portfolio** : libellés « (optionnel, recommandé) » (dashboard et inscription).
+- **Profil public** : bouton **Partager** (`ShareProfileButton` : Web Share API puis presse-papiers, URL rendue absolue) à côté de « Voir mon profil public » (gateé par l'identifiant public) dans le dashboard et les paramètres.
+- **Agence** : coût **4 Tokens** affiché sur « Créer mon agence » et message de solde insuffisant renvoyant au wallet.
+- **`/dev`** : redirection vers `/dashboard` qui préserve la locale (next-intl `getLocale`).
+
+### Messagerie & notifications
+
+- Message vocal (envoi + piste de lecture), édition et suppression douce des messages ; présence en ligne / « vu il y a … » ; cloche de notifications couvrant tous les types (`lib/notification-icon.ts`).
+
+### Paiement
+
+- Énumérations de moyens de paiement retirées de la copy marketing (landing, tokens, messages FR/EN) ; les sélecteurs fonctionnels sont conservés (choix du moyen de paiement de la vérification, choix du canal de retrait).
+
+### Classement & escrow
+
+- **Migration `0065_escrow_auto_refund_leaderboard.sql`** : remboursement automatique du fonds bloqué en cas d'annulation/refus (bookkeeping plateforme, Chariow n'exposant pas d'API refund), réglage du cron sur le **mois précédent**, **50 pts** par projet livré (région + pays), top 3 = 10/7/4 (détails des contrats inchangés).
+- **`/classement`** : classement **mondial** (tous les pays) en plus des classements régional et par pays.
+- Route cron `/api/cron/leaderboard-settle` (secrète via `CRON_SECRET`) qui solde le mois précédent.
+
+### Vérifications exécutées
+
+- `npm run check` ✓ (check-rpc, typecheck, lint), unitaires **177/177**, e2e **63/63**.
+
+### Interventions requises de l'utilisateur
+
+1. Appliquer `supabase/migrations/0065_escrow_auto_refund_leaderboard.sql` dans le SQL Editor (ou la section 0065 du script consolidé).
+2. Configurer `SUPABASE_SERVICE_ROLE_KEY` (vide en local : le webhook de paiement répond 503).
+3. Le remboursement « auto » est un bookkeeping plateforme : à suivre côté comptable (pas d'API refund Chariow).
+
 ## [Unreleased] — 2026-10-20 : paiement Chariow des missions (client → montant convenu)
 
 Le client peut désormais régler une mission en ligne au montant exact convenu ; la confirmation ne vient que du Pulse signé (aucun crédit côté client).

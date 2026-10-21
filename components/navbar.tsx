@@ -68,7 +68,11 @@ export function Navbar({
     user?.name?.trim() || (authed ? (isClient ? t("mySpace") : t("myAccount")) : null);
 
   const appLinks: { href: string; label: string; adminOnly?: boolean }[] = [];
-  appLinks.push({ href: "/dev", label: t("findDev") });
+  // « Trouver un développeur » : réservé aux clients et aux visiteurs,
+  // jamais à l'espace développeur.
+  if (!isDev) {
+    appLinks.push({ href: "/dev", label: t("findDev") });
+  }
   appLinks.push({ href: "/agences", label: t("agencies") });
   if (authed) {
     appLinks.push({ href: homeHref, label: t("home") });
@@ -79,7 +83,6 @@ export function Navbar({
     } else if (isDev) {
       appLinks.push({ href: "/briefs", label: t("briefsView") });
       appLinks.push({ href: "/dashboard?tab=profil", label: t("myProfile") });
-      appLinks.push({ href: "/verification", label: t("verifyProfile") });
     } else {
       appLinks.push({ href: "/briefs", label: t("briefsView") });
     }
@@ -90,7 +93,7 @@ export function Navbar({
         adminOnly: true,
       });
     }
-    appLinks.push({ href: "/tokens", label: t("buyTokens") });
+    appLinks.push({ href: "/wallet", label: t("buyTokens") });
     appLinks.push({ href: "/parametres", label: t("settings") });
   }
 
@@ -113,7 +116,7 @@ export function Navbar({
       return [
         { href: "/dashboard", label: t("home"), icon: Home },
         { href: "/briefs", label: t("briefs"), icon: Briefcase },
-        { href: "/tokens", label: t("tokens"), icon: Coins },
+        { href: "/wallet", label: t("tokens"), icon: Coins },
         { href: "/conversations", label: t("messages"), icon: MessageCircle },
         { href: "/dashboard?tab=profil", label: t("profile"), icon: UserRound },
       ];

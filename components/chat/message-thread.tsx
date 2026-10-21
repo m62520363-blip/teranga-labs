@@ -4,10 +4,21 @@ import * as React from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Loader2, Send, Sparkles, Check, Zap, ClipboardList } from "lucide-react";
+import {
+  ClipboardList,
+  Check,
+  Loader2,
+  Mic,
+  Pencil,
+  Send,
+  Sparkles,
+  Trash,
+  Zap,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { formatFCFA, formatDateTime } from "@/lib/formatting";
+import { formatFCFA, formatDateTime, formatRelativeTime } from "@/lib/formatting";
 import { missionErrorMessage } from "@/lib/mission-labels";
+import { AudioMessage, formatDuration } from "@/components/chat/audio-message";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,14 +33,22 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "cn";
 
+const MAX_RECORD_SECONDS = 600;
+const PRESENCE_TOUCH_INTERVAL_MS = 60_000;
+const PRESENCE_POLL_INTERVAL_MS = 45_000;
+
 export type ThreadMessage = {
   id: string;
   sender_id: string | null;
   content: string;
-  message_type: "text" | "offer" | "system";
+  message_type: "text" | "offer" | "system" | "audio";
   metadata: Record<string, unknown> | null;
   read_at: string | null;
   created_at: string;
+  edited_at?: string | null;
+  deleted_at?: string | null;
+  audio_path?: string | null;
+  audio_duration_seconds?: number | null;
 };
 
 export type ThreadOffer = {
@@ -84,6 +103,25 @@ export function MessageThread({
   });
   const [offerSending, setOfferSending] = React.useState(false);
   const [creatingMission, setCreatingMission] = React.useState(false);
+  const [peerId, setPeerId] = React.useState<string | null>(null);
+  const [presence, setPresence] = React.useState<{
+    online: boolean;
+    lastSeenAt: string | null;
+  } | null>(null);
+  const [editingId, setEditingId] = React.useState<string | null>(null);
+  const [editDraft, setEditDraft] = React.useState("");
+  const [savingEdit, setSavingEdit] = React.useState(false);
+  const [deleteTargetId, setDeleteTargetId] = React.useState<string | null>(null);
+  const [deleting, setDeleting] = React.useState(false);
+  const [recording, setRecording] = React.useState(false);
+  const [recordSeconds, setRecordSeconds] = React.useState(0);
+  const [sendingVoice, setSendingVoice] = React.useState(false);
+  const recorderRef = React.useRef<MediaRecorder | null>(null);
+  const streamRef = React.useRef<MediaStream | null>(null);
+  const chunksRef = React.useRef<Blob[]>([]);
+  const recordSecondsRef = React.useRef(0);
+  const recordTimerRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
+  const sendingVoiceRef = React.useRef(false);
   const bottomRef = React.useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -108,6 +146,76 @@ export function MessageThread({
   }, [conversationId]);
 
   React.useEffect(() => {
+    const supabase = createClient();
+    let active = true;
+    void supabase
+      .from("conversations")
+      .select("developer_id, client_id")
+      .eq("id", conversationId)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!active || !data) return;
+        const peer =
+          data.developer_id === userId ? data.client_id : data.developer_id;
+        setPeerId(typeof peer === "string" && peer !== userId ? peer : null);
+      });
+    return () => {
+      active = false;
+    };
+  }, [conversationId, userId]);
+
+  React.useEffect(() => {
+    const supabase = createClient();
+    const touch = () => {
+      void supabase.rpc("touch_presence");
+    };
+    touch();
+    const timer = setInterval(touch, PRESENCE_TOUCH_INTERVAL_MS);
+    return () => clearInterval(timer);
+  }, []);
+
+  React.useEffect(() => {
+    if (locked || !peerId) {
+      setPresence(null);
+      return;
+    }
+    const supabase = createClient();
+    let active = true;
+    const load = async () => {
+      const { data, error } = await supabase.rpc("get_peer_presence", {
+        p_peer_id: peerId,
+      });
+      if (!active) return;
+      if (error || !data) {
+        setPresence(null);
+        return;
+      }
+      const payload = data as { online?: unknown; last_seen_at?: unknown };
+      setPresence({
+        online: payload.online === true,
+        lastSeenAt:
+          typeof payload.last_seen_at === "string" ? payload.last_seen_at : null,
+      });
+    };
+    void load();
+    const timer = setInterval(() => void load(), PRESENCE_POLL_INTERVAL_MS);
+    return () => {
+      active = false;
+      clearInterval(timer);
+    };
+  }, [locked, peerId]);
+
+  React.useEffect(() => {
+    return () => {
+      if (recordTimerRef.current !== null) {
+        clearInterval(recordTimerRef.current);
+        recordTimerRef.current = null;
+      }
+      streamRef.current?.getTracks().forEach((track) => track.stop());
+    };
+  }, []);
+
+  React.useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "auto" });
   }, [messages.length]);
 
@@ -128,7 +236,12 @@ export function MessageThread({
 
   React.useEffect(() => {
     const unread = messages
-      .filter((m) => m.sender_id !== userId && !m.read_at && m.message_type === "text")
+      .filter(
+        (m) =>
+          m.sender_id !== userId &&
+          !m.read_at &&
+          (m.message_type === "text" || m.message_type === "audio")
+      )
       .map((m) => m.id);
     if (unread.length > 0) void markRead(unread);
   }, [messages, userId, markRead]);
@@ -195,6 +308,261 @@ export function MessageThread({
       return;
     }
     setDraft("");
+  };
+
+  const startEdit = (msg: ThreadMessage) => {
+    if (msg.message_type !== "text" || msg.deleted_at) return;
+    setEditingId(msg.id);
+    setEditDraft(msg.content);
+  };
+
+  const cancelEdit = () => {
+    if (savingEdit) return;
+    setEditingId(null);
+    setEditDraft("");
+  };
+
+  const saveEdit = async () => {
+    const targetId = editingId;
+    if (!targetId || savingEdit) return;
+    const content = editDraft.trim();
+    if (!content) {
+      toast.error("Le message ne peut pas être vide.");
+      return;
+    }
+    setSavingEdit(true);
+    const supabase = createClient();
+    const { error } = await supabase.rpc("edit_message", {
+      p_message_id: targetId,
+      p_content: content,
+    });
+    setSavingEdit(false);
+    if (error) {
+      toast.error(error.message || "Modification impossible. Réessayez.");
+      return;
+    }
+    setMessages((prev) =>
+      prev.map((m) =>
+        m.id === targetId
+          ? { ...m, content, edited_at: new Date().toISOString() }
+          : m
+      )
+    );
+    setEditingId(null);
+    setEditDraft("");
+  };
+
+  const confirmDelete = async () => {
+    const targetId = deleteTargetId;
+    if (!targetId || deleting) return;
+    setDeleting(true);
+    const supabase = createClient();
+    const { error } = await supabase.rpc("soft_delete_message", {
+      p_message_id: targetId,
+    });
+    setDeleting(false);
+    if (error) {
+      toast.error(error.message || "Suppression impossible. Réessayez.");
+      return;
+    }
+    setMessages((prev) =>
+      prev.map((m) =>
+        m.id === targetId
+          ? {
+              ...m,
+              deleted_at: new Date().toISOString(),
+              content: "",
+              audio_path: null,
+            }
+          : m
+      )
+    );
+    setDeleteTargetId(null);
+  };
+
+  const resetRecording = React.useCallback(() => {
+    if (recordTimerRef.current !== null) {
+      clearInterval(recordTimerRef.current);
+      recordTimerRef.current = null;
+    }
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+    streamRef.current = null;
+    recorderRef.current = null;
+    recordSecondsRef.current = 0;
+    setRecording(false);
+    setRecordSeconds(0);
+  }, []);
+
+  const collectRecordingBlob = (
+    recorder: MediaRecorder
+  ): Promise<Blob | null> =>
+    new Promise((resolve) => {
+      const flush = () => {
+        const type = (recorder.mimeType || "audio/webm").split(";")[0];
+        const blob =
+          chunksRef.current.length > 0
+            ? new Blob(chunksRef.current, { type })
+            : null;
+        chunksRef.current = [];
+        resolve(blob);
+      };
+      if (recorder.state === "inactive") {
+        flush();
+        return;
+      }
+      recorder.onstop = flush;
+      recorder.stop();
+    });
+
+  const sendVoiceMessage = async () => {
+    const recorder = recorderRef.current;
+    if (!recorder || sendingVoiceRef.current) return;
+    sendingVoiceRef.current = true;
+    setSendingVoice(true);
+    const duration = Math.min(
+      Math.max(recordSecondsRef.current, 1),
+      MAX_RECORD_SECONDS
+    );
+    const blob = await collectRecordingBlob(recorder);
+    resetRecording();
+    if (!blob || blob.size === 0) {
+      sendingVoiceRef.current = false;
+      setSendingVoice(false);
+      toast.error("Enregistrement vide. Réessayez.");
+      return;
+    }
+    const type = (blob.type || "audio/webm").split(";")[0];
+    const extension = type.includes("mp4")
+      ? "m4a"
+      : type.includes("ogg")
+        ? "ogg"
+        : type.includes("wav")
+          ? "wav"
+          : type.includes("mpeg")
+            ? "mp3"
+            : "webm";
+    const path = `${userId}/${conversationId}/${crypto.randomUUID()}.${extension}`;
+    const supabase = createClient();
+    const { error: uploadError } = await supabase.storage
+      .from("message-audio")
+      .upload(path, blob, { contentType: type, upsert: false });
+    if (uploadError) {
+      sendingVoiceRef.current = false;
+      setSendingVoice(false);
+      toast.error("Envoi du message vocal impossible. Réessayez.");
+      return;
+    }
+    const { data: sent, error } = await supabase.rpc("send_message", {
+      p_conversation_id: conversationId,
+      p_content: "",
+      p_message_type: "audio",
+      p_audio_path: path,
+      p_audio_duration_seconds: duration,
+    });
+    sendingVoiceRef.current = false;
+    setSendingVoice(false);
+    if (error || !sent) {
+      void supabase.storage.from("message-audio").remove([path]);
+      toast.error("Message vocal non envoyé. Réessayez.");
+      return;
+    }
+    const row = sent as {
+      id?: string;
+      sender_id?: string | null;
+      created_at?: string;
+    };
+    const newId = typeof row?.id === "string" ? row.id : null;
+    if (newId) {
+      setMessages((prev) =>
+        prev.some((m) => m.id === newId)
+          ? prev
+          : [
+              ...prev,
+              {
+                id: newId,
+                sender_id: row.sender_id ?? userId,
+                content: "",
+                message_type: "audio",
+                metadata: null,
+                read_at: null,
+                created_at: row.created_at ?? new Date().toISOString(),
+                edited_at: null,
+                deleted_at: null,
+                audio_path: path,
+                audio_duration_seconds: duration,
+              },
+            ]
+      );
+    }
+  };
+
+  const cancelRecording = () => {
+    const recorder = recorderRef.current;
+    chunksRef.current = [];
+    if (recorder) {
+      recorder.onstop = null;
+      if (recorder.state !== "inactive") recorder.stop();
+    }
+    resetRecording();
+  };
+
+  const startRecording = async () => {
+    if (recording || sendingVoice) return;
+    if (
+      typeof MediaRecorder === "undefined" ||
+      !navigator.mediaDevices?.getUserMedia
+    ) {
+      toast.error("Enregistrement audio non pris en charge par ce navigateur.");
+      return;
+    }
+    let stream: MediaStream;
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    } catch (err) {
+      const name = err instanceof DOMException ? err.name : "";
+      if (
+        name === "NotAllowedError" ||
+        name === "PermissionDeniedError" ||
+        name === "SecurityError"
+      ) {
+        toast.error(
+          "Micro refusé : autorisez le microphone du navigateur pour envoyer un message vocal."
+        );
+      } else {
+        toast.error("Micro indisponible. Vérifiez votre appareil audio.");
+      }
+      return;
+    }
+    let recorder: MediaRecorder;
+    try {
+      recorder = new MediaRecorder(stream);
+    } catch {
+      stream.getTracks().forEach((track) => track.stop());
+      toast.error("Enregistrement audio non pris en charge par ce navigateur.");
+      return;
+    }
+    chunksRef.current = [];
+    recorder.ondataavailable = (event) => {
+      if (event.data && event.data.size > 0) chunksRef.current.push(event.data);
+    };
+    recorderRef.current = recorder;
+    streamRef.current = stream;
+    recordSecondsRef.current = 0;
+    setRecordSeconds(0);
+    setRecording(true);
+    recorder.start();
+    recordTimerRef.current = setInterval(() => {
+      const next = recordSecondsRef.current + 1;
+      recordSecondsRef.current = next;
+      setRecordSeconds(next);
+      if (next >= MAX_RECORD_SECONDS) {
+        if (recordTimerRef.current !== null) {
+          clearInterval(recordTimerRef.current);
+          recordTimerRef.current = null;
+        }
+        void sendVoiceMessage();
+      }
+    }, 1000);
   };
 
   const sendOffer = async () => {
@@ -318,6 +686,22 @@ export function MessageThread({
         </div>
         {locked ? (
           <span className="badge badge-warning">Projet attribué</span>
+        ) : presence ? (
+          presence.online ? (
+            <span className="flex items-center gap-1.5 text-xs text-success">
+              <span className="size-2 rounded-full bg-success" aria-hidden="true" />
+              En ligne
+            </span>
+          ) : presence.lastSeenAt ? (
+            <span className="text-xs text-muted-foreground">
+              Vu {formatRelativeTime(presence.lastSeenAt)}
+            </span>
+          ) : (
+            <span className="flex items-center gap-1.5 text-xs text-success">
+              <span className="size-2 rounded-full bg-success" aria-hidden="true" />
+              Temps réel
+            </span>
+          )
         ) : (
           <span className="flex items-center gap-1.5 text-xs text-success">
             <span className="size-2 rounded-full bg-success" aria-hidden="true" />
@@ -360,8 +744,28 @@ export function MessageThread({
             );
           }
           const mine = msg.sender_id === userId;
+          const deleted = Boolean(msg.deleted_at);
+          const isAudio = msg.message_type === "audio" && !deleted;
+          const isEditing = editingId === msg.id;
+
+          if (deleted) {
+            return (
+              <div key={msg.id} className={cn("flex", mine ? "justify-end" : "justify-start")}>
+                <div className="max-w-[78%] rounded-2xl border border-dashed border-hairline bg-transparent px-4 py-2.5 text-sm italic text-muted-foreground">
+                  Message supprimé
+                </div>
+              </div>
+            );
+          }
+
           return (
-            <div key={msg.id} className={cn("flex", mine ? "justify-end" : "justify-start")}>
+            <div
+              key={msg.id}
+              className={cn(
+                "group flex",
+                mine ? "justify-end" : "justify-start"
+              )}
+            >
               <div
                 className={cn(
                   "max-w-[78%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed shadow-sm",
@@ -370,21 +774,98 @@ export function MessageThread({
                     : "rounded-bl-sm border border-hairline bg-muted"
                 )}
               >
-                <p className="whitespace-pre-wrap break-words">{msg.content}</p>
+                {isEditing ? (
+                  <div className="flex min-w-48 flex-col gap-2">
+                    <Textarea
+                      rows={2}
+                      value={editDraft}
+                      onChange={(e) => setEditDraft(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && !e.shiftKey) {
+                          e.preventDefault();
+                          void saveEdit();
+                        }
+                        if (e.key === "Escape") cancelEdit();
+                      }}
+                      className="min-h-10 resize-none rounded-xl bg-card text-foreground"
+                      aria-label="Modifier le message"
+                      autoFocus
+                    />
+                    <div className="flex justify-end gap-1.5">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-7 px-2 text-xs"
+                        disabled={savingEdit}
+                        onClick={cancelEdit}
+                      >
+                        Annuler
+                      </Button>
+                      <Button
+                        size="sm"
+                        className="h-7 px-2 text-xs"
+                        disabled={savingEdit || !editDraft.trim()}
+                        onClick={() => void saveEdit()}
+                      >
+                        {savingEdit ? (
+                          <Loader2 className="size-3 animate-spin" aria-hidden="true" />
+                        ) : null}
+                        Enregistrer
+                      </Button>
+                    </div>
+                  </div>
+                ) : isAudio ? (
+                  <AudioMessage
+                    messageId={msg.id}
+                    durationSeconds={msg.audio_duration_seconds ?? null}
+                  />
+                ) : (
+                  <p className="whitespace-pre-wrap break-words">{msg.content}</p>
+                )}
                 <p
                   className={cn(
-                    "mt-1 text-right text-[10px]",
+                    "mt-1 flex items-center justify-end gap-1.5 text-[10px]",
                     mine ? "text-ink/60" : "text-muted-foreground"
                   )}
                 >
-                  {formatDateTime(msg.created_at)}
-                  {mine ? (
-                    <span className="ml-1.5 inline-flex items-center gap-0.5">
+                  {msg.edited_at ? <span>(modifié)</span> : null}
+                  <span>{formatDateTime(msg.created_at)}</span>
+                  {mine && !isEditing ? (
+                    <span className="inline-flex items-center gap-0.5">
                       <Check className="size-3" aria-hidden="true" />
                       {msg.read_at ? "Vu" : "Envoyé"}
                     </span>
                   ) : null}
                 </p>
+                {mine && !isEditing ? (
+                  <div
+                    className={cn(
+                      "mt-1 flex justify-end gap-1 opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100",
+                      mine ? "text-ink/70" : "text-muted-foreground"
+                    )}
+                  >
+                    {msg.message_type === "text" ? (
+                      <button
+                        type="button"
+                        onClick={() => startEdit(msg)}
+                        className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] transition-colors outline-none hover:bg-black/10 focus-visible:ring-2 focus-visible:ring-primary/50"
+                        aria-label="Modifier"
+                      >
+                        <Pencil className="size-3" aria-hidden="true" />
+                        Modifier
+                      </button>
+                    ) : null}
+                    <button
+                      type="button"
+                      onClick={() => setDeleteTargetId(msg.id)}
+                      className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] transition-colors outline-none hover:bg-black/10 focus-visible:ring-2 focus-visible:ring-primary/50"
+                      aria-label="Supprimer"
+                    >
+                      <Trash className="size-3" aria-hidden="true" />
+                      Supprimer
+                    </button>
+                  </div>
+                ) : null}
               </div>
             </div>
           );
@@ -463,34 +944,76 @@ export function MessageThread({
               ))}
             </div>
 
-            <div className="flex items-end gap-2">
-              <Textarea
-                rows={1}
-                value={draft}
-                onChange={(e) => setDraft(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    void sendMessage();
-                  }
-                }}
-                placeholder={`Écrire à ${otherName}…`}
-                className="max-h-32 min-h-10 flex-1 resize-none rounded-xl"
-                aria-label="Message"
-              />
-              <Button
-                onClick={sendMessage}
-                disabled={sending || !draft.trim()}
-                className="h-10 shrink-0"
-                aria-label="Envoyer"
-              >
-                {sending ? (
-                  <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-                ) : (
-                  <Send className="size-4" aria-hidden="true" />
-                )}
-              </Button>
-            </div>
+            {recording ? (
+              <div className="flex items-center gap-2 rounded-xl border border-hairline bg-surface px-3 py-2">
+                <span className="flex items-center gap-1.5 text-xs font-medium text-destructive">
+                  <span className="size-2 animate-pulse rounded-full bg-destructive" aria-hidden="true" />
+                  Enregistrement · {formatDuration(recordSeconds)}
+                </span>
+                <div className="ml-auto flex gap-1.5">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-8 px-2.5 text-xs"
+                    disabled={sendingVoice}
+                    onClick={cancelRecording}
+                  >
+                    Annuler
+                  </Button>
+                  <Button
+                    size="sm"
+                    className="h-8 px-2.5 text-xs"
+                    disabled={sendingVoice}
+                    onClick={() => void sendVoiceMessage()}
+                  >
+                    {sendingVoice ? (
+                      <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
+                    ) : (
+                      <Send className="size-3.5" aria-hidden="true" />
+                    )}
+                    Envoyer
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-end gap-2">
+                <Button
+                  variant="outline"
+                  className="h-10 w-10 shrink-0 rounded-xl"
+                  onClick={() => void startRecording()}
+                  disabled={sendingVoice}
+                  aria-label="Message vocal"
+                >
+                  <Mic className="size-4" aria-hidden="true" />
+                </Button>
+                <Textarea
+                  rows={1}
+                  value={draft}
+                  onChange={(e) => setDraft(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      void sendMessage();
+                    }
+                  }}
+                  placeholder={`Écrire à ${otherName}…`}
+                  className="max-h-32 min-h-10 flex-1 resize-none rounded-xl"
+                  aria-label="Message"
+                />
+                <Button
+                  onClick={sendMessage}
+                  disabled={sending || !draft.trim()}
+                  className="h-10 shrink-0"
+                  aria-label="Envoyer"
+                >
+                  {sending ? (
+                    <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+                  ) : (
+                    <Send className="size-4" aria-hidden="true" />
+                  )}
+                </Button>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -568,6 +1091,44 @@ export function MessageThread({
                 <Sparkles className="size-4" aria-hidden="true" />
               )}
               Envoyer le devis
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={Boolean(deleteTargetId)}
+        onOpenChange={(open) => {
+          if (!open) setDeleteTargetId(null);
+        }}
+      >
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Supprimer le message</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            Le message sera remplacé par « Message supprimé » pour les deux
+            participants. Cette action est définitive.
+          </p>
+          <DialogFooter className="gap-2">
+            <Button
+              variant="outline"
+              disabled={deleting}
+              onClick={() => setDeleteTargetId(null)}
+            >
+              Annuler
+            </Button>
+            <Button
+              variant="destructive"
+              disabled={deleting}
+              onClick={() => void confirmDelete()}
+            >
+              {deleting ? (
+                <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
+              ) : (
+                <Trash className="size-3.5" aria-hidden="true" />
+              )}
+              Supprimer
             </Button>
           </DialogFooter>
         </DialogContent>

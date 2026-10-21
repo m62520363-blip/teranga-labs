@@ -36,12 +36,15 @@ import {
   LINK_KINDS,
   PROJECT_TYPES,
 } from "@/lib/tokens";
-import { ALL_REGION_ITEMS } from "@/lib/countries";
+import {
+  findWorldCountryByName,
+  getWorldRegions,
+  WORLD_COUNTRIES,
+} from "@/lib/world-countries";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PhoneInput } from "@/components/ui/phone-input";
-import { RegionSelectContent } from "@/components/ui/region-select";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
@@ -120,7 +123,13 @@ const SPECIALTY_SUGGESTIONS = [
   "Rédacteur web & SEO",
 ];
 
-const CITY_ITEMS: Record<string, string> = ALL_REGION_ITEMS;
+/* Pays : value = nom français (c'est ce que stocke `developers.country`
+   et ce que groupe le classement pays). Région : liste curée du pays choisi
+   (périmètre ou référentiel monde), sinon champ libre — inscription ouverte
+   au monde entier, sans exception. */
+const COUNTRY_NAME_ITEMS: Record<string, string> = Object.fromEntries(
+  WORLD_COUNTRIES.map((c) => [c.nameFr, c.nameFr])
+);
 
 export function OnboardingForm({
   initial,
@@ -275,6 +284,19 @@ function IdentityStep({
     getValues,
     formState: { errors, isSubmitting },
   } = form;
+
+  /* Pays choisi → ISO2 → régions (périmètre lu dans lib/countries). */
+  const countryName = (watch("country") as string) ?? "";
+  const worldIso2 = findWorldCountryByName(countryName)?.iso2 ?? null;
+  const worldRegions = getWorldRegions(worldIso2);
+  const cityValue = (watch("city") as string) ?? "";
+  /* Ville legacy hors liste (profil déjà rempli hors curé) → champ libre,
+     pour ne jamais afficher un Select vide qui masquerait la valeur. */
+  const showCitySelect =
+    worldRegions.length > 0 && (cityValue === "" || worldRegions.includes(cityValue));
+  const cityItems: Record<string, string> = Object.fromEntries(
+    worldRegions.map((n) => [n, n])
+  );
 
   const onSubmit = async (values: DeveloperIdentityFormValues) => {
     if (!isSupabaseConfigured()) {
@@ -462,29 +484,86 @@ function IdentityStep({
           />
         </Field>
 
-        <Field label="Région" error={errors.city?.message} htmlFor="oi-city">
+        <Field label="Pays" error={errors.country?.message} htmlFor="oi-country">
           <div className="relative">
             <MapPin
               className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
               aria-hidden="true"
             />
             <Select
-              value={(watch("city") as string) ?? ""}
-              onValueChange={(v) =>
-                v && setValue("city", v as DeveloperIdentityFormValues["city"], { shouldValidate: true })
-              }
-              items={CITY_ITEMS}
+              value={(watch("country") as string) ?? ""}
+              onValueChange={(v) => {
+                if (!v || v === (watch("country") as string)) return;
+                setValue("country", v, { shouldValidate: true, shouldDirty: true });
+                setValue("city", "", { shouldValidate: true });
+              }}
+              items={COUNTRY_NAME_ITEMS}
             >
               <SelectTrigger
-                id="oi-city"
+                id="oi-country"
                 className="h-11 w-full rounded-xl border-hairline bg-background/70 pl-10 data-[size=default]:h-11"
               >
-                <SelectValue />
+                <SelectValue placeholder="Choisir un pays" />
               </SelectTrigger>
-              <RegionSelectContent />
+              <SelectContent align="start" className="max-h-80">
+                {WORLD_COUNTRIES.map((c) => (
+                  <SelectItem key={c.iso2} value={c.nameFr}>
+                    {c.nameFr}
+                  </SelectItem>
+                ))}
+              </SelectContent>
             </Select>
           </div>
         </Field>
+
+        {showCitySelect ? (
+          <Field label="Région" error={errors.city?.message} htmlFor="oi-city">
+            <div className="relative">
+              <MapPin
+                className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+                aria-hidden="true"
+              />
+              <Select
+                value={cityValue}
+                onValueChange={(v) =>
+                  v && setValue("city", v as DeveloperIdentityFormValues["city"], { shouldValidate: true })
+                }
+                items={cityItems}
+              >
+                <SelectTrigger
+                  id="oi-city"
+                  className="h-11 w-full rounded-xl border-hairline bg-background/70 pl-10 data-[size=default]:h-11"
+                >
+                  <SelectValue placeholder="Choisir une région" />
+                </SelectTrigger>
+                <SelectContent align="start" className="max-h-72">
+                  {worldRegions.map((name) => (
+                    <SelectItem key={name} value={name}>
+                      {name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </Field>
+        ) : (
+          <Field label="Ville / région" error={errors.city?.message} htmlFor="oi-city">
+            <div className="relative">
+              <MapPin
+                className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+                aria-hidden="true"
+              />
+              <Input
+                id="oi-city"
+                autoComplete="address-level2"
+                placeholder="Ex. Austin, Montréal, Nairobi…"
+                {...register("city")}
+                className="h-11 rounded-xl border-hairline bg-background/70 pl-10"
+                aria-invalid={Boolean(errors.city)}
+              />
+            </div>
+          </Field>
+        )}
 
         <Field label="Adresse" error={errors.address?.message} htmlFor="oi-address">
           <div className="relative">
@@ -499,23 +578,6 @@ function IdentityStep({
               className="h-11 rounded-xl border-hairline bg-background/70 pl-10"
               placeholder="Scat Urbam, Parcelles Assainies…(optionnel)"
               aria-invalid={Boolean(errors.address)}
-            />
-          </div>
-        </Field>
-
-        <Field label="Pays" error={errors.country?.message} htmlFor="oi-country">
-          <div className="relative">
-            <MapPin
-              className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
-              aria-hidden="true"
-            />
-            <Input
-              id="oi-country"
-              autoComplete="country-name"
-              {...register("country")}
-              className="h-11 rounded-xl border-hairline bg-background/70 pl-10"
-              placeholder="Ex. Sénégal, Côte d'Ivoire…"
-              aria-invalid={Boolean(errors.country)}
             />
           </div>
         </Field>
@@ -924,7 +986,7 @@ function ProfessionalStep({
           </div>
 
           <div className="sm:col-span-2">
-            <Field label="Photo de profil (URL)" error={errors.avatar_url?.message} htmlFor="oi-avatar">
+            <Field label="Photo de profil (optionnelle, recommandée)" error={errors.avatar_url?.message} htmlFor="oi-avatar">
               <Input
                 id="oi-avatar"
                 type="url"
@@ -1063,9 +1125,11 @@ function ProfessionalStep({
       <section className="rounded-2xl border border-hairline bg-card p-6 shadow-sm sm:p-8">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <h2 className="text-lg font-semibold tracking-tight">Portfolio</h2>
+            <h2 className="text-lg font-semibold tracking-tight">
+              Portfolio (optionnel, recommandé)
+            </h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Vos réalisations récentes (optionnel mais recommandé).
+              Vos réalisations récentes pour inspirer la confiance.
             </p>
           </div>
           {errors.projects ? (

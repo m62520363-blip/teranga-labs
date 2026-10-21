@@ -26,9 +26,16 @@ export async function GET(request: Request) {
     );
   }
 
+  // Le cron tourne le 1er du mois à 00h01 : on solde le mois ÉCoulÉ,
+  // pas le mois en cours (qui vient de démarrer, sans mission).
   const now = new Date();
-  const year = now.getUTCFullYear();
-  const month = now.getUTCMonth() + 1;
+  let year = now.getUTCFullYear();
+  let month = now.getUTCMonth() + 1; // 1..12
+  month -= 1;
+  if (month === 0) {
+    month = 12;
+    year -= 1;
+  }
 
   const { data, error } = await supabase.rpc("leaderboard_settle_month", {
     p_year: year,

@@ -22,7 +22,7 @@ function applySecurityHeaders(response: NextResponse): NextResponse {
   // aucune de ces API n'est utilisee par l'app
   response.headers.set(
     "Permissions-Policy",
-    "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+    "camera=(), microphone=(self), geolocation=(), interest-cohort=()"
   );
   // HTTPS obligatoire pendant 2 ans, sous-domaine inclus
   response.headers.set(

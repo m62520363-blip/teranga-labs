@@ -123,7 +123,7 @@ export function MissionsDashboard({ missions, userId, role, focusId = null }: Pr
 
   const act = (mission: MissionPayload, to: MissionStatus) => {
     const transitions = MISSION_TRANSITIONS[mission.status].filter((t) => t.to === to);
-    const transition = transitions.find((t) => t.by === roleKey) ?? transitions[0];
+    const transition = transitions.find((t) => t.by === roleKey || t.by === "either") ?? transitions[0];
     if (!transition) return;
     if (transition.confirm || transition.comment) {
       setComment("");
@@ -195,7 +195,7 @@ export function MissionsDashboard({ missions, userId, role, focusId = null }: Pr
             {visible.map((m) => {
               const isFocused = focusId !== null && m.id === focusId;
               const transitions = canAct
-                ? MISSION_TRANSITIONS[m.status].filter((t) => t.by === roleKey)
+                ? MISSION_TRANSITIONS[m.status].filter((t) => t.by === roleKey || t.by === "either")
                 : [];
               const showHistory = Boolean(openHistory[m.id]);
               return (
@@ -395,7 +395,7 @@ export function MissionsDashboard({ missions, userId, role, focusId = null }: Pr
                     ({formatFCFA(confirm.mission.agreed_price_fcfa)}).
                   </>
                 ) : confirm.transition.to === "cancelled" ? (
-                  "Cette action annule la mission et ne peut être rejouée par le client. Continuer ?"
+                  "Cette action annule la mission. Si le paiement est déjà confirmé, le client est automatiquement remboursé. Continuer ?"
                 ) : (
                   "Un litige engage la vérification des deux parties. Continuer ?"
                 )}

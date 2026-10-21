@@ -2,6 +2,7 @@ import { test, expect, type Page } from "@playwright/test";
 import { COUNTRIES, getFlagUrl } from "@/lib/countries";
 import { allCountrySlugs } from "@/lib/geography";
 import { allRegionSlugs, slugifyRegion } from "@/lib/region-slugs";
+import { WORLD_PHONE_COUNTRIES } from "@/lib/world-countries";
 
 /**
  * Couverture des surfaces MULTI-PAYS livrées en P5-ter/quater.
@@ -14,7 +15,7 @@ import { allRegionSlugs, slugifyRegion } from "@/lib/region-slugs";
  *  - l'index /pays et ses 9 cartes,
  *  - les 9 pages /pays/[slug],
  *  - le sitemap (92 + 9 entrées géographiques),
- *  - le sélecteur d'indicatif (9 pays) sur l'inscription,
+ *  - le sélecteur d'indicatif (monde entier, dont les 9 pays du périmètre),
  *  - et surtout : AUCUNE image drapeau en erreur réseau.
  */
 
@@ -190,7 +191,7 @@ test.describe("sitemap géographique", () => {
 });
 
 test.describe("sélecteur d'indicatif (inscription)", () => {
-  test("propose les 9 pays du périmètre", async ({ page }) => {
+  test("propose tous les indicatifs du monde, dont les 9 du périmètre", async ({ page }) => {
     await page.goto("/login?mode=signup", { waitUntil: "domcontentloaded" });
     // Attendre l'hydratation React : une interaction avant hydratation échoue
     // silencieusement (constaté en probe — le popup ne s'ouvrait pas).
@@ -203,7 +204,8 @@ test.describe("sélecteur d'indicatif (inscription)", () => {
 
     await trigger.click();
     const options = page.getByRole("option");
-    await expect(options).toHaveCount(COUNTRIES.length);
+    // Liste DÉDUPLIQUÉE par indicatif (US/CA → « +1 », RU/KZ → « +7 »).
+    await expect(options).toHaveCount(WORLD_PHONE_COUNTRIES.length);
 
     // On s'ancre sur l'indicatif (unique) puis on vérifie le nom du pays :
     // un filtre sur le nom seul matcherait « Guinée » dans « Guinée-Bissau ».

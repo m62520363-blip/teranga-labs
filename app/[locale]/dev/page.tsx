@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { getLocale } from "next-intl/server";
+import { redirect } from "@/i18n/navigation";
 import { createClient, getCurrentRole, getCurrentUser } from "@/lib/supabase/server";
 import { DirectoryPage } from "@/components/dev/directory-page";
 import type { ApprovedDeveloper, DirectoryFilters } from "@/types/database";
@@ -41,6 +43,9 @@ export default async function DirectoryPageRoute({
 
   const user = await getCurrentUser();
   const role = await getCurrentRole();
+
+  // « Trouver un développeur » : réservé aux clients (et aux visiteurs).
+  if (role === "developer") redirect({ href: "/dashboard", locale: await getLocale() });
 
   const [listRes, costRes, filtersRes] = await Promise.all([
     supabase.rpc("list_approved_developers", {

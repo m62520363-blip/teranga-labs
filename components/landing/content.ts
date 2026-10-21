@@ -61,7 +61,7 @@ export const HOW_IT_WORKS = {
     {
       num: "05",
       title: "Choisis et paie sans commission",
-      text: "Vous traitez ensemble, en Wave, Orange Money ou Max It. TERANGA ne prélève rien sur ton projet.",
+      text: "Vous réglez ensemble, directement. TERANGA ne prélève rien sur ton projet.",
       icon: "circle-check",
     },
   ],
@@ -94,7 +94,7 @@ export const FAQS_LANDING = [
   },
   {
     q: "Combien coûte un Token ?",
-    a: `${TOKEN_LABEL_PRICED}. L'inscription est gratuite : tu commandes tes Tokens en ligne (carte bancaire ou mobile money), puis tu publies ton brief ou tu débloques un contact.`,
+    a: `${TOKEN_LABEL_PRICED}. L'inscription est gratuite : tu commandes tes Tokens en ligne depuis ton wallet, puis tu publies ton brief ou tu débloques un contact.`,
   },
   {
     q: "Y a-t-il une commission sur les projets ?",
@@ -106,7 +106,7 @@ export const FAQS_LANDING = [
   },
   {
     q: "Dans quels pays le service est-il disponible ?",
-    a: "Dans les 9 pays d'Afrique de l'Ouest francophone : Sénégal, Côte d'Ivoire, Mali, Burkina Faso, Niger, Guinée, Guinée-Bissau, Bénin et Togo. Les prix sont affichés en FCFA.",
+    a: "Partout dans le monde : chaque pays et chaque région sont disponibles à l'inscription, et les prix s'affichent dans la devise locale (FCFA, USD, EUR, …).",
   },
 ];
 
@@ -119,7 +119,7 @@ export const ROLE_CARDS = {
       "Brief publié pour 1 Token, sans abonnement",
       "Dev sérieux : ils paient 1 Token pour t'écrire",
       "Aucune commission sur ton projet",
-      "Wave, Orange Money ou Max It",
+      "Paiement 100 % depuis ton wallet",
     ],
     cta: { label: "Publier mon brief", href: "/poster" },
   },
@@ -131,7 +131,7 @@ export const ROLE_CARDS = {
       "Profil public avec portfolio de projets",
       "Reçois des briefs par pays et par niche",
       "1 Token = 1 contact client, 0 commission",
-      "Paiement direct Wave / Orange Money",
+      "Paiement direct, sans commission",
     ],
     cta: { label: "Voir les briefs", href: "/briefs" },
   },
@@ -141,10 +141,10 @@ export const FAQS = [
   { q: "Qu'est-ce que TERANGA LABS ?", a: "TERANGA LABS est le marketplace des projets web de l'Afrique de l'Ouest francophone : les clients publient le brief de leur site web pour 1 Token, et les développeurs sérieux viennent vers eux." },
   { q: "Comment fonctionne le modèle ?", a: "Le client poste son brief en 2 minutes : type de site, budget et région. Le brief apparaît dans /briefs. Le développeur qui s'intéresse paie 1 Token pour ouvrir une discussion privée avec le client, puis l'échange se fait en direct sur la plateforme." },
   { q: "Combien coûte un Token ?", a: `${TOKEN_LABEL_PRICED}. L'inscription est gratuite : vous commandez vos Tokens, puis vous publiez votre brief ou débloquez un contact.` },
-  { q: "Comment je paie mes Tokens ?", a: "Le paiement se fait en ligne depuis la page Tokens : carte bancaire ou mobile money, selon votre pays. Dès la confirmation du paiement, vos Tokens sont crédités automatiquement sur votre compte." },
+  { q: "Comment je paie mes Tokens ?", a: "Le paiement se fait en ligne depuis votre wallet : rechargez-le, puis dépensez vos Tokens partout sur le site. Dès la confirmation du paiement, vos Tokens sont crédités automatiquement sur votre compte." },
   { q: "Mon numéro WhatsApp reste-t-il privé ?", a: "Oui. Votre numéro n'apparaît jamais sur les briefs ni dans les résultats de recherche : les échanges passent par la messagerie interne, et vous décidez seul de quand donner votre contact." },
-      { q: "Dans quels pays le service est-il disponible ?", a: "Dans les 9 pays d'Afrique de l'Ouest francophone : Sénégal, Côte d'Ivoire, Mali, Burkina Faso, Niger, Guinée, Guinée-Bissau, Bénin et Togo. Les prix sont affichés en FCFA." },
-  { q: "Existe-t-il un classement des développeurs ?", a: "Oui : un classement mensuel, régional et par pays. Seuls les 2 premiers sont récompensés en Tokens, et il faut au moins 2 projets terminés et confirmés dans le mois pour y figurer." },
+      { q: "Dans quels pays le service est-il disponible ?", a: "Partout dans le monde : chaque pays et chaque région sont disponibles à l'inscription, et les prix s'affichent dans la devise locale (FCFA, USD, EUR, …)." },
+  { q: "Existe-t-il un classement des développeurs ?", a: "Oui : un classement mondial, récompensé chaque mois. Les 3 premiers reçoivent 10, 7 et 4 Tokens, il faut au moins 2 projets terminés et confirmés dans le mois pour y figurer, et chaque projet terminé vaut 50 points." },
   { q: "Y a-t-il une commission sur les projets ?", a: "Non. TERANGA LABS ne prélève aucune commission sur les projets : le développeur et le client traitent ensemble, sans intermédiaire." },
 ];
 

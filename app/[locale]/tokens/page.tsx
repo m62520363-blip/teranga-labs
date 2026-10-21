@@ -1,97 +1,21 @@
 import type { Metadata } from "next";
-import { CheckCircle2 } from "lucide-react";
-import { TokenCard } from "@/components/token-card";
-import { createClient } from "@/lib/supabase/server";
-import { EmptyState } from "@/components/empty-state";
+import { getLocale } from "next-intl/server";
+import { redirect } from "@/i18n/navigation";
 
 export const metadata: Metadata = {
   title: "Tokens",
   description:
-    "Commandez vos Tokens en ligne (carte bancaire ou mobile money) et débloquez les coordonnées des clients qui cherchent un développeur.",
+    "Rechargez vos Tokens depuis votre wallet pour publier un brief ou débloquer un contact.",
   robots: { index: false, follow: false },
 };
 
 export const dynamic = "force-dynamic";
 
+/**
+ * L'achat de Tokens est forcé par le wallet (point de recharge unique) :
+ * /tokens ne fait que rediriger vers la section packs de /wallet.
+ */
 export default async function TokensPage() {
-  const supabase = await createClient();
-
-  const { data: packages } = supabase
-    ? await supabase
-        .from("token_packages")
-        .select("id, name, tokens, price_fcfa, popular")
-        .order("price_fcfa", { ascending: true })
-    : { data: null };
-
-  return (
-    <div className="bg-surface py-16 md:py-24">
-      <div className="container-tl">
-        <div className="mx-auto max-w-2xl text-center">
-          <h1 className="text-3xl font-semibold leading-tight tracking-tight">
-            Commandez vos Tokens
-          </h1>
-          <p className="mt-3 text-base leading-relaxed text-muted-foreground">
-            Débloquez les coordonnées des clients qui cherchent un développeur.
-          </p>
-        </div>
-
-        {packages && packages.length > 0 ? (
-          <div className="mx-auto mt-14 grid max-w-4xl gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {packages.map((pkg) => (
-              <TokenCard key={pkg.id} pkg={pkg} />
-            ))}
-          </div>
-        ) : (
-          <div className="mx-auto mt-14 max-w-2xl">
-            <EmptyState
-              title="Packs indisponibles"
-              description="Connectez Supabase et appliquez les migrations pour charger les packs de Tokens."
-            />
-          </div>
-        )}
-
-        <div className="mx-auto mt-8 max-w-2xl">
-          <div className="rounded-2xl border border-hairline bg-card p-5 shadow-sm">
-            <h2 className="text-[15px] font-semibold tracking-tight">
-              Paiement sécurisé
-            </h2>
-            <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-              Le règlement passe par Chariow, prestataire de paiement : les moyens
-              proposés (carte, mobile money) dépendent de votre pays. Vos Tokens
-              sont crédités dès que le paiement est confirmé, sans attendre.
-            </p>
-            <p className="mt-4 rounded-xl border border-hairline bg-muted/60 px-4 py-3 text-xs leading-relaxed text-muted-foreground">
-              <span className="font-medium text-foreground">
-                Remboursement.
-              </span>{" "}
-              Un Token consommé sur un contact n’est pas remboursable. En cas de
-              contact frauduleux ou de brief fictif, signalez-le dans les{" "}
-              <strong>48 heures</strong> suivant le déblocage : l’équipe vérifie
-              la messagerie et rembourse en Tokens si le litige est confirmé.
-            </p>
-          </div>
-        </div>
-
-        <div className="mx-auto mt-8 max-w-2xl">
-          <div className="rounded-2xl border border-hairline bg-card p-6 shadow-sm">
-            <div className="flex items-start gap-3">
-              <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary-soft">
-                <CheckCircle2 className="size-4 text-primary" aria-hidden="true" />
-              </span>
-              <div>
-                <h2 className="text-[15px] font-semibold tracking-tight">
-                  Des Tokens crédités après confirmation de paiement
-                </h2>
-                <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-                  Un paiement n’est jamais simulé : les Tokens sont crédités
-                  qu’après réception effective de l’argent, automatiquement dès
-                  confirmation du règlement.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  const locale = await getLocale();
+  redirect({ href: "/wallet#acheter-tokens", locale });
 }

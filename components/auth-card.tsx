@@ -25,11 +25,13 @@ import {
   type LoginFormValues,
   type SignupFormValues,
 } from "@/lib/validations";
+import { getFlagUrl } from "@/lib/countries";
 import {
-  COUNTRIES,
-  getFlagUrl,
-  getRegionsByCountry,
-} from "@/lib/countries";
+  getWorldCountry,
+  getWorldRegions,
+  WORLD_COUNTRIES,
+  WORLD_COUNTRY_ITEMS,
+} from "@/lib/world-countries";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { PhoneOtpForm } from "@/components/phone-otp-form";
 import { Input } from "@/components/ui/input";
@@ -75,14 +77,14 @@ const secondaryClass =
 const selectTriggerClass =
   "h-11 min-h-11 data-[size=default]:h-11 w-full rounded-xl border border-border bg-surface px-4 text-sm text-foreground outline-none transition-colors focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/30";
 
-/* Inscription client : on choisit d'abord le PAYS, ensuite la RÉGION — la
-   liste de régions se réduit aux frontières du pays choisi. Le champ stocké
-   reste `city` = nom de région (le pays est dérivé par lib/geography.ts). */
+/* Inscription client : on choisit d'abord le PAYS (référentiel monde, ~206
+   entrées, sans exception), ensuite la RÉGION — la liste suit le pays choisi ;
+   pays sans liste curée → champ « Ville / région » en saisie libre. Le champ
+   stocké reste `city` (le pays dérivé par lib/geography.ts pour le périmètre,
+   et le pays choisi est envoyé en metadata `country`). */
 const DEFAULT_COUNTRY = "SN";
 
-const COUNTRY_ITEMS: Record<string, string> = Object.fromEntries(
-  COUNTRIES.map((c) => [c.code, c.nameFr])
-);
+const COUNTRY_ITEMS: Record<string, string> = WORLD_COUNTRY_ITEMS;
 
 function FlagImg({ code }: { code: string }) {
   return (
@@ -398,11 +400,12 @@ function SignupForm({ initialRole }: { initialRole: AuthRole }) {
 
   /* Pays d'abord, région ensuite (UI seule : `city` garde le nom de région). */
   const [countryCode, setCountryCode] = React.useState<string>(DEFAULT_COUNTRY);
+  const worldRegions = React.useMemo(() => getWorldRegions(countryCode), [countryCode]);
   const regionItems = React.useMemo(() => {
     const items: Record<string, string> = {};
-    for (const region of getRegionsByCountry(countryCode)) items[region.name] = region.name;
+    for (const name of worldRegions) items[name] = name;
     return items;
-  }, [countryCode]);
+  }, [worldRegions]);
 
   const onSubmit = async (values: AuthInput) => {
     if (!isSupabaseConfigured()) {
@@ -434,6 +437,7 @@ function SignupForm({ initialRole }: { initialRole: AuthRole }) {
           full_name: values.full_name,
           company_name: isClient ? (values.company_name ?? "") : undefined,
           city: isClient ? (values.city ?? "") : undefined,
+          country: isClient ? (getWorldCountry(countryCode)?.nameFr ?? "") : undefined,
           whatsapp: isClient ? (values.whatsapp ?? "") : values.whatsapp,
           skills: isClient ? undefined : parseSkills(values.skills ?? ""),
         },
@@ -549,9 +553,9 @@ function SignupForm({ initialRole }: { initialRole: AuthRole }) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent align="start" className="max-h-72">
-                {COUNTRIES.map((country) => (
-                  <SelectItem key={country.code} value={country.code}>
-                    <FlagImg code={country.code} />
+                {WORLD_COUNTRIES.map((country) => (
+                  <SelectItem key={country.iso2} value={country.iso2}>
+                    <FlagImg code={country.iso2} />
                     {country.nameFr}
                   </SelectItem>
                 ))}
@@ -560,32 +564,43 @@ function SignupForm({ initialRole }: { initialRole: AuthRole }) {
           </Field>
         )}
 
-        {role === "client" && (
-          <Field label="Région" htmlFor="signup-city" required error={errors.city?.message}>
-            <Select
-              value={(watch("city") as string) ?? ""}
-              onValueChange={(v) =>
-                v &&
-                setValue("city", v as ClientSignupFormValues["city"], {
-                  shouldValidate: true,
-                })
-              }
-              items={regionItems}
-            >
-              <SelectTrigger id="signup-city" className={selectTriggerClass}>
-                <SelectValue placeholder="Choisir une région" />
-              </SelectTrigger>
-              <SelectContent align="start" className="max-h-72">
-                {getRegionsByCountry(countryCode).map((region) => (
-                  <SelectItem key={region.code} value={region.name}>
-                    {region.name}
-                    {region.note ? " — (à confirmer)" : ""}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </Field>
-        )}
+        {role === "client" &&
+          (worldRegions.length > 0 ? (
+            <Field label="Région" htmlFor="signup-city" required error={errors.city?.message}>
+              <Select
+                value={(watch("city") as string) ?? ""}
+                onValueChange={(v) =>
+                  v &&
+                  setValue("city", v as ClientSignupFormValues["city"], {
+                    shouldValidate: true,
+                  })
+                }
+                items={regionItems}
+              >
+                <SelectTrigger id="signup-city" className={selectTriggerClass}>
+                  <SelectValue placeholder="Choisir une région" />
+                </SelectTrigger>
+                <SelectContent align="start" className="max-h-72">
+                  {worldRegions.map((name) => (
+                    <SelectItem key={name} value={name}>
+                      {name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
+          ) : (
+            <Field label="Ville / région" htmlFor="signup-city" required error={errors.city?.message}>
+              <Input
+                id="signup-city"
+                autoComplete="address-level2"
+                placeholder="Ex. Austin, Montréal, Nairobi…"
+                className={inputClass}
+                {...register("city")}
+                aria-invalid={Boolean(errors.city)}
+              />
+            </Field>
+          ))}
 
         <Field label="Email" htmlFor="signup-email" required error={errors.email?.message}>
           <Input

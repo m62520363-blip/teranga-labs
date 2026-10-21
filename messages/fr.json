@@ -116,7 +116,7 @@
         {
           "num": "05",
           "title": "Choisis et paie sans commission",
-          "text": "Vous traitez ensemble, en Wave, Orange Money ou Max It. TERANGA ne prélève rien sur ton projet.",
+          "text": "Vous réglez ensemble, directement. TERANGA ne prélève rien sur ton projet.",
           "icon": "circle-check"
         }
       ]
@@ -151,7 +151,7 @@
       },
       {
         "q": "Combien coûte un Token ?",
-        "a": "{token}. L'inscription est gratuite : tu commandes tes Tokens en ligne (carte bancaire ou mobile money), puis tu publies ton brief ou tu débloques un contact."
+        "a": "{token}. L'inscription est gratuite : tu commandes tes Tokens en ligne depuis ton wallet, puis tu publies ton brief ou tu débloques un contact."
       },
       {
         "q": "Y a-t-il une commission sur les projets ?",
@@ -163,7 +163,7 @@
       },
       {
         "q": "Dans quels pays le service est-il disponible ?",
-        "a": "Dans les 9 pays d'Afrique de l'Ouest francophone : Sénégal, Côte d'Ivoire, Mali, Burkina Faso, Niger, Guinée, Guinée-Bissau, Bénin et Togo. Les prix sont affichés en FCFA."
+        "a": "Partout dans le monde : chaque pays et chaque région sont disponibles à l'inscription, et les prix s'affichent dans la devise locale (FCFA, USD, EUR, …)."
       }
     ],
     "roleCards": {
@@ -175,7 +175,7 @@
           "Brief publié pour 1 Token, sans abonnement",
           "Dev sérieux : ils paient 1 Token pour t'écrire",
           "Aucune commission sur ton projet",
-          "Wave, Orange Money ou Max It"
+          "Paiement 100 % depuis ton wallet"
         ],
         "cta": "Publier mon brief"
       },
@@ -187,7 +187,7 @@
           "Profil public avec portfolio de projets",
           "Reçois des briefs par pays et par niche",
           "1 Token = 1 contact client, 0 commission",
-          "Paiement direct Wave / Orange Money"
+          "Paiement direct, sans commission"
         ],
         "cta": "Voir les briefs"
       }
@@ -270,7 +270,7 @@
         },
         {
           "q": "Comment je paie mes Tokens ?",
-          "a": "Le paiement se fait en ligne depuis la page Tokens : carte bancaire ou mobile money, selon votre pays. Dès la confirmation du paiement, vos Tokens sont crédités automatiquement sur votre compte."
+          "a": "Le paiement se fait en ligne depuis votre wallet : rechargez-le, puis dépensez vos Tokens partout sur le site. Dès la confirmation du paiement, vos Tokens sont crédités automatiquement sur votre compte."
         },
         {
           "q": "Mon numéro WhatsApp reste-t-il privé ?",
@@ -278,11 +278,11 @@
         },
         {
           "q": "Dans quels pays le service est-il disponible ?",
-          "a": "Dans les 9 pays d'Afrique de l'Ouest francophone : Sénégal, Côte d'Ivoire, Mali, Burkina Faso, Niger, Guinée, Guinée-Bissau, Bénin et Togo. Les prix sont affichés en FCFA."
+          "a": "Partout dans le monde : chaque pays et chaque région sont disponibles à l'inscription, et les prix s'affichent dans la devise locale (FCFA, USD, EUR, …)."
         },
         {
           "q": "Existe-t-il un classement des développeurs ?",
-          "a": "Oui : un classement mensuel, régional et par pays. Les 3 premiers sont récompensés en Tokens (10, 7 et 4), et il faut au moins 2 projets terminés et confirmés dans le mois pour y figurer."
+          "a": "Oui : un classement mondial, récompensé chaque mois. Les 3 premiers reçoivent 10, 7 et 4 Tokens, il faut au moins 2 projets terminés et confirmés dans le mois pour y figurer, et chaque projet terminé vaut 50 points."
         },
         {
           "q": "Y a-t-il une commission sur les projets ?",

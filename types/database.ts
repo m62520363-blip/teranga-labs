@@ -1713,6 +1713,14 @@ export interface Database {
         };
         Returns: Json;
       };
+      mission_finalize_auto_refund: {
+        Args: {
+          p_mission_id: string;
+          p_actor?: string;
+          p_context?: string;
+        };
+        Returns: Json;
+      };
       leaderboard_settle_month: {
         Args: {
           p_year: number;

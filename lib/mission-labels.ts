@@ -44,7 +44,13 @@ export function missionErrorMessage(code: string | null, fallback: string): stri
 
 export const MISSION_TRANSITIONS: Record<
   MissionStatus,
-  { to: MissionStatus; label: string; by: "developer" | "client"; confirm?: boolean; comment?: boolean }[]
+  {
+    to: MissionStatus;
+    label: string;
+    by: "developer" | "client" | "either";
+    confirm?: boolean;
+    comment?: boolean;
+  }[]
 > = {
   draft: [
     { to: "negotiating", label: "Commencer la négociation", by: "developer" },
@@ -62,16 +68,16 @@ export const MISSION_TRANSITIONS: Record<
     // Le passage à payment_confirmed est interdit côté client : seul le
     // Pulse Chariow (confirm_mission_payment) confirme. Le bouton « Payer »
     // de missions-dashboard ouvre la session de paiement.
-    { to: "cancellation_requested", label: "Demander l'annulation", by: "client", confirm: true, comment: true },
+    { to: "cancellation_requested", label: "Demander l'annulation", by: "either", confirm: true, comment: true },
   ],
   payment_confirmed: [
     { to: "in_progress", label: "Démarrer la mission", by: "developer" },
-    { to: "cancellation_requested", label: "Demander l'annulation", by: "client", confirm: true, comment: true },
+    { to: "cancellation_requested", label: "Demander l'annulation", by: "either", confirm: true, comment: true },
     { to: "dispute_open", label: "Ouvrir un litige", by: "client", confirm: true, comment: true },
   ],
   in_progress: [
     { to: "delivery_submitted", label: "Soumettre la livraison", by: "developer" },
-    { to: "cancellation_requested", label: "Demander l'annulation", by: "client", confirm: true, comment: true },
+    { to: "cancellation_requested", label: "Demander l'annulation", by: "either", confirm: true, comment: true },
     { to: "dispute_open", label: "Ouvrir un litige", by: "client", confirm: true, comment: true },
   ],
   delivery_submitted: [
@@ -87,17 +93,18 @@ export const MISSION_TRANSITIONS: Record<
   ],
   corrections_requested: [
     { to: "in_progress", label: "Reprendre le travail", by: "developer" },
-    { to: "cancellation_requested", label: "Demander l'annulation", by: "client", confirm: true, comment: true },
+    { to: "cancellation_requested", label: "Demander l'annulation", by: "either", confirm: true, comment: true },
     { to: "dispute_open", label: "Ouvrir un litige", by: "client", confirm: true, comment: true },
   ],
   dispute_open: [],
   completed: [],
   cancellation_requested: [
-    { to: "cancelled", label: "Confirmer l'annulation", by: "client", confirm: true },
+    // Remboursement automatique côté serveur dès que les fonds sont bloqués.
+    { to: "cancelled", label: "Confirmer l'annulation", by: "either", confirm: true },
   ],
   cancelled: [],
   refund_in_progress: [
-    { to: "refunded", label: "Confirmer le remboursement", by: "client", confirm: true },
+    // Remboursement exécuté automatiquement (0065) ou par un admin.
   ],
   refunded: [],
   new: [

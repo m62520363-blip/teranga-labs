@@ -21,6 +21,8 @@ export type ConversationListItem = {
     sender_id: string | null;
     read_at: string | null;
     created_at: string;
+    message_type?: string | null;
+    deleted_at?: string | null;
   } | null;
   unreadCount: number;
   pendingOffers: number;
@@ -59,6 +61,8 @@ type MessageRow = {
   content: string;
   read_at: string | null;
   created_at: string;
+  message_type?: string | null;
+  deleted_at?: string | null;
 };
 
 const PUBLIC_REQUEST_COLS = [
@@ -94,7 +98,7 @@ export async function getConversations(
 
   const { data: msgs } = await supabase
     .from("messages")
-    .select("id, conversation_id, sender_id, content, read_at, created_at")
+    .select("id, conversation_id, sender_id, content, read_at, created_at, message_type, deleted_at")
     .in("conversation_id", rows.map((r) => r.id))
     .order("created_at", { ascending: false });
 
@@ -331,7 +335,9 @@ export async function getConversationThread(
 
   const { data: messages } = await supabase
     .from("messages")
-    .select("id, sender_id, content, message_type, metadata, read_at, created_at")
+    .select(
+      "id, sender_id, content, message_type, metadata, read_at, created_at, edited_at, deleted_at, audio_path, audio_duration_seconds"
+    )
     .eq("conversation_id", conversationId)
     .order("created_at", { ascending: true });
 

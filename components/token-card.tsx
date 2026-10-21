@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import type { TokenPackage } from "@/types/database";
 import { formatFCFA } from "@/lib/formatting";
+import { formatLocalPrice } from "@/lib/currency";
 import {
   Dialog,
   DialogClose,
@@ -92,10 +93,20 @@ function useBuyFlow(pkg: TokenPackage) {
   return { step, errorMessage, payOnline, resetStep };
 }
 
-export function TokenCard({ pkg }: { pkg: TokenPackage }) {
+export function TokenCard({
+  pkg,
+  currency,
+}: {
+  pkg: TokenPackage;
+  /** ISO 4217 de l'utilisateur (pays d'inscription) : prix affiché en
+   *  devise locale en plus des FCFA (taux indicatif statique). */
+  currency?: string | null;
+}) {
   const [open, setOpen] = React.useState(false);
   const { step, errorMessage, payOnline, resetStep } = useBuyFlow(pkg);
   const pricePerToken = pkg.tokens > 0 ? Math.round(pkg.price_fcfa / pkg.tokens) : 0;
+  const localPrice =
+    currency && currency !== "XOF" ? formatLocalPrice(pkg.price_fcfa, currency) : null;
 
   return (
     <div
@@ -127,6 +138,11 @@ export function TokenCard({ pkg }: { pkg: TokenPackage }) {
       <p className="mt-3 text-lg font-semibold tracking-tight">
         {formatFCFA(pkg.price_fcfa)}
       </p>
+      {localPrice ? (
+        <p className="mt-0.5 text-xs text-muted-foreground">
+          ≈ {localPrice} <span className="opacity-70">· taux indicatif</span>
+        </p>
+      ) : null}
       <p className="mt-0.5 text-xs text-muted-foreground">
         {pricePerToken >= 1 ? `${formatFCFA(pricePerToken)} / token` : "—"}
       </p>
@@ -172,7 +188,7 @@ export function TokenCard({ pkg }: { pkg: TokenPackage }) {
                   Paiement sécurisé, Tokens crédités automatiquement
                 </div>
                 <ol className="list-inside list-decimal space-y-1.5 text-sm leading-relaxed text-muted-foreground">
-                  <li>Vous réglez sur la page de paiement sécurisée (carte ou mobile money).</li>
+                  <li>Vous réglez sur la page de paiement sécurisée de Chariow.</li>
                   <li>Vos Tokens sont crédités dès que le paiement est confirmé.</li>
                 </ol>
                 <p className="border-t border-hairline pt-3 text-xs leading-relaxed text-muted-foreground">

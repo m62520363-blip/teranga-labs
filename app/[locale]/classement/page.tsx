@@ -13,7 +13,7 @@ import { cn } from "cn";
 export const metadata: Metadata = {
   title: "Classement des développeurs",
   description:
-    "Classement mensuel réel des développeurs d'Afrique de l'Ouest francophone : missions terminées par mois, régionalement et par pays. Seuls le 1er et le 2e reçoivent des Tokens.",
+    "Classement mensuel mondial des développeurs : missions terminées par mois, 50 points par projet. Les 3 premiers reçoivent 10, 7 et 4 Tokens, et chaque pays possède son propre tableau.",
 };
 
 export const dynamic = "force-dynamic";
@@ -27,18 +27,29 @@ type LeaderboardRow = {
   country?: string | null;
   avatar_url?: string | null;
   completed_projects: number;
+  points?: number;
   tokens_awarded: number;
 };
 
 type LeaderboardPayload = {
   period?: { year: number; month: number };
   status?: "live" | "settled";
-  config?: { enabled?: boolean; min_projects?: number; rewards?: Record<string, Record<string, number>> };
+  config?: {
+    enabled?: boolean;
+    min_projects?: number;
+    points_per_project?: number;
+    rewards?: Record<string, Record<string, number>>;
+  };
   regional: LeaderboardRow[];
   countries: { key: string; rows: LeaderboardRow[] }[];
 };
 
-const HEADERS = ["Rang", "Développeur", "Missions terminées", "Tokens attribués", "Badges"];
+const HEADERS = ["Rang", "Développeur", "Missions terminées", "Points", "Tokens attribués", "Badges"];
+const POINTS_PER_PROJECT = 50;
+
+function pointsOf(row: LeaderboardRow): number {
+  return row.points ?? row.completed_projects * POINTS_PER_PROJECT;
+}
 
 function initialsOf(name: string | null): string {
   if (!name) return "D";
@@ -62,8 +73,16 @@ function RewardsLegend({
   rewards: Record<string, number> | undefined;
   scope: string;
 }) {
-  const first = rewards?.["1"] ?? 0;
-  const second = rewards?.["2"] ?? 0;
+  if (!rewards) {
+    return (
+      <p className="mt-3 text-xs text-muted-foreground">
+        Classement affiché — les Tokens sont attribués au classement mondial.
+      </p>
+    );
+  }
+  const first = rewards["1"] ?? 0;
+  const second = rewards["2"] ?? 0;
+  const third = rewards["3"] ?? 0;
   return (
     <p className="mt-3 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
       <span className="badge badge-success">
@@ -71,6 +90,9 @@ function RewardsLegend({
       </span>
       <span className="badge badge-muted">
         2<sup>e</sup> {second} Token{second > 1 ? "s" : ""}
+      </span>
+      <span className="badge badge-muted">
+        3<sup>e</sup> {third} Token{third > 1 ? "s" : ""}
       </span>
       <span className="text-xs">Autres rangs : 0 Token — {scope}</span>
     </p>
@@ -129,6 +151,13 @@ function RankBadge({ rank }: { rank: number }) {
       </span>
     );
   }
+  if (rank === 3) {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full border border-hairline bg-muted px-2 py-0.5 text-[11px] font-semibold text-foreground">
+        <Award className="size-3" aria-hidden="true" /> Top 3
+      </span>
+    );
+  }
   return <span className="text-xs text-muted-foreground">—</span>;
 }
 
@@ -160,7 +189,7 @@ function LeaderboardTable({
           </thead>
           <tbody className="divide-y divide-hairline">
             <tr>
-              <td colSpan={5} className="px-4 py-10 text-center sm:px-6">
+              <td colSpan={6} className="px-4 py-10 text-center sm:px-6">
                 <span className="inline-flex items-center gap-2 text-sm text-muted-foreground">
                   <UserRound className="size-4 text-primary" aria-hidden="true" />
                   {emptyLabel}
@@ -192,7 +221,7 @@ function LeaderboardTable({
           </thead>
           <tbody className="divide-y divide-hairline">
             {rows.map((row) => (
-              <tr key={row.developer_id} className={cn(row.rank <= 2 && "bg-primary-soft/30")}>
+              <tr key={row.developer_id} className={cn(row.rank <= 3 && "bg-primary-soft/30")}>
                 <td className="px-4 py-3 sm:px-6">
                   <span className="inline-flex size-7 items-center justify-center rounded-full bg-surface text-xs font-bold">
                     {row.rank}
@@ -202,6 +231,7 @@ function LeaderboardTable({
                   <DeveloperCell row={row} />
                 </td>
                 <td className="px-4 py-3 font-semibold sm:px-6">{row.completed_projects}</td>
+                <td className="px-4 py-3 font-semibold text-primary sm:px-6">{pointsOf(row)}</td>
                 <td className="px-4 py-3 sm:px-6">
                   {live || row.tokens_awarded <= 0 ? (
                     <span className="text-muted-foreground">à la clôture</span>
@@ -283,7 +313,7 @@ export default async function ClassementPage() {
             align="left"
             eyebrow="Classement mensuel"
             title="Le classement des développeurs"
-            lead="Chaque mois, le classement régional (Afrique de l'Ouest francophone) et le classement de chaque pays récompensent les développeurs les plus actifs, calculés sur les missions réellement terminées."
+            lead="Chaque mois, le classement mondial et le classement de chaque pays récompensent les développeurs les plus actifs, calculés sur les missions réellement terminées — 50 points par projet, 10/7/4 Tokens pour le podium mondial."
           />
           <Scene3D variant="ranking" className="hidden lg:block" />
         </div>
@@ -310,7 +340,8 @@ export default async function ClassementPage() {
             </p>
             <p className="inline-flex items-center gap-2 text-xs text-muted-foreground">
               <Award className="size-3.5 text-primary" aria-hidden="true" />
-              Seuil d&apos;apparition : {config?.min_projects ?? 2} missions terminées sur le mois
+              Seuil d&apos;apparition : {config?.min_projects ?? 2} missions terminées —{" "}
+              {config?.points_per_project ?? POINTS_PER_PROJECT} points par projet
             </p>
           </div>
         </Reveal>
@@ -319,8 +350,8 @@ export default async function ClassementPage() {
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
-                Classement régional{" "}
-                <span className="text-muted-foreground">(Afrique de l&apos;Ouest francophone)</span>
+                Classement mondial{" "}
+                <span className="text-muted-foreground">(tous les pays)</span>
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
                 {live ? "Mois en cours — données de missions en direct." : `${periodLabel} — classement archivé.`}
@@ -328,7 +359,7 @@ export default async function ClassementPage() {
             </div>
             <span className="chip gap-2 bg-card/85 border-hairline backdrop-blur">
               <Crown className="size-3.5 text-primary" aria-hidden="true" />
-              Top 2 récompensé
+              Top 3 récompensé
             </span>
           </div>
 
@@ -344,7 +375,7 @@ export default async function ClassementPage() {
             />
           </div>
 
-          <RewardsLegend rewards={config?.rewards?.regional} scope="classement régional (Afrique de l'Ouest francophone)" />
+          <RewardsLegend rewards={config?.rewards?.regional} scope="classement mondial" />
         </section>
 
         <section className="mt-14">
@@ -448,8 +479,9 @@ export default async function ClassementPage() {
 
         <p className="mt-12 border-t border-hairline pt-6 text-xs leading-relaxed text-muted-foreground">
           Critère d&apos;apparition : au moins {config?.min_projects ?? 2} missions terminées et confirmées
-          par mois. Seuls les 2 premiers (régional + par pays) reçoivent des Tokens ; les badges et la mise
-          en avant restent conservés.
+          par mois. Chaque projet terminé vaut {config?.points_per_project ?? POINTS_PER_PROJECT} points. Au
+          classement mondial, les 3 premiers reçoivent 10, 7 et 4 Tokens ; les classements par pays servent de
+          référence et les badges restent conservés.
         </p>
       </Section>
     </div>

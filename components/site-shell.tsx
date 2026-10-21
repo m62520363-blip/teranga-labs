@@ -23,6 +23,10 @@ import { isClientAppRoute } from "@/components/client/app-routes";
  * menu coulissant sur mobile) sur les routes du menu — au lieu de la
  * navbar publique.
  *
+ * Footer : UNIQUEMENT sur l'accueil, et seulement pour un visiteur non
+ * connecté — jamais sur les pages intérieures ni dans les espaces
+ * connectés.
+ *
  * Thème : sombre unique partout (décision projet), sans bascule — il n'y
  * a donc plus d'attribut `data-app-theme` à synchroniser.
  */
@@ -63,11 +67,13 @@ export function SiteShell({
     );
   }
 
+  const showFooter = !user && pathname === "/";
+
   return (
     <div className="flex min-h-screen flex-col">
       {navbar}
       <main className="flex-1 pt-16 pb-28 md:pb-0">{children}</main>
-      {footer}
+      {showFooter ? footer : null}
     </div>
   );
 }

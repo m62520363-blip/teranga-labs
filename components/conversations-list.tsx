@@ -116,9 +116,13 @@ export function ConversationsList({
                     <p className="truncate text-xs text-muted-foreground">
                       {c.lastMessage
                         ? (c.lastMessage.sender_id === userId ? "Vous : " : "") +
-                          (c.lastMessage.content.length > 50
-                            ? c.lastMessage.content.slice(0, 50) + "…"
-                            : c.lastMessage.content)
+                          (c.lastMessage.deleted_at
+                            ? "Message supprimé"
+                            : c.lastMessage.message_type === "audio"
+                              ? "Message vocal"
+                              : c.lastMessage.content.length > 50
+                                ? c.lastMessage.content.slice(0, 50) + "…"
+                                : c.lastMessage.content)
                         : "Démarrez la discussion"}
                     </p>
                   </div>

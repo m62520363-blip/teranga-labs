@@ -1,7 +1,11 @@
 "use client";
 
 import * as React from "react";
-import { COUNTRIES } from "@/lib/countries";
+import {
+  parseWorldDial,
+  WORLD_DEFAULT_DIAL,
+  WORLD_PHONE_COUNTRIES,
+} from "@/lib/world-countries";
 import { Flag } from "@/components/ui/Flag";
 import { Input } from "@/components/ui/input";
 import {
@@ -12,27 +16,17 @@ import {
 } from "@/components/ui/select";
 import { cn } from "cn";
 
-/** Indicatif affiché tant qu'aucun numéro n'a été saisi (siège légal). */
-const DEFAULT_DIAL = "+221";
-
 /**
- * Découpe un numéro international en indicatif pays + partie nationale.
+ * Indicatif + partie nationale d'un numéro international.
  *
- * On reconnaît l'indicatif en cherchant le préfixe d'un des pays du bassin
- * (`lib/countries.ts`). Un numéro sans indicatif reconnu est considéré comme
- * une saisie nationale sous l'indicatif par défaut (aucune devinette : on ne
- * force plus jamais un pays, le sélecteur le rend explicite).
+ * Le découpage gère le MONDE entier (`lib/world-countries.ts`) : les dials
+ * sont testés du plus long au plus court (+1242 avant +1), et un numéro
+ * saisi sans « + » est une saisie nationale rattachée à l'indicatif par
+ * défaut (siège légal) — aucune devinette, le sélecteur rend le choix
+ * explicite. Le popup listé est DÉDUPLIQUÉ par indicatif (US/CA → « +1 »).
  */
 function parsePhone(value: string): { dial: string; national: string } {
-  const digits = value.replace(/\D/g, "");
-  if (!digits) return { dial: DEFAULT_DIAL, national: "" };
-  for (const c of COUNTRIES) {
-    const code = c.phoneCode.replace("+", "");
-    if (digits.startsWith(code) && digits.length > code.length) {
-      return { dial: c.phoneCode, national: digits.slice(code.length) };
-    }
-  }
-  return { dial: DEFAULT_DIAL, national: digits };
+  return parseWorldDial(value);
 }
 
 export interface PhoneInputProps {
@@ -67,7 +61,9 @@ export function PhoneInput({
 }: PhoneInputProps) {
   const fieldClass = fieldClassName ?? className;
   const { dial, national } = React.useMemo(() => parsePhone(value), [value]);
-  const country = COUNTRIES.find((c) => c.phoneCode === dial) ?? COUNTRIES[0];
+  const country =
+    WORLD_PHONE_COUNTRIES.find((c) => c.dial === dial) ??
+    WORLD_PHONE_COUNTRIES.find((c) => c.dial === WORLD_DEFAULT_DIAL)!;
 
   const emit = (nextDial: string, nextNational: string) => {
     const digits = nextNational.replace(/\D/g, "");
@@ -86,15 +82,15 @@ export function PhoneInput({
           className={cn("shrink-0 gap-1.5", fieldClass)}
           aria-invalid={invalid || undefined}
         >
-          <Flag countryCode={country.code} size={16} />
+          <Flag countryCode={country.iso2} size={16} />
           <span className="tabular-nums">{dial}</span>
         </SelectTrigger>
-        <SelectContent align="start">
-          {COUNTRIES.map((c) => (
-            <SelectItem key={c.code} value={c.phoneCode}>
+        <SelectContent align="start" className="max-h-80">
+          {WORLD_PHONE_COUNTRIES.map((c) => (
+            <SelectItem key={c.dial} value={c.dial}>
               <span className="flex items-center gap-2">
-                <Flag countryCode={c.code} size={16} />
-                <span className="tabular-nums">{c.phoneCode}</span>
+                <Flag countryCode={c.iso2} size={16} />
+                <span className="tabular-nums">{c.dial}</span>
                 <span className="text-muted-foreground">{c.nameFr}</span>
               </span>
             </SelectItem>

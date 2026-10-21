@@ -12,6 +12,20 @@ const regionField = (message = "Choisissez une région.") =>
     .trim()
     .refine((v) => isKnownRegion(v), { message });
 
+/**
+ * Ville/région d'inscription (client) et d'onboarding développeur :
+ * le référentiel monde (~206 pays) propose des régions curées pour les
+ * pays majeurs, mais un « champ libre » pour tous les autres — aucune
+ * exception à l'inscription. On valide la longueur, pas l'appartenance
+ * au périmètre (le brief, lui, garde `regionField` strict).
+ */
+const cityField = (message = "Indiquez votre ville ou région.") =>
+  z
+    .string()
+    .trim()
+    .min(2, message)
+    .max(60, "60 caractères max.");
+
 export const usernameSchema = z
   .string()
   .trim()
@@ -57,7 +71,7 @@ export const developerIdentitySchema = z.object({
     .trim()
     .min(2, "Pays requis.")
     .max(60, "Pays trop long."),
-  city: regionField(),
+  city: cityField(),
   languages: z
     .array(z.string().trim().min(2, "Langue trop courte.").max(40, "40 caractères max."))
     .max(10, "10 langues maximum.")
@@ -294,7 +308,7 @@ export const clientSignupSchema = z.object({
     .max(72, "Mot de passe trop long.")
     .regex(/[A-Za-z]/, "Au moins une lettre.")
     .regex(/\d/, "Au moins un chiffre."),
-  city: regionField(),
+  city: cityField(),
   whatsapp: z
     .string()
     .regex(

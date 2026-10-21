@@ -8,11 +8,14 @@ export function ShareProfileButton({ url, label }: { url: string; label?: string
   const [copied, setCopied] = useState(false);
 
   const handleShare = async () => {
+    const absoluteUrl = url.startsWith("http")
+      ? url
+      : `${window.location.origin}${url}`;
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
         await navigator.share({
-          title: "Profil développeur · Teranga Labs",
-          url,
+          title: "Profil développeur – Teranga Labs",
+          url: absoluteUrl,
         });
         return;
       } catch {
@@ -20,7 +23,7 @@ export function ShareProfileButton({ url, label }: { url: string; label?: string
       }
     }
     try {
-      await navigator.clipboard.writeText(url);
+      await navigator.clipboard.writeText(absoluteUrl);
       setCopied(true);
       toast.success("Lien du profil copié");
       window.setTimeout(() => setCopied(false), 2000);

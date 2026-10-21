@@ -3,43 +3,13 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  ArrowRight,
-  BadgeCheck,
-  Bell,
-  Briefcase,
-  CheckCheck,
-  CheckCircle2,
-  Loader2,
-  MessageCircle,
-  Star,
-} from "lucide-react";
+import { ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { EmptyState } from "@/components/empty-state";
 import { formatDateTime } from "@/lib/formatting";
+import { notificationIcon } from "@/lib/notification-icon";
 import { cn } from "cn";
 import type { InAppNotification } from "@/components/notification-bell";
-
-function bellIcon(type: string) {
-  switch (type) {
-    case "new_message":
-      return MessageCircle;
-    case "offer_accepted":
-      return CheckCheck;
-    case "review_received":
-      return Star;
-    case "review_requested":
-      return Star;
-    case "review_responded":
-      return MessageCircle;
-    case "account_certified":
-      return BadgeCheck;
-    case "unlock_received":
-      return Briefcase;
-    default:
-      return Bell;
-  }
-}
 
 export function NotificationsPage({ userId }: { userId: string }) {
   const router = useRouter();
@@ -190,7 +160,7 @@ export function NotificationsPage({ userId }: { userId: string }) {
           ) : (
             <ul className="space-y-3">
               {items.map((item) => {
-                const Icon = bellIcon(item.type);
+                  const Icon = notificationIcon(item.type);
                 return (
                   <li key={item.id}>
                     <button

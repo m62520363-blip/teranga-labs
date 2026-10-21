@@ -13,6 +13,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Clock,
+  Coins,
   Download,
   ExternalLink,
   Globe,
@@ -35,6 +36,7 @@ import AvailabilityCard from "@/components/availability-card";
 import { MissionsManager, type TlMissionOption } from "@/components/dev/missions-manager";
 import AgencyManager from "@/components/agency/agency-manager";
 import ProPanel from "@/components/sponsoring/pro-panel";
+import { ShareProfileButton } from "@/components/dev/share-profile-button";
 import { DevReviewsPanel } from "@/components/dev/reviews-panel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -394,6 +396,32 @@ export function DashboardContent({
     .filter((t) => t.type === "unlock")
     .reduce((sum, t) => sum + Math.abs(t.amount), 0);
 
+  /* Progression du profil : photo et portfolio sont des recommandations
+     (optionnelles), les autres critères structurent la complétion. */
+  const profileChecks: { label: string; done: boolean }[] = [
+    { label: "Photo de profil (recommandée)", done: Boolean(profile?.avatar_url) },
+    { label: "Bio présentée", done: Boolean(p.bio.trim()) },
+    { label: "Identifiant public", done: Boolean(p.username.trim()) },
+    { label: "Ville", done: Boolean(p.city.trim()) },
+    { label: "Compétences", done: Boolean(p.skills.trim()) },
+    {
+      label: "Portfolio (optionnel, recommandé)",
+      done: portfolio.some((l) => l.title.trim() && l.url.trim()),
+    },
+  ];
+  const profileScore = Math.round(
+    (profileChecks.filter((c) => c.done).length / profileChecks.length) * 100
+  );
+  const heroParts = [
+    `${balance} Token${balance > 1 ? "s" : ""} disponible${balance > 1 ? "s" : ""}`,
+    `${unlocks.length} contact${unlocks.length > 1 ? "s" : ""} débloqué${unlocks.length > 1 ? "s" : ""}`,
+    `${myMissions.length} mission${myMissions.length > 1 ? "s" : ""} en cours`,
+  ];
+  const heroSubtitle =
+    unlocks.length === 0 && myMissions.length === 0 && transactions.length === 0
+      ? "Suivez vos Tokens, pilotez vos contacts et soignez votre profil."
+      : heroParts.join(" · ");
+
   const saveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     const validLinks = portfolio.filter(
@@ -642,7 +670,7 @@ export function DashboardContent({
               {p.full_name ? `Bonjour, ${p.full_name.split(" ")[0]}` : "Votre espace développeur"}
             </h1>
             <p className="mt-2 text-base text-muted-foreground">
-              Suivez vos Tokens, pilotez vos contacts et soignez votre profil.
+              {heroSubtitle}
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -652,6 +680,13 @@ export function DashboardContent({
             >
               <MessageCircle className="size-4" aria-hidden="true" />
               Mes discussions
+            </Link>
+            <Link
+              href="/wallet#acheter-tokens"
+              className="inline-flex h-10 items-center gap-2 rounded-xl border border-hairline bg-card px-5 text-sm font-medium text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
+            >
+              <Coins className="size-4" aria-hidden="true" />
+              Acheter des Tokens
             </Link>
             <Link
               href="/wallet"
@@ -664,6 +699,66 @@ export function DashboardContent({
         </div>
 
         {profile ? <DevStatusBanner profile={profile} /> : null}
+
+        {profileScore < 100 ? (
+          <section
+            className="mt-6 rounded-2xl border border-hairline bg-card p-5 sm:p-6"
+            aria-label="Progression de votre profil"
+          >
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h2 className="text-lg font-semibold tracking-tight">
+                  Profil {profileScore} % complet
+                </h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Un profil soigné rassure les clients et débloque plus de
+                  contacts. Photo et portfolio restent facultatifs.
+                </p>
+              </div>
+              <Button
+                type="button"
+                onClick={() => setTab("profil")}
+                className="h-10 w-full shrink-0 rounded-xl bg-primary px-5 text-sm font-medium text-ink transition-colors hover:bg-primary-hover sm:w-auto"
+              >
+                Compléter mon profil
+                <ArrowRight className="size-4" aria-hidden="true" />
+              </Button>
+            </div>
+            <div
+              className="mt-4 h-2 w-full overflow-hidden rounded-full bg-hairline"
+              role="progressbar"
+              aria-valuenow={profileScore}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-label="Progression du profil"
+            >
+              <div
+                className="h-full rounded-full bg-primary transition-all"
+                style={{ width: `${profileScore}%` }}
+              />
+            </div>
+            <ul className="mt-3 flex flex-wrap gap-2">
+              {profileChecks.map((c) => (
+                <li
+                  key={c.label}
+                  className={cn(
+                    "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs",
+                    c.done
+                      ? "border-success/40 bg-success-soft text-success"
+                      : "border-hairline bg-background text-muted-foreground"
+                  )}
+                >
+                  {c.done ? (
+                    <Check className="size-3" aria-hidden="true" />
+                  ) : (
+                    <span className="size-1.5 rounded-full bg-primary" aria-hidden="true" />
+                  )}
+                  {c.label}
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
 
         <div className="mt-10">
           <DashboardStats
@@ -1201,15 +1296,18 @@ export function DashboardContent({
                 </p>
               </div>
               {publicUrl ? (
-                <Link
-                  href={publicUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex h-10 items-center gap-2 rounded-xl border border-hairline bg-card px-5 text-sm font-medium text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
-                >
-                  <Share2 className="size-4 text-primary" aria-hidden="true" />
-                  Voir mon profil public
-                </Link>
+                <div className="flex flex-wrap gap-2">
+                  <Link
+                    href={publicUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex h-10 items-center gap-2 rounded-xl border border-hairline bg-card px-5 text-sm font-medium text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
+                  >
+                    <Share2 className="size-4 text-primary" aria-hidden="true" />
+                    Voir mon profil public
+                  </Link>
+                  <ShareProfileButton url={publicUrl} label="Partager" />
+                </div>
               ) : null}
             </div>
 
@@ -1340,7 +1438,7 @@ export function DashboardContent({
                   <div className="flex items-center justify-between gap-3">
                     <h3 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
                       <Globe className="size-4 text-primary" aria-hidden="true" />
-                      Portfolio
+                      Portfolio (optionnel, recommandé)
                     </h3>
                     <Button
                       type="button"
