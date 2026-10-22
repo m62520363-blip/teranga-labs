@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useTranslations } from "next-intl";
 import { Loader2, Search, SlidersHorizontal, X } from "lucide-react";
 import type { ApprovedDeveloper, DirectoryFilters } from "@/types/database";
 import { createClient } from "@/lib/supabase/client";
@@ -62,6 +63,7 @@ export function DirectoryPage({
   const [hasMore, setHasMore] = React.useState(initial.length === PAGE_SIZE);
   const [loading, setLoading] = React.useState(false);
   const [showFilters, setShowFilters] = React.useState(false);
+  const td = useTranslations("Directory");
 
   const supabase = React.useMemo(() => createClient(), []);
 
@@ -276,13 +278,13 @@ export function DirectoryPage({
             </button>
           ) : null}
           <Select value={sort} onValueChange={(v) => setSort(v ?? "")}>
-            <SelectTrigger aria-label="Trier les résultats">
-              <SelectValue />
+            <SelectTrigger aria-label={td("sortLabel")}>
+              <SelectValue>{td(`sort.${sort}`)}</SelectValue>
             </SelectTrigger>
             <SelectContent>
               {SORT_OPTIONS.map((o) => (
                 <SelectItem key={o.value} value={o.value}>
-                  {o.label}
+                  {td(`sort.${o.value}`)}
                 </SelectItem>
               ))}
             </SelectContent>

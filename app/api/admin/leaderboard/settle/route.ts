@@ -43,6 +43,11 @@ export async function POST(request: NextRequest) {
   if (month < 1 || month > 12) {
     return NextResponse.json({ code: "BAD_REQUEST", message: "Mois invalide (1-12)." }, { status: 400 });
   }
+  // Bornes réalistes sur l'année (évite NaN ou une année absurde envoyée
+  // à la RPC, qui renverrait une erreur Postgres).
+  if (!Number.isInteger(year) || year < 2000 || year > 2100) {
+    return NextResponse.json({ code: "BAD_REQUEST", message: "Année invalide." }, { status: 400 });
+  }
 
   const admin = createAdminClient();
   if (!admin) {
@@ -51,9 +56,13 @@ export async function POST(request: NextRequest) {
 
   const { data, error } = await admin.rpc("settle_leaderboard", { p_year: year, p_month: month });
   if (error) {
+    // Le message Postgres reste en interne : on ne renvoie qu'un code
+    // applicatif générique (pas de fuite de schéma).
     log.error({ action: "leaderboard.settle", user: user.id, year, month, message: error.message });
-    const code = error.code ?? "SERVER_ERROR";
-    return NextResponse.json({ code, message: error.message }, { status: 400 });
+    return NextResponse.json(
+      { code: "SETTLE_FAILED", message: "Échec du settlement." },
+      { status: 400 }
+    );
   }
 
   return NextResponse.json({ ok: true, result: data ?? null });

@@ -271,7 +271,7 @@ export function DevReviewsPanel({
                   rows={3}
                   disabled={responding === review.id}
                   placeholder="Remercier le client, préciser un point de contexte… votre réponse ne modifie jamais sa note."
-                  className="w-full flex-1 resize-y rounded-xl border border-hairline bg-surface px-3.5 py-2.5 text-sm outline-none placeholder:text-muted-foreground/60 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 disabled:opacity-60"
+                  className="w-full flex-1 resize-y rounded-xl border border-hairline bg-surface px-3.5 py-2.5 text-sm outline-none placeholder:text-muted-foreground focus:border-primary/50 focus:ring-2 focus:ring-primary/20 disabled:opacity-60"
                 />
                 <button
                   type="button"

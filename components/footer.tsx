@@ -2,6 +2,8 @@
 import { Link } from "@/i18n/navigation";
 import { BRAND, LEGAL_PUBLISHER } from "@/components/landing/content";
 import { ImageLogoMark } from "@/components/logo";
+import { NewsletterForm } from "@/components/newsletter-form";
+import { SocialLinks } from "@/components/social-links";
 
 const columns = [
   {
@@ -49,6 +51,16 @@ export function Footer() {
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
               {t("tagline")}
             </p>
+            <div className="mt-6 max-w-sm">
+              <p className="font-headings text-sm font-semibold text-foreground">
+                {t("newsletter.title")}
+              </p>
+              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                {t("newsletter.description")}
+              </p>
+              <NewsletterForm />
+            </div>
+            <SocialLinks />
           </div>
 
           <div className="mt-12 grid grid-cols-2 gap-8 lg:mt-0 lg:flex-1 lg:grid-cols-3 lg:gap-y-16">
@@ -106,7 +118,7 @@ export function Footer() {
               </li>
             </ul>
           </div>
-          <p className="mt-4 text-xs text-muted-foreground/70">
+          <p className="mt-4 text-xs text-muted-foreground">
             {t("publishedBy")} {LEGAL_PUBLISHER}.
           </p>
         </div>

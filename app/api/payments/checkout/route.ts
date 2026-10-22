@@ -2,11 +2,8 @@ import { NextResponse } from "next/server";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { apiRequireUser } from "@/lib/auth/guards";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { createChariowCheckout, isChariowApiError } from "@/lib/payments/chariow";
-import {
-  getTokenProductSlug,
-  isChariowConfigured,
-} from "@/lib/payments/chariow-config";
+import { getPaymentProvider, isPaymentApiError } from "@/lib/payments/provider";
+import { getTokenProductSlug } from "@/lib/payments/chariow-config";
 import { paymentCheckoutSchema } from "@/lib/validations";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { log } from "@/lib/log";
@@ -27,7 +24,8 @@ export const dynamic = "force-dynamic";
  * détecte toute divergence de prix entre base et boutique Chariow.
  */
 export async function POST(request: Request) {
-  if (!isChariowConfigured()) {
+  const provider = getPaymentProvider();
+  if (!provider.isConfigured()) {
     return NextResponse.json(
       {
         code: "PAYMENT_NOT_CONFIGURED",
@@ -190,7 +188,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const checkout = await createChariowCheckout({
+    const checkout = await provider.createCheckout({
       productSlug: getTokenProductSlug(pkg.id),
       email,
       fullName: profile?.full_name ?? null,
@@ -213,12 +211,12 @@ export async function POST(request: Request) {
       );
     }
 
-    // Mémorise la vente Chariow côté serveur (concordance du Pulse).
+    // Mémorise la vente côté serveur (concordance du Pulse).
     if (admin) {
       await admin
         .from("payment_intents")
         .update({
-          provider: "chariow",
+          provider: provider.id,
           provider_session_id: checkout.saleId,
         })
         .eq("id", intent.id);
@@ -240,7 +238,7 @@ export async function POST(request: Request) {
       if (creditError) {
         log.error({
           action: "payment.checkout.immediate_credit",
-          provider: "chariow",
+          provider: provider.id,
           user: user.id,
           request_id: intent.id,
           message: creditError.message,
@@ -254,7 +252,7 @@ export async function POST(request: Request) {
         intentId: intent.id,
         launchUrl: `${origin}/tokens?intent=${intent.id}`,
         sessionId: checkout.saleId,
-        provider: "chariow",
+        provider: provider.id,
         result: creditResult,
       });
     }
@@ -263,13 +261,13 @@ export async function POST(request: Request) {
       intentId: intent.id,
       launchUrl: checkout.checkoutUrl,
       sessionId: checkout.saleId,
-      provider: "chariow",
+      provider: provider.id,
     });
   } catch (err) {
-    if (isChariowApiError(err)) {
+    if (isPaymentApiError(err)) {
       log.error({
         action: "payment.checkout",
-        provider: "chariow",
+        provider: provider.id,
         user: user.id,
         request_id: intent.id,
         status: err.status,
@@ -291,7 +289,7 @@ export async function POST(request: Request) {
     }
     log.error({
       action: "payment.checkout",
-      provider: "chariow",
+      provider: provider.id,
       user: user.id,
       request_id: intent.id,
       status: 500,

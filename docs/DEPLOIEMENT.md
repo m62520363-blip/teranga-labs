@@ -25,8 +25,8 @@ dans un commit, une issue ou une conversation.
 
 ## 3. Migrations
 
-1. Ordre strict : `supabase/migrations/0001_…` → `0055_…` (dernières : méthode
-   de vérification Chariow, correctif des types de transactions Tokens).
+1. Ordre strict : `supabase/migrations/0001_…` → `0068_…` (dernières : newsletter,
+   table `notification_preferences` + gating `notify_user`, drapeau `newsletter`).
 2. Application via le **SQL Editor Supabase** (un fichier à la fois, dans l'ordre), ou
    `supabase db push` pour les équipes outillées CLI.
 3. Règles **non destructives** : `CREATE … IF NOT EXISTS`, `ALTER`, jamais `DROP` sur
@@ -80,3 +80,33 @@ Le job `e2e` nécessite les **repo variables** `SUPABASE_URL` et `SUPABASE_ANON_
   qu'après confirmation.
 - Rotation des clés Chariow (API + secret Pulse) en cas de doute ;
   `.env` Vercel jamais committé.
+
+## 8. Drapeaux de fonctionnalité & préférences de notifications
+
+### Feature flags (table `feature_flags`, RPC `is_feature_enabled`)
+
+- **Défaut : un drapeau absent = désactivé** (`is_feature_enabled` → `false`).
+- Poser ou basculer **sans redéploiement** : RPC admin
+  `admin_set_feature_flag('newsletter', false, 'motif')` (console admin, ou SQL
+  Editor avec `service_role`). La table est lue publiquement (clés + état ne sont
+  pas des secrets).
+- Flag posé aujourd'hui : **`newsletter`** (seed migration `0068`, actif par
+  défaut pour ne rien casser) — éteint, `POST /api/newsletter` répond `404` et la
+  newsletter s'arrête sans toucher au code (contrôle fait AVANT le rate-limit).
+- Côté site : helper `lib/features.ts` → `isFeatureEnabled(clé)`. Toute route
+  commutable l'appelle en premier ; sans Supabase configuré, retourne `false`.
+- Ajouter un flag : `insert into feature_flags (key, enabled, description) …`
+  ou la RPC admin — aucune seed automatique, le flag n'existe que s'il est posé.
+
+### Préférences de notifications (table `notification_preferences`)
+
+- **Source de vérité : la table** (mig `0067`). L'ancien
+  `user_metadata.email_prefs` n'est plus écrit ; la migration 0067 a copié les
+  valeurs existantes (backfill).
+- RLS : chacun ne lit et n'écrit que **ses** lignes ; l'écran Paramètres
+  (section « E-mails » + interrupteur « Notifications dans l'app ») fait un
+  `upsert` (défaut SQL `auth.uid()` pour `user_id`).
+- Gating : `notify_user` n'insère plus de notification **in-app** si
+  `in_app = false` ; une **absence de ligne = actif** (comportement historique
+  préservé pour les comptes sans préférence).
+- Rien à faire au déploiement au-delà des migrations `0067` et `0068`.

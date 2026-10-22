@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth/guards";
 import {
   MissionsDashboard,
+  type DisputeRow,
   type MissionPayload,
 } from "@/components/missions/missions-dashboard";
 
@@ -41,8 +42,23 @@ export default async function MissionsPage({
   const { data } = await supabase.rpc("list_my_missions");
   const missions = (Array.isArray(data) ? data : []) as unknown as MissionPayload[];
 
+  // Mes litiges (F2) : demandeur ou défendeur, nés des transitions
+  // « Ouvrir un litige » (open_dispute) — modération côté admin.
+  const { data: disputesData } = await supabase.rpc("list_my_disputes");
+  const disputes = (
+    Array.isArray(disputesData) ? disputesData : []
+  ) as unknown as DisputeRow[];
+
   const params = (await searchParams) ?? {};
   const focusId = typeof params.focus === "string" && params.focus ? params.focus : null;
 
-  return <MissionsDashboard missions={missions} userId={user.id} role={role} focusId={focusId} />;
+  return (
+    <MissionsDashboard
+      missions={missions}
+      userId={user.id}
+      role={role}
+      focusId={focusId}
+      disputes={disputes}
+    />
+  );
 }

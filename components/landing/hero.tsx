@@ -58,6 +58,13 @@ export function Hero() {
           </Link>
         </div>
 
+        <p
+          className="animate-rise mt-4 text-xs text-muted-foreground"
+          style={{ "--rise-delay": "1650ms" } as React.CSSProperties}
+        >
+          {t("ctaNote")}
+        </p>
+
         {/* Showcase : ordinateur + scène 3D de fond (profondeur) */}
         <div className="relative mx-auto mt-14 w-full max-w-md sm:max-w-lg lg:mt-16 lg:w-[32rem] lg:max-w-none">
           <Scene3D

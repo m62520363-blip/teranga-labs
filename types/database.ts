@@ -73,6 +73,52 @@ export type ClientProfile = Database["public"]["Tables"]["client_profiles"]["Row
 export interface Database {
   public: {
     Tables: {
+      newsletter_subscribers: {
+        Row: {
+          id: string;
+          email: string;
+          locale: string;
+          source: string;
+          subscribed_at: string;
+          unsubscribed_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          email: string;
+          locale?: string;
+          source?: string;
+          subscribed_at?: string;
+          unsubscribed_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["newsletter_subscribers"]["Insert"]>;
+        Relationships: [];
+      };
+      notification_preferences: {
+        Row: {
+          user_id: string;
+          in_app: boolean;
+          email_contact: boolean;
+          email_replies: boolean;
+          email_unread_reminders: boolean;
+          email_price_offers: boolean;
+          updated_at: string;
+        };
+        Insert: {
+          user_id?: string;
+          in_app?: boolean;
+          email_contact?: boolean;
+          email_replies?: boolean;
+          email_unread_reminders?: boolean;
+          email_price_offers?: boolean;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["notification_preferences"]["Insert"]>;
+        Relationships: [];
+      };
       requests: {
         Row: {
           id: string;
@@ -873,6 +919,24 @@ export interface Database {
       };
     };
     Functions: {
+      newsletter_subscribe: {
+        Args: {
+          p_email: string;
+          p_locale?: string;
+          p_source?: string;
+        };
+        Returns: Json;
+      };
+      admin_list_newsletter_subscribers: {
+        Args: Record<string, never>;
+        Returns: Database["public"]["Tables"]["newsletter_subscribers"]["Row"][];
+      };
+      is_feature_enabled: {
+        Args: {
+          p_key: string;
+        };
+        Returns: boolean;
+      };
       has_role: {
         Args: {
           p_roles: string[];
@@ -1247,6 +1311,17 @@ export interface Database {
         Returns: Json;
       };
       list_my_missions: {
+        Args: Record<string, never>;
+        Returns: Json;
+      };
+      open_dispute: {
+        Args: {
+          p_mission_id: string;
+          p_reason: string;
+        };
+        Returns: Json;
+      };
+      list_my_disputes: {
         Args: Record<string, never>;
         Returns: Json;
       };

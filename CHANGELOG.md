@@ -2,6 +2,69 @@
 
 Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [Unreleased] — refonte complète TERANGA LABS (38 points, sections A → H)
+
+Lot complet du plan de refonte à 38 points : **A** SEO/corrections, **B** landing niveau mondial, **C** performance, **D** accessibilité, **E** sécurité, **F** fonctionnalités user, **G** notifications, **H** drapeaux/paiement/doc — sans changer le design existant (mobile-first, next-intl FR/EN).
+
+### Corrections urgentes (A)
+
+- **Placeholder `{token}` figé** : la variable de traduction non résolue `1 Token = {token}` devient `1 Token = 2 500 F` (FR) / `1 Token = 2,500 F` (EN) ; `{name}` (ICU) est préservé côté success.
+- **Mentions légales** : FR/EN nettoyées des placeholders `[à compléter]` / `[to be completed]`.
+- **Tri `/dev` i18n** : `dev/directory-page.tsx` utilise `useTranslations("Directory")` et le trigger affiche le libellé i18n (clés `Directory.sort.*` ajoutées) au lieu de la valeur brute.
+- **Favicon** : `public/favicon.ico` en source unique (les routes `app/icon.png` et `app/favicon.ico` redondantes supprimées), metadata `icons` nettoyée dans `app/layout.tsx`.
+- **Canonical + hreflang globaux** : helper `buildAlternates()` (`lib/utils.ts`) + header `x-pathname` posé sur la **requête** dans `middleware.ts` (avant `handleI18nRouting`) ; `generateMetadata` du layout racine renvoie `alternates` avec `fr`/`en`/`x-default` cohérents sur toutes les routes publiques.
+- **og:image / twitter:image** : homepage renseigne `og:image` et `twitter:image` (`/og.png` 1200×630, alt i18n).
+
+### Landing niveau mondial (B)
+
+- **Nouvelles sections** (`components/landing/`) : `social-proof.tsx`, `token-section.tsx`, `comparison-table.tsx` (TERANGA vs groupes WhatsApp vs plateformes étrangères), `for-who-tabs.tsx` (tabs WAI-ARIA au clavier), `testimonials.tsx` (contenu démo, à remplacer) et `country-flags.tsx` (9 pays du périmètre, codes ISO2 majuscules, `getFlagUrl`).
+- **CTA sous-texte** : `Landing.hero.ctaNote` rendu sous le hero.
+- **Nav visiteur** : lien « Développeurs / Developers » → `/dev` dans la navbar publique, avec état actif (`isActiveLink`).
+- **Newsletter (B16)** : table `newsletter_subscribers` (migration `0066`, RLS insert anonyme, RPC upsert idempotent + `admin_list_newsletter_subscribers`), route publique `POST /api/newsletter` (rate-limitée, réponse `ok` même si déjà inscrit — pas de disclosure), composant `newsletter-form.tsx` dans le footer (labels + `role="status"`).
+- **Réseaux sociaux (B17)** : `social-links.tsx` (icônes SVG inline, URLs via `NEXT_PUBLIC_*_URL`, rendu vide si absentes — aucun lien mort).
+- **i18n** : clés `Landing.{socialProof,token,comparison,testimonials,forWho,flags}`, `Landing.hero.ctaNote`, `Footer.newsletter`, `Footer.social`, `Nav.developers` ajoutées en FR et EN.
+
+### Performance & images (C)
+
+- **Formats modernes** : `next.config.ts` → `images.formats = ["image/avif", "image/webp"]` (conversion automatique des images servies par `next/image`).
+- **`Flag`** : attribut `sizes` explicite sur chaque variante d'image (fini le chargement de la pleine largeur sur mobile).
+
+### Accessibilité (D)
+
+- **Skip link** : `components/skip-link.tsx` (libellé i18n `skipToContent` → `#main`) + `id="main" tabIndex={-1}` sur les 3 shells (`site-shell`, `client-shell`, `dashboard-shell`) — le focus atterrit sur le contenu.
+- **Contrastes** : opacités faibles remplacées par des couleurs pleines (5× `/70`, 3× `placeholder:/60`).
+- **`CountryRegionSelect`** : thème sombre harmonisé + `htmlFor`/`id` liant label et champ.
+- **`role="alert"` + `aria-describedby`** : `contact-form`, `agency-manager` (6 champs), `newsletter-form` (`aria-invalid` + `id="newsletter-status"`).
+- **Structure** : `h2 sr-only` sur `role-cards` (`t("client.title")`), `<h3>` sur les résumés FAQ, logo en `alt=""`, `focus-visible` sur les champs du formulaire agence.
+
+### Sécurité (E)
+
+- **Headers centralisés** : `middleware.ts` devient le seul maître des headers de contenu — CSP riche (`frame-ancestors 'none'; base-uri 'self'; form-action 'self'` + Supabase), Permissions-Policy avec `payment=()`, HSTS ; `next.config.ts` ne garde que HSTS (couvre les statiques hors matcher).
+- **Disclosure Postgres close** : `api/admin/leaderboard/settle`, `api/cron/leaderboard-settle` et `api/otp/request` renvoient des codes applicatifs génériques (log interne seul) ; comparaison cron en temps constant (`timingSafeEqual`) ; bornes `year` 2000-2100 ; caractères parasite `透露` corrigé.
+
+### Fonctionnalités user (F)
+
+- **Page `/favoris` (F1)** : `app/[locale]/favoris/page.tsx` (requireUser, embedding `favorites → requests` avec les colonnes brief), grilles/empty-state/favori réutilisés, clés i18n `Pages.favorites` (ICU `count`, FR/EN), lien **Cœur** ajouté aux navs app + client (`app-nav.ts`, `SHELL_SEGMENTS`).
+- **Litiges côté user (F2)** : `missions-dashboard.tsx` appelle `open_dispute` avant `mission_update_status` quand la cible ∈ {`dispute_open`, `disputed`} (déjà ouvert = non bloquant), nouvelle section **« Mes litiges »** (badges `open|under_review|resolved|rejected` + lien `/missions/{id}`) alimentée par `list_my_disputes` depuis `/missions` ; les deux RPCs ajoutées à `types/database.ts`.
+- **Analytics (F3)** : `signup_completed` fire-and-forget dans `/auth/confirm` (type `signup`) ; route `POST /api/analytics/track` (apiRequireUser, rate-limit 60/IP, `track_event` service_role) + `trackClientEventSchema` (`contact_unlocked`) appelée par `unlock-dialog` après déblocage réussi.
+- **Sitemap (F4)** : `/agences` (statique) + fiches agences (`list_agencies`) ajoutées ; vérification faite que les pages pays/villes sont bien indexables (le `noindex` repéré ne concerne que le cas « introuvable »).
+
+### Notifications & préférences (G)
+
+- **Mig `0067` `notification_preferences`** : table (`in_app` + 4 préf. e-mail) avec RLS « chacun le sien », **backfill** depuis `user_metadata.email_prefs`, et `notify_user` remplacée : plus d'insertion in-app si `in_app = false` (**absence de ligne = actif** : comportement historique préservé).
+- **Écran Paramètres** : lecture depuis la table (fallback `user_metadata`), persistance par `upsert` (défaut `auth.uid()`), nouvel interrupteur **« Notifications dans l'app »** ; `user_metadata.email_prefs` n'est plus écrit côté client.
+
+### Feature flags & paiement (H)
+
+- **H1 — premier drapeau branché** : helper `lib/features.ts` (`isFeatureEnabled`, défaut `false`) + gate sur `POST /api/newsletter` (drapeau éteint → `404`, **avant** le rate-limit) ; seed `newsletter = true` (mig `0068`) pour ne rien casser ; commutable sans redéploiement via `admin_set_feature_flag`.
+- **H2 — abstraction `PaymentProvider`** : `lib/payments/provider.ts` (contrat : checkout, re-vérification de la vente, montant, référence, signature webhook, `isPaymentApiError`) + `lib/payments/chariow-provider.ts` (adaptateur, délégation pure vers `chariow.ts`) ; les 4 routes (`payments/checkout`, `payments/mission-checkout`, `verification/checkout`, `payments/webhook`) basculées dessus — plus aucune dépendance directe au module `chariow` côté routes.
+- **H3 — doc** : `docs/DEPLOIEMENT.md` nouvelle §8 (drapeaux de fonctionnalité + préférences de notifications), §3 mise à jour (ordre des migrations `0001 → 0068`).
+
+### Vérifications (A → H)
+
+- `npm run check` ✓ (check-rpc : 173 appels RPC tous résolus, typecheck, lint, vitest **177/177**), `npm run build` ✓ (First Load JS 304 kB ; routes `analytics`, `newsletter`, page `favoris` en place), e2e port 3100 : **58/63 en suite complète** — les 5 échecs (navbar/3D/tarifs landing, home guards, smoke header) sont des **flakes de charge** (scénarios à 43-56 s), **26/26 au rejeu** des 3 fichiers concernés.
+- **À faire en prod** : appliquer les migrations `0066`, `0067` et `0068` dans le SQL Editor ; renseigner `SUPABASE_SERVICE_ROLE_KEY`, `CRON_SECRET`, `CHARIOW_MISSION_PRODUCT_ID` et les URLs sociales `NEXT_PUBLIC_*_URL`.
+
 ## [Unreleased] — 2026-10-21 : bandeau noir supprimé de l'espace client et de l'espace développeur
 
 La navbar publique noire (Trouver un développeur, Agences, Accueil, Messages, Missions, Publier un brief, Acheter des Tokens, Paramètres, FR/EN, cloche, solde, profil, déconnexion) n'apparaît plus dans les espaces connectés client et développeur.

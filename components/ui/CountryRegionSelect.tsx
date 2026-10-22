@@ -77,12 +77,13 @@ export function CountryRegionSelect({
     <div className={className}>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>
-          <label className="mb-1 block text-xs font-medium text-gray-700">{countryLabel}</label>
+          <label htmlFor="crs-country" className="mb-1 block text-xs font-medium text-muted-foreground">{countryLabel}</label>
           <select
+            id="crs-country"
             value={selectedCountry ?? (showAllOption ? "all" : "")}
             onChange={(e) => handleCountryChange(e.target.value)}
             disabled={disabled}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-md border border-hairline bg-surface px-3 py-2 text-sm focus:border-primary/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {showAllOption && <option value="all">Tous les pays</option>}
             {COUNTRIES.map((c) => (
@@ -93,12 +94,13 @@ export function CountryRegionSelect({
           </select>
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium text-gray-700">{regionLabel}</label>
+          <label htmlFor="crs-region" className="mb-1 block text-xs font-medium text-muted-foreground">{regionLabel}</label>
           <select
+            id="crs-region"
             value={selectedRegion ?? (showAllOption ? "all" : "")}
             onChange={(e) => handleRegionChange(e.target.value)}
             disabled={disabled || !selectedCountry}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-md border border-hairline bg-surface px-3 py-2 text-sm focus:border-primary/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {showAllOption && <option value="all">Toutes les régions</option>}
             {regions.map((r) => (

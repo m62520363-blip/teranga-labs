@@ -160,9 +160,25 @@ export function Navbar({
             <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 lg:flex">
               <Link
                 href="/"
-                className="text-sm font-medium text-foreground/80 transition-colors outline-none hover:text-foreground focus-visible:text-foreground"
+                className={cn(
+                  "text-sm font-medium transition-colors outline-none focus-visible:text-foreground",
+                  isActiveLink(pathname, "/")
+                    ? "text-foreground"
+                    : "text-foreground/80 hover:text-foreground"
+                )}
               >
                 {t("home")}
+              </Link>
+              <Link
+                href="/dev"
+                className={cn(
+                  "text-sm font-medium transition-colors outline-none focus-visible:text-foreground",
+                  isActiveLink(pathname, "/dev")
+                    ? "text-foreground"
+                    : "text-foreground/80 hover:text-foreground"
+                )}
+              >
+                {t("developers")}
               </Link>
               <Link
                 href="/#comment-ca-marche"

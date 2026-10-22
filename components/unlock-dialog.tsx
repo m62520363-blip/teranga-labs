@@ -116,6 +116,14 @@ export function UnlockDialog({
 
     if (typeof result?.balance === "number") setBalance(result.balance);
 
+    // F3 : contact_unlocked remonté au serveur (track_event = service_role).
+    // Fire-and-forget : le tracking ne bloque jamais la navigation.
+    void fetch("/api/analytics/track", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ event: "contact_unlocked", request_id: brief.id }),
+    }).catch(() => undefined);
+
     if (result?.conversation_id) {
       router.push(`/conversations/${result.conversation_id}`);
       return;

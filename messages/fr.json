@@ -13,6 +13,7 @@
     "faq": "FAQ",
     "findDev": "Trouver un développeur",
     "findDevShort": "Trouver un dev",
+    "developers": "Développeurs",
     "agencies": "Agences",
     "forClients": "Pour les clients",
     "forDevs": "Pour les développeurs",
@@ -43,10 +44,30 @@
     "tokens": "Tokens",
     "langGroup": "Choisir la langue",
     "langToEn": "English",
-    "langToFr": "Français"
+    "langToFr": "Français",
+    "skipToContent": "Aller au contenu principal"
   },
   "Footer": {
     "tagline": "Le marketplace des projets web de l'Afrique de l'Ouest francophone. Tu paies en Tokens, ton argent ne bouge jamais en commission.",
+    "newsletter": {
+      "title": "Restez informé",
+      "description": "Nouveautés, guides et offres — un e-mail de temps en temps, jamais de spam.",
+      "placeholder": "votre@email.com",
+      "cta": "S'abonner",
+      "loading": "Inscription…",
+      "success": "Merci ! Vous êtes inscrit.",
+      "error": "Une erreur est survenue. Réessayez.",
+      "invalid": "Adresse email invalide."
+    },
+    "social": {
+      "label": "Suivez-nous",
+      "facebook": "Facebook",
+      "x": "X (Twitter)",
+      "linkedin": "LinkedIn",
+      "instagram": "Instagram",
+      "youtube": "YouTube",
+      "tiktok": "TikTok"
+    },
     "columns": {
       "platform": "Plateforme",
       "account": "Compte",
@@ -79,10 +100,11 @@
         "avec 1 Token.",
         "sans intermédiaire."
       ],
-      "subtitle": "Publie ton brief en 2 minutes. Les développeurs sérieux viennent à toi — ton WhatsApp reste privé.",
-      "ctaPrimary": "Trouver un développeur",
-      "ctaSecondary": "Publier un brief"
-    },
+    "subtitle": "Publie ton brief en 2 minutes. Les développeurs sérieux viennent à toi — ton WhatsApp reste privé.",
+    "ctaPrimary": "Trouver un développeur",
+    "ctaSecondary": "Publier un brief",
+    "ctaNote": "Gratuit pour commencer · Sans commission · Paiement direct entre vous"
+  },
     "howItWorks": {
       "badge": "Aucune commission, jamais",
       "titleA": "Comment ça marche",
@@ -151,7 +173,7 @@
       },
       {
         "q": "Combien coûte un Token ?",
-        "a": "{token}. L'inscription est gratuite : tu commandes tes Tokens en ligne depuis ton wallet, puis tu publies ton brief ou tu débloques un contact."
+        "a": "1 Token (2 500 FCFA). L'inscription est gratuite : tu commandes tes Tokens en ligne depuis ton wallet, puis tu publies ton brief ou tu débloques un contact."
       },
       {
         "q": "Y a-t-il une commission sur les projets ?",
@@ -190,6 +212,105 @@
           "Paiement direct, sans commission"
         ],
         "cta": "Voir les briefs"
+      }
+    },
+    "flags": {
+      "label": "Pays desservis",
+      "lead": "Disponible dans 9 pays d'Afrique de l'Ouest francophone, et dans le monde entier.",
+      "sn": "Sénégal",
+      "ci": "Côte d'Ivoire",
+      "ml": "Mali",
+      "bf": "Burkina Faso",
+      "ne": "Niger",
+      "gn": "Guinée",
+      "gw": "Guinée-Bissau",
+      "bj": "Bénin",
+      "tg": "Togo"
+    },
+    "socialProof": {
+      "badge": "La confiance d'abord",
+      "titleA": "Des clients et développeurs",
+      "titleB": "de toute la région.",
+      "lead": "TERANGA LABS relie les entreprises d'Afrique de l'Ouest francophone à des développeurs web vérifiés — sans commission, sans intermédiaire.",
+      "stats": [
+        { "value": "0 %", "label": "de commission sur les projets" },
+        { "value": "1 Token", "label": "pour publier un brief ou débloquer un contact" },
+        { "value": "100 %", "label": "de votre budget va au développeur" },
+        { "value": "24 h", "label": "pour publier et être contacté" }
+      ],
+      "note": "Paiement direct entre vous, WhatsApp privé, classement mensuel des meilleurs développeurs."
+    },
+    "token": {
+      "badge": "Transparent",
+      "titleA": "Un seul Token,",
+      "titleB": "un prix clair.",
+      "lead": "Pas d'abonnement, pas de frais cachés. Le Token est la seule monnaie d'échange sur TERANGA LABS.",
+      "price": "2 500 FCFA",
+      "priceUnit": "par Token",
+      "uses": [
+        { "title": "Publier un brief", "text": "Un client paie 1 Token pour mettre en ligne son projet et toucher tous les développeurs de la plateforme." },
+        { "title": "Débloquer un contact", "text": "Un développeur paie 1 Token pour ouvrir la discussion privée avec un client. Le contact est à vie." },
+        { "title": "Aucune commission", "text": "Le prix du projet se négocie en direct. TERANGA ne prélève rien sur ce que vous vous payez." }
+      ],
+      "note": "Les prix s'affichent dans votre devise locale (FCFA, USD, EUR, …).",
+      "cta": "Acheter des Tokens",
+      "ctaHref": "/tokens"
+    },
+    "comparison": {
+      "badge": "Comparatif",
+      "titleA": "Pourquoi TERANGA,",
+      "titleB": "pas les groupes WhatsApp.",
+      "lead": "Face aux alternatives, la différence tient en un mot : la transparence.",
+      "headers": { "feature": "Ce qui compte", "teranga": "TERANGA LABS", "whatsapp": "Groupes WhatsApp", "foreign": "Plateformes étrangères" },
+      "rows": [
+        { "feature": "Commission sur le projet", "teranga": "0 %", "whatsapp": "Négociée au cas par cas", "foreign": "15 – 20 %" },
+        { "feature": "Coût pour publier un brief", "teranga": "1 Token (2 500 FCFA)", "whatsapp": "Gratuit", "foreign": "Gratuit" },
+        { "feature": "Développeurs vérifiés", "teranga": "Oui, portfolio et notes", "whatsapp": "Non", "foreign": "Variable" },
+        { "feature": "WhatsApp privé", "teranga": "Protégé jusqu'à ton accord", "whatsapp": "Exposé au groupe", "foreign": "Souvent public" },
+        { "feature": "Paiement dans votre devise", "teranga": "FCFA, USD, EUR…", "whatsapp": "Espèces / mobile money", "foreign": "USD ou EUR seulement" },
+        { "feature": "Recours en cas de litige", "teranga": "Signalement et remboursement", "whatsapp": "Aucun", "foreign": "Médiation lente" }
+      ],
+      "note": "TERANGA ne remplace pas votre contrat : il vous met en relation, sans prendre votre argent."
+    },
+    "testimonials": {
+      "badge": "Ils nous font confiance",
+      "titleA": "Des projets livrés,",
+      "titleB": "des matchs réussis.",
+      "lead": "Ce que disent les clients et développeurs qui utilisent TERANGA LABS au quotidien.",
+      "items": [
+        { "quote": "J'ai publié mon brief un dimanche soir. Le lundi matin, trois développeurs sérieux m'ont contacté. Le site était en ligne en deux semaines.", "name": "Aïssatou D.", "role": "Cliente", "location": "Dakar, Sénégal" },
+        { "quote": "Avant TERANGA, je perdais mon temps en candidatures sauvages. Ici, les clients me trouvent selon ma compétence, et je ne paie qu'un Token pour les contacter.", "name": "Kwame O.", "role": "Développeur Full-stack", "location": "Abidjan, Côte d'Ivoire" },
+        { "quote": "Le paiement en FCFA depuis mon wallet change tout. Pas de conversion, pas de mauvaise surprise. Et le classement mensuel motive toute l'équipe.", "name": "Fatou N.", "role": "Cliente", "location": "Bamako, Mali" }
+      ],
+      "note": "Témoignages de démonstration — remplacez-les par de vrais retours clients."
+    },
+    "forWho": {
+      "badge": "Pour qui ?",
+      "titleA": "Une plateforme,",
+      "titleB": "trois façons de l'utiliser.",
+      "lead": "Que vous ayez un projet à faire réaliser ou une expertise à monétiser, TERANGA LABS est fait pour vous.",
+      "tabs": [
+        { "key": "client", "label": "Client" },
+        { "key": "developer", "label": "Développeur" },
+        { "key": "agency", "label": "Agence" }
+      ],
+      "client": {
+        "title": "Trouvez le bon développeur, sans y passer des heures.",
+        "text": "Décrivez votre projet en 2 minutes, fixez votre budget et laissez les développeurs sérieux venir à vous. Votre WhatsApp reste privé jusqu'à votre accord.",
+        "bullets": ["Brief publié pour 1 Token", "Développeurs vérifiés par portfolio", "Aucune commission sur votre projet", "Paiement direct, en votre devise"],
+        "cta": { "label": "Publier mon brief", "href": "/poster" }
+      },
+      "developer": {
+        "title": "Faites venir les clients vers votre expertise.",
+        "text": "Créez un profil avec votre portfolio, recevez des briefs ciblés par pays et par niche, et débloquez les contacts pour 1 Token. Vous êtes payé directement.",
+        "bullets": ["Profil public avec portfolio", "Briefs par pays et par compétence", "1 Token = 1 contact client", "0 % de commission"],
+        "cta": { "label": "Voir les briefs", "href": "/briefs" }
+      },
+      "agency": {
+        "title": "Trouvez les meilleurs talents de la région.",
+        "text": "Accédez à un vivier de développeurs vérifiés en Afrique de l'Ouest francophone. Filtrez par compétence, note et disponibilité, et collaborez en toute transparence.",
+        "bullets": ["Accès à des profils vérifiés", "Filtres par compétence et note", "Classement mensuel des meilleurs", "Collaboration sans commission"],
+        "cta": { "label": "Explorer les profils", "href": "/dev" }
       }
     }
   },
@@ -266,7 +387,7 @@
         },
         {
           "q": "Combien coûte un Token ?",
-          "a": "{token}. L'inscription est gratuite : vous commandez vos Tokens, puis vous publiez votre brief ou débloquez un contact."
+          "a": "1 Token (2 500 FCFA). L'inscription est gratuite : vous commandez vos Tokens, puis vous publiez votre brief ou débloquez un contact."
         },
         {
           "q": "Comment je paie mes Tokens ?",
@@ -306,7 +427,7 @@
         },
         {
           "title": "Le développeur paie juste",
-          "text": "{tokenRule} = 1 contact. Vous ne payez que pour les briefs qui vous intéressent vraiment, sans commission sur le projet."
+          "text": "1 Token = 2 500 F = 1 contact. Vous ne payez que pour les briefs qui vous intéressent vraiment, sans commission sur le projet."
         },
         {
           "title": "Un échange direct",
@@ -366,6 +487,16 @@
         "direct": "Vous préférez un email direct ? <mail>contact@terangalabs.sn</mail>",
         "submit": "Envoyer"
       }
+    },
+    "favorites": {
+      "metaTitle": "Mes favoris",
+      "metaDesc": "Retrouvez les briefs que vous avez sauvegardés sur TERANGA LABS.",
+      "h1": "Vos briefs favoris",
+      "lead": "Touchez le cœur d’un brief pour le retrouver ici. 1 Token ouvre une discussion privée avec le client.",
+      "count": "{count, plural, =0 {Aucun brief sauvegardé} one {# brief sauvegardé} other {# briefs sauvegardés}}",
+      "emptyTitle": "Aucun favori pour l’instant",
+      "emptyDesc": "Parcourez les briefs disponibles et touchez le cœur pour les garder à portée de main.",
+      "browse": "Parcourir les briefs"
     },
     "sitemap": {
       "metaTitle": "Plan du site",
@@ -450,7 +581,7 @@
         },
         "s3": {
           "h": "Identité légale",
-          "b": "<p>Adresse du siège, NINEA et RCCM de Walty Group-SUARL : <it>[à compléter]</it>. Ces informations sont publiées dès réception de l’immatriculation administrative. En attendant, pour toute demande, écrivez à <mail>contact@terangalabs.sn</mail>.</p>"
+          "b": "<p>Adresse du siège, NINEA et RCCM de Walty Group-SUARL : en cours d’enregistrement. Ces informations seront publiées dès réception de l’immatriculation administrative. Pour toute demande, écrivez à <mail>contact@terangalabs.sn</mail>.</p>"
         },
         "s4": {
           "h": "Hébergement",
@@ -619,6 +750,16 @@
           "b": "<p>Une question sur cette politique ? Écrivez-nous à <mail>contact@terangalabs.sn</mail>.</p>"
         }
       }
+    }
+  },
+  "Directory": {
+    "sortLabel": "Trier par",
+    "sort": {
+      "relevance": "Meilleurs résultats",
+      "experience": "Expérience décroissante",
+      "projects": "Projets réalisés",
+      "rating": "Meilleures notes",
+      "availability": "Disponibilité"
     }
   }
 }

@@ -5,6 +5,7 @@ import { usePathname } from "@/i18n/navigation";
 import { ClientShell } from "@/components/client/client-shell";
 import { DashboardShell } from "@/components/nav/dashboard-shell";
 import { isAppShellRoute } from "@/components/nav/app-nav";
+import { SkipLink } from "@/components/skip-link";
 
 /**
  * Chrome du site (navbar + padding principal + footer).
@@ -84,8 +85,9 @@ export function SiteShell({
 
   return (
     <div className="flex min-h-screen flex-col">
+      <SkipLink />
       {navbar}
-      <main className="flex-1 pt-16 pb-28 md:pb-0">{children}</main>
+      <main id="main" tabIndex={-1} className="flex-1 pt-16 pb-28 md:pb-0">{children}</main>
       {showFooter ? footer : null}
     </div>
   );

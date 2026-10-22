@@ -72,13 +72,25 @@ export async function POST(request: Request) {
   });
 
   if (error) {
-    const code = error.code ?? "SERVER_ERROR";
-    const status = code === "TLOTS" ? 429 : 400;
-    const message =
-      code === "TLOTS"
-        ? "Trop de demandes récentes pour ce numéro."
-        : "Impossible de générer le code.";
-    return NextResponse.json({ code, message }, { status });
+    // Le code Postgres reste en interne : on mappe vers un code applicatif
+    // générique pour ne pas divulguer le schéma de la base.
+    log.error({
+      action: "otp.request.rpc",
+      user: user.id,
+      status: 400,
+      message: error.message,
+      pgCode: error.code,
+    });
+    const lots = error.code === "TLOTS";
+    return NextResponse.json(
+      {
+        code: lots ? "RATE_LIMITED" : "OTP_FAILED",
+        message: lots
+          ? "Trop de demandes récentes pour ce numéro."
+          : "Impossible de générer le code.",
+      },
+      { status: lots ? 429 : 400 }
+    );
   }
 
   const result = (data ?? {}) as {

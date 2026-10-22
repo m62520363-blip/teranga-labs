@@ -2,8 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { apiRequireUser } from "@/lib/auth/guards";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { createChariowCheckout, isChariowApiError } from "@/lib/payments/chariow";
-import { isChariowConfigured } from "@/lib/payments/chariow-config";
+import { getPaymentProvider, isPaymentApiError } from "@/lib/payments/provider";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { log } from "@/lib/log";
 import type { Json } from "@/types/database";
@@ -25,7 +24,8 @@ export const dynamic = "force-dynamic";
  * (service_role, idempotent) après re-vérification serveur du montant.
  */
 export async function POST(request: Request) {
-  if (!isChariowConfigured()) {
+  const provider = getPaymentProvider();
+  if (!provider.isConfigured()) {
     return NextResponse.json(
       { code: "PAYMENT_NOT_CONFIGURED", message: "Le paiement en ligne n'est pas activé." },
       { status: 503 }
@@ -183,7 +183,7 @@ export async function POST(request: Request) {
   const origin = process.env.NEXT_PUBLIC_APP_URL ?? new URL(request.url).origin;
 
   try {
-    const checkout = await createChariowCheckout({
+    const checkout = await provider.createCheckout({
       productSlug: productId,
       priceVariantId,
       email,
@@ -215,11 +215,11 @@ export async function POST(request: Request) {
     ) {
       log.error({
         action: "payment.mission.checkout.amount_mismatch",
-        provider: "chariow",
+        provider: provider.id,
         user: user.id,
         mission_id: mission.id,
         status: 409,
-        message: `Montant Chariow ${checkout.amount.value} ${checkout.amount.currency} ≠ ${mission.agreed_price_fcfa} XOF`,
+        message: `Montant du prestataire ${checkout.amount.value} ${checkout.amount.currency} ≠ ${mission.agreed_price_fcfa} XOF`,
       });
       return NextResponse.json(
         {
@@ -235,13 +235,13 @@ export async function POST(request: Request) {
       missionId: mission.id,
       launchUrl: checkout.checkoutUrl,
       sessionId: checkout.saleId,
-      provider: "chariow",
+      provider: provider.id,
     });
   } catch (err) {
-    if (isChariowApiError(err)) {
+    if (isPaymentApiError(err)) {
       log.error({
         action: "payment.mission.checkout",
-        provider: "chariow",
+        provider: provider.id,
         user: user.id,
         mission_id: mission.id,
         status: err.status,
@@ -260,7 +260,7 @@ export async function POST(request: Request) {
     }
     log.error({
       action: "payment.mission.checkout",
-      provider: "chariow",
+      provider: provider.id,
       user: user.id,
       mission_id: mission.id,
       status: 500,

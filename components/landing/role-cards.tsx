@@ -12,8 +12,11 @@ const CARDS = [
 export function RoleCards() {
   const t = useTranslations("Landing.roleCards");
   return (
-    <section className="pb-20 sm:pb-28">
+    <section className="pb-20 sm:pb-28" aria-labelledby="role-cards-title">
       <div className="mx-auto max-w-6xl px-5 sm:px-6">
+        <h2 id="role-cards-title" className="sr-only">
+          {t("client.title")}
+        </h2>
         <div className="grid gap-6 lg:grid-cols-2">
           {CARDS.map((card) => {
             const bullets = t.raw(`${card.key}.bullets`) as string[];

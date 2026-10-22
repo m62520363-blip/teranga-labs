@@ -412,6 +412,36 @@ export const favoriteToggleSchema = z
 
 export type FavoriteToggleBody = z.infer<typeof favoriteToggleSchema>;
 
+/** Corps de POST /api/newsletter (abonnement footer, B16). */
+export const newsletterSubscribeSchema = z
+  .object({
+    email: z
+      .string()
+      .trim()
+      .min(1, "L'adresse email est requise.")
+      .email("Adresse email invalide.")
+      .max(254, "Adresse email trop longue."),
+    locale: z.enum(["fr", "en"]).default("fr"),
+    source: z.string().trim().min(1).max(40).default("footer"),
+  })
+  .strict();
+
+export type NewsletterSubscribeBody = z.infer<typeof newsletterSubscribeSchema>;
+
+/**
+ * Corps de POST /api/analytics/track (F3) : événements métier émisés par le
+ * client. La liste est volontairement fermée — jamais d'arbitraire envoyé
+ * à track_event.
+ */
+export const trackClientEventSchema = z
+  .object({
+    event: z.enum(["contact_unlocked"]),
+    request_id: z.string().uuid("Identifiant invalide.").optional(),
+  })
+  .strict();
+
+export type TrackClientEventBody = z.infer<typeof trackClientEventSchema>;
+
 export function parseSkills(raw: string): string[] {
   return raw
     .split(",")

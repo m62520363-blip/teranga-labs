@@ -49,7 +49,24 @@ export default async function SettingsPage() {
   const company = String(meta.company_name ?? "").trim() || null;
   const city = String(meta.city ?? "").trim() || null;
   const whatsapp = String(meta.whatsapp ?? "").trim() || null;
-  const emailPrefs = (meta.email_prefs ?? null) as Partial<EmailPrefs> | null;
+
+  // Source de vérité : table notification_preferences (mig 0067).
+  // Fallback : ancien user_metadata.email_prefs / défauts « tout actif ».
+  const { data: prefRow } = await supabase
+    .from("notification_preferences")
+    .select("in_app, email_contact, email_replies, email_unread_reminders, email_price_offers")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  const emailPrefs: Partial<EmailPrefs> | null = prefRow
+    ? {
+        contact: prefRow.email_contact,
+        replies: prefRow.email_replies,
+        unreadReminders: prefRow.email_unread_reminders,
+        priceOffers: prefRow.email_price_offers,
+      }
+    : ((meta.email_prefs ?? null) as Partial<EmailPrefs> | null);
+  const inAppPref = prefRow ? prefRow.in_app : true;
 
   return (
     <SettingsContent
@@ -64,6 +81,7 @@ export default async function SettingsPage() {
       lastSignIn={user.last_sign_in_at ?? null}
       devPublicUrl={devPublicUrl}
       emailPrefs={emailPrefs}
+      inAppPref={inAppPref}
     />
   );
 }

@@ -18,6 +18,7 @@ export function Flag({ countryCode, size = 20, className, alt }: FlagProps) {
       alt={altText}
       width={size}
       height={Math.round((size * 2) / 3)}
+      sizes={`${size}px`}
       loading="lazy"
       decoding="async"
       className={className}

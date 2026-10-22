@@ -1,13 +1,24 @@
 import { NextResponse } from "next/server";
+import { timingSafeEqual } from "node:crypto";
 import { createAdminClient, isServiceConfigured } from "@/lib/supabase/admin";
 
 export const dynamic = "force-dynamic";
+
+/** Comparaison de secrets en temps constant (évite le timing attack). */
+function isAuthorized(authHeader: string | null, secret: string): boolean {
+  if (!authHeader?.startsWith("Bearer ")) return false;
+  const token = authHeader.slice("Bearer ".length);
+  const a = Buffer.from(token);
+  const b = Buffer.from(secret);
+  if (a.length !== b.length) return false;
+  return timingSafeEqual(a, b);
+}
 
 export async function GET(request: Request) {
   const authHeader = request.headers.get("authorization");
   const cronSecret = process.env.CRON_SECRET;
 
-  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
+  if (!cronSecret || !isAuthorized(authHeader, cronSecret)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -43,8 +54,9 @@ export async function GET(request: Request) {
   });
 
   if (error) {
+    // Message Postgres en interne uniquement (pas de fuite au client).
     console.error("Leaderboard settle error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "SETTLE_FAILED" }, { status: 500 });
   }
 
   return NextResponse.json(data);

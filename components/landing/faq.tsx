@@ -22,7 +22,7 @@ export function FaqSection() {
                 className="group rounded-card border border-hairline bg-card open:border-primary/30"
               >
                 <summary className="tl-details-marker flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-headings text-base font-semibold">
-                  {q}
+                  <h3 className="font-headings text-base font-semibold">{q}</h3>
                   <Plus
                     aria-hidden="true"
                     className="size-4 shrink-0 text-primary transition-transform group-open:rotate-45"

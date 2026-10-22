@@ -195,7 +195,7 @@ export function ClientShell({
           </div>
         </header>
 
-        <main className="min-h-screen pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-12">
+        <main id="main" tabIndex={-1} className="min-h-screen pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-12">
           {children}
         </main>
       </div>

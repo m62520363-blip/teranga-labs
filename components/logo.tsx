@@ -31,7 +31,7 @@ export function Logo({ className }: { className?: string }) {
   return (
     <span className={cn("inline-flex items-center", className)}>
       <span className="sr-only">TERANGA&nbsp;LABS</span>
-      <ImageLogoMark />
+      <ImageLogoMark alt="" />
     </span>
   );
 }

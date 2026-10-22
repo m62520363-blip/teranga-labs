@@ -206,7 +206,7 @@ export function DashboardShell({
           </div>
         </header>
 
-        <main className="min-h-screen pb-16 md:pb-10">{children}</main>
+        <main id="main" tabIndex={-1} className="min-h-screen pb-16 md:pb-10">{children}</main>
       </div>
 
       {/* ------------------------------ MENU MOBILE ------------------------------ */}

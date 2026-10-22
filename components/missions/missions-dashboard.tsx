@@ -15,6 +15,7 @@ import {
   History,
   Loader2,
   MapPin,
+  Scale,
   Search,
   UserRound,
 } from "lucide-react";
@@ -43,11 +44,38 @@ import { cn } from "cn";
 
 export type { MissionEventPayload, MissionPayload };
 
+/** Ligne renvoyée par la RPC list_my_disputes (F2). */
+export type DisputeRow = {
+  id: string;
+  mission_id: string;
+  reason: string;
+  status: "open" | "under_review" | "resolved" | "rejected";
+  resolution: string | null;
+  created_at: string;
+  resolved_at: string | null;
+  i_am_complainant: boolean;
+};
+
+const DISPUTE_STATUS_LABELS: Record<DisputeRow["status"], string> = {
+  open: "Ouvert",
+  under_review: "En cours d'examen",
+  resolved: "Résolu",
+  rejected: "Rejeté",
+};
+
+const DISPUTE_STATUS_CLASS: Record<DisputeRow["status"], string> = {
+  open: "bg-error-soft text-error",
+  under_review: "bg-muted text-foreground",
+  resolved: "bg-success-soft text-success",
+  rejected: "bg-muted text-muted-foreground",
+};
+
 type Props = {
   missions: MissionPayload[];
   userId: string;
   role: string | null;
   focusId?: string | null;
+  disputes?: DisputeRow[];
 };
 
 type FilterKey = "all" | "active" | "completed" | "disputed" | "cancelled";
@@ -68,7 +96,7 @@ function opponentName(opponent: MissionPayload["opponent"]): string {
   return opponent.company_name || opponent.contact_name || "Client";
 }
 
-export function MissionsDashboard({ missions, userId, role, focusId = null }: Props) {
+export function MissionsDashboard({ missions, userId, role, focusId = null, disputes = [] }: Props) {
   const router = useRouter();
   const [filter, setFilter] = React.useState<FilterKey>("all");
   const [busyId, setBusyId] = React.useState<string | null>(null);
@@ -93,6 +121,25 @@ export function MissionsDashboard({ missions, userId, role, focusId = null }: Pr
   const updateStatus = async (mission: MissionPayload, to: MissionStatus, pComment?: string) => {
     setBusyId(mission.id);
     const supabase = createClient();
+
+    // F2 : ouvrir le litige dans la TABLE disputes (modération admin), pas
+    // seulement le statut de mission. Le motif = commentaire saisi (10 car.
+    // min exigés par la RPC). TLDUP = un litige existe déjà : on laisse
+    // mission_update_status suivre son cours.
+    if (to === "dispute_open" || to === "disputed") {
+      const { error: disputeError } = await supabase.rpc("open_dispute", {
+        p_mission_id: mission.id,
+        p_reason: (pComment ?? "").trim(),
+      });
+      if (disputeError && disputeError.code !== "TLDUP") {
+        setBusyId(null);
+        toast.error(
+          missionErrorMessage(disputeError.code ?? null, disputeError.message || "Impossible d'ouvrir le litige."),
+        );
+        return;
+      }
+    }
+
     const { data, error } = await supabase.rpc("mission_update_status", {
       p_mission_id: mission.id,
       p_to_status: to,
@@ -136,6 +183,44 @@ export function MissionsDashboard({ missions, userId, role, focusId = null }: Pr
   return (
     <div className="bg-surface">
       <div className="container-tl py-8 md:py-12">
+        {disputes.length > 0 ? (
+          <section aria-label="Mes litiges" className="mb-8 rounded-2xl border border-error/25 bg-card p-5">
+            <h2 className="flex items-center gap-1.5 text-sm font-semibold">
+              <Scale className="size-4 text-error" aria-hidden="true" />
+              Mes litiges ({disputes.length})
+            </h2>
+            <ul className="mt-4 flex flex-col gap-3">
+              {disputes.map((d) => (
+                <li key={d.id} className="rounded-xl border border-hairline bg-surface p-4">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="flex items-center gap-2 text-xs">
+                      <span
+                        className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold ${DISPUTE_STATUS_CLASS[d.status]}`}
+                      >
+                        {DISPUTE_STATUS_LABELS[d.status]}
+                      </span>
+                      <span className="text-muted-foreground">
+                        {d.i_am_complainant ? "Vous êtes demandeur" : "Vous êtes défendeur"}
+                      </span>
+                    </span>
+                    <span className="text-xs text-muted-foreground">{formatDate(d.created_at)}</span>
+                  </div>
+                  <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{d.reason}</p>
+                  {d.resolution ? (
+                    <p className="mt-2 text-xs text-muted-foreground">Résolution : {d.resolution}</p>
+                  ) : null}
+                  <Link
+                    href={`/missions/${d.mission_id}`}
+                    className="mt-3 inline-flex text-xs font-medium text-primary outline-none hover:underline focus-visible:ring-2 focus-visible:ring-primary/50"
+                  >
+                    Voir la mission →
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
+
         {visible.length === 0 ? null : (
           <>
             <div className="flex flex-col gap-2">

@@ -211,7 +211,7 @@ export function NotificationBell({ userId }: { userId: string }) {
                 <p className="text-sm text-muted-foreground">
                   Aucune notification pour le moment.
                 </p>
-                <p className="mt-1 text-xs text-muted-foreground/70">
+                <p className="mt-1 text-xs text-muted-foreground">
                   Nouveaux messages, devis acceptés et briefs débloqués
                   apparaîtront ici.
                 </p>
@@ -251,7 +251,7 @@ export function NotificationBell({ userId }: { userId: string }) {
                               {item.body}
                             </span>
                           ) : null}
-                          <span className="mt-1 block text-[11px] text-muted-foreground/70">
+                          <span className="mt-1 block text-[11px] text-muted-foreground">
                             {formatRelativeTime(item.created_at)}
                           </span>
                         </span>

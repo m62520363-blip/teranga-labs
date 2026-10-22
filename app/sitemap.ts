@@ -12,6 +12,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const routes = [
     "",
     "/a-propos",
+    "/agences",
     "/briefs",
     "/classement",
     "/conditions-utilisation",
@@ -58,6 +59,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // approuvés sont indexés, jamais les comptes en attente/refusés).
   const supabase = await createClient();
   let developerEntries: MetadataRoute.Sitemap = [];
+  let agencyEntries: MetadataRoute.Sitemap = [];
   if (supabase) {
     const { data } = await supabase.rpc("list_approved_developers", { p_limit: 1000 });
     const rows = (Array.isArray(data) ? data : []) as Array<{
@@ -71,7 +73,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         changeFrequency: "weekly",
         priority: 0.6,
       }));
+
+    // Une URL par fiche agence visible (mêmes critères que la page /agences).
+    const { data: agenciesData } = await supabase.rpc("list_agencies", {
+      p_limit: 60,
+      p_offset: 0,
+    });
+    const agencies = (Array.isArray(agenciesData) ? agenciesData : []) as Array<{
+      slug?: string | null;
+    }>;
+    agencyEntries = agencies
+      .filter((a) => typeof a.slug === "string" && a.slug)
+      .map((a) => ({
+        url: `${baseUrl}/agences/${encodeURIComponent(a.slug as string)}`,
+        lastModified: new Date(),
+        changeFrequency: "weekly",
+        priority: 0.6,
+      }));
   }
 
-  return [...staticEntries, ...countryEntries, ...regionEntries, ...developerEntries];
+  return [
+    ...staticEntries,
+    ...countryEntries,
+    ...regionEntries,
+    ...developerEntries,
+    ...agencyEntries,
+  ];
 }

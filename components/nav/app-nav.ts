@@ -4,6 +4,7 @@ import {
   ClipboardList,
   Coins,
   FileText,
+  Heart,
   Home,
   LayoutGrid,
   Megaphone,
@@ -45,6 +46,7 @@ export const APP_NAV_SECTIONS: AppNavSection[] = [
       { href: "/agences", label: "Agences", icon: Building2 },
       { href: "/missions", label: "Missions", icon: ClipboardList },
       { href: "/briefs", label: "Voir les briefs", icon: FileText },
+      { href: "/favoris", label: "Mes favoris", icon: Heart },
     ],
   },
   {
@@ -72,6 +74,7 @@ const SHELL_SEGMENTS = new Set([
   "agences",
   "missions",
   "briefs",
+  "favoris",
   "conversations",
   "verification",
   "tokens",
@@ -94,6 +97,7 @@ export const CLIENT_NAV_SECTIONS: AppNavSection[] = [
       { href: "/agences", label: "Agences", icon: Building2 },
       { href: "/missions", label: "Mes projets", icon: ClipboardList },
       { href: "/client/briefs", label: "Mes briefs", icon: Megaphone },
+      { href: "/favoris", label: "Mes favoris", icon: Heart },
     ],
   },
   {

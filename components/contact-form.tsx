@@ -124,6 +124,7 @@ export function ContactForm() {
                 onChange={(e) => setName(e.target.value)}
                 placeholder={t("phName")}
                 autoComplete="name"
+                aria-describedby={status === "error" && error ? "contact-error" : undefined}
                 required
               />
             </div>
@@ -138,6 +139,7 @@ export function ContactForm() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={t("phEmail")}
                 autoComplete="email"
+                aria-describedby={status === "error" && error ? "contact-error" : undefined}
                 required
               />
             </div>
@@ -173,12 +175,17 @@ export function ContactForm() {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder={t("phMessage")}
+              aria-describedby={status === "error" && error ? "contact-error" : undefined}
               required
             />
           </div>
 
           {status === "error" && error ? (
-            <p className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+            <p
+              id="contact-error"
+              role="alert"
+              className="rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive"
+            >
               {error}
             </p>
           ) : null}

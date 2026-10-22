@@ -55,6 +55,7 @@ export function SettingsContent({
   lastSignIn,
   devPublicUrl,
   emailPrefs,
+  inAppPref,
 }: {
   email: string;
   name: string | null;
@@ -67,6 +68,7 @@ export function SettingsContent({
   lastSignIn: string | null;
   devPublicUrl: string | null;
   emailPrefs?: Partial<EmailPrefs> | null;
+  inAppPref?: boolean;
 }) {
   const router = useRouter();
   const [currentPassword, setCurrentPassword] = React.useState("");
@@ -104,8 +106,27 @@ export function SettingsContent({
     ...DEFAULT_EMAIL_PREFS,
     ...(emailPrefs ?? {}),
   }));
+  const [inApp, setInApp] = React.useState<boolean>(inAppPref ?? true);
   const [prefsSaving, setPrefsSaving] = React.useState(false);
   const [prefsError, setPrefsError] = React.useState<string | null>(null);
+
+  // Persistance : table notification_preferences (mig 0067) — l'upsert
+  // sans user_id repose sur DEFAULT auth.uid() + RLS « chacun le sien ».
+  const persistPrefs = async (
+    next: EmailPrefs,
+    nextInApp: boolean
+  ): Promise<{ ok: boolean }> => {
+    const supabase = createClient();
+    const { error } = await supabase.from("notification_preferences").upsert({
+      in_app: nextInApp,
+      email_contact: next.contact,
+      email_replies: next.replies,
+      email_unread_reminders: next.unreadReminders,
+      email_price_offers: next.priceOffers,
+      updated_at: new Date().toISOString(),
+    });
+    return { ok: !error };
+  };
 
   const togglePref = async (key: keyof EmailPrefs, value: boolean) => {
     const previous = prefs;
@@ -114,13 +135,26 @@ export function SettingsContent({
     setPrefsError(null);
     if (!isSupabaseConfigured()) return;
     setPrefsSaving(true);
-    const supabase = createClient();
-    const { error } = await supabase.auth.updateUser({
-      data: { email_prefs: next },
-    });
+    const { ok } = await persistPrefs(next, inApp);
     setPrefsSaving(false);
-    if (error) {
+    if (!ok) {
       setPrefs(previous);
+      setPrefsError("Impossible d’enregistrer cette préférence. Réessayez.");
+      return;
+    }
+    router.refresh();
+  };
+
+  const toggleInApp = async (value: boolean) => {
+    const previous = inApp;
+    setInApp(value);
+    setPrefsError(null);
+    if (!isSupabaseConfigured()) return;
+    setPrefsSaving(true);
+    const { ok } = await persistPrefs(prefs, value);
+    setPrefsSaving(false);
+    if (!ok) {
+      setInApp(previous);
       setPrefsError("Impossible d’enregistrer cette préférence. Réessayez.");
       return;
     }
@@ -573,31 +607,40 @@ export function SettingsContent({
                 <Moon className="size-4 text-primary" aria-hidden="true" />
                 Préférences
               </h2>
-              <div className="mt-4 flex items-center justify-between gap-4 rounded-xl border border-hairline bg-surface p-4">
-                <label htmlFor="reduce-motion" className="cursor-pointer text-sm">
-                  <span className="block font-medium text-foreground">Réduire les animations</span>
-                  <span className="block text-sm text-muted-foreground">
-                    Limite les transitions sur tout le site, sur cet appareil.
-                  </span>
-                </label>
-                <button
-                  id="reduce-motion"
-                  type="button"
-                  role="switch"
-                  aria-checked={reduceMotion}
-                  onClick={() => toggleReduceMotion(!reduceMotion)}
-                  className={cn(
-                    "relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-primary/60",
-                    reduceMotion ? "bg-primary" : "bg-hairline"
-                  )}
-                >
-                  <span
+              <div className="mt-4 flex flex-col gap-3">
+                <PrefRow
+                  id="pref-inapp"
+                  label="Notifications dans l’app"
+                  hint="Alertes affichées dans ton espace (messages, offres, statuts)."
+                  checked={inApp}
+                  onChange={(v) => void toggleInApp(v)}
+                />
+                <div className="flex items-center justify-between gap-4 rounded-xl border border-hairline bg-surface p-4">
+                  <label htmlFor="reduce-motion" className="cursor-pointer text-sm">
+                    <span className="block font-medium text-foreground">Réduire les animations</span>
+                    <span className="block text-sm text-muted-foreground">
+                      Limite les transitions sur tout le site, sur cet appareil.
+                    </span>
+                  </label>
+                  <button
+                    id="reduce-motion"
+                    type="button"
+                    role="switch"
+                    aria-checked={reduceMotion}
+                    onClick={() => toggleReduceMotion(!reduceMotion)}
                     className={cn(
-                      "inline-block size-4 translate-x-1 rounded-full bg-white transition-transform duration-200",
-                      reduceMotion && "translate-x-6"
+                      "relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-primary/60",
+                      reduceMotion ? "bg-primary" : "bg-hairline"
                     )}
-                  />
-                </button>
+                  >
+                    <span
+                      className={cn(
+                        "inline-block size-4 translate-x-1 rounded-full bg-white transition-transform duration-200",
+                        reduceMotion && "translate-x-6"
+                      )}
+                    />
+                  </button>
+                </div>
               </div>
             </section>
 

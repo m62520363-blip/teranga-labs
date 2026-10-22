@@ -288,7 +288,7 @@ export function ReviewForm({ context }: { context: ReviewForRequest }) {
               maxLength={1500}
               rows={5}
               placeholder="Points forts, points à améliorer, conseils aux futurs clients…"
-              className="mt-3 w-full resize-y rounded-2xl border border-hairline bg-surface px-4 py-3 text-sm outline-none placeholder:text-muted-foreground/60 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+              className="mt-3 w-full resize-y rounded-2xl border border-hairline bg-surface px-4 py-3 text-sm outline-none placeholder:text-muted-foreground focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
             />
             <div className="mt-1 text-right text-xs text-muted-foreground">
               {comment.length}/1500
@@ -355,7 +355,7 @@ export function ReviewForm({ context }: { context: ReviewForRequest }) {
                     setAssets((prev) => prev.map((x, j) => (j === i ? e.target.value : x)))
                   }
                   placeholder={`Capture ${i + 1} (https://…)`}
-                  className="w-full rounded-xl border border-hairline bg-surface px-4 py-2.5 text-sm outline-none placeholder:text-muted-foreground/60 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+                  className="w-full rounded-xl border border-hairline bg-surface px-4 py-2.5 text-sm outline-none placeholder:text-muted-foreground focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
                 />
               ))}
             </div>

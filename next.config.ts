@@ -4,24 +4,23 @@ import createNextIntlPlugin from "next-intl/plugin";
 /** Charge la config de requête i18n depuis ./i18n/request.ts (emplacement par défaut). */
 const withNextIntl = createNextIntlPlugin();
 
+/**
+ * Headers posés ici s'appliquent à TOUTES les routes (dont les assets
+ * statiques que le matcher du middleware exclut). Les headers relatifs au
+ * contenu (CSP, X-Frame-Options, nosniff, Referrer-Policy,
+ * Permissions-Policy) sont posés par `middleware.ts` qui s'exécute en
+ * dernier et les écraserait : on ne garde ici que le HSTS, qui doit
+ * couvrir aussi les fichiers statiques.
+ */
 const securityHeaders = [
-  { key: "X-Frame-Options", value: "DENY" },
-  { key: "X-Content-Type-Options", value: "nosniff" },
-  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-  {
-    key: "Permissions-Policy",
-    value: "camera=(), microphone=(self), geolocation=(), payment=()",
-  },
-  {
-    key: "Content-Security-Policy",
-    value:
-      "frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://virihuuksoepswccxsne.supabase.co",
-  },
+  { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
 ];
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: {
+    // AVIF en priorité (meilleure compression), WebP en repli.
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       // Drapeaux (référentiel statique des pays).
       { protocol: "https", hostname: "flagcdn.com" },

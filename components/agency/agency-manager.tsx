@@ -223,7 +223,7 @@ export default function AgencyManager() {
               minLength={2}
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="h-11 w-full rounded-xl border border-hairline bg-background px-3 text-sm outline-none focus:border-primary"
+              className="h-11 w-full rounded-xl border border-hairline bg-background px-3 text-sm outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/50"
               placeholder="Ex. Atelier Teranga"
             />
           </div>
@@ -246,7 +246,7 @@ export default function AgencyManager() {
                     slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""),
                   })
                 }
-                className="w-full flex-1 bg-transparent outline-none"
+                className="w-full flex-1 bg-transparent outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
                 placeholder="atelier-teranga"
               />
             </div>
@@ -261,7 +261,7 @@ export default function AgencyManager() {
                 id="agency-city"
                 value={form.city}
                 onChange={(e) => setForm({ ...form, city: e.target.value })}
-                className="h-11 w-full rounded-xl border border-hairline bg-background px-3 text-sm outline-none focus:border-primary"
+                className="h-11 w-full rounded-xl border border-hairline bg-background px-3 text-sm outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/50"
                 placeholder="Dakar"
               />
             </div>
@@ -273,7 +273,7 @@ export default function AgencyManager() {
                 id="agency-country"
                 value={form.country}
                 onChange={(e) => setForm({ ...form, country: e.target.value })}
-                className="h-11 w-full rounded-xl border border-hairline bg-background px-3 text-sm outline-none focus:border-primary"
+                className="h-11 w-full rounded-xl border border-hairline bg-background px-3 text-sm outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/50"
                 placeholder="Ex. Côte d'Ivoire"
               />
             </div>
@@ -288,13 +288,13 @@ export default function AgencyManager() {
               type="url"
               value={form.website}
               onChange={(e) => setForm({ ...form, website: e.target.value })}
-              className="h-11 w-full rounded-xl border border-hairline bg-background px-3 text-sm outline-none focus:border-primary"
+              className="h-11 w-full rounded-xl border border-hairline bg-background px-3 text-sm outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/50"
               placeholder="https://…"
             />
           </div>
 
           {error ? (
-            <p className="text-sm font-medium text-destructive">{error}</p>
+            <p role="alert" className="text-sm font-medium text-destructive">{error}</p>
           ) : null}
 
           <p className="text-sm text-muted-foreground">
@@ -333,7 +333,7 @@ export default function AgencyManager() {
                 id="agency-invite"
                 value={joinCode}
                 onChange={(e) => setJoinCode(e.target.value.trim())}
-                className="h-11 w-full rounded-xl border border-hairline bg-background px-3 font-mono text-sm outline-none focus:border-primary"
+                className="h-11 w-full rounded-xl border border-hairline bg-background px-3 font-mono text-sm outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/50"
                 placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
               />
             </div>

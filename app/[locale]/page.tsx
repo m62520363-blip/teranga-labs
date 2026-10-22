@@ -7,8 +7,15 @@ import { HowItWorks } from "@/components/landing/how-it-works";
 import { PricingSection } from "@/components/landing/pricing";
 import { FaqSection } from "@/components/landing/faq";
 import { RoleCards } from "@/components/landing/role-cards";
+import { SocialProof } from "@/components/landing/social-proof";
+import { TokenSection } from "@/components/landing/token-section";
+import { ComparisonTable } from "@/components/landing/comparison-table";
+import { Testimonials } from "@/components/landing/testimonials";
+import { ForWhoTabs } from "@/components/landing/for-who-tabs";
+import { CountryFlags } from "@/components/landing/country-flags";
 import { META } from "@/components/landing/content";
 import { TOKEN_LABEL_PRICED } from "@/lib/formatting";
+import { absoluteUrl } from "@/lib/utils";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Meta");
@@ -25,11 +32,20 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: "TERANGA LABS",
       locale,
       url: META.url || undefined,
+      images: [
+        {
+          url: absoluteUrl("/og.png"),
+          width: 1200,
+          height: 630,
+          alt: t("ogAlt"),
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: t("title"),
       description: t("description"),
+      images: [absoluteUrl("/og.png")],
     },
   };
 }
@@ -74,8 +90,14 @@ export default async function HomePage() {
       />
       <div className="bg-background">
         <Hero />
+        <CountryFlags />
+        <SocialProof />
         <HowItWorks />
+        <TokenSection />
         <PricingSection />
+        <ComparisonTable />
+        <ForWhoTabs />
+        <Testimonials />
         <FaqSection />
         <RoleCards />
       </div>

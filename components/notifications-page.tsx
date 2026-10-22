@@ -181,7 +181,7 @@ export function NotificationsPage({ userId }: { userId: string }) {
                           <span className="text-sm font-semibold tracking-tight">
                             {item.title}
                           </span>
-                          <span className="shrink-0 text-xs text-muted-foreground/70">
+                          <span className="shrink-0 text-xs text-muted-foreground">
                             {formatDateTime(item.created_at)}
                           </span>
                         </span>

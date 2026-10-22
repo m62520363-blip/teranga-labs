@@ -2,11 +2,8 @@ import { NextResponse } from "next/server";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { apiRequireUser } from "@/lib/auth/guards";
 import { createAdminClient } from "@/lib/supabase/admin";
-import {
-  getVerificationProductSlug,
-  isChariowConfigured,
-} from "@/lib/payments/chariow-config";
-import { createChariowCheckout, isChariowApiError } from "@/lib/payments/chariow";
+import { getVerificationProductSlug } from "@/lib/payments/chariow-config";
+import { getPaymentProvider, isPaymentApiError } from "@/lib/payments/provider";
 import { verificationCheckoutSchema } from "@/lib/validations";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { log } from "@/lib/log";
@@ -23,7 +20,8 @@ export const dynamic = "force-dynamic";
  * en rapprochement manuel) confirme le paiement.
  */
 export async function POST(request: Request) {
-  if (!isChariowConfigured()) {
+  const provider = getPaymentProvider();
+  if (!provider.isConfigured()) {
     return NextResponse.json(
       { code: "PAYMENT_NOT_CONFIGURED", message: "Le paiement en ligne n'est pas encore activé." },
       { status: 503 }
@@ -180,7 +178,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const checkout = await createChariowCheckout({
+    const checkout = await provider.createCheckout({
       productSlug: getVerificationProductSlug(),
       email,
       fullName: dev.full_name ?? null,
@@ -200,12 +198,12 @@ export async function POST(request: Request) {
       );
     }
 
-    // Mémorise la vente Chariow côté serveur (concordance du Pulse).
+    // Mémorise la vente côté serveur (concordance du Pulse).
     const admin = createAdminClient();
     if (admin) {
       await admin
         .from("verification_requests")
-        .update({ provider: "chariow", provider_session_id: checkout.saleId })
+        .update({ provider: provider.id, provider_session_id: checkout.saleId })
         .eq("id", requestId);
     }
 
@@ -218,10 +216,10 @@ export async function POST(request: Request) {
       sessionId: checkout.saleId,
     });
   } catch (err) {
-    if (isChariowApiError(err)) {
+    if (isPaymentApiError(err)) {
       log.error({
         action: "verification.checkout",
-        provider: "chariow",
+        provider: provider.id,
         user: user.id,
         request_id: requestId,
         status: err.status,
@@ -241,7 +239,7 @@ export async function POST(request: Request) {
     }
     log.error({
       action: "verification.checkout",
-      provider: "chariow",
+      provider: provider.id,
       user: user.id,
       request_id: requestId,
       status: 500,

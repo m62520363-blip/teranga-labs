@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
+import { headers } from "next/headers";
 import { Bodoni_Moda, DM_Sans, Geist_Mono, Outfit } from "next/font/google";
 import { hasLocale } from "next-intl";
 import { NextIntlClientProvider } from "next-intl";
@@ -10,7 +11,7 @@ import { Footer } from "@/components/footer";
 import { SiteShell } from "@/components/site-shell";
 import { Providers } from "@/components/providers";
 import { getCurrentRole, getCurrentUser } from "@/lib/supabase/server";
-import { absoluteUrl } from "@/lib/utils";
+import { absoluteUrl, buildAlternates } from "@/lib/utils";
 import { routing } from "@/i18n/routing";
 
 const outfit = Outfit({
@@ -52,12 +53,15 @@ const geistMono = Geist_Mono({
  */
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("RootMeta");
+  const hdrs = await headers();
+  const pathname = hdrs.get("x-pathname") ?? "/";
   const rawLocale = await getLocale();
   const locale = hasLocale(routing.locales, rawLocale)
     ? rawLocale
     : routing.defaultLocale;
   return {
     metadataBase: absoluteUrl("/"),
+    alternates: buildAlternates(pathname),
     title: {
       default: t("default"),
       template: "%s — TERANGA LABS",
@@ -66,7 +70,10 @@ export async function generateMetadata(): Promise<Metadata> {
     keywords: t.raw("keywords") as string[],
     manifest: "/manifest.json",
     icons: {
-      icon: "/icon.png",
+      icon: [
+        { url: "/favicon.ico", sizes: "any" },
+        { url: "/icon.png", sizes: "512x512", type: "image/png" },
+      ],
       apple: "/apple-icon.png",
     },
     openGraph: {
