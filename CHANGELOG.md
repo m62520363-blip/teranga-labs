@@ -8,7 +8,8 @@ Le site change d'identité : **TERANGA LABS → Devmarket** — nom, logos, pale
 
 ### Identité & logos (T1)
 
-- **Assets dérivés des logos livrés** : `public/logo.png` (lockup 1998×787), `public/icon.png` (512), `public/apple-icon.png` (180), `public/pwa-icon-192.png` / `-512.png`, `public/favicon.ico` (conteneur ICO maison autour d'un PNG 32×32), `public/og.png` régénéré 1200×630 (fond radial Prompt Blue, lockup centré) ; `components/logo.tsx` passe aux vraies dimensions du lockup.
+- **Logos officiels du client** (`logo avec nom.png` 1997×787 + `logo sans nom.png`, transparence d'origine conservée) : `public/logo.png` = lockup en **variante claire** (texte/contour marine `#000920` + halo gris → `#F1F5FF`, verts et blancs intacts — le lockup marine d'origine serait illisible sur le fond sombre du site) ; `public/icon.png` (512), `public/apple-icon.png` (180), `public/pwa-icon-192/512.png` et `public/favicon.ico` (conteneur ICO, entrée PNG 32×32) dérivés du pictogramme marine d'origine ; `public/og.png` 1200×630 (radial Prompt Blue + lockup clair centré) ; `components/logo.tsx` : dimensions réelles 1997×787.
+- **Capture écran du laptop hero** : `public/hero/briefs-desktop.png` régénérée (1280×800 sur `/briefs`) — l'écran du héros affiche maintenant Devmarket en bleu nuit au lieu de l'ancienne maquette noire/orange.
 
 ### Palette Prompt Blue + AI Green (T2)
 

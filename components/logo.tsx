@@ -19,7 +19,7 @@ export function ImageLogoMark({
     <Image
       src="/logo.png"
       alt={alt}
-      width={1998}
+      width={1997}
       height={787}
       priority={priority}
       className={cn("h-8 w-auto", className)}
