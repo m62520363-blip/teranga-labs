@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { headers } from "next/headers";
-import { Bodoni_Moda, DM_Sans, Geist_Mono, Outfit } from "next/font/google";
+import localFont from "next/font/local";
 import { hasLocale } from "next-intl";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
@@ -14,32 +14,42 @@ import { getCurrentRole, getCurrentUser } from "@/lib/supabase/server";
 import { absoluteUrl, buildAlternates } from "@/lib/utils";
 import { routing } from "@/i18n/routing";
 
-const outfit = Outfit({
+/**
+ * Fonts auto-hébergées (app/fonts/*.woff2, sous-ensemble latin variable).
+ *
+ * On est passé de next/font/google à next/font/local à cause du bug upstream
+ * vercel/next.js#99114 : Google Fonts répond parfois (~1-2 %) des URLs sans
+ * extension (`/l/font?kit=…`) que Turbopack ne sait pas parser → builds Vercel
+ * en échec aléatoire. Les fichiers woff2 sont maintenant dans le repo : zéro
+ * appel réseau au build, rendu identique (mêmes axes variable, même CSS var).
+ */
+const outfit = localFont({
+  src: "./fonts/outfit-latin-var.woff2",
   variable: "--font-outfit",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
+  weight: "400 900",
   display: "swap",
 });
 
 /* Accent sérif italique du hero : rotation de phrases façon Montaaj. */
-const bodoni = Bodoni_Moda({
+const bodoni = localFont({
+  src: "./fonts/bodoni-moda-italic-latin-var.woff2",
   variable: "--font-bodoni",
-  subsets: ["latin"],
-  style: ["italic"],
-  weight: ["400", "500", "600", "700", "800", "900"],
+  style: "italic",
+  weight: "400 900",
   display: "swap",
 });
 
-const dmSans = DM_Sans({
+const dmSans = localFont({
+  src: "./fonts/dm-sans-latin-var.woff2",
   variable: "--font-dm-sans",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: "400 700",
   display: "swap",
 });
 
-const geistMono = Geist_Mono({
+const geistMono = localFont({
+  src: "./fonts/geist-mono-latin-var.woff2",
   variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: "100 900",
 });
 
 /**

@@ -36,6 +36,10 @@ Le site change d'identité : **TERANGA LABS → Devmarket** — nom, logos, pale
 
 - `npm run check` ✓ (check-rpc, typecheck, lint, **177/177** vitest) ; `npm run build` ✓ (FLJS 304 kB) ; **e2e smoke+landing 22/22** ; résidus « teranga » limités aux identifiants DB/projets volontairement conservés.
 
+### Correctif build Vercel (fonts auto-hébergées)
+
+- **`next/font/google` → `next/font/local`** : les 4 familles (Outfit, Bodoni Moda italique, DM Sans, Geist Mono) sont embarquées en woff2 latin variable dans `app/fonts/` (~172 kB). Correction du bug upstream vercel/next.js#99114 (Google Fonts répond ~1-2 % du temps des URLs sans extension que Turbopack ne parse pas → **build Vercel en échec aléatoire**, cause des déploiements prod non venus) ; zéro appel réseau au build, rendu identique (mêmes axes variable et variables CSS).
+
 ## [Unreleased] — refonte complète TERANGA LABS (38 points, sections A → H)
 
 Lot complet du plan de refonte à 38 points : **A** SEO/corrections, **B** landing niveau mondial, **C** performance, **D** accessibilité, **E** sécurité, **F** fonctionnalités user, **G** notifications, **H** drapeaux/paiement/doc — sans changer le design existant (mobile-first, next-intl FR/EN).
