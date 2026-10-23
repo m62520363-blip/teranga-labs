@@ -137,7 +137,7 @@ async function sendResend(apiKey: string, from: string, to: string, message: str
     body: JSON.stringify({
       from,
       to: [to],
-      subject: "Teranga Labs · Nouveau brief",
+      subject: "Devmarket · Nouveau brief",
       text: message,
     }),
     signal: AbortSignal.timeout(10000),

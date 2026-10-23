@@ -14,7 +14,7 @@ export function ShareProfileButton({ url, label }: { url: string; label?: string
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
         await navigator.share({
-          title: "Profil développeur – Teranga Labs",
+          title: "Profil développeur – Devmarket",
           url: absoluteUrl,
         });
         return;

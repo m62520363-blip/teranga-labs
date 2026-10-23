@@ -78,7 +78,7 @@ export function ReviewForm({ context }: { context: ReviewForRequest }) {
           Merci pour votre avis !
         </h1>
         <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
-          Votre avis aide la communauté TERANGA LABS à choisir les meilleurs
+          Votre avis aide la communauté Devmarket à choisir les meilleurs
           développeurs. {isPublished ? "Il a bien été mis à jour." : "Il est maintenant publié."}{" "}
           {context.developer?.full_name ? `Le développeur pourra y répondre publiquement.` : null}
         </p>

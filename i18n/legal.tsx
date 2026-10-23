@@ -22,7 +22,7 @@ export async function getLegal(namespace: string) {
       ul: (chunks) => <ul className="list-disc space-y-1 pl-5">{chunks}</ul>,
       li: (chunks) => <li>{chunks}</li>,
       mail: (chunks) => (
-        <a href="mailto:contact@terangalabs.sn" className={LINK_CLS}>
+        <a href="mailto:contact@devmarket.com" className={LINK_CLS}>
           {chunks}
         </a>
       ),

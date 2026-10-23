@@ -123,7 +123,7 @@ export function VerificationForm({
       <Panel tone="success" icon={<BadgeCheck className="size-7 text-success" />}>
         <h2 className="text-xl font-bold tracking-tight">Badge Vérifié obtenu</h2>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          Votre profil a été vérifié par TERANGA LABS. Votre fiche publique affiche
+          Votre profil a été vérifié par Devmarket. Votre fiche publique affiche
           désormais le badge vérifié qui rassure les clients.
         </p>
         <div className="mt-6 flex flex-col gap-3 sm:flex-row">

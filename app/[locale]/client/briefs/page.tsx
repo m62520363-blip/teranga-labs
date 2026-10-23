@@ -12,7 +12,7 @@ import {
 
 export const metadata: Metadata = {
   title: "Mes briefs",
-  description: "Tous les briefs publiés sur votre compte TERANGA LABS.",
+  description: "Tous les briefs publiés sur votre compte Devmarket.",
   robots: { index: false, follow: false },
 };
 

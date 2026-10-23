@@ -74,9 +74,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { username } = await params;
   const profile = await getProfile(username);
-  if (!profile) return { title: "Développeur introuvable · Teranga Labs" };
+  if (!profile) return { title: "Développeur introuvable · Devmarket" };
   return {
-    title: `${profile.full_name ?? "Développeur"}${profile.city ? ` · ${profile.city}` : ""} · Teranga Labs`,
+    title: `${profile.full_name ?? "Développeur"}${profile.city ? ` · ${profile.city}` : ""} · Devmarket`,
     description:
       profile.bio ??
       `Développeur ${profile.city ?? "en Afrique de l’Ouest francophone"} — consultez le portfolio et contactez directement.`,
@@ -124,7 +124,7 @@ export default async function DeveloperProfilePage({
   const contactCost =
     typeof costRes?.data === "number" && costRes.data > 0 ? costRes.data : 1;
 
-  const name = profile.full_name ?? "Développeur Teranga Labs";
+  const name = profile.full_name ?? "Développeur Devmarket";
   const roundAverage = Math.round(profile.review_average);
   const shareUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/dev/${profile.username ?? username}`;
   const availability = availabilityInfo(profile.availability);
@@ -433,7 +433,7 @@ export default async function DeveloperProfilePage({
                 Missions réalisées
               </h2>
               <p className="mt-2 text-sm text-muted-foreground">
-                Des projets concrets, vérifiés par TERANGA LABS lorsque la mention
+                Des projets concrets, vérifiés par Devmarket lorsque la mention
                 est affichée.
               </p>
               <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -508,7 +508,7 @@ export default async function DeveloperProfilePage({
                         {mission.via_teranga_labs ? (
                           <span className="inline-flex items-center gap-1.5 rounded-full border border-success/40 bg-success-soft px-2.5 py-1 text-[11px] font-medium text-success">
                             <CheckCircle2 className="size-3" aria-hidden="true" />
-                            Réalisée via TERANGA LABS
+                            Réalisée via Devmarket
                           </span>
                         ) : confidential ? (
                           <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-primary-soft px-2.5 py-1 text-[11px] font-medium text-primary-light">
@@ -518,7 +518,7 @@ export default async function DeveloperProfilePage({
                         ) : (
                           <span className="inline-flex items-center gap-1.5 rounded-full border border-success/40 bg-success-soft px-2.5 py-1 text-[11px] font-medium text-success">
                             <CheckCircle2 className="size-3" aria-hidden="true" />
-                            Mission vérifiée par TERANGA LABS
+                            Mission vérifiée par Devmarket
                           </span>
                         )}
                         {mission.mission_ref ? (
@@ -727,7 +727,7 @@ export default async function DeveloperProfilePage({
         </div>
 
         <p className="mt-6 text-center text-xs text-muted-foreground">
-          Profil présenté par Teranga Labs — mise en relation directe entre
+          Profil présenté par Devmarket — mise en relation directe entre
           clients et développeurs en Afrique de l’Ouest francophone.
         </p>
       </div>

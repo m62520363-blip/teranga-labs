@@ -32,7 +32,7 @@ async function expectBareChrome(page: Page) {
   await expect(page.getByRole("navigation", { name: "Navigation principale" })).toHaveCount(0);
   await expect(page.getByRole("navigation", { name: "Navigation rapide" })).toHaveCount(0);
   await expect(page.locator("footer")).toHaveCount(0);
-  await expect(page.getByRole("link", { name: "TERANGA LABS — accueil" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Devmarket — accueil" })).toBeVisible();
 }
 
 test.describe("page de connexion (/login)", () => {

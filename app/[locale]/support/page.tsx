@@ -4,7 +4,7 @@ import SupportTickets from "@/components/support-tickets";
 
 export const metadata: Metadata = {
   title: "Support",
-  description: "Ouvrez et suivez vos tickets de support TERANGA LABS.",
+  description: "Ouvrez et suivez vos tickets de support Devmarket.",
   robots: { index: false, follow: false },
 };
 
@@ -18,7 +18,7 @@ export default async function SupportPage() {
       <div className="container-tl mx-auto max-w-2xl">
         <h1 className="font-display text-2xl font-semibold">Support</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Une question, un problème ? Ouvrez un ticket : l&apos;équipe TERANGA LABS vous
+          Une question, un problème ? Ouvrez un ticket : l&apos;équipe Devmarket vous
           répond directement ici.
         </p>
         <div className="mt-8">

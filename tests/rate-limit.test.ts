@@ -32,20 +32,20 @@ describe("rateLimit", () => {
 
 describe("clientIp", () => {
   it("privilégie x-forwarded-for", () => {
-    const req = new Request("https://teranga-labs.vercel.app/api/x", {
+    const req = new Request("https://devmarket.vercel.app/api/x", {
       headers: { "x-forwarded-for": "41.82.10.10, 10.0.0.1" },
     });
     expect(clientIp(req)).toBe("41.82.10.10");
   });
 
   it("tombe sur x-real-ip sinon", () => {
-    const req = new Request("https://teranga-labs.vercel.app/api/x", {
+    const req = new Request("https://devmarket.vercel.app/api/x", {
       headers: { "x-real-ip": "197.10.2.3" },
     });
     expect(clientIp(req)).toBe("197.10.2.3");
   });
 
   it("renvoie 'unknown' sans en-tête", () => {
-    expect(clientIp(new Request("https://teranga-labs.vercel.app/api/x"))).toBe("unknown");
+    expect(clientIp(new Request("https://devmarket.vercel.app/api/x"))).toBe("unknown");
   });
 });

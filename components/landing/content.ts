@@ -1,20 +1,20 @@
 import { TOKEN_LABEL_PRICED, TOKEN_RULE } from "@/lib/formatting";
 
 /* --------------------------------------------------------------------------- */
-/*  Données éditables de la landing page à TERANGA LABS.                        */
+/*  Données éditables de la landing page à Devmarket.                        */
 /*  Positionnement : marketplace des projets web de l'Afrique de l'Ouest francophone. */
 /* --------------------------------------------------------------------------- */
 
-export const BRAND = "TERANGA LABS";
+export const BRAND = "Devmarket";
 export const LEGAL_PUBLISHER = "Walty Group-SUARL";
 
 export const META = {
-  title: "Le marketplace des projets web de l'Afrique de l'Ouest francophone | TERANGA LABS",
+  title: "Le marketplace des projets web de l'Afrique de l'Ouest francophone | Devmarket",
   description:
-    "TERANGA LABS, le marketplace des projets web de l'Afrique de l'Ouest francophone. Le client publie son brief pour 1 Token, le développeur débloque le contact avec 1 Token et tout se règle en direct. Aucune commission.",
+    "Devmarket, le marketplace des projets web de l'Afrique de l'Ouest francophone. Le client publie son brief pour 1 Token, le développeur débloque le contact avec 1 Token et tout se règle en direct. Aucune commission.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://teranga-labs.vercel.app",
   keywords:
-    "marketplace Afrique de l'Ouest francophone, développeurs Sénégal, développeurs Côte d'Ivoire, freelance Dakar, Abidjan, Bamako, brief web, trouver des clients web, acheter des tokens, classement développeurs, site e-commerce Dakar, TERANGA LABS",
+    "marketplace Afrique de l'Ouest francophone, développeurs Sénégal, développeurs Côte d'Ivoire, freelance Dakar, Abidjan, Bamako, brief web, trouver des clients web, acheter des tokens, classement développeurs, site e-commerce Dakar, Devmarket",
 };
 
 export const HERO = {
@@ -32,7 +32,7 @@ export const HOW_IT_WORKS = {
   badge: "Aucune commission, jamais",
   titleA: "Comment ça marche",
   titleB: "vraiment.",
-  lead: "Ni les groupes WhatsApp ni les plateformes étrangères ne garantissent le bon match au bon prix — TERANGA le fait au même endroit.",
+  lead: "Ni les groupes WhatsApp ni les plateformes étrangères ne garantissent le bon match au bon prix — Devmarket le fait au même endroit.",
   steps: [
     {
       num: "01",
@@ -61,7 +61,7 @@ export const HOW_IT_WORKS = {
     {
       num: "05",
       title: "Choisis et paie sans commission",
-      text: "Vous réglez ensemble, directement. TERANGA ne prélève rien sur ton projet.",
+      text: "Vous réglez ensemble, directement. Devmarket ne prélève rien sur ton projet.",
       icon: "circle-check",
     },
   ],
@@ -70,7 +70,7 @@ export const HOW_IT_WORKS = {
 export const PRICING = {
   titleA: "Des tarifs",
   titleB: "sans surprise.",
-  lead: "Pas d'abonnement, pas de frais cachés. TERANGA ne gagne de l'argent que quand tu utilises un Token.",
+  lead: "Pas d'abonnement, pas de frais cachés. Devmarket ne gagne de l'argent que quand tu utilises un Token.",
   cards: [
     {
       eyebrow: "Client",
@@ -89,8 +89,8 @@ export const PRICING = {
 
 export const FAQS_LANDING = [
   {
-    q: "Qu'est-ce que TERANGA LABS ?",
-    a: "TERANGA LABS est le marketplace des projets web de l'Afrique de l'Ouest francophone : tu publies le brief de ton site pour 1 Token, et le développeur intéressé débloque ton contact avec 1 Token. Ensuite, vous traitez directement — aucune commission.",
+    q: "Qu'est-ce que Devmarket ?",
+    a: "Devmarket est le marketplace des projets web de l'Afrique de l'Ouest francophone : tu publies le brief de ton site pour 1 Token, et le développeur intéressé débloque ton contact avec 1 Token. Ensuite, vous traitez directement — aucune commission.",
   },
   {
     q: "Combien coûte un Token ?",
@@ -98,7 +98,7 @@ export const FAQS_LANDING = [
   },
   {
     q: "Y a-t-il une commission sur les projets ?",
-    a: "Non. TERANGA LABS ne prélève aucune commission sur les projets : le développeur et le client traitent ensemble, sans intermédiaire. Contre 15 à 20 % prélevés ailleurs, ici tu gardes 100 % de ton budget.",
+    a: "Non. Devmarket ne prélève aucune commission sur les projets : le développeur et le client traitent ensemble, sans intermédiaire. Contre 15 à 20 % prélevés ailleurs, ici tu gardes 100 % de ton budget.",
   },
   {
     q: "Mon WhatsApp reste-t-il privé ?",
@@ -138,14 +138,14 @@ export const ROLE_CARDS = {
 };
 
 export const FAQS = [
-  { q: "Qu'est-ce que TERANGA LABS ?", a: "TERANGA LABS est le marketplace des projets web de l'Afrique de l'Ouest francophone : les clients publient le brief de leur site web pour 1 Token, et les développeurs sérieux viennent vers eux." },
+  { q: "Qu'est-ce que Devmarket ?", a: "Devmarket est le marketplace des projets web de l'Afrique de l'Ouest francophone : les clients publient le brief de leur site web pour 1 Token, et les développeurs sérieux viennent vers eux." },
   { q: "Comment fonctionne le modèle ?", a: "Le client poste son brief en 2 minutes : type de site, budget et région. Le brief apparaît dans /briefs. Le développeur qui s'intéresse paie 1 Token pour ouvrir une discussion privée avec le client, puis l'échange se fait en direct sur la plateforme." },
   { q: "Combien coûte un Token ?", a: `${TOKEN_LABEL_PRICED}. L'inscription est gratuite : vous commandez vos Tokens, puis vous publiez votre brief ou débloquez un contact.` },
   { q: "Comment je paie mes Tokens ?", a: "Le paiement se fait en ligne depuis votre wallet : rechargez-le, puis dépensez vos Tokens partout sur le site. Dès la confirmation du paiement, vos Tokens sont crédités automatiquement sur votre compte." },
   { q: "Mon numéro WhatsApp reste-t-il privé ?", a: "Oui. Votre numéro n'apparaît jamais sur les briefs ni dans les résultats de recherche : les échanges passent par la messagerie interne, et vous décidez seul de quand donner votre contact." },
       { q: "Dans quels pays le service est-il disponible ?", a: "Partout dans le monde : chaque pays et chaque région sont disponibles à l'inscription, et les prix s'affichent dans la devise locale (FCFA, USD, EUR, …)." },
   { q: "Existe-t-il un classement des développeurs ?", a: "Oui : un classement mondial, récompensé chaque mois. Les 3 premiers reçoivent 10, 7 et 4 Tokens, il faut au moins 2 projets terminés et confirmés dans le mois pour y figurer, et chaque projet terminé vaut 50 points." },
-  { q: "Y a-t-il une commission sur les projets ?", a: "Non. TERANGA LABS ne prélève aucune commission sur les projets : le développeur et le client traitent ensemble, sans intermédiaire." },
+  { q: "Y a-t-il une commission sur les projets ?", a: "Non. Devmarket ne prélève aucune commission sur les projets : le développeur et le client traitent ensemble, sans intermédiaire." },
 ];
 
 export { TOKEN_RULE };

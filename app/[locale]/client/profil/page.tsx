@@ -5,7 +5,7 @@ import { ProfileForm } from "@/components/client/profile-form";
 
 export const metadata: Metadata = {
   title: "Mon profil",
-  description: "Gérez le nom affiché de votre compte TERANGA LABS.",
+  description: "Gérez le nom affiché de votre compte Devmarket.",
   robots: { index: false, follow: false },
 };
 

@@ -224,7 +224,7 @@ export default function AgencyManager() {
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               className="h-11 w-full rounded-xl border border-hairline bg-background px-3 text-sm outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/50"
-              placeholder="Ex. Atelier Teranga"
+              placeholder="Ex. Atelier Devmarket"
             />
           </div>
 
@@ -247,7 +247,7 @@ export default function AgencyManager() {
                   })
                 }
                 className="w-full flex-1 bg-transparent outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
-                placeholder="atelier-teranga"
+                placeholder="atelier-devmarket"
               />
             </div>
           </div>

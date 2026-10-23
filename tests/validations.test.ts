@@ -63,7 +63,7 @@ describe("briefSchema", () => {
 describe("loginSchema", () => {
   it("accepte un email et mot de passe valides", () => {
     expect(
-      loginSchema.safeParse({ email: "dev@teranga.sn", password: "secret123" })
+      loginSchema.safeParse({ email: "dev@devmarket.sn", password: "secret123" })
         .success
     ).toBe(true);
   });
@@ -78,7 +78,7 @@ describe("loginSchema", () => {
 describe("signupSchema", () => {
   const valid = {
     full_name: "Awa Ndiaye",
-    email: "awa@teranga.sn",
+    email: "awa@devmarket.sn",
     password: "Motdepasse1",
     whatsapp: "+221771234567",
     skills: "Next.js, Supabase",

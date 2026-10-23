@@ -1,4 +1,4 @@
-# Déploiement — TERANGA LABS
+# Déploiement — Devmarket
 
 > Guide opérationnel (§66 du cahier des charges). Site : `teranga-labs` (Vercel).
 > Console admin : `teranga-labs-admin` (Vercel, dépôt séparé).

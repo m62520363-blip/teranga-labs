@@ -41,7 +41,7 @@ export function SideLink({
           className={cn(
             "grid size-7 shrink-0 place-items-center rounded-lg transition-colors",
             active
-              ? "bg-primary text-white"
+              ? "bg-primary text-ink"
               : "text-muted-foreground group-hover:text-foreground"
           )}
         >

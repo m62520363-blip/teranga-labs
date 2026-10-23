@@ -8,7 +8,7 @@ import { cn } from "cn";
  */
 export function ImageLogoMark({
   className,
-  alt = "TERANGA LABS",
+  alt = "Devmarket",
   priority = false,
 }: {
   className?: string;
@@ -19,8 +19,8 @@ export function ImageLogoMark({
     <Image
       src="/logo.png"
       alt={alt}
-      width={2172}
-      height={724}
+      width={1998}
+      height={787}
       priority={priority}
       className={cn("h-8 w-auto", className)}
     />
@@ -30,7 +30,7 @@ export function ImageLogoMark({
 export function Logo({ className }: { className?: string }) {
   return (
     <span className={cn("inline-flex items-center", className)}>
-      <span className="sr-only">TERANGA&nbsp;LABS</span>
+      <span className="sr-only">Devmarket</span>
       <ImageLogoMark alt="" />
     </span>
   );

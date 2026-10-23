@@ -108,7 +108,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const message = `Votre code de vérification TERANGA LABS : ${result.code} (valable 10 minutes). Ne le partagez avec personne.`;
+  const message = `Votre code de vérification Devmarket : ${result.code} (valable 10 minutes). Ne le partagez avec personne.`;
 
   try {
     if (parsed.data.channel === "email") {

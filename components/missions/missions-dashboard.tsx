@@ -245,7 +245,7 @@ export function MissionsDashboard({ missions, userId, role, focusId = null, disp
                   className={cn(
                     "rounded-xl border px-3.5 py-1.5 text-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
                     filter === f.key
-                      ? "border-primary/40 bg-primary text-white"
+                      ? "border-primary/40 bg-primary text-ink"
                       : "border-hairline bg-card text-muted-foreground hover:text-foreground",
                   )}
                 >

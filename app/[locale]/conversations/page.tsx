@@ -7,7 +7,7 @@ import { ConversationsList } from "@/components/conversations-list";
 
 export const metadata: Metadata = {
   title: "Mes discussions",
-  description: "Vos conversations privées autour des briefs Teranga Labs.",
+  description: "Vos conversations privées autour des briefs Devmarket.",
   robots: { index: false, follow: false },
 };
 

@@ -1,4 +1,4 @@
-# TERANGA LABS
+# Devmarket
 
 **Des clients qui veulent un site. Tous les jours au Sénégal.**
 
@@ -182,29 +182,30 @@ valeur hexadécimale en dur dans les composants.
 
 | Token | Valeur | Rôle |
 | --- | --- | --- |
-| `--primary` | `#e86a2c` | orange TERANGA (boutons, liens, accents) |
-| `--primary-foreground` | `--ink` `#0d0d0d` | texte **sur** un aplat orange |
-| `--ink` | `#0d0d0d` | texte sur fond clair (secondaires inversés) |
-| `--hairline` | `#2a2a2a` | filet de séparation des cartes |
-| `--border-strong` | `#3a3a3a` | filet appuyé (traits de svg, barre de défilement) |
-| `--border` | `#262626` | bordure de champ et de carte |
-| `--surface` / `--surface-secondary` | `#0f0f0f` / `#141414` | fond de section et de carte |
-| `--primary-soft` | `#2a1a10` | fond des encarts de marque (pastilles, bulles) |
-| `--primary-light` | `#f2a378` | texte d'accent sur fond sombre (9:1) |
-| `--primary-hover` | `#d95c1f` | survol des aplats orange |
-| `--success` / `--warning` / `--error` | `#34d399` / `#fbbf24` / `#f87171` | statut : le trio est lisible en texte sur les surfaces sombres (≥ 9:1) |
+| `--primary` | `#39ff88` | AI Green Devmarket (boutons, liens, accents) |
+| `--primary-foreground` | `--ink` `#0b132b` | texte **sur** un aplat vert néon |
+| `--ink` | `#0b132b` | texte sur fond clair (secondaires inversés) |
+| `--hairline` | `#1e2a4e` | filet de séparation des cartes |
+| `--border-strong` | `#2c3a66` | filet appuyé (traits de svg, barre de défilement) |
+| `--border` | `#1e2a4e` | bordure de champ et de carte |
+| `--surface` / `--surface-secondary` | `#080e20` / `#101833` | fond de section et de carte |
+| `--primary-soft` | `#0f2e24` | fond des encarts de marque (pastilles, bulles) |
+| `--primary-light` | `#8cffc0` | texte d'accent sur fond sombre |
+| `--primary-hover` | `#2be076` | survol des aplats verts |
+| `--success` / `--warning` / `--error` | `#39ff88` / `#fbbf24` / `#f87171` | statut : le trio est lisible en texte sur les surfaces sombres |
 | `--destructive` | `#b91c1c` | fond des boutons destructifs (libellé blanc 6.4:1) |
 
 Les teintes translucides (`--accent-glow`, `--*-soft`) sont exprimées en
 `color-mix()` sur ces tokens : plus de `rgba()` à dupliquer.
 
-> **Contraste** : le texte posé sur un aplat de marque est le noir, pas le
-> blanc. `#0d0d0d` sur `#e86a2c` = **6.04:1** (WCAG AA) alors que `#ffffff`
-> sur la même couleur plafonne à **3.22:1** et échoue. Toute la surface —
-> `.btn-primary`, `<Button>`, `<Badge>`, boutons de formulaire, badges —
-> passe par `--primary-foreground`, donc le choix correct est appliqué une
-> seule fois. Le reste de la palette est vérifié : texte principal 17.7:1,
-> texte secondaire 7.9:1, succès 10.3:1, warning 11.9:1, erreur 6.3:1.
+> **Contraste** : le texte posé sur un aplat de marque est le noir (Prompt
+> Blue), pas le blanc. `#0b132b` sur `#39ff88` = **13.9:1** (WCAG AAA) alors
+> que `#ffffff` sur la même couleur plafonne à **1.33:1** et échoue
+> lamentablement. Toute la surface — `.btn-primary`, `<Button>`, `<Badge>`,
+> boutons de formulaire, badges, avatars, FAB — passe par
+> `--primary-foreground`, donc le choix correct est appliqué une seule fois.
+> Le reste de la palette est vérifié : texte principal 16.9:1, texte
+> secondaire 7.6:1, succès 13.9:1, warning 11.0:1, erreur 6.6:1.
 
 > Ajouter une couleur = ajouter un token dans `:root` **et** son alias
 > `--color-*` dans `@theme inline`, puis n'utiliser que l'utilitaire
@@ -219,7 +220,7 @@ un build, les classes utilisées doivent exister dans `.next/static/chunks/*.css
 **Exceptions assumées** (le CSS peut ne pas être chargé) :
 `app/global-error.tsx` utilise des styles inline avec des littéraux hex, et
 `viewport.themeColor` de `app/layout.tsx` reste un littéral — dans les deux cas
-un `var(--token)` rendrait la page illisible. Ce sont les 10 seuls
+un `var(--token)` rendrait la page illisible. Ce sont les 9 seuls
 hexadécimaux restants du code (hors adresse factice d'un témoignage).
 
 ## Économie des Tokens

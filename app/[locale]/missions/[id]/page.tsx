@@ -7,7 +7,7 @@ import type { MissionPayload } from "@/components/missions/types";
 
 export const metadata: Metadata = {
   title: "Détail de la mission",
-  description: "Suivi d'une mission TERANGA LABS.",
+  description: "Suivi d'une mission Devmarket.",
   robots: { index: false, follow: false },
 };
 

@@ -1,25 +1,25 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360" fill="none" role="img" aria-label="Podium du classement des développeurs">
-  <rect width="480" height="360" rx="24" fill="#0f0f0f"/>
-  <circle cx="240" cy="200" r="140" fill="#e86a2c" opacity="0.06"/>
+  <rect width="480" height="360" rx="24" fill="#080e20"/>
+  <circle cx="240" cy="200" r="140" fill="#39ff88" opacity="0.06"/>
   <!-- Podium -->
   <g>
-    <rect x="86" y="212" width="92" height="72" rx="10" fill="#141414" stroke="#2a2a2a"/>
-    <rect x="194" y="164" width="92" height="120" rx="10" fill="#241712" stroke="#e86a2c" stroke-width="2"/>
-    <rect x="302" y="230" width="92" height="54" rx="10" fill="#141414" stroke="#2a2a2a"/>
-    <text x="132" y="256" text-anchor="middle" font-family="system-ui,sans-serif" font-size="24" font-weight="800" fill="#9a9a9a">2</text>
-    <text x="240" y="214" text-anchor="middle" font-family="system-ui,sans-serif" font-size="30" font-weight="800" fill="#e86a2c">1</text>
-    <text x="348" y="264" text-anchor="middle" font-family="system-ui,sans-serif" font-size="20" font-weight="800" fill="#9a9a9a">3</text>
+    <rect x="86" y="212" width="92" height="72" rx="10" fill="#101833" stroke="#1e2a4e"/>
+    <rect x="194" y="164" width="92" height="120" rx="10" fill="#0f2e24" stroke="#39ff88" stroke-width="2"/>
+    <rect x="302" y="230" width="92" height="54" rx="10" fill="#101833" stroke="#1e2a4e"/>
+    <text x="132" y="256" text-anchor="middle" font-family="system-ui,sans-serif" font-size="24" font-weight="800" fill="#9aa7c7">2</text>
+    <text x="240" y="214" text-anchor="middle" font-family="system-ui,sans-serif" font-size="30" font-weight="800" fill="#39ff88">1</text>
+    <text x="348" y="264" text-anchor="middle" font-family="system-ui,sans-serif" font-size="20" font-weight="800" fill="#9aa7c7">3</text>
   </g>
   <!-- Profils au-dessus -->
   <g>
-    <circle cx="132" cy="176" r="16" fill="#1c1c1c" stroke="#2a2a2a"/>
-    <circle cx="132" cy="171" r="6" fill="#9a9a9a"/>
-    <circle cx="240" cy="118" r="20" fill="#e86a2c"/>
-    <circle cx="240" cy="111" r="8" fill="#5b2508"/>
-    <circle cx="348" cy="196" r="14" fill="#1c1c1c" stroke="#2a2a2a"/>
-    <circle cx="348" cy="191" r="5.5" fill="#9a9a9a"/>
+    <circle cx="132" cy="176" r="16" fill="#101833" stroke="#1e2a4e"/>
+    <circle cx="132" cy="171" r="6" fill="#9aa7c7"/>
+    <circle cx="240" cy="118" r="20" fill="#39ff88"/>
+    <circle cx="240" cy="111" r="8" fill="#0b3b22"/>
+    <circle cx="348" cy="196" r="14" fill="#101833" stroke="#1e2a4e"/>
+    <circle cx="348" cy="191" r="5.5" fill="#9aa7c7"/>
   </g>
   <!-- Étoile -->
-  <path d="M240 52l6.5 13.2 14.6 2.1-10.6 10.3 2.5 14.5L240 84.2l-13 6.9 2.5-14.5-10.6-10.3 14.6-2.1z" fill="#e86a2c"/>
-  <text x="240" y="332" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="#9a9a9a">Réputation calculée sur missions et avis clients</text>
+  <path d="M240 52l6.5 13.2 14.6 2.1-10.6 10.3 2.5 14.5L240 84.2l-13 6.9 2.5-14.5-10.6-10.3 14.6-2.1z" fill="#39ff88"/>
+  <text x="240" y="332" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="#9aa7c7">Réputation calculée sur missions et avis clients</text>
 </svg>

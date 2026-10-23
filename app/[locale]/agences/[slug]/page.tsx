@@ -28,7 +28,7 @@ export async function generateMetadata({
     title: `${agency.name} — Agence`,
     description:
       agency.bio?.slice(0, 160) ||
-      `Agence ${agency.name} sur TERANGA LABS (${agency.members_count} développeurs).`,
+      `Agence ${agency.name} sur Devmarket (${agency.members_count} développeurs).`,
   };
 }
 

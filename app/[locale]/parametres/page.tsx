@@ -5,7 +5,7 @@ import { SettingsContent, type EmailPrefs } from "@/components/settings-content"
 
 export const metadata: Metadata = {
   title: "Paramètres",
-  description: "Gérez votre compte et votre mot de passe TERANGA LABS.",
+  description: "Gérez votre compte et votre mot de passe Devmarket.",
   robots: { index: false, follow: false },
 };
 

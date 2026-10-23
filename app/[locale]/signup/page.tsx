@@ -6,7 +6,7 @@ import { getCurrentRole, getCurrentUser } from "@/lib/supabase/server";
 export const metadata: Metadata = {
   title: "Créer un compte",
   description:
-    "Inscrivez-vous sur TERANGA LABS : publiez un projet (client) ou débloquez les briefs et contactez les clients (développeur).",
+    "Inscrivez-vous sur Devmarket : publiez un projet (client) ou débloquez les briefs et contactez les clients (développeur).",
   robots: { index: false, follow: false },
 };
 

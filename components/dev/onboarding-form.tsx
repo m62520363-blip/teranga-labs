@@ -1478,7 +1478,7 @@ function ProfessionalStep({
             <Link href="/conditions-utilisation" className="font-medium text-primary underline-offset-4 hover:underline">
               conditions d’utilisation
             </Link>{" "}
-            de TERANGA LABS. Mon dossier sera examiné par notre équipe avant activation.
+            de Devmarket. Mon dossier sera examiné par notre équipe avant activation.
           </span>
         </label>
         {errors.terms_accepted ? (

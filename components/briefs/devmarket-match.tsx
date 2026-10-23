@@ -29,7 +29,7 @@ type MatchRow = {
   };
 };
 
-export function TerangaMatch({
+export function DevmarketMatch({
   projectType,
   city,
   budget,
@@ -69,7 +69,7 @@ export function TerangaMatch({
           Développeurs recommandés
         </h2>
         <span className="text-xs text-muted-foreground">
-          Score de compatibilité Teranga Match
+          Score de compatibilité Devmarket Match
         </span>
       </div>
       <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

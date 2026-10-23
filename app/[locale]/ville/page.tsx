@@ -38,7 +38,7 @@ export default function RegionsIndexPage() {
             Développeurs web par région
           </h1>
           <p className="mt-3 max-w-2xl leading-relaxed text-muted-foreground">
-            TERANGA LABS couvre le Sénégal, la Côte d&apos;Ivoire, le Mali, le
+            Devmarket couvre le Sénégal, la Côte d&apos;Ivoire, le Mali, le
             Burkina Faso, le Niger, la Guinée, la Guinée-Bissau, le Bénin et le
             Togo. Choisissez votre région pour voir les briefs réellement
             publiés.

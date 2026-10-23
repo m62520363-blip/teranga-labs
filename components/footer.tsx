@@ -48,7 +48,10 @@ export function Footer() {
               <span className="sr-only">{BRAND}</span>
               <ImageLogoMark className="h-10 w-auto" alt="" />
             </Link>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
+            <p className="mt-4 max-w-xs font-headings text-base font-bold tracking-tight text-primary">
+              {t("slogan")}
+            </p>
+            <p className="mt-2 max-w-xs text-sm leading-relaxed text-muted-foreground">
               {t("tagline")}
             </p>
             <div className="mt-6 max-w-sm">

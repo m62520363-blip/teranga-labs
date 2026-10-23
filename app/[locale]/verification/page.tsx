@@ -12,7 +12,7 @@ import { isChariowConfigured } from "@/lib/payments/chariow-config";
 export const metadata: Metadata = {
   title: "Vérification de profil",
   description:
-    "Obtenez le badge Vérifié sur votre profil développeur TERANGA LABS grâce à une vérification d'identité et de portfolio effectuée par notre équipe.",
+    "Obtenez le badge Vérifié sur votre profil développeur Devmarket grâce à une vérification d'identité et de portfolio effectuée par notre équipe.",
   robots: { index: false, follow: false },
 };
 

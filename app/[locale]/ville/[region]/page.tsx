@@ -53,10 +53,10 @@ export async function generateMetadata({
 
   return {
     title: `Développeurs web à ${region}`,
-    description: `Trouvez un développeur web à ${region} (${countryName}) pour créer votre site, votre boutique en ligne ou votre application. Publiez votre besoin depuis TERANGA LABS.`,
+    description: `Trouvez un développeur web à ${region} (${countryName}) pour créer votre site, votre boutique en ligne ou votre application. Publiez votre besoin depuis Devmarket.`,
     alternates: { canonical: `/ville/${slugifyRegion(region)}` },
     openGraph: {
-      title: `Développeurs web à ${region} — TERANGA LABS`,
+      title: `Développeurs web à ${region} — Devmarket`,
       description: `Les briefs web réels de ${region}, publiés par des entreprises et entrepreneurs du ${countryName}.`,
       url: absoluteUrl(`/ville/${slugifyRegion(region)}`),
     },
@@ -98,7 +98,7 @@ export default async function RegionPage({
     description: `Les briefs web réels publiés à ${region}, en ${countryName}.`,
     url: absoluteUrl(`/ville/${slug}`),
     inLanguage: "fr",
-    isPartOf: { "@type": "WebSite", name: "TERANGA LABS", url: absoluteUrl("/").origin },
+    isPartOf: { "@type": "WebSite", name: "Devmarket", url: absoluteUrl("/").origin },
   };
 
   return (
@@ -118,7 +118,7 @@ export default async function RegionPage({
           </h1>
           <p className="mt-3 max-w-2xl leading-relaxed text-muted-foreground">
             Voici les besoins que les entreprises et entrepreneurs de {region}
-            ont publiés sur TERANGA LABS. Publiez le vôtre : les développeurs
+            ont publiés sur Devmarket. Publiez le vôtre : les développeurs
             de la région vous répondent directement.
           </p>
 

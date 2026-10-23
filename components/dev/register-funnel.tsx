@@ -290,7 +290,7 @@ function AccountStep({
           Crée ton compte
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          rejoins TERANGA LABS en tant que développeur. Gratuit, 2 minutes.
+          rejoins Devmarket en tant que développeur. Gratuit, 2 minutes.
         </p>
       </div>
 

@@ -53,7 +53,7 @@ export function missionStatusBadge(
 export const PUBLICATION_LABELS: Record<string, string> = {
   public: "Projet public",
   confidential: "Projet confidentiel",
-  clients_only: "Visible uniquement par les clients TERANGA LABS",
+  clients_only: "Visible uniquement par les clients Devmarket",
 };
 
 export function publicationLabel(

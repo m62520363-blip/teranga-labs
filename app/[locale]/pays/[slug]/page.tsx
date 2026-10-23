@@ -35,8 +35,8 @@ export async function generateMetadata({
     description: `Trouvez un développeur web en ${country.nameFr} pour votre site, votre boutique en ligne ou votre application. Publiez votre brief et recevez les réponses des développeurs.`,
     alternates: { canonical: `/pays/${slugifyPlace(country.nameFr)}` },
     openGraph: {
-      title: `Développeurs web en ${country.nameFr} — TERANGA LABS`,
-      description: `Les régions couvertes et les briefs réels de ${country.nameFr}, publiés par des clients TERANGA LABS.`,
+      title: `Développeurs web en ${country.nameFr} — Devmarket`,
+      description: `Les régions couvertes et les briefs réels de ${country.nameFr}, publiés par des clients Devmarket.`,
       url: absoluteUrl(`/pays/${slugifyPlace(country.nameFr)}`),
     },
   };
@@ -90,7 +90,7 @@ export default async function CountryPage({
     description: `Les briefs web réels publiés en ${country.nameFr}.`,
     url: absoluteUrl(`/pays/${countrySlug}`),
     inLanguage: "fr",
-    isPartOf: { "@type": "WebSite", name: "TERANGA LABS", url: absoluteUrl("/").origin },
+    isPartOf: { "@type": "WebSite", name: "Devmarket", url: absoluteUrl("/").origin },
   };
 
   return (

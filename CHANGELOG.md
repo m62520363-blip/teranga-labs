@@ -1,6 +1,40 @@
 # Changelog
 
-Toutes les modifications notables du projet TERANGA LABS sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
+Toutes les modifications notables du projet sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
+
+## [Unreleased] — 2026-10-23 : rebrand Devmarket (Prompt Blue + AI Green, logos officiels, slogan)
+
+Le site change d'identité : **TERANGA LABS → Devmarket** — nom, logos, palette (Prompt Blue `#0B132B` en fond, AI Green `#39FF88` en primaire) et slogan « Find Developers. Build Your Vision ». Migrations, CHANGELOG et AUDIT exclus du renommage (historique immuable).
+
+### Identité & logos (T1)
+
+- **Assets dérivés des logos livrés** : `public/logo.png` (lockup 1998×787), `public/icon.png` (512), `public/apple-icon.png` (180), `public/pwa-icon-192.png` / `-512.png`, `public/favicon.ico` (conteneur ICO maison autour d'un PNG 32×32), `public/og.png` régénéré 1200×630 (fond radial Prompt Blue, lockup centré) ; `components/logo.tsx` passe aux vraies dimensions du lockup.
+
+### Palette Prompt Blue + AI Green (T2)
+
+- **`app/globals.css`** : fond `#0b132b`, primaire `#39ff88` + jetons dérivés (ink, surfaces, hairlines, primary-soft/light/hover, success) ; teintes translucides déjà en `color-mix()`.
+- **Hardcodes résiduels convertis** : `global-error.tsx`, `themeColor` racine, gradients hex de `scene-3d`, halos `hero`/`navbar`/`client-shell` ; textes sur aplat néon `text-white` → `text-ink` (FAB, filtres, avatars, nav — 13,9:1).
+- **6 illustrations SVG** (`public/illustrations/`) recolorées (marque + neutres de l'ancienne palette chaude).
+- **README** : table du design system et note de contraste recalculées.
+
+### Slogan (T3)
+
+- Clés i18n `Landing.hero.slogan` + `Footer.slogan` (« Find Developers. Build Your Vision », identique FR/EN) rendues sous le h1 du hero et au-dessus de la tagline du footer.
+
+### Renommage Devmarket (T4-T5)
+
+- **~250 occurrences sur 64 fichiers** : UI, i18n FR/EN, metadata (template de titre, siteName, JSON-LD), e-mails/OTP, mentions légales/CGU, README, docs ; contact → `contact@devmarket.com`.
+- **Identifiants préservés** : colonne `via_teranga_labs`, RPC `teranga_match` (+ types), projets Vercel `teranga-labs`/`teranga-labs-admin`, URL de repli `teranga-labs.vercel.app`, domaine d'envoi Resend (display name « Devmarket »).
+- **Features** : `TerangaMatch` → `DevmarketMatch` (`components/briefs/devmarket-match.tsx`), « Score Teranga » → « Score Devmarket », clés de colonnes `teranga` → `devmarket` (tableau comparatif + messages).
+- **`package.json`** : nom `devmarket` (lock régénéré).
+
+### Correctifs metadata (bonus)
+
+- **`Meta.ogAlt` manquante** (bug préexistant de la refonte : `MISSING_MESSAGE` à chaque rendu de la home) : clé ajoutée en FR/EN ; `og:title`/`twitter:title` de la home basculés sur `Meta.ogTitle` ; « | Devmarket » retiré de `Meta.title` (fin du « … — Devmarket » dupliqué dans le `<title>`).
+
+### Vérifications
+
+- `npm run check` ✓ (check-rpc, typecheck, lint, **177/177** vitest) ; `npm run build` ✓ (FLJS 304 kB) ; **e2e smoke+landing 22/22** ; résidus « teranga » limités aux identifiants DB/projets volontairement conservés.
 
 ## [Unreleased] — refonte complète TERANGA LABS (38 points, sections A → H)
 

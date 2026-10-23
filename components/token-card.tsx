@@ -249,7 +249,7 @@ export function TokenCard({
               </div>
               {step === "redirecting" ? (
                 <p className="text-center text-xs leading-relaxed text-muted-foreground">
-                  Vous allez quitter TERANGA LABS pour la page de paiement
+                  Vous allez quitter Devmarket pour la page de paiement
                   sécurisée. Ne fermez pas cet onglet.
                 </p>
               ) : null}

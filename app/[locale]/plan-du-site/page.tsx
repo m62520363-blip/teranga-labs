@@ -65,7 +65,7 @@ export default async function PlanDuSitePage() {
         <div className="mx-auto max-w-3xl">
           <span className="chip gap-2 bg-card/85 border-hairline backdrop-blur">
             <MapPin className="size-3.5 text-primary" aria-hidden="true" />
-            TERANGA LABS
+            Devmarket
           </span>
           <h1 className="mt-6 text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
             {t("h1")}

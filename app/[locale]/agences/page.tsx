@@ -7,7 +7,7 @@ import { asAgencyList, type AgencyListItem } from "@/types/agency";
 export const metadata: Metadata = {
   title: "Agences",
   description:
-    "Découvrez les agences de développement vérifiées de Teranga Labs : équipes, spécialités et projets à la carte.",
+    "Découvrez les agences de développement vérifiées de Devmarket : équipes, spécialités et projets à la carte.",
 };
 
 export const dynamic = "force-dynamic";
@@ -46,7 +46,7 @@ export default async function AgenciesPageRoute() {
               Travaillez avec une <span className="text-primary">équipe</span>
             </h1>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground md:text-base">
-              Des collectifs de développeurs validés par TERANGA LABS, réunis sous
+              Des collectifs de développeurs validés par Devmarket, réunis sous
               une même enseigne pour porter vos projets de bout en bout.
             </p>
           </div>

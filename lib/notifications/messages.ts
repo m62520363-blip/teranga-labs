@@ -39,7 +39,7 @@ export function buildClientConfirmationMessage(
 ): string {
   const trackingUrl = `${origin}/brief/${brief.request_id}?key=${brief.management_key}`;
   return (
-    `Teranga Labs : votre brief « ${brief.client_name} » est en ligne !\n` +
+    `Devmarket : votre brief « ${brief.client_name} » est en ligne !\n` +
     `\n` +
     `${summarizeBrief(brief)}\n` +
     `\n` +
@@ -59,7 +59,7 @@ export function buildDeveloperMatchMessage(
   origin: string
 ): string {
   return (
-    `Nouveau brief sur Teranga Labs :\n` +
+    `Nouveau brief sur Devmarket :\n` +
     `${summarizeBrief(brief)}\n` +
     `Consultez le projet et débloquez le contact du client :\n` +
     `${origin}/briefs`

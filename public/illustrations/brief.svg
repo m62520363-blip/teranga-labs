@@ -1,23 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360" fill="none" role="img" aria-label="Publication d'un brief de projet web">
-  <rect width="480" height="360" rx="24" fill="#0f0f0f"/>
-  <circle cx="240" cy="170" r="140" fill="#e86a2c" opacity="0.06"/>
+  <rect width="480" height="360" rx="24" fill="#080e20"/>
+  <circle cx="240" cy="170" r="140" fill="#39ff88" opacity="0.06"/>
   <!-- Document -->
   <g>
-    <rect x="130" y="58" width="220" height="244" rx="18" fill="#141414" stroke="#2a2a2a"/>
-    <rect x="158" y="92" width="120" height="10" rx="5" fill="#e86a2c"/>
-    <rect x="158" y="118" width="164" height="8" rx="4" fill="#2a2a2a"/>
-    <rect x="158" y="136" width="140" height="8" rx="4" fill="#2a2a2a"/>
-    <rect x="158" y="154" width="158" height="8" rx="4" fill="#2a2a2a"/>
-    <rect x="158" y="186" width="88" height="26" rx="13" fill="#241712"/>
-    <text x="202" y="204" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="700" fill="#e86a2c">350 000 F</text>
-    <rect x="158" y="230" width="128" height="34" rx="17" fill="#e86a2c"/>
-    <text x="222" y="252" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#0d0d0d">Publier · 1 Token</text>
+    <rect x="130" y="58" width="220" height="244" rx="18" fill="#101833" stroke="#1e2a4e"/>
+    <rect x="158" y="92" width="120" height="10" rx="5" fill="#39ff88"/>
+    <rect x="158" y="118" width="164" height="8" rx="4" fill="#1e2a4e"/>
+    <rect x="158" y="136" width="140" height="8" rx="4" fill="#1e2a4e"/>
+    <rect x="158" y="154" width="158" height="8" rx="4" fill="#1e2a4e"/>
+    <rect x="158" y="186" width="88" height="26" rx="13" fill="#0f2e24"/>
+    <text x="202" y="204" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="700" fill="#39ff88">350 000 F</text>
+    <rect x="158" y="230" width="128" height="34" rx="17" fill="#39ff88"/>
+    <text x="222" y="252" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#0b132b">Publier · 1 Token</text>
   </g>
   <!-- Stylo -->
   <g transform="rotate(38 356 118)">
-    <rect x="338" y="60" width="16" height="120" rx="8" fill="#2a2a2a"/>
-    <rect x="338" y="60" width="16" height="34" rx="8" fill="#e86a2c"/>
-    <path d="M338 180h16l-8 22z" fill="#f2f2f2"/>
+    <rect x="338" y="60" width="16" height="120" rx="8" fill="#1e2a4e"/>
+    <rect x="338" y="60" width="16" height="34" rx="8" fill="#39ff88"/>
+    <path d="M338 180h16l-8 22z" fill="#f1f5ff"/>
   </g>
-  <text x="240" y="332" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="#9a9a9a">Votre besoin, en ligne en 2 minutes</text>
+  <text x="240" y="332" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="#9aa7c7">Votre besoin, en ligne en 2 minutes</text>
 </svg>

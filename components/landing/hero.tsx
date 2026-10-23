@@ -34,7 +34,14 @@ export function Hero() {
         <HeroTitle className="animate-rise" delay="1250ms" />
 
         <p
-          className="animate-rise mt-5 max-w-xl text-base text-muted-foreground sm:text-lg sm:leading-relaxed"
+          className="animate-rise mt-4 font-headings text-lg font-bold tracking-tight text-primary sm:text-xl"
+          style={{ "--rise-delay": "1300ms" } as React.CSSProperties}
+        >
+          {t("slogan")}
+        </p>
+
+        <p
+          className="animate-rise mt-4 max-w-xl text-base text-muted-foreground sm:text-lg sm:leading-relaxed"
           style={{ "--rise-delay": "1350ms" } as React.CSSProperties}
         >
           {t("subtitle")}
@@ -71,7 +78,7 @@ export function Hero() {
             variant="marketplace"
             className="pointer-events-none absolute -inset-x-16 -bottom-10 -top-8 -z-10 opacity-40"
           />
-          <div className="pointer-events-none absolute -inset-x-10 top-16 -z-10 h-64 rounded-full bg-[radial-gradient(closest-side,rgba(232,106,44,0.16),transparent)]" />
+          <div className="pointer-events-none absolute -inset-x-10 top-16 -z-10 h-64 rounded-full bg-[radial-gradient(closest-side,rgba(57,255,136,0.16),transparent)]" />
           <HeroLaptop />
         </div>
       </div>

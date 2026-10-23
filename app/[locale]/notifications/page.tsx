@@ -4,7 +4,7 @@ import { requireUser } from "@/lib/auth/guards";
 
 export const metadata: Metadata = {
   title: "Notifications",
-  description: "Vos alertes TERANGA LABS.",
+  description: "Vos alertes Devmarket.",
   robots: { index: false, follow: false },
 };
 

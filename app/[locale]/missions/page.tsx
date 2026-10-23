@@ -9,7 +9,7 @@ import {
 
 export const metadata: Metadata = {
   title: "Mes missions",
-  description: "Suivi de vos missions TERANGA LABS.",
+  description: "Suivi de vos missions Devmarket.",
   robots: { index: false, follow: false },
 };
 

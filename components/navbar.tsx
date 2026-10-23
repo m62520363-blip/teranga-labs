@@ -373,7 +373,7 @@ function DesktopNavLinks({
       <span
         aria-hidden="true"
         className={cn(
-          "absolute bottom-0 h-[3px] rounded-full bg-gradient-to-r from-primary to-primary-light shadow-[0_0_12px_rgba(232,106,44,0.55)] transition-transform duration-500 will-change-transform [transition-timing-function:var(--ease-spring)]",
+          "absolute bottom-0 h-[3px] rounded-full bg-gradient-to-r from-primary to-primary-light shadow-[0_0_12px_rgba(57,255,136,0.55)] transition-transform duration-500 will-change-transform [transition-timing-function:var(--ease-spring)]",
           !indicator.visible && "opacity-0"
         )}
         style={{
@@ -471,7 +471,7 @@ function MobileDock({ items, pathname }: { items: DockItem[]; pathname: string }
         <span
           aria-hidden="true"
           className={cn(
-            "pointer-events-none absolute left-1.5 top-1.5 h-[calc(100%-0.75rem)] rounded-[1.2rem] bg-gradient-to-b from-primary to-primary-hover shadow-[0_6px_20px_-4px_rgba(232,106,44,0.55)] ring-1 ring-white/20 transition-all duration-500 will-change-transform [transition-timing-function:var(--ease-spring)]",
+            "pointer-events-none absolute left-1.5 top-1.5 h-[calc(100%-0.75rem)] rounded-[1.2rem] bg-gradient-to-b from-primary to-primary-hover shadow-[0_6px_20px_-4px_rgba(57,255,136,0.55)] ring-1 ring-white/20 transition-all duration-500 will-change-transform [transition-timing-function:var(--ease-spring)]",
             !pos.active && "opacity-0"
           )}
           style={{

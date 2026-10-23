@@ -17,8 +17,8 @@ export default function GlobalError({
     <html lang="fr">
       <body
         style={{
-          background: "#0a0a0a",
-          color: "#f2f2f2",
+          background: "#0b132b",
+          color: "#f1f5ff",
           fontFamily: "ui-sans-serif, system-ui, sans-serif",
           display: "flex",
           minHeight: "100vh",
@@ -31,7 +31,7 @@ export default function GlobalError({
         <main style={{ maxWidth: "28rem", textAlign: "center" }}>
           <p
             style={{
-              color: "#e86a2c",
+              color: "#39ff88",
               fontSize: "3rem",
               fontWeight: 800,
               margin: 0,
@@ -45,7 +45,7 @@ export default function GlobalError({
           </h1>
           <p
             style={{
-              color: "#a3a3a3",
+              color: "#9aa7c7",
               fontSize: "0.875rem",
               lineHeight: 1.6,
               margin: "0.75rem 0 0",
@@ -59,8 +59,8 @@ export default function GlobalError({
               type="button"
               onClick={reset}
               style={{
-                background: "#e86a2c",
-                color: "#0d0d0d",
+                background: "#39ff88",
+                color: "#0b132b",
                 border: 0,
                 borderRadius: "0.75rem",
                 cursor: "pointer",
@@ -76,8 +76,8 @@ export default function GlobalError({
               onClick={() => window.location.assign("/")}
               style={{
                 background: "transparent",
-                color: "#f2f2f2",
-                border: "1px solid #2a2a2a",
+                color: "#f1f5ff",
+                border: "1px solid #1e2a4e",
                 borderRadius: "0.75rem",
                 cursor: "pointer",
                 fontSize: "0.875rem",

@@ -64,7 +64,7 @@ export async function generateMetadata(): Promise<Metadata> {
     alternates: buildAlternates(pathname),
     title: {
       default: t("default"),
-      template: "%s — TERANGA LABS",
+      template: "%s — Devmarket",
     },
     description: t("description"),
     keywords: t.raw("keywords") as string[],
@@ -82,7 +82,7 @@ export async function generateMetadata(): Promise<Metadata> {
       url: absoluteUrl(locale === "en" ? "/en" : "/"),
       title: t("ogTitle"),
       description: t("ogDescription"),
-      siteName: "TERANGA LABS",
+      siteName: "Devmarket",
       images: [
         {
           url: absoluteUrl("/og.png"),
@@ -106,7 +106,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export const viewport: Viewport = {
-  themeColor: "#0A0A0A",
+  themeColor: "#0B132B",
 };
 
 /**
@@ -130,7 +130,7 @@ function buildJsonLd(locale: string, metaT: Awaited<ReturnType<typeof getTransla
   const organizationJsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "TERANGA LABS",
+    name: "Devmarket",
     url: absoluteUrl("/").origin,
     logo: absoluteUrl("/icon.png"),
     description: metaT("orgDescription"),
@@ -146,10 +146,10 @@ function buildJsonLd(locale: string, metaT: Awaited<ReturnType<typeof getTransla
   const websiteJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "TERANGA LABS",
+    name: "Devmarket",
     url: absoluteUrl("/").origin,
     inLanguage: locale,
-    publisher: { "@type": "Organization", name: "TERANGA LABS" },
+    publisher: { "@type": "Organization", name: "Devmarket" },
     // Pas de SearchAction : la recherche des briefs est faite côté client
     // et n'est pas adressable par une URL (?q=), donc la déclarer ici
     // serait une promesse que le site ne tient pas.

@@ -163,7 +163,7 @@ export function SettingsContent({
 
   const exportData = () => {
     const data = {
-      service: "TERANGA LABS",
+      service: "Devmarket",
       exportedAt: new Date().toISOString(),
       profil: {
         email,
@@ -182,7 +182,7 @@ export function SettingsContent({
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "mes-donnees-teranga-labs.json";
+    a.download = "mes-donnees-devmarket.json";
     a.click();
     URL.revokeObjectURL(url);
   };

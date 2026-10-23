@@ -9,10 +9,10 @@ import { absoluteUrl } from "@/lib/utils";
 export const metadata: Metadata = {
   title: "Développeurs web en Afrique de l'Ouest francophone",
   description:
-    "Trouvez un développeur web dans les 9 pays du périmètre TERANGA LABS : Sénégal, Côte d'Ivoire, Mali, Burkina Faso, Niger, Guinée, Guinée-Bissau, Bénin et Togo.",
+    "Trouvez un développeur web dans les 9 pays du périmètre Devmarket : Sénégal, Côte d'Ivoire, Mali, Burkina Faso, Niger, Guinée, Guinée-Bissau, Bénin et Togo.",
   alternates: { canonical: "/pays" },
   openGraph: {
-    title: "Nos pays — TERANGA LABS",
+    title: "Nos pays — Devmarket",
     description: "Le marketplace des projets web des 9 pays d'Afrique de l'Ouest francophone.",
     url: absoluteUrl("/pays"),
   },
@@ -61,7 +61,7 @@ export default function CountriesPage() {
             Des développeurs web dans les 9 pays du périmètre
           </h1>
           <p className="mt-3 max-w-2xl leading-relaxed text-muted-foreground">
-            TERANGA LABS connecte les clients et les développeurs des 9 pays de
+            Devmarket connecte les clients et les développeurs des 9 pays de
             diffusion : Sénégal, Côte d&apos;Ivoire, Mali, Burkina Faso, Niger,
             Guinée, Guinée-Bissau, Bénin et Togo. Choisissez un pays pour
             découvrir les régions couvertes et publier un brief.

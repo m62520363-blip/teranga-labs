@@ -195,7 +195,7 @@ export function ContactForm() {
               {t.rich("direct", {
                 mail: (chunks) => (
                   <a
-                    href="mailto:contact@terangalabs.sn"
+                    href="mailto:contact@devmarket.com"
                     className="font-medium text-primary underline underline-offset-2"
                   >
                     {chunks}

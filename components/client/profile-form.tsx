@@ -58,7 +58,7 @@ export function ProfileForm({
   return (
     <form onSubmit={submit} className="flex flex-col gap-5 sm:flex-row sm:items-start">
       <span
-        className="mx-auto grid size-20 shrink-0 place-items-center rounded-full bg-primary text-xl font-bold text-white sm:mx-0 sm:size-24 sm:text-2xl"
+        className="mx-auto grid size-20 shrink-0 place-items-center rounded-full bg-primary text-xl font-bold text-ink sm:mx-0 sm:size-24 sm:text-2xl"
         aria-hidden="true"
       >
         {initialsOf(name || initialName || "", email)}

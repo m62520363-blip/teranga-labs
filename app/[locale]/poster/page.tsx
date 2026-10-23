@@ -53,7 +53,7 @@ export default async function PosterPage() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/illustrations/brief.svg"
-                alt="Exemple de brief de projet web publié en deux minutes sur TERANGA LABS"
+                alt="Exemple de brief de projet web publié en deux minutes sur Devmarket"
                 width={480}
                 height={360}
                 loading="lazy"

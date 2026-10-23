@@ -3,7 +3,7 @@ import { UpdatePasswordForm } from "@/components/update-password-form";
 
 export const metadata: Metadata = {
   title: "Nouveau mot de passe",
-  description: "Définissez un nouveau mot de passe pour votre compte TERANGA LABS.",
+  description: "Définissez un nouveau mot de passe pour votre compte Devmarket.",
 };
 
 export default function UpdatePasswordPage() {

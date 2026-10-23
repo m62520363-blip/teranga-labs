@@ -230,7 +230,7 @@ export function MissionsManager({
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
             Présentez vos projets livrés. Une mission est affichée publiquement
-            une fois vérifiée par TERANGA LABS.
+            une fois vérifiée par Devmarket.
           </p>
         </div>
         <Button type="button" onClick={openNew} className="h-10">
@@ -292,7 +292,7 @@ export function MissionsManager({
                       {m.via_teranga_labs ? (
                         <span className="inline-flex items-center gap-1 rounded-full border border-success/40 bg-success-soft px-2 py-0.5 text-[11px] font-medium text-success">
                           <ShieldCheck className="size-3" aria-hidden="true" />
-                          TERANGA LABS
+                          Devmarket
                         </span>
                       ) : null}
                     </div>
@@ -388,13 +388,13 @@ export function MissionsManager({
           <form onSubmit={save} className="flex flex-col gap-4">
             {locked ? (
               <div className="rounded-xl border border-success/40 bg-success-soft px-3 py-2.5 text-xs text-success">
-                Mission officielle TERANGA LABS : le nom, le type et la date sont
+                Mission officielle Devmarket : le nom, le type et la date sont
                 issus de la mission enregistrée et ne peuvent pas être modifiés.
               </div>
             ) : tlMissions.length > 0 ? (
               <div className="flex flex-col gap-2">
                 <Label htmlFor="ms-tl">
-                  Lier à une mission TERANGA LABS (optionnel)
+                  Lier à une mission Devmarket (optionnel)
                 </Label>
                 <Select
                   value={form.tlConversation}

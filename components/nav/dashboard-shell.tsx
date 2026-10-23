@@ -27,7 +27,7 @@ type ShellUser = {
 
 /**
  * Shell de l'espace dashboard (V8) — inspiré de la hiérarchie de navigation
- * de Montaaj, avec l'identité TERANGA LABS.
+ * de Montaaj, avec l'identité Devmarket.
  *
  * Ordinateur (md+) : barre latérale verticale fixe à gauche, logo en haut,
  * liens groupés en sections, profil + solde réel + déconnexion en bas.
@@ -161,7 +161,7 @@ export function DashboardShell({
         <div className="flex h-16 shrink-0 items-center justify-between gap-2 border-b border-border px-4">
           <Link
             href="/dashboard"
-            aria-label="TERANGA LABS — accueil"
+            aria-label="Devmarket — accueil"
             className="flex min-w-0 items-center gap-2 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
           >
             <ImageLogoMark priority className="h-7 w-auto" alt="" />
@@ -185,7 +185,7 @@ export function DashboardShell({
         <header className="sticky top-0 z-40 flex h-14 items-center justify-between gap-2 border-b border-border bg-background/90 px-3 backdrop-blur-md md:hidden">
           <Link
             href="/dashboard"
-            aria-label="TERANGA LABS — accueil"
+            aria-label="Devmarket — accueil"
             className="flex min-w-0 items-center gap-2 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
           >
             <ImageLogoMark className="h-7 w-auto" alt="" />
@@ -229,7 +229,7 @@ export function DashboardShell({
               <Link
                 href="/dashboard"
                 onClick={() => setDrawerOpen(false)}
-                aria-label="TERANGA LABS — accueil"
+                aria-label="Devmarket — accueil"
                 className="flex min-w-0 items-center gap-2 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
               >
                 <ImageLogoMark className="h-7 w-auto" alt="" />

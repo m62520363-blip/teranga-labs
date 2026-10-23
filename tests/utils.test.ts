@@ -11,14 +11,14 @@ afterEach(() => {
 
 describe("absoluteUrl", () => {
   it("utilise NEXT_PUBLIC_SITE_URL quand défini", () => {
-    process.env.NEXT_PUBLIC_SITE_URL = "https://teranga.sn";
-    expect(absoluteUrl("/briefs").toString()).toBe("https://teranga.sn/briefs");
+    process.env.NEXT_PUBLIC_SITE_URL = "https://devmarket.sn";
+    expect(absoluteUrl("/briefs").toString()).toBe("https://devmarket.sn/briefs");
   });
 
   it("utilise l'URL de production Vercel en fallback", () => {
     delete process.env.NEXT_PUBLIC_SITE_URL;
-    process.env.VERCEL_PROJECT_PRODUCTION_URL = "teranga.vercel.app";
-    expect(absoluteUrl("/").toString()).toBe("https://teranga.vercel.app/");
+    process.env.VERCEL_PROJECT_PRODUCTION_URL = "devmarket.vercel.app";
+    expect(absoluteUrl("/").toString()).toBe("https://devmarket.vercel.app/");
   });
 
   it("retombe sur localhost", () => {
@@ -28,7 +28,7 @@ describe("absoluteUrl", () => {
   });
 
   it("retourne un objet URL (metadataBase attend un URL)", () => {
-    process.env.NEXT_PUBLIC_SITE_URL = "https://teranga.sn";
+    process.env.NEXT_PUBLIC_SITE_URL = "https://devmarket.sn";
     expect(absoluteUrl("/")).toBeInstanceOf(URL);
   });
 });

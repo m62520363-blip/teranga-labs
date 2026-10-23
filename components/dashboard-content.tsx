@@ -162,7 +162,7 @@ function DevStatusBanner({ profile }: { profile: DeveloperProfile }) {
       <div className="mt-6 flex items-start gap-3 rounded-2xl border border-success/40 bg-success-soft p-4 sm:p-5">
         <BadgeCheck className="mt-0.5 size-5 shrink-0 text-success" aria-hidden="true" />
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-semibold tracking-tight">Profil vérifié par TERANGA LABS</p>
+          <p className="text-sm font-semibold tracking-tight">Profil vérifié par Devmarket</p>
           <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
             Votre badge Vérifié est affiché sur votre fiche publique. Merci pour votre confiance.
           </p>
@@ -641,7 +641,7 @@ export function DashboardContent({
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "contacts-teranga-labs.csv";
+    a.download = "contacts-devmarket.csv";
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -1243,7 +1243,7 @@ export function DashboardContent({
                             />
                             <a
                               href={`${waLink(item.client_whatsapp)}?text=${encodeURIComponent(
-                                `Bonjour ${item.client_name}, je vous contacte au sujet de votre projet (Teranga Labs).`
+                                `Bonjour ${item.client_name}, je vous contacte au sujet de votre projet (Devmarket).`
                               )}`}
                               target="_blank"
                               rel="noopener noreferrer"
@@ -1314,7 +1314,7 @@ export function DashboardContent({
             {profile?.is_verified ? (
               <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-success/40 bg-success-soft px-3 py-1 text-xs font-medium text-success">
                 <BadgeCheck className="size-3.5" aria-hidden="true" />
-                Compte vérifié par Teranga Labs
+                Compte vérifié par Devmarket
               </div>
             ) : null}
 
@@ -1522,7 +1522,7 @@ export function DashboardContent({
                   </Button>
                   <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
                     Le badge « Développeur vérifié » est attribué par
-                    l’équipe Teranga Labs, pas par l’utilisateur.
+                    l’équipe Devmarket, pas par l’utilisateur.
                   </p>
                 </div>
               </div>

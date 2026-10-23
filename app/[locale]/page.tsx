@@ -23,13 +23,13 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: t("title"),
     description: t("description"),
-    applicationName: "TERANGA LABS",
+    applicationName: "Devmarket",
     keywords: t("keywords"),
     openGraph: {
-      title: t("title"),
+      title: t("ogTitle"),
       description: t("description"),
       type: "website",
-      siteName: "TERANGA LABS",
+      siteName: "Devmarket",
       locale,
       url: META.url || undefined,
       images: [
@@ -43,7 +43,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
-      title: t("title"),
+      title: t("ogTitle"),
       description: t("description"),
       images: [absoluteUrl("/og.png")],
     },
@@ -64,7 +64,7 @@ export default async function HomePage() {
     "@graph": [
       {
         "@type": "WebSite",
-        name: "TERANGA LABS",
+        name: "Devmarket",
         description: metaT("description"),
         inLanguage: locale,
       },

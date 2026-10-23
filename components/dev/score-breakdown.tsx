@@ -56,11 +56,11 @@ export function ScoreBreakdown({ identifier }: { identifier: string }) {
   }, [identifier]);
 
   return (
-    <section className="mt-8 border-t border-hairline pt-6" aria-label="Score Teranga">
+    <section className="mt-8 border-t border-hairline pt-6" aria-label="Score Devmarket">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-            Score Teranga
+            Score Devmarket
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
             Indice de confiance calculé sur les avis, les projets terminés, la

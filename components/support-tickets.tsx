@@ -265,7 +265,7 @@ export default function SupportTickets() {
                             )}
                           >
                             <span className="text-xs font-semibold text-muted-foreground">
-                              {m.is_staff ? "Équipe TERANGA LABS" : "Vous"} ·{" "}
+                              {m.is_staff ? "Équipe Devmarket" : "Vous"} ·{" "}
                               {new Date(m.created_at).toLocaleDateString("fr-FR")}
                             </span>
                             <p className="mt-1 whitespace-pre-wrap">{m.body}</p>
@@ -315,7 +315,7 @@ export default function SupportTickets() {
       )}
       <p className="flex items-center gap-2 text-xs text-muted-foreground">
         <Lock className="size-3.5" aria-hidden="true" />
-        Vos tickets sont privés : seuls vous et l&apos;équipe TERANGA LABS y ont accès.
+        Vos tickets sont privés : seuls vous et l&apos;équipe Devmarket y ont accès.
       </p>
     </div>
   );

@@ -144,7 +144,7 @@ export function ClientShell({
         <div className="flex h-16 shrink-0 items-center justify-between gap-2 border-b border-border px-4">
           <Link
             href="/client"
-            aria-label="TERANGA LABS — tableau de bord"
+            aria-label="Devmarket — tableau de bord"
             className="flex min-w-0 items-center gap-2 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
           >
             <ImageLogoMark priority className="h-7 w-auto" alt="" />
@@ -168,7 +168,7 @@ export function ClientShell({
         <header className="sticky top-0 z-40 flex h-14 items-center justify-between gap-2 border-b border-border bg-background/90 px-3 backdrop-blur-md md:hidden">
           <Link
             href="/client"
-            aria-label="TERANGA LABS — tableau de bord"
+            aria-label="Devmarket — tableau de bord"
             className="flex min-w-0 items-center gap-2 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
           >
             <ImageLogoMark className="h-7 w-auto" alt="" />
@@ -177,7 +177,7 @@ export function ClientShell({
             <Link
               href="/support"
               aria-label="Support"
-              className="grid size-9 place-items-center rounded-full bg-primary text-white outline-none transition-colors hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50"
+              className="grid size-9 place-items-center rounded-full bg-primary text-ink outline-none transition-colors hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50"
             >
               <Headphones className="size-[18px]" aria-hidden="true" />
             </Link>
@@ -220,7 +220,7 @@ export function ClientShell({
               <Link
                 href="/client"
                 onClick={() => setDrawerOpen(false)}
-                aria-label="TERANGA LABS — tableau de bord"
+                aria-label="Devmarket — tableau de bord"
                 className="flex min-w-0 items-center gap-2 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
               >
                 <ImageLogoMark className="h-7 w-auto" alt="" />
@@ -251,7 +251,7 @@ export function ClientShell({
       <Link
         href="/support"
         aria-label="Support"
-        className="fixed bottom-6 right-6 z-30 hidden size-12 place-items-center rounded-full bg-primary text-white shadow-[0_16px_40px_-16px_rgba(232,106,44,0.7)] outline-none transition-colors hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50 md:grid"
+        className="fixed bottom-6 right-6 z-30 hidden size-12 place-items-center rounded-full bg-primary text-ink shadow-[0_16px_40px_-16px_rgba(57,255,136,0.7)] outline-none transition-colors hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50 md:grid"
       >
         <Headphones className="size-5" aria-hidden="true" />
       </Link>
@@ -269,7 +269,7 @@ export function ClientShell({
             <Link
               href="/poster"
               aria-label="Publier un brief"
-              className="grid size-11 place-items-center rounded-full bg-primary text-white shadow-[0_10px_24px_-8px_rgba(232,106,44,0.65)] outline-none transition-transform active:scale-95 focus-visible:ring-2 focus-visible:ring-primary/50"
+              className="grid size-11 place-items-center rounded-full bg-primary text-ink shadow-[0_10px_24px_-8px_rgba(57,255,136,0.65)] outline-none transition-transform active:scale-95 focus-visible:ring-2 focus-visible:ring-primary/50"
             >
               <Plus className="size-6" aria-hidden="true" />
             </Link>

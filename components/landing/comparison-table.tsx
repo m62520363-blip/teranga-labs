@@ -3,12 +3,12 @@ import { Check } from "lucide-react";
 import { SectionHeader } from "@/components/landing/section";
 import { cn } from "cn";
 
-type Row = { feature: string; teranga: string; whatsapp: string; foreign: string };
-type Headers = { feature: string; teranga: string; whatsapp: string; foreign: string };
+type Row = { feature: string; devmarket: string; whatsapp: string; foreign: string };
+type Headers = { feature: string; devmarket: string; whatsapp: string; foreign: string };
 
 /**
- * Tableau comparatif TERANGA vs groupes WhatsApp vs plateformes étrangères.
- * La colonne TERANGA est mise en avant (fond primaire léger). Sur mobile,
+ * Tableau comparatif Devmarket vs groupes WhatsApp vs plateformes étrangères.
+ * La colonne Devmarket est mise en avant (fond primaire léger). Sur mobile,
  * chaque ligne devient une carte empilée pour rester lisible.
  */
 export function ComparisonTable() {
@@ -16,7 +16,7 @@ export function ComparisonTable() {
   const rows = t.raw("rows") as Row[];
   const headers = t.raw("headers") as Headers;
   const cols: { key: keyof Headers; highlight?: boolean }[] = [
-    { key: "teranga", highlight: true },
+    { key: "devmarket", highlight: true },
     { key: "whatsapp" },
     { key: "foreign" },
   ];
@@ -70,16 +70,16 @@ export function ComparisonTable() {
                   </th>
                   {cols.map((c) => {
                     const val = row[c.key as keyof Row];
-                    const isTeranga = c.key === "teranga";
+                    const isDevmarket = c.key === "devmarket";
                     return (
                       <td
                         key={c.key}
                         className={cn(
                           "px-5 py-4 text-center",
-                          isTeranga && "bg-primary-soft font-medium text-foreground"
+                          isDevmarket && "bg-primary-soft font-medium text-foreground"
                         )}
                       >
-                        {isTeranga ? (
+                        {isDevmarket ? (
                           <span className="inline-flex items-center justify-center gap-1.5">
                             <Check className="size-4 shrink-0 text-primary" aria-hidden="true" />
                             {val}
@@ -106,10 +106,10 @@ export function ComparisonTable() {
               <h3 className="font-headings font-semibold">{row.feature}</h3>
               <dl className="mt-3 flex flex-col gap-2 text-sm">
                 <div className="flex items-center justify-between gap-3 rounded-lg bg-primary-soft px-3 py-2">
-                  <dt className="font-medium text-primary">{headers.teranga}</dt>
+                  <dt className="font-medium text-primary">{headers.devmarket}</dt>
                   <dd className="inline-flex items-center gap-1.5 text-right">
                     <Check className="size-4 shrink-0 text-primary" aria-hidden="true" />
-                    {row.teranga}
+                    {row.devmarket}
                   </dd>
                 </div>
                 <div className="flex items-center justify-between gap-3 px-3 py-1">

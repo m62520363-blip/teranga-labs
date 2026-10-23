@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Runner des tests SQL pgtap de Teranga Labs.
+ * Runner des tests SQL pgtap de Devmarket.
  *
  *   node scripts/db-test.mjs                      # tous les fichiers de supabase/tests
  *   node scripts/db-test.mjs supabase/tests/x.sql # un fichier précis

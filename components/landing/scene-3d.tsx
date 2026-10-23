@@ -107,8 +107,8 @@ export function Coin({ className }: { className?: string }) {
     <span
       className={cn(
         "grid size-14 place-items-center rounded-full",
-        "bg-[radial-gradient(circle_at_32%_28%,#ffd9a8,#e86a2c_58%,#9c3f12)]",
-        "shadow-[0_16px_34px_-12px_rgba(232,106,44,0.65),inset_0_-3px_8px_rgba(0,0,0,0.35),inset_0_3px_6px_rgba(255,255,255,0.35)]",
+        "bg-[radial-gradient(circle_at_32%_28%,#d5ffe8,#39FF88_58%,#0e7a46)]",
+        "shadow-[0_16px_34px_-12px_rgba(57,255,136,0.65),inset_0_-3px_8px_rgba(0,0,0,0.35),inset_0_3px_6px_rgba(255,255,255,0.35)]",
         "ring-2 ring-[#ffbd7a]/50",
         className,
       )}
@@ -173,7 +173,7 @@ function Pin({ className }: { className?: string }) {
     <span
       className={cn(
         "grid size-9 place-items-center rounded-full rounded-bl-none rotate-[-45deg]",
-        "bg-primary shadow-[0_12px_26px_-8px_rgba(232,106,44,0.7)]",
+        "bg-primary shadow-[0_12px_26px_-8px_rgba(57,255,136,0.7)]",
         className,
       )}
     >
@@ -188,7 +188,7 @@ function MarketplaceScene() {
   return (
     <>
       <div
-        className="pointer-events-none absolute inset-x-2 bottom-4 top-10 rounded-[2.5rem] border border-white/[0.07] bg-[radial-gradient(120%_120%_at_50%_0%,rgba(232,106,44,0.14),transparent_60%)]"
+        className="pointer-events-none absolute inset-x-2 bottom-4 top-10 rounded-[2.5rem] border border-white/[0.07] bg-[radial-gradient(120%_120%_at_50%_0%,rgba(57,255,136,0.14),transparent_60%)]"
         style={{ transform: "translateZ(-80px)" }}
       />
       <Layer z={-30} x="50%" y="46%" float={false}>
@@ -220,7 +220,7 @@ function TokensScene() {
   return (
     <>
       <div
-        className="pointer-events-none absolute inset-x-6 bottom-6 top-16 rounded-full border border-primary/15 bg-[radial-gradient(closest-side,rgba(232,106,44,0.16),transparent)]"
+        className="pointer-events-none absolute inset-x-6 bottom-6 top-16 rounded-full border border-primary/15 bg-[radial-gradient(closest-side,rgba(57,255,136,0.16),transparent)]"
         style={{ transform: "translateZ(-60px) rotateX(62deg)" }}
       />
       <Layer z={40} x="50%" y="62%" float={false}>
@@ -338,7 +338,7 @@ function RankingScene() {
         </div>
       </Layer>
       <Layer z={120} x="50%" y="26%" delay={0.4}>
-        <span className="grid size-14 place-items-center rounded-full bg-[radial-gradient(circle_at_32%_28%,#ffe3b3,#e86a2c_60%,#9c3f12)] font-display text-xl font-extrabold text-[#5b2508] shadow-[0_18px_40px_-14px_rgba(232,106,44,0.7)]">
+        <span className="grid size-14 place-items-center rounded-full bg-[radial-gradient(circle_at_32%_28%,#d9ffe9,#39FF88_60%,#0e7a46)] font-display text-xl font-extrabold text-[#0b3b22] shadow-[0_18px_40px_-14px_rgba(57,255,136,0.7)]">
           1
         </span>
       </Layer>

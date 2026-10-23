@@ -10,7 +10,7 @@ import type { ReviewForRequest } from "@/types/database";
 export const metadata: Metadata = {
   title: "Évaluez votre expérience",
   description:
-    "Partagez votre avis et votre note après une mission TERANGA LABS.",
+    "Partagez votre avis et votre note après une mission Devmarket.",
   robots: { index: false, follow: false },
 };
 

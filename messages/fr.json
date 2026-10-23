@@ -1,10 +1,11 @@
 {
   "Meta": {
-    "title": "Le marketplace des projets web de l'Afrique de l'Ouest francophone | TERANGA LABS",
-    "description": "TERANGA LABS, le marketplace des projets web de l'Afrique de l'Ouest francophone. Le client publie son brief pour 1 Token, le développeur débloque le contact avec 1 Token et tout se règle en direct. Aucune commission.",
-    "keywords": "marketplace Afrique de l'Ouest francophone, développeurs Sénégal, développeurs Côte d'Ivoire, freelance Dakar, Abidjan, Bamako, brief web, trouver des clients web, acheter des tokens, classement développeurs, site e-commerce Dakar, TERANGA LABS",
-    "ogTitle": "TERANGA LABS — Des clients qui veulent un site",
-    "ogDescription": "Le client publie son besoin pour 1 Token. Le développeur utilise 1 Token pour débloquer le contact. Zéro commission."
+    "title": "Le marketplace des projets web de l'Afrique de l'Ouest francophone",
+    "description": "Devmarket, le marketplace des projets web de l'Afrique de l'Ouest francophone. Le client publie son brief pour 1 Token, le développeur débloque le contact avec 1 Token et tout se règle en direct. Aucune commission.",
+    "keywords": "marketplace Afrique de l'Ouest francophone, développeurs Sénégal, développeurs Côte d'Ivoire, freelance Dakar, Abidjan, Bamako, brief web, trouver des clients web, acheter des tokens, classement développeurs, site e-commerce Dakar, Devmarket",
+    "ogTitle": "Devmarket — Des clients qui veulent un site",
+    "ogDescription": "Le client publie son besoin pour 1 Token. Le développeur utilise 1 Token pour débloquer le contact. Zéro commission.",
+    "ogAlt": "Devmarket — Le marketplace des projets web de l'Afrique de l'Ouest francophone."
   },
   "Nav": {
     "home": "Accueil",
@@ -37,7 +38,7 @@
     "closeMenu": "Fermer le menu",
     "mainNav": "Navigation principale",
     "quickNav": "Navigation rapide",
-    "homeLink": "TERANGA LABS — accueil",
+    "homeLink": "Devmarket — accueil",
     "devs": "Dévs",
     "publish": "Publier",
     "profile": "Profil",
@@ -48,6 +49,7 @@
     "skipToContent": "Aller au contenu principal"
   },
   "Footer": {
+    "slogan": "Find Developers. Build Your Vision",
     "tagline": "Le marketplace des projets web de l'Afrique de l'Ouest francophone. Tu paies en Tokens, ton argent ne bouge jamais en commission.",
     "newsletter": {
       "title": "Restez informé",
@@ -100,6 +102,7 @@
         "avec 1 Token.",
         "sans intermédiaire."
       ],
+    "slogan": "Find Developers. Build Your Vision",
     "subtitle": "Publie ton brief en 2 minutes. Les développeurs sérieux viennent à toi — ton WhatsApp reste privé.",
     "ctaPrimary": "Trouver un développeur",
     "ctaSecondary": "Publier un brief",
@@ -109,7 +112,7 @@
       "badge": "Aucune commission, jamais",
       "titleA": "Comment ça marche",
       "titleB": "vraiment.",
-      "lead": "Ni les groupes WhatsApp ni les plateformes étrangères ne garantissent le bon match au bon prix — TERANGA le fait au même endroit.",
+      "lead": "Ni les groupes WhatsApp ni les plateformes étrangères ne garantissent le bon match au bon prix — Devmarket le fait au même endroit.",
       "steps": [
         {
           "num": "01",
@@ -138,7 +141,7 @@
         {
           "num": "05",
           "title": "Choisis et paie sans commission",
-          "text": "Vous réglez ensemble, directement. TERANGA ne prélève rien sur ton projet.",
+          "text": "Vous réglez ensemble, directement. Devmarket ne prélève rien sur ton projet.",
           "icon": "circle-check"
         }
       ]
@@ -146,7 +149,7 @@
     "pricing": {
       "titleA": "Des tarifs",
       "titleB": "sans surprise.",
-      "lead": "Pas d'abonnement, pas de frais cachés. TERANGA ne gagne de l'argent que quand tu utilises un Token.",
+      "lead": "Pas d'abonnement, pas de frais cachés. Devmarket ne gagne de l'argent que quand tu utilises un Token.",
       "cards": [
         {
           "eyebrow": "Client",
@@ -168,8 +171,8 @@
     },
     "faqs": [
       {
-        "q": "Qu'est-ce que TERANGA LABS ?",
-        "a": "TERANGA LABS est le marketplace des projets web de l'Afrique de l'Ouest francophone : tu publies le brief de ton site pour 1 Token, et le développeur intéressé débloque ton contact avec 1 Token. Ensuite, vous traitez directement — aucune commission."
+        "q": "Qu'est-ce que Devmarket ?",
+        "a": "Devmarket est le marketplace des projets web de l'Afrique de l'Ouest francophone : tu publies le brief de ton site pour 1 Token, et le développeur intéressé débloque ton contact avec 1 Token. Ensuite, vous traitez directement — aucune commission."
       },
       {
         "q": "Combien coûte un Token ?",
@@ -177,7 +180,7 @@
       },
       {
         "q": "Y a-t-il une commission sur les projets ?",
-        "a": "Non. TERANGA LABS ne prélève aucune commission sur les projets : le développeur et le client traitent ensemble, sans intermédiaire. Contre 15 à 20 % prélevés ailleurs, ici tu gardes 100 % de ton budget."
+        "a": "Non. Devmarket ne prélève aucune commission sur les projets : le développeur et le client traitent ensemble, sans intermédiaire. Contre 15 à 20 % prélevés ailleurs, ici tu gardes 100 % de ton budget."
       },
       {
         "q": "Mon WhatsApp reste-t-il privé ?",
@@ -231,7 +234,7 @@
       "badge": "La confiance d'abord",
       "titleA": "Des clients et développeurs",
       "titleB": "de toute la région.",
-      "lead": "TERANGA LABS relie les entreprises d'Afrique de l'Ouest francophone à des développeurs web vérifiés — sans commission, sans intermédiaire.",
+      "lead": "Devmarket relie les entreprises d'Afrique de l'Ouest francophone à des développeurs web vérifiés — sans commission, sans intermédiaire.",
       "stats": [
         { "value": "0 %", "label": "de commission sur les projets" },
         { "value": "1 Token", "label": "pour publier un brief ou débloquer un contact" },
@@ -244,13 +247,13 @@
       "badge": "Transparent",
       "titleA": "Un seul Token,",
       "titleB": "un prix clair.",
-      "lead": "Pas d'abonnement, pas de frais cachés. Le Token est la seule monnaie d'échange sur TERANGA LABS.",
+      "lead": "Pas d'abonnement, pas de frais cachés. Le Token est la seule monnaie d'échange sur Devmarket.",
       "price": "2 500 FCFA",
       "priceUnit": "par Token",
       "uses": [
         { "title": "Publier un brief", "text": "Un client paie 1 Token pour mettre en ligne son projet et toucher tous les développeurs de la plateforme." },
         { "title": "Débloquer un contact", "text": "Un développeur paie 1 Token pour ouvrir la discussion privée avec un client. Le contact est à vie." },
-        { "title": "Aucune commission", "text": "Le prix du projet se négocie en direct. TERANGA ne prélève rien sur ce que vous vous payez." }
+        { "title": "Aucune commission", "text": "Le prix du projet se négocie en direct. Devmarket ne prélève rien sur ce que vous vous payez." }
       ],
       "note": "Les prix s'affichent dans votre devise locale (FCFA, USD, EUR, …).",
       "cta": "Acheter des Tokens",
@@ -258,28 +261,28 @@
     },
     "comparison": {
       "badge": "Comparatif",
-      "titleA": "Pourquoi TERANGA,",
+      "titleA": "Pourquoi Devmarket,",
       "titleB": "pas les groupes WhatsApp.",
       "lead": "Face aux alternatives, la différence tient en un mot : la transparence.",
-      "headers": { "feature": "Ce qui compte", "teranga": "TERANGA LABS", "whatsapp": "Groupes WhatsApp", "foreign": "Plateformes étrangères" },
+      "headers": { "feature": "Ce qui compte", "devmarket": "Devmarket", "whatsapp": "Groupes WhatsApp", "foreign": "Plateformes étrangères" },
       "rows": [
-        { "feature": "Commission sur le projet", "teranga": "0 %", "whatsapp": "Négociée au cas par cas", "foreign": "15 – 20 %" },
-        { "feature": "Coût pour publier un brief", "teranga": "1 Token (2 500 FCFA)", "whatsapp": "Gratuit", "foreign": "Gratuit" },
-        { "feature": "Développeurs vérifiés", "teranga": "Oui, portfolio et notes", "whatsapp": "Non", "foreign": "Variable" },
-        { "feature": "WhatsApp privé", "teranga": "Protégé jusqu'à ton accord", "whatsapp": "Exposé au groupe", "foreign": "Souvent public" },
-        { "feature": "Paiement dans votre devise", "teranga": "FCFA, USD, EUR…", "whatsapp": "Espèces / mobile money", "foreign": "USD ou EUR seulement" },
-        { "feature": "Recours en cas de litige", "teranga": "Signalement et remboursement", "whatsapp": "Aucun", "foreign": "Médiation lente" }
+        { "feature": "Commission sur le projet", "devmarket": "0 %", "whatsapp": "Négociée au cas par cas", "foreign": "15 – 20 %" },
+        { "feature": "Coût pour publier un brief", "devmarket": "1 Token (2 500 FCFA)", "whatsapp": "Gratuit", "foreign": "Gratuit" },
+        { "feature": "Développeurs vérifiés", "devmarket": "Oui, portfolio et notes", "whatsapp": "Non", "foreign": "Variable" },
+        { "feature": "WhatsApp privé", "devmarket": "Protégé jusqu'à ton accord", "whatsapp": "Exposé au groupe", "foreign": "Souvent public" },
+        { "feature": "Paiement dans votre devise", "devmarket": "FCFA, USD, EUR…", "whatsapp": "Espèces / mobile money", "foreign": "USD ou EUR seulement" },
+        { "feature": "Recours en cas de litige", "devmarket": "Signalement et remboursement", "whatsapp": "Aucun", "foreign": "Médiation lente" }
       ],
-      "note": "TERANGA ne remplace pas votre contrat : il vous met en relation, sans prendre votre argent."
+      "note": "Devmarket ne remplace pas votre contrat : il vous met en relation, sans prendre votre argent."
     },
     "testimonials": {
       "badge": "Ils nous font confiance",
       "titleA": "Des projets livrés,",
       "titleB": "des matchs réussis.",
-      "lead": "Ce que disent les clients et développeurs qui utilisent TERANGA LABS au quotidien.",
+      "lead": "Ce que disent les clients et développeurs qui utilisent Devmarket au quotidien.",
       "items": [
         { "quote": "J'ai publié mon brief un dimanche soir. Le lundi matin, trois développeurs sérieux m'ont contacté. Le site était en ligne en deux semaines.", "name": "Aïssatou D.", "role": "Cliente", "location": "Dakar, Sénégal" },
-        { "quote": "Avant TERANGA, je perdais mon temps en candidatures sauvages. Ici, les clients me trouvent selon ma compétence, et je ne paie qu'un Token pour les contacter.", "name": "Kwame O.", "role": "Développeur Full-stack", "location": "Abidjan, Côte d'Ivoire" },
+        { "quote": "Avant Devmarket, je perdais mon temps en candidatures sauvages. Ici, les clients me trouvent selon ma compétence, et je ne paie qu'un Token pour les contacter.", "name": "Kwame O.", "role": "Développeur Full-stack", "location": "Abidjan, Côte d'Ivoire" },
         { "quote": "Le paiement en FCFA depuis mon wallet change tout. Pas de conversion, pas de mauvaise surprise. Et le classement mensuel motive toute l'équipe.", "name": "Fatou N.", "role": "Cliente", "location": "Bamako, Mali" }
       ],
       "note": "Témoignages de démonstration — remplacez-les par de vrais retours clients."
@@ -288,7 +291,7 @@
       "badge": "Pour qui ?",
       "titleA": "Une plateforme,",
       "titleB": "trois façons de l'utiliser.",
-      "lead": "Que vous ayez un projet à faire réaliser ou une expertise à monétiser, TERANGA LABS est fait pour vous.",
+      "lead": "Que vous ayez un projet à faire réaliser ou une expertise à monétiser, Devmarket est fait pour vous.",
       "tabs": [
         { "key": "client", "label": "Client" },
         { "key": "developer", "label": "Développeur" },
@@ -315,8 +318,8 @@
     }
   },
   "RootMeta": {
-    "default": "TERANGA LABS — Le marketplace des projets web de l'Afrique de l'Ouest francophone",
-    "description": "TERANGA LABS met en relation les entreprises d'Afrique de l'Ouest francophone et des développeurs web : le client publie son brief pour 1 Token, le développeur débloque le contact avec 1 Token. Aucune commission.",
+    "default": "Devmarket — Le marketplace des projets web de l'Afrique de l'Ouest francophone",
+    "description": "Devmarket met en relation les entreprises d'Afrique de l'Ouest francophone et des développeurs web : le client publie son brief pour 1 Token, le développeur débloque le contact avec 1 Token. Aucune commission.",
     "keywords": [
       "développeur",
       "Afrique de l'Ouest francophone",
@@ -336,9 +339,9 @@
       "freelance",
       "Tokens"
     ],
-    "ogTitle": "TERANGA LABS — Des clients qui veulent un site",
+    "ogTitle": "Devmarket — Des clients qui veulent un site",
     "ogDescription": "Le client publie son besoin pour 1 Token. Le développeur utilise 1 Token pour débloquer le contact. Zéro commission.",
-    "ogAlt": "TERANGA LABS — Le marketplace des projets web de l'Afrique de l'Ouest francophone.",
+    "ogAlt": "Devmarket — Le marketplace des projets web de l'Afrique de l'Ouest francophone.",
     "twitterDescription": "Marketplace des projets web de l'Afrique de l'Ouest francophone : briefs, Tokens, zéro commission.",
     "orgDescription": "Marketplace qui met en relation les entreprises d'Afrique de l'Ouest francophone et des développeurs web, sur un modèle inversé où les clients publient leurs besoins.",
     "countries": [
@@ -356,7 +359,7 @@
   "Pages": {
     "faq": {
       "metaTitle": "FAQ",
-      "metaDesc": "Toutes les réponses sur TERANGA LABS : prix des Tokens, publication d’un brief, rôle du développeur et fonctionnement du marketplace inversé.",
+      "metaDesc": "Toutes les réponses sur Devmarket : prix des Tokens, publication d’un brief, rôle du développeur et fonctionnement du marketplace inversé.",
       "h1": "Questions fréquentes",
       "intro": "Tout ce qu’il faut savoir avant de publier votre premier brief, ou de débloquer votre premier contact en tant que développeur.",
       "groups": [
@@ -378,8 +381,8 @@
       ],
       "faqs": [
         {
-          "q": "Qu'est-ce que TERANGA LABS ?",
-          "a": "TERANGA LABS est le marketplace des projets web de l'Afrique de l'Ouest francophone : les clients publient le brief de leur site web pour 1 Token, et les développeurs sérieux viennent vers eux."
+          "q": "Qu'est-ce que Devmarket ?",
+          "a": "Devmarket est le marketplace des projets web de l'Afrique de l'Ouest francophone : les clients publient le brief de leur site web pour 1 Token, et les développeurs sérieux viennent vers eux."
         },
         {
           "q": "Comment fonctionne le modèle ?",
@@ -407,7 +410,7 @@
         },
         {
           "q": "Y a-t-il une commission sur les projets ?",
-          "a": "Non. TERANGA LABS ne prélève aucune commission sur les projets : le développeur et le client traitent ensemble, sans intermédiaire."
+          "a": "Non. Devmarket ne prélève aucune commission sur les projets : le développeur et le client traitent ensemble, sans intermédiaire."
         }
       ],
       "notFoundTitle": "Vous n’avez pas trouvé votre réponse ?",
@@ -416,10 +419,10 @@
     },
     "about": {
       "metaTitle": "À propos",
-      "metaDesc": "TERANGA LABS est le marketplace inversé d'Afrique de l'Ouest : les clients publient le brief de leur site web moyennant 1 Token, les développeurs débloquent le contact avec 1 Token.",
-      "h1": "À propos de TERANGA LABS",
+      "metaDesc": "Devmarket est le marketplace inversé d'Afrique de l'Ouest : les clients publient le brief de leur site web moyennant 1 Token, les développeurs débloquent le contact avec 1 Token.",
+      "h1": "À propos de Devmarket",
       "leadBold": "On ne vend pas des sites. On vend l’accès aux clients qui veulent des sites.",
-      "leadRest": "TERANGA LABS est le marketplace inversé d'Afrique de l'Ouest : une boutique à Thiès, un resto à Dakar, une école à Abidjan publient le brief de leur projet (1 Token), et les développeurs sérieux viennent vers eux.",
+      "leadRest": "Devmarket est le marketplace inversé d'Afrique de l'Ouest : une boutique à Thiès, un resto à Dakar, une école à Abidjan publient le brief de leur projet (1 Token), et les développeurs sérieux viennent vers eux.",
       "values": [
         {
           "title": "Le client gagne du temps",
@@ -441,7 +444,7 @@
     },
     "contact": {
       "metaTitle": "Contact",
-      "metaDesc": "Contactez l’équipe TERANGA LABS : question, signalement d’abus ou besoin d’acheter des Tokens.",
+      "metaDesc": "Contactez l’équipe Devmarket : question, signalement d’abus ou besoin d’acheter des Tokens.",
       "h1": "Contact",
       "intro": "Une question, un signalement d’abus, ou besoin d’acheter des Tokens ? Écrivez-nous, on répond vite.",
       "topicsTitle": "À quoi sert le contact ?",
@@ -469,7 +472,7 @@
           "technical": "Problème technique",
           "other": "Autre demande"
         },
-        "errDb": "Connexion à la base de données indisponible. Écrivez-nous à contact@terangalabs.sn.",
+        "errDb": "Connexion à la base de données indisponible. Écrivez-nous à contact@devmarket.com.",
         "errGeneric": "Une erreur est survenue. Réessayez.",
         "successTitle": "Message envoyé",
         "successBody": "Merci {name} ! On vous répond sous 24 h ouvrées.",
@@ -484,13 +487,13 @@
         "phName": "Ex. Awa Diop",
         "phEmail": "vous@exemple.sn",
         "phMessage": "Décrivez votre demande : achat de Tokens, signalement d’abus, problème technique…",
-        "direct": "Vous préférez un email direct ? <mail>contact@terangalabs.sn</mail>",
+        "direct": "Vous préférez un email direct ? <mail>contact@devmarket.com</mail>",
         "submit": "Envoyer"
       }
     },
     "favorites": {
       "metaTitle": "Mes favoris",
-      "metaDesc": "Retrouvez les briefs que vous avez sauvegardés sur TERANGA LABS.",
+      "metaDesc": "Retrouvez les briefs que vous avez sauvegardés sur Devmarket.",
       "h1": "Vos briefs favoris",
       "lead": "Touchez le cœur d’un brief pour le retrouver ici. 1 Token ouvre une discussion privée avec le client.",
       "count": "{count, plural, =0 {Aucun brief sauvegardé} one {# brief sauvegardé} other {# briefs sauvegardés}}",
@@ -500,7 +503,7 @@
     },
     "sitemap": {
       "metaTitle": "Plan du site",
-      "metaDesc": "Retrouvez toutes les pages et sections de TERANGA LABS : navigation, pages découverte et documents légaux.",
+      "metaDesc": "Retrouvez toutes les pages et sections de Devmarket : navigation, pages découverte et documents légaux.",
       "h1": "Plan du site",
       "intro": "Tout est accessible en quelques clics : les pages principales, la découverte et les documents légaux.",
       "groups": [
@@ -567,13 +570,13 @@
     "legal": {
       "mentions": {
         "metaTitle": "Mentions légales",
-        "metaDesc": "Mentions légales de TERANGA LABS, le marketplace inversé d'Afrique de l'Ouest.",
+        "metaDesc": "Mentions légales de Devmarket, le marketplace inversé d'Afrique de l'Ouest.",
         "title": "Mentions légales",
-        "lead": "Informations relatives à l’éditeur du service TERANGA LABS.",
+        "lead": "Informations relatives à l’éditeur du service Devmarket.",
         "updated": "Dernière mise à jour : 24 septembre 2026",
         "s1": {
           "h": "Éditeur du service",
-          "b": "<p>Le site TERANGA LABS est édité par <strong>Walty Group-SUARL</strong>, société de services numériques basée à <strong>Dakar, Sénégal</strong>. La marque TERANGA LABS est la dénomination commerciale du service.</p><p>Email de contact : <mail>contact@terangalabs.sn</mail></p>"
+          "b": "<p>Le site Devmarket est édité par <strong>Walty Group-SUARL</strong>, société de services numériques basée à <strong>Dakar, Sénégal</strong>. La marque Devmarket est la dénomination commerciale du service.</p><p>Email de contact : <mail>contact@devmarket.com</mail></p>"
         },
         "s2": {
           "h": "Directeur de la publication",
@@ -581,7 +584,7 @@
         },
         "s3": {
           "h": "Identité légale",
-          "b": "<p>Adresse du siège, NINEA et RCCM de Walty Group-SUARL : en cours d’enregistrement. Ces informations seront publiées dès réception de l’immatriculation administrative. Pour toute demande, écrivez à <mail>contact@terangalabs.sn</mail>.</p>"
+          "b": "<p>Adresse du siège, NINEA et RCCM de Walty Group-SUARL : en cours d’enregistrement. Ces informations seront publiées dès réception de l’immatriculation administrative. Pour toute demande, écrivez à <mail>contact@devmarket.com</mail>.</p>"
         },
         "s4": {
           "h": "Hébergement",
@@ -593,7 +596,7 @@
         },
         "s6": {
           "h": "Responsabilités",
-          "b": "<p>Les échanges entre clients et développeurs sont effectués sous leur propre responsabilité. TERANGA LABS fournit la mise en relation (Tokens, briefs, messagerie) et n’intervient pas dans la conclusion des contrats ni dans les transactions financières entre les parties. Des efforts raisonnables sont faits pour prévenir les abus et la fraude, sans garantie de résultat.</p>"
+          "b": "<p>Les échanges entre clients et développeurs sont effectués sous leur propre responsabilité. Devmarket fournit la mise en relation (Tokens, briefs, messagerie) et n’intervient pas dans la conclusion des contrats ni dans les transactions financières entre les parties. Des efforts raisonnables sont faits pour prévenir les abus et la fraude, sans garantie de résultat.</p>"
         },
         "s7": {
           "h": "Droit applicable",
@@ -601,22 +604,22 @@
         },
         "s8": {
           "h": "Propriété intellectuelle",
-          "b": "<p>L’ensemble des éléments du site — textes, visuels, logo, structure, mise en page — est la propriété exclusive de TERANGA LABS ou de ses partenaires. Toute reproduction, représentation ou diffusion sans autorisation préalable est interdite.</p><p>Les marques et noms cités à titre d’exemple (applications de marketplace) appartiennent à leurs propriétaires respectifs.</p>"
+          "b": "<p>L’ensemble des éléments du site — textes, visuels, logo, structure, mise en page — est la propriété exclusive de Devmarket ou de ses partenaires. Toute reproduction, représentation ou diffusion sans autorisation préalable est interdite.</p><p>Les marques et noms cités à titre d’exemple (applications de marketplace) appartiennent à leurs propriétaires respectifs.</p>"
         },
         "s9": {
           "h": "Modification des mentions",
-          "b": "<p>TERANGA LABS se réserve le droit de modifier les présentes mentions à tout moment. Elles sont opposables dès leur mise en ligne.</p>"
+          "b": "<p>Devmarket se réserve le droit de modifier les présentes mentions à tout moment. Elles sont opposables dès leur mise en ligne.</p>"
         }
       },
       "terms": {
         "metaTitle": "Conditions d’utilisation",
-        "metaDesc": "Les règles d’utilisation du service TERANGA LABS : briefs, Tokens et mise en relation.",
+        "metaDesc": "Les règles d’utilisation du service Devmarket : briefs, Tokens et mise en relation.",
         "title": "Conditions d’utilisation",
-        "lead": "En utilisant TERANGA LABS, vous acceptez les règles suivantes.",
+        "lead": "En utilisant Devmarket, vous acceptez les règles suivantes.",
         "updated": "Dernière mise à jour : 24 septembre 2026",
         "s1": {
           "h": "Objet du service",
-          "b": "<p>TERANGA LABS est un service de mise en relation entre des clients qui publient le besoin d’un site web moyennant 1 Token et des développeurs qui débloquent le contact avec un Token.</p>"
+          "b": "<p>Devmarket est un service de mise en relation entre des clients qui publient le besoin d’un site web moyennant 1 Token et des développeurs qui débloquent le contact avec un Token.</p>"
         },
         "s2": {
           "h": "Publication d’un brief",
@@ -628,7 +631,7 @@
         },
         "s4": {
           "h": "Contact direct",
-          "b": "<p>Le contact direct avec le client est l’objet même du service : le développeur qui débloque un brief avec 1 Token obtient le contact et poursuit l’échange dans la messagerie interne, puis en direct (WhatsApp) après accord. Les développeurs et les clients sont responsables de leurs échanges et de la conclusion de leur propre contrat. TERANGA LABS n’intervient pas dans les transactions financières entre les parties et ne prélève aucune commission.</p>"
+          "b": "<p>Le contact direct avec le client est l’objet même du service : le développeur qui débloque un brief avec 1 Token obtient le contact et poursuit l’échange dans la messagerie interne, puis en direct (WhatsApp) après accord. Les développeurs et les clients sont responsables de leurs échanges et de la conclusion de leur propre contrat. Devmarket n’intervient pas dans les transactions financières entre les parties et ne prélève aucune commission.</p>"
         },
         "s5": {
           "h": "Comportement attendu",
@@ -636,7 +639,7 @@
         },
         "s6": {
           "h": "Propriété intellectuelle",
-          "b": "<p>Le contenu d’un brief appartient à son auteur (le client). Les développeurs peuvent l’utiliser uniquement pour répondre à ce brief. La marque, les textes et l’identité visuelle de TERANGA LABS ne peuvent pas être réutilisés sans autorisation écrite.</p>"
+          "b": "<p>Le contenu d’un brief appartient à son auteur (le client). Les développeurs peuvent l’utiliser uniquement pour répondre à ce brief. La marque, les textes et l’identité visuelle de Devmarket ne peuvent pas être réutilisés sans autorisation écrite.</p>"
         },
         "s7": {
           "h": "Remboursements et litiges",
@@ -644,30 +647,30 @@
         },
         "s8": {
           "h": "Responsabilité",
-          "b": "<p>TERANGA LABS fournit une mise en relation. La qualité du travail livré, le respect des délais et le contenu des projets relèvent de la responsabilité exclusive du développeur, et l’exactitude du brief de celle du client. Notre responsabilité est limitée au montant des Tokens concernés.</p>"
+          "b": "<p>Devmarket fournit une mise en relation. La qualité du travail livré, le respect des délais et le contenu des projets relèvent de la responsabilité exclusive du développeur, et l’exactitude du brief de celle du client. Notre responsabilité est limitée au montant des Tokens concernés.</p>"
         },
         "s9": {
           "h": "Évolution du service",
-          "b": "<p>TERANGA LABS évolue en continu : tarifs, règles et fonctionnalités peuvent changer. Les conditions en vigueur sont celles publiées sur cette page. Une utilisation du service après une mise à jour vaut acceptation des nouvelles règles.</p>"
+          "b": "<p>Devmarket évolue en continu : tarifs, règles et fonctionnalités peuvent changer. Les conditions en vigueur sont celles publiées sur cette page. Une utilisation du service après une mise à jour vaut acceptation des nouvelles règles.</p>"
         },
         "s10": {
           "h": "Signaler un problème",
-          "b": "<p>Pour signaler un abus, une fraude ou une infraction aux présentes conditions, écrivez-nous à <mail>contact@terangalabs.sn</mail> ou utilisez le bouton de signalement présent sur chaque contenu.</p>"
+          "b": "<p>Pour signaler un abus, une fraude ou une infraction aux présentes conditions, écrivez-nous à <mail>contact@devmarket.com</mail> ou utilisez le bouton de signalement présent sur chaque contenu.</p>"
         },
         "s11": {
           "h": "Coordonnées pour les notifications",
-          "b": "<p>Toutes les notifications légales sont adressées à contact@terangalabs.sn. Merci de conserver un accès valide à votre adresse e-mail de connexion.</p>"
+          "b": "<p>Toutes les notifications légales sont adressées à contact@devmarket.com. Merci de conserver un accès valide à votre adresse e-mail de connexion.</p>"
         },
         "s12": {
           "h": "Modification et suspension",
-          "b": "<p>TERANGA LABS peut suspendre tout compte en cas de non-respect des présentes conditions, et se réserve le droit de faire évoluer le service et ses tarifs. En cas de litige, la loi sénégalaise est applicable et les tribunaux de Dakar sont compétents.</p>"
+          "b": "<p>Devmarket peut suspendre tout compte en cas de non-respect des présentes conditions, et se réserve le droit de faire évoluer le service et ses tarifs. En cas de litige, la loi sénégalaise est applicable et les tribunaux de Dakar sont compétents.</p>"
         }
       },
       "privacy": {
         "metaTitle": "Politique de confidentialité",
-        "metaDesc": "Comment TERANGA LABS collecte, utilise et protège vos données personnelles.",
+        "metaDesc": "Comment Devmarket collecte, utilise et protège vos données personnelles.",
         "title": "Politique de confidentialité",
-        "lead": "Vos données, votre vie privée : voici comment TERANGA LABS les traite.",
+        "lead": "Vos données, votre vie privée : voici comment Devmarket les traite.",
         "updated": "Dernière mise à jour : 24 septembre 2026",
         "s1": {
           "h": "Données collectées",
@@ -695,7 +698,7 @@
         },
         "s7": {
           "h": "Mineurs",
-          "b": "<p>Le service est réservé aux personnes capables d’assumer des engagements contractuels. Une personne mineure ne peut pas utiliser TERANGA LABS sans le consentement d’un représentant légal.</p>"
+          "b": "<p>Le service est réservé aux personnes capables d’assumer des engagements contractuels. Une personne mineure ne peut pas utiliser Devmarket sans le consentement d’un représentant légal.</p>"
         },
         "s8": {
           "h": "Cookies",
@@ -703,12 +706,12 @@
         },
         "s9": {
           "h": "Vos droits",
-          "b": "<p>Conformément à la loi sénégalaise n° 2008-12 sur la protection des données personnelles, vous pouvez demander l’accès, la rectification ou la suppression de vos données en écrivant à <mail>contact@terangalabs.sn</mail>.</p>"
+          "b": "<p>Conformément à la loi sénégalaise n° 2008-12 sur la protection des données personnelles, vous pouvez demander l’accès, la rectification ou la suppression de vos données en écrivant à <mail>contact@devmarket.com</mail>.</p>"
         }
       },
       "cookies": {
         "metaTitle": "Politique de cookies",
-        "metaDesc": "Comment TERANGA LABS utilise les cookies et traceurs pour faire fonctionner le service et vous garder connecté.",
+        "metaDesc": "Comment Devmarket utilise les cookies et traceurs pour faire fonctionner le service et vous garder connecté.",
         "title": "Politique de cookies",
         "lead": "Nous gardons votre session connectée avec des cookies, et rien d’autre.",
         "updated": "Dernière mise à jour : 24 septembre 2026",
@@ -727,12 +730,12 @@
           },
           {
             "name": "Aucun cookie publicitaire ou de suivi",
-            "description": "TERANGA LABS n’utilise pas de publicité ciblée, ne transmet aucun cookie à des régies publicitaires et ne revend aucune donnée."
+            "description": "Devmarket n’utilise pas de publicité ciblée, ne transmet aucun cookie à des régies publicitaires et ne revend aucune donnée."
           }
         ],
         "s1": {
           "h": "Ce que sont les cookies",
-          "b": "<p>Un cookie est un petit fichier stocké par votre navigateur. Chez TERANGA LABS, les cookies servent à une seule chose : <strong>vous garder connecté</strong> de façon sécurisée pendant jusqu’à 30 jours, comme vous l’avez demandé.</p>"
+          "b": "<p>Un cookie est un petit fichier stocké par votre navigateur. Chez Devmarket, les cookies servent à une seule chose : <strong>vous garder connecté</strong> de façon sécurisée pendant jusqu’à 30 jours, comme vous l’avez demandé.</p>"
         },
         "s2": {
           "h": "Les cookies que nous utilisons"
@@ -743,11 +746,11 @@
         },
         "s4": {
           "h": "Gestion et consentement",
-          "b": "<p>Les cookies essentiels d’authentification ne demandent pas de consentement : ils sont indispensables au service. Les préférences locales peuvent être effacées à tout moment depuis les réglages de votre navigateur. Si vous bloquez tous les cookies, la connexion à TERANGA LABS sera impossible.</p>"
+          "b": "<p>Les cookies essentiels d’authentification ne demandent pas de consentement : ils sont indispensables au service. Les préférences locales peuvent être effacées à tout moment depuis les réglages de votre navigateur. Si vous bloquez tous les cookies, la connexion à Devmarket sera impossible.</p>"
         },
         "s5": {
           "h": "Contact",
-          "b": "<p>Une question sur cette politique ? Écrivez-nous à <mail>contact@terangalabs.sn</mail>.</p>"
+          "b": "<p>Une question sur cette politique ? Écrivez-nous à <mail>contact@devmarket.com</mail>.</p>"
         }
       }
     }

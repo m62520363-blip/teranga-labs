@@ -8,7 +8,7 @@ import type { ApprovedDeveloper, DirectoryFilters } from "@/types/database";
 export const metadata: Metadata = {
   title: "Trouver un développeur",
   description:
-    "Parcourez l’annuaire des développeurs vérifiés de Teranga Labs, filtrez par spécialité, ville et technologies, puis contactez-les directement.",
+    "Parcourez l’annuaire des développeurs vérifiés de Devmarket, filtrez par spécialité, ville et technologies, puis contactez-les directement.",
 };
 
 export const dynamic = "force-dynamic";

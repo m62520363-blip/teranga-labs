@@ -44,47 +44,48 @@
 
 :root {
   --radius: 1rem;
-  --background: #0a0a0a;
-  --foreground: #f2f2f2;
-  --ink: #0d0d0d;
-  --card: #141414;
-  --card-foreground: #f2f2f2;
-  --popover: #141414;
-  --popover-foreground: #f2f2f2;
-  --primary: #e86a2c;
-  /* texte pose sur un aplat de marque : le noir ressort a 6.04:1 (AA) alors
-     que le blanc plafonne a 3.22:1 et echoue WCAG AA sur les boutons */
+  /* Prompt Blue #0B132B : fond unique du site (palette Devmarket). */
+  --background: #0b132b;
+  --foreground: #f1f5ff;
+  /* texte porté par un aplat AI Green : navy sur #39FF88 ≈ 15:1 (AAA). */
+  --ink: #0b132b;
+  --card: #111a36;
+  --card-foreground: #f1f5ff;
+  --popover: #111a36;
+  --popover-foreground: #f1f5ff;
+  /* AI Green #39FF88 : primaire de marque. */
+  --primary: #39ff88;
   --primary-foreground: var(--ink);
-  /* declensions de la marque : fond tinted des encarts, texte d'accent
-     lisible sur fond sombre (9:1) et teinte de survol des aplats pleins */
-  --primary-soft: #2a1a10;
-  --primary-light: #f2a378;
-  --primary-hover: #d95c1f;
-  --secondary: #1c1c1c;
-  --secondary-foreground: #f2f2f2;
-  --muted: #1c1c1c;
-  --muted-foreground: #a3a3a3;
-  --accent: #241712;
-  --accent-foreground: #f2f2f2;
-  /* rouge profond : le libelle blanc ressort a 6.4:1 (AA) sur les boutons
+  /* déclinaisons de la marque : fond teinté des encarts, texte d'accent
+     lisible sur fond sombre et teinte de survol des aplats pleins */
+  --primary-soft: #0f2e24;
+  --primary-light: #8cffc0;
+  --primary-hover: #2be076;
+  --secondary: #141c3b;
+  --secondary-foreground: #f1f5ff;
+  --muted: #141c3b;
+  --muted-foreground: #9aa7c7;
+  --accent: #0d2418;
+  --accent-foreground: #f1f5ff;
+  /* rouge profond : le libellé blanc ressort à 6.4:1 (AA) sur les boutons
      destructifs, contre 3.9:1 avec un rouge plus clair */
   --destructive: #b91c1c;
   --destructive-foreground: #ffffff;
-  --border: #262626;
-  --input: #2e2e2e;
+  --border: #1e2a4e;
+  --input: #243159;
   --ring: var(--primary);
   /* filet de séparation réellement utilisé dans les cartes */
-  --hairline: #2a2a2a;
+  --hairline: #1e2a4e;
   /* filet appuyé : traits de svg decoratifs, pouce de barre de defilement */
-  --border-strong: #3a3a3a;
+  --border-strong: #2c3a66;
 
-  /* TERANGA design system */
-  --surface: #0f0f0f;
-  --surface-secondary: #141414;
-  --text-primary: #f2f2f2;
-  --text-secondary: #a3a3a3;
+  /* Devmarket design system */
+  --surface: #080e20;
+  --surface-secondary: #101833;
+  --text-primary: #f1f5ff;
+  --text-secondary: #9aa7c7;
   --accent-glow: color-mix(in oklab, var(--primary) 45%, transparent);
-  --success: #34d399;
+  --success: #39ff88;
   --success-soft: color-mix(in oklab, var(--success) 12%, transparent);
   --warning: #fbbf24;
   --warning-soft: color-mix(in oklab, var(--warning) 12%, transparent);
@@ -213,7 +214,7 @@ h6 {
 }
 
 .glow-orb {
-  background: radial-gradient(circle, rgba(232, 106, 44, 0.35) 0%, rgba(232, 106, 44, 0) 70%);
+  background: radial-gradient(circle, rgba(57, 255, 136, 0.35) 0%, rgba(57, 255, 136, 0) 70%);
   filter: blur(40px);
 }
 
@@ -228,7 +229,7 @@ h6 {
   background-color: var(--surface);
   background-image: radial-gradient(
     55rem 26rem at 78% 0%,
-    rgba(232, 106, 44, 0.38),
+    rgba(57, 255, 136, 0.38),
     transparent 62%
   );
   color: var(--foreground);
@@ -243,9 +244,9 @@ h6 {
 
 .card-elevate:hover {
   transform: translateY(-4px);
-  border-color: rgba(232, 106, 44, 0.35);
+  border-color: rgba(57, 255, 136, 0.35);
   box-shadow:
-    0 20px 44px -22px rgba(232, 106, 44, 0.45),
+    0 20px 44px -22px rgba(57, 255, 136, 0.45),
     0 12px 26px -16px rgba(0, 0, 0, 0.14);
 }
 
@@ -303,7 +304,7 @@ h6 {
 }
 
 ::selection {
-  background: rgba(232, 106, 44, 0.18);
+  background: rgba(57, 255, 136, 0.18);
   color: var(--foreground);
 }
 
@@ -601,7 +602,7 @@ h6 {
   color: var(--foreground);
 }
 .btn-secondary:hover {
-  border-color: rgba(232, 106, 44, 0.45);
+  border-color: rgba(57, 255, 136, 0.45);
   background: var(--accent);
 }
 .btn-invert {
@@ -613,7 +614,7 @@ h6 {
 }
 .btn-invert:hover {
   background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(232, 106, 44, 0.55);
+  border-color: rgba(57, 255, 136, 0.55);
 }
 .btn-ghost {
   background: transparent;
@@ -661,9 +662,9 @@ h6 {
   /* Léger basculement 3D au survol (souris uniquement : le tactile n'a
      pas de hover) pour donner de la profondeur sans dépendance. */
   transform: perspective(900px) translateY(-5px) rotateX(2.5deg);
-  border-color: rgba(232, 106, 44, 0.4);
+  border-color: rgba(57, 255, 136, 0.4);
   box-shadow:
-    0 24px 48px -24px rgba(232, 106, 44, 0.45),
+    0 24px 48px -24px rgba(57, 255, 136, 0.45),
     0 14px 28px -18px rgba(0, 0, 0, 0.16);
 }
 

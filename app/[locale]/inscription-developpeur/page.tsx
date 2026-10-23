@@ -10,7 +10,7 @@ import { Scene3D } from "@/components/landing/scene-3d";
 export const metadata: Metadata = {
   title: "Inscription développeur",
   description:
-    "Rejoignez TERANGA LABS en tant que développeur : créez votre compte, vérifiez votre email, complétez votre profil professionnel. Chaque dossier est examiné avant activation.",
+    "Rejoignez Devmarket en tant que développeur : créez votre compte, vérifiez votre email, complétez votre profil professionnel. Chaque dossier est examiné avant activation.",
   robots: { index: false, follow: false },
 };
 
@@ -68,7 +68,7 @@ function VerificationInProgress() {
         </span>
         <h1 className="mt-5 text-xl font-bold tracking-tight">Vérification en cours</h1>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          Votre profil est en cours de vérification par TERANGA LABS.
+          Votre profil est en cours de vérification par Devmarket.
           Une notification sera envoyée dès la fin de l’examen.
         </p>
         <Link href="/dashboard" className="btn btn-secondary mt-6 w-full">
@@ -122,7 +122,7 @@ export default async function InscriptionDeveloppeurPage() {
               INSCRIPTION DÉVELOPPEUR
             </span>
             <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
-              Rejoignez TERANGA LABS
+              Rejoignez Devmarket
             </h1>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
               Deux étapes, quelques minutes. Votre dossier est examiné par notre équipe

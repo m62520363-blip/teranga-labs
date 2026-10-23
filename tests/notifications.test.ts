@@ -46,7 +46,7 @@ describe("messages de notification de brief", () => {
   it("fournit un lien vers la liste des briefs pour les développeurs", () => {
     const msg = buildDeveloperMatchMessage(devPayload, ORIGIN);
     expect(msg).toContain(`${ORIGIN}/briefs`);
-    expect(msg).toContain("Nouveau brief sur Teranga Labs");
+    expect(msg).toContain("Nouveau brief sur Devmarket");
   });
 
   it("ne contient jamais la clé de gestion dans le message aux développeurs", () => {
