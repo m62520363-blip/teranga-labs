@@ -135,6 +135,10 @@ async function recordViaPublicRpc(event: string, developerId: string) {
     ) {
       return NextResponse.json({ ok: true, recorded: false });
     }
+    // Développeur inconnu : rien à enregistrer, ce n'est pas une panne.
+    if (code === "TLNOK") {
+      return NextResponse.json({ ok: true, recorded: false });
+    }
     log.error({
       action: "analytics.track.public",
       event,
