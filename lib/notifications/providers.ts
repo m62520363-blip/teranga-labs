@@ -10,6 +10,8 @@ export type DeliveryMeta = {
   jobType: string;
   requestId: string;
   recipientLabel: string;
+  /** false = ne pas utiliser l'email (préférence « nouveaux projets »). */
+  allowEmail?: boolean;
 };
 
 /**
@@ -60,7 +62,12 @@ export async function deliverMessage(
     return;
   }
 
-  if (recipient.email && cfg.resendApiKey && cfg.resendFromEmail) {
+  if (
+    recipient.email &&
+    cfg.resendApiKey &&
+    cfg.resendFromEmail &&
+    meta.allowEmail !== false
+  ) {
     await sendResend(cfg.resendApiKey, cfg.resendFromEmail, recipient.email, message);
     return;
   }
@@ -137,7 +144,7 @@ async function sendResend(apiKey: string, from: string, to: string, message: str
     body: JSON.stringify({
       from,
       to: [to],
-      subject: "Devmarket · Nouveau brief",
+      subject: "Devmarket · Nouveau projet",
       text: message,
     }),
     signal: AbortSignal.timeout(10000),

@@ -108,16 +108,35 @@ async function dispatchJob(admin: AdminClient, job: NotificationJob): Promise<vo
 
   if (matches.length === 0) return; // RIEN à notifier : job marqué « sent » (cas normal).
 
+  // Préférence « alerte email nouveaux projets » (mig 0070). Absence de
+  // ligne / colonne = actif. Le WhatsApp reste indépendant de ce réglage.
+  const { data: prefRows } = await admin
+    .from("notification_preferences")
+    .select("user_id, email_new_projects")
+    .in("user_id", matches.map((m) => m.id));
+  const emailAlerts = new Map<string, boolean>();
+  for (const row of prefRows ?? []) {
+    emailAlerts.set(row.user_id, row.email_new_projects);
+  }
+
   const message = buildDeveloperMatchMessage(payload, portal);
   let delivered = 0;
   let firstError: unknown = null;
 
   for (const dev of matches) {
+    const wantsEmail = emailAlerts.get(dev.id) !== false;
+    // Aucun canal restant : ni WhatsApp, ni email autorisé.
+    if (!dev.whatsapp && !wantsEmail) continue;
     try {
       await deliverMessage(
         { whatsapp: dev.whatsapp ?? undefined, email: dev.email ?? undefined },
         message,
-        { jobType: job.type, requestId: payload.request_id, recipientLabel: dev.full_name ?? dev.id }
+        {
+          jobType: job.type,
+          requestId: payload.request_id,
+          recipientLabel: dev.full_name ?? dev.id,
+          allowEmail: wantsEmail,
+        }
       );
       delivered += 1;
     } catch (err) {

@@ -59,6 +59,7 @@ export function ContactButton({
   const [cost, setCost] = React.useState(contactCost);
   const [message, setMessage] = React.useState("");
   const [busy, setBusy] = React.useState(false);
+  const trackedClick = React.useRef(false);
 
   const refresh = async () => {
     const supabase = createClient();
@@ -76,6 +77,20 @@ export function ContactButton({
   const handleOpenChange = (next: boolean) => {
     setOpen(next);
     if (next) {
+      if (authed && !trackedClick.current) {
+        trackedClick.current = true;
+        void fetch("/api/analytics/track", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            event: "contact_click",
+            developer_id: developer.id,
+          }),
+          keepalive: true,
+        }).catch(() => {
+          // Suivi best-effort uniquement.
+        });
+      }
       setMessage("");
       setBusy(false);
       if (!authed) {
@@ -173,7 +188,7 @@ export function ContactButton({
             action={
               <Link href="/poster">
                 <Button variant="outline" className="w-full">
-                  Publier un brief
+                  Publier un projet
                 </Button>
               </Link>
             }

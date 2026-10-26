@@ -58,6 +58,15 @@ export async function apiRequireUser() {
   return { user, response: null };
 }
 
+/**
+ * Session facultative pour une route API publique : renvoie l'utilisateur
+ * connecté ou `null`, sans jamais bloquer le visiteur anonyme.
+ * Usage réservé aux routes de suivi/lecture qui acceptent les deux cas.
+ */
+export async function apiOptionalUser() {
+  return getCurrentUser();
+}
+
 export async function requireRole(allowed: AllowedRole[]) {
   const user = await getCurrentUser();
   if (!user) redirect(LOGIN_URL);

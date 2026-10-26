@@ -7,6 +7,22 @@
     "ogDescription": "Free posting, free quotes, 0% commission. Find the developer you need in French-speaking West Africa.",
     "ogAlt": "Devmarket — West Africa's francophone web projects marketplace."
   },
+  "DevStats": {
+    "title": "Profile performance",
+    "subtitle": "Views of your profile, “Contact” clicks and opened conversations over the last 30 days.",
+    "views": "Profile views",
+    "clicks": "“Contact” clicks",
+    "contacts": "Opened contacts",
+    "conversion": "Conversion rate",
+    "total": "{count} in total",
+    "last30": "Last 30 days",
+    "conversionHint": "contacts / clicks",
+    "trackingOff": "View and click tracking starts automatically on the first visit to your profile.",
+    "emailAlerts": "Receive new projects by email",
+    "emailAlertsHint": "One email for each new project matching your region and skills. WhatsApp alerts stay independent.",
+    "emailSaved": "Email preference saved",
+    "emailError": "Could not save this preference. Please try again."
+  },
   "Nav": {
     "home": "Home",
     "howItWorks": "How it works",

@@ -435,10 +435,22 @@ export type NewsletterSubscribeBody = z.infer<typeof newsletterSubscribeSchema>;
  */
 export const trackClientEventSchema = z
   .object({
-    event: z.enum(["contact_unlocked"]),
+    event: z.enum(["contact_unlocked", "profile_view", "contact_click"]),
     request_id: z.string().uuid("Identifiant invalide.").optional(),
+    developer_id: z.string().uuid("Identifiant développeur invalide.").optional(),
   })
-  .strict();
+  .strict()
+  .superRefine((value, ctx) => {
+    const needsDeveloper =
+      value.event === "profile_view" || value.event === "contact_click";
+    if (needsDeveloper && !value.developer_id) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Identifiant développeur manquant.",
+        path: ["developer_id"],
+      });
+    }
+  });
 
 export type TrackClientEventBody = z.infer<typeof trackClientEventSchema>;
 

@@ -20,6 +20,7 @@ import { ShareProfileButton } from "@/components/dev/share-profile-button";
 import { ScoreBreakdown } from "@/components/dev/score-breakdown";
 import { ReportButton } from "@/components/report-button";
 import { ContactButton } from "@/components/dev/contact-dialog";
+import { ProfileViewTracker } from "@/components/dev/profile-view-tracker";
 import { availabilityInfo, experienceLabel } from "@/lib/dev-labels";
 import { projectTypeLabel, formatProjectDate } from "@/lib/dev-missions-labels";
 import {
@@ -138,6 +139,7 @@ export default async function DeveloperProfilePage({
   return (
     <div className="bg-background py-14 md:py-20">
       <div className="container-tl">
+        <ProfileViewTracker developerId={profile.id} />
         <div className="rounded-3xl border border-hairline bg-gradient-to-b from-card via-surface to-surface-secondary p-6 md:p-10">
           <header className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div className="flex items-start gap-5">

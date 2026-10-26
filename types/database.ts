@@ -105,6 +105,7 @@ export interface Database {
           email_replies: boolean;
           email_unread_reminders: boolean;
           email_price_offers: boolean;
+          email_new_projects: boolean;
           updated_at: string;
         };
         Insert: {
@@ -114,6 +115,7 @@ export interface Database {
           email_replies?: boolean;
           email_unread_reminders?: boolean;
           email_price_offers?: boolean;
+          email_new_projects?: boolean;
           updated_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["notification_preferences"]["Insert"]>;
@@ -919,6 +921,10 @@ export interface Database {
       };
     };
     Functions: {
+      get_my_developer_stats: {
+        Args: Record<string, never>;
+        Returns: Json;
+      };
       newsletter_subscribe: {
         Args: {
           p_email: string;

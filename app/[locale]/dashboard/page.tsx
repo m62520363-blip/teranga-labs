@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { DashboardContent, type OrderItem, type UnlockHistoryItem } from "@/components/dashboard-content";
+import type { DeveloperStats } from "@/components/dev/performance-panel";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth/guards";
 import { getConversations } from "@/lib/conversations";
@@ -48,7 +49,7 @@ export default async function DashboardPage({
   const roleRes = await supabase.rpc("get_my_role");
   if (roleRes.data === "client") redirect("/client");
 
-  const [devRes, balanceRes, unlocksRes, transactionsRes, ordersRes, reviewsRes, myReviewsRes, missionsRes, conversations, openProjectsRes] =
+  const [devRes, balanceRes, unlocksRes, transactionsRes, ordersRes, reviewsRes, myReviewsRes, missionsRes, conversations, openProjectsRes, statsRes, prefsRes] =
     await Promise.all([
       supabase
         .from("developers")
@@ -73,6 +74,12 @@ export default async function DashboardPage({
         .select("id", { count: "exact", head: true })
         .eq("status", "ouvert")
         .eq("hidden", false),
+      supabase.rpc("get_my_developer_stats"),
+      supabase
+        .from("notification_preferences")
+        .select("email_new_projects")
+        .eq("user_id", user.id)
+        .maybeSingle(),
     ]);
 
   const profile = devRes.data ?? null;
@@ -109,6 +116,9 @@ export default async function DashboardPage({
     conversation_id: c.id,
     name: `${c.request.client_name} · ${c.request.project_type}`,
   }));
+  const stats = (statsRes.data ?? null) as DeveloperStats | null;
+  const emailNewProjects =
+    prefsRes.data?.email_new_projects !== false;
 
   return (
     <DashboardContent
@@ -125,6 +135,8 @@ export default async function DashboardPage({
       tlMissions={tlMissions}
       devisEnAttente={devisEnAttente}
       openProjects={openProjectsRes.count ?? 0}
+      stats={stats}
+      emailNewProjects={emailNewProjects}
       initialTab={(tab ?? "") as never}
     />
   );

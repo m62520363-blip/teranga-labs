@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import {
   AlertTriangle,
@@ -34,6 +35,7 @@ import {
 import { DashboardStats } from "@/components/dashboard-stats";
 import AvailabilityCard from "@/components/availability-card";
 import { MissionsManager, type TlMissionOption } from "@/components/dev/missions-manager";
+import { PerformancePanel, type DeveloperStats } from "@/components/dev/performance-panel";
 import AgencyManager from "@/components/agency/agency-manager";
 import ProPanel from "@/components/sponsoring/pro-panel";
 import { ShareProfileButton } from "@/components/dev/share-profile-button";
@@ -59,7 +61,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { createClient } from "@/lib/supabase/client";
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { parseSkills } from "@/lib/validations";
 import { formatFCFA, formatDate } from "@/lib/formatting";
 import { waLink } from "@/lib/tokens";
@@ -321,6 +323,8 @@ export function DashboardContent({
   tlMissions,
   devisEnAttente,
   openProjects = 0,
+  stats = null,
+  emailNewProjects = true,
   initialTab,
 }: {
   userId: string;
@@ -336,8 +340,11 @@ export function DashboardContent({
   tlMissions: TlMissionOption[];
   devisEnAttente: ConversationListItem[];
   openProjects?: number;
+  stats?: DeveloperStats | null;
+  emailNewProjects?: boolean;
   initialTab?: string;
 }) {
+  const t = useTranslations("DevStats");
   const [p, setP] = React.useState({
     full_name: profile?.full_name ?? "",
     whatsapp: profile?.whatsapp ?? "",
@@ -367,6 +374,8 @@ export function DashboardContent({
   const [crmView, setCrmView] = React.useState<"board" | "list">("board");
   const [savingGoal, setSavingGoal] = React.useState(false);
   const [saving, setSaving] = React.useState(false);
+  const [emailAlerts, setEmailAlerts] = React.useState(emailNewProjects);
+  const [savingEmailAlerts, setSavingEmailAlerts] = React.useState(false);
   const defaultTab: TabKey = (
     ["crm", "profil", "activite", "devis", "missions", "avis", "agence", "pro"] as TabKey[]
   ).includes(initialTab as TabKey)
@@ -467,6 +476,28 @@ export function DashboardContent({
       return;
     }
     toast.success("Profil mis à jour");
+  };
+
+  /* Alerte email « nouveaux projets » : enregistrement immédiat dans
+     notification_preferences (mig 0070), indépendant des alertes
+     WhatsApp. En cas d'échec, on revient à l'état précédent. */
+  const toggleEmailAlerts = async (value: boolean) => {
+    const previous = emailAlerts;
+    setEmailAlerts(value);
+    if (!isSupabaseConfigured()) return;
+    setSavingEmailAlerts(true);
+    const supabase = createClient();
+    const { error } = await supabase.from("notification_preferences").upsert({
+      email_new_projects: value,
+      updated_at: new Date().toISOString(),
+    });
+    setSavingEmailAlerts(false);
+    if (error) {
+      setEmailAlerts(previous);
+      toast.error(t("emailError"));
+      return;
+    }
+    toast.success(t("emailSaved"));
   };
 
   const updateCrm = async (
@@ -1450,11 +1481,29 @@ export function DashboardContent({
                     />
                     <span>
                       <span className="block text-sm font-medium">
-                        Recevoir les nouveaux briefs
+                        Recevoir les nouveaux projets
                       </span>
                       <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">
                         Alertes WhatsApp des projets correspondant à ma région et
                         à mes compétences.
+                      </span>
+                    </span>
+                  </label>
+                  <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-hairline p-4">
+                    <input
+                      type="checkbox"
+                      checked={emailAlerts}
+                      disabled={savingEmailAlerts}
+                      onChange={(e) => void toggleEmailAlerts(e.target.checked)}
+                      className="mt-0.5 size-4 rounded border-hairline accent-primary"
+                      aria-label={t("emailAlerts")}
+                    />
+                    <span>
+                      <span className="block text-sm font-medium">
+                        {t("emailAlerts")}
+                      </span>
+                      <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">
+                        {t("emailAlertsHint")}
                       </span>
                     </span>
                   </label>
@@ -1561,6 +1610,9 @@ export function DashboardContent({
 
         {tab === "activite" ? (
           <>
+            <div className="mt-8">
+              <PerformancePanel stats={stats} />
+            </div>
             <div className="mt-8 grid gap-6 lg:grid-cols-2">
             <section
               className="rounded-2xl border border-hairline bg-card p-6 shadow-sm sm:p-8"

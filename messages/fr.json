@@ -7,6 +7,22 @@
     "ogDescription": "Publication gratuite, devis gratuits, 0 % commission. Trouvez le développeur qu'il vous faut en Afrique de l'Ouest francophone.",
     "ogAlt": "Devmarket — Le marketplace des projets web de l'Afrique de l'Ouest francophone."
   },
+  "DevStats": {
+    "title": "Performance du profil",
+    "subtitle": "Vues de votre fiche, clics « Contacter » et contacts ouverts sur les 30 derniers jours.",
+    "views": "Vues de la fiche",
+    "clicks": "Clics « Contacter »",
+    "contacts": "Contacts ouverts",
+    "conversion": "Taux de conversion",
+    "total": "{count} au total",
+    "last30": "30 derniers jours",
+    "conversionHint": "contacts / clics",
+    "trackingOff": "Le suivi des vues et des clics s'active automatiquement dès la première visite de votre fiche.",
+    "emailAlerts": "Recevoir les nouveaux projets par email",
+    "emailAlertsHint": "Un email à chaque nouveau projet correspondant à votre région et à vos compétences. Les alertes WhatsApp restent indépendantes.",
+    "emailSaved": "Préférence email enregistrée",
+    "emailError": "Impossible d'enregistrer cette préférence. Réessayez."
+  },
   "Nav": {
     "home": "Accueil",
     "howItWorks": "Comment ça marche",
