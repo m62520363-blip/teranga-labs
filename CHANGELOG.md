@@ -2,6 +2,25 @@
 
 Toutes les modifications notables du projet sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [Unreleased] — 2026-10-26 : espace développeur « à la Codeur » (stats + alerte email)
+
+Suite de la refonte « Codeur » (publication de projet gratuite côté client, monétisation côté développeur) : l'espace développeur gagne le suivi de performance de sa fiche et une préférence d'alerte email.
+
+### Statistiques de la fiche (D1)
+
+- **Panneau « Performance du profil »** (`components/dev/performance-panel.tsx`) dans l'onglet Activité : vues de fiche, clics « Contacter », contacts ouverts et taux de conversion, sur 30 jours avec le total. Textes `DevStats` en FR/EN (parité 594 clés).
+- **RPC `get_my_developer_stats()`** (migration `0070`) : agrège `analytic_events` (vues/clics) et les conversations directes (`request_id IS NULL`) créées par `contact_developer`. Lecture seule, `SECURITY DEFINER`, tolérante à l'absence de la table analytics.
+- **Suivi** : `components/dev/profile-view-tracker.tsx` émet `profile_view` sur la fiche publique (visiteurs anonymes inclus), `contact-dialog.tsx` émet `contact_click` à l'ouverture du bouton « Contacter ». Une vue de sa propre fiche est ignorée, côté route et côté base.
+
+### Alerte email « nouveaux projets » (D2)
+
+- Colonne `notification_preferences.email_new_projects` (défaut `true`), case dédiée dans l'onglet Profil ; `lib/notifications/dispatch.ts` et `providers.ts` respectent la préférence (WhatsApp inchangé, absence de ligne = actif).
+
+### Pain de la production corrigé au passage (D3)
+
+- **`public.notification_preferences` n'existait pas en production** (migration `0067` jamais appliquée) : tous les réglages de notification échouaient silencieusement. La migration `0070` crée la table, ses policies RLS, le backfill `user_metadata.email_prefs` et le gating de `notify_user` (supprimé puis recréé, son type de retour en prod différant — `42P13`).
+- **`SUPABASE_SERVICE_ROLE_KEY` absente sur Vercel** : `/api/analytics/track` sortait en `recorded:false`, et la newsletter, le webhook de paiement et l'envoi des notifications étaient inopérants. Migration `0071` : RPC `track_public_event()` (`SECURITY DEFINER`, `anon` + `authenticated`) limitée à `profile_view` / `contact_click` et à un développeur existant, la table restant fermée en écriture directe. Les statistiques ne dépendent plus de la clé service.
+
 ## [Unreleased] — 2026-10-23 : rebrand Devmarket (Prompt Blue + AI Green, logos officiels, slogan)
 
 Le site change d'identité : **TERANGA LABS → Devmarket** — nom, logos, palette (Prompt Blue `#0B132B` en fond, AI Green `#39FF88` en primaire) et slogan « Find Developers. Build Your Vision ». Migrations, CHANGELOG et AUDIT exclus du renommage (historique immuable).
