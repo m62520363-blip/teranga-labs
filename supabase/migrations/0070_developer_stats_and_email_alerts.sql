@@ -2,23 +2,26 @@
 -- 0070 : statistiques de l'espace développeur + alerte email
 -- « nouveaux projets ».
 --
--- Modèle « Codeur » : le développeur doit pouvoir suivre la
--- performance de sa fiche publique (vues, clics « Contacter »,
--- contacts ouverts, conversion) et choisir de recevoir ou non
--- les nouveaux projets par email.
+-- Constat en production : la migration 0067 n'a jamais été
+-- appliquée (public.notification_preferences absente, erreur
+-- 42P01). La présente migration est donc AUTONOME : elle crée
+-- elle-même tout ce dont elle dépend.
 --
--- NON destructif :
---   * ajout d'une colonne avec valeur par défaut (true) ;
---   * RPC en lecture seule, tolérante à l'absence de la table
---     analytic_events (migrations 0039 non appliquées).
+--   0. socle analytics : analytic_events + track_event (0039) ;
+--   1. notification_preferences + RLS + backfill + gating
+--      de notify_user (0067) ;
+--   2. colonne email_new_projects ;
+--   3. RPC get_my_developer_stats().
+--
+-- NON destructif et idempotent : IF NOT EXISTS, CREATE OR
+-- REPLACE, DROP POLICY IF EXISTS. Rejouable sans risque.
 -- ============================================================
 
 BEGIN;
 
 -- ------------------------------------------------------------
--- 0. Infrastructure analytics (migration 0039 non appliquée sur
---    certains environnements). Idempotent : ne remplace rien
---    d'existant, garantit simplement que le suivi peut écrire.
+-- 0. Socle analytics (migration 0039). Écriture réservée au
+--    service_role : aucune donnée inventée.
 -- ------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS public.analytic_events (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -67,20 +70,124 @@ REVOKE ALL ON FUNCTION public.track_event(TEXT, UUID, UUID, JSONB) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.track_event(TEXT, UUID, UUID, JSONB) TO service_role;
 
 -- ------------------------------------------------------------
--- 1. Préférence « alerte email nouveaux projets ».
---    Absence de ligne = actif (même logique que la migration 0067).
+-- 1. Préférences de notifications (migration 0067).
+--    Source de vérité : une ligne par utilisateur, lue par
+--    l'écran Paramètres, par notify_user et par la diffusion
+--    des emails. Absence de ligne = tout actif.
+-- ------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS public.notification_preferences (
+  user_id UUID PRIMARY KEY DEFAULT auth.uid()
+    REFERENCES auth.users (id) ON DELETE CASCADE,
+  in_app BOOLEAN NOT NULL DEFAULT TRUE,
+  email_contact BOOLEAN NOT NULL DEFAULT TRUE,
+  email_replies BOOLEAN NOT NULL DEFAULT TRUE,
+  email_unread_reminders BOOLEAN NOT NULL DEFAULT TRUE,
+  email_price_offers BOOLEAN NOT NULL DEFAULT TRUE,
+  email_new_projects BOOLEAN NOT NULL DEFAULT TRUE,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+COMMENT ON TABLE public.notification_preferences IS
+  'Préférences de notifications par utilisateur (in-app + e-mails). '
+  'Remplace user_metadata.email_prefs, non lus côté SQL.';
+
+ALTER TABLE public.notification_preferences ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "notification_preferences_select_own"
+  ON public.notification_preferences;
+CREATE POLICY "notification_preferences_select_own"
+  ON public.notification_preferences FOR SELECT
+  TO authenticated
+  USING (user_id = auth.uid());
+
+DROP POLICY IF EXISTS "notification_preferences_insert_own"
+  ON public.notification_preferences;
+CREATE POLICY "notification_preferences_insert_own"
+  ON public.notification_preferences FOR INSERT
+  TO authenticated
+  WITH CHECK (user_id = auth.uid());
+
+DROP POLICY IF EXISTS "notification_preferences_update_own"
+  ON public.notification_preferences;
+CREATE POLICY "notification_preferences_update_own"
+  ON public.notification_preferences FOR UPDATE
+  TO authenticated
+  USING (user_id = auth.uid())
+  WITH CHECK (user_id = auth.uid());
+
+-- Backfill des préférences héritées de user_metadata.email_prefs.
+INSERT INTO public.notification_preferences (
+  user_id,
+  email_contact,
+  email_replies,
+  email_unread_reminders,
+  email_price_offers
+)
+SELECT
+  u.id,
+  coalesce((u.raw_user_meta_data -> 'email_prefs' ->> 'contact')::boolean, TRUE),
+  coalesce((u.raw_user_meta_data -> 'email_prefs' ->> 'replies')::boolean, TRUE),
+  coalesce((u.raw_user_meta_data -> 'email_prefs' ->> 'unreadReminders')::boolean, TRUE),
+  coalesce((u.raw_user_meta_data -> 'email_prefs' ->> 'priceOffers')::boolean, TRUE)
+FROM auth.users u
+WHERE u.raw_user_meta_data -> 'email_prefs' IS NOT NULL
+ON CONFLICT (user_id) DO NOTHING;
+
+-- Gating : notify_user ne crée plus de notification in-app pour
+-- un utilisateur l'ayant désactivée (signature inchangée).
+CREATE OR REPLACE FUNCTION public.notify_user(
+  p_user_id UUID,
+  p_type TEXT,
+  p_title TEXT,
+  p_body TEXT,
+  p_link TEXT DEFAULT NULL,
+  p_entity_type TEXT DEFAULT NULL,
+  p_entity_id UUID DEFAULT NULL
+)
+RETURNS UUID
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_nid UUID;
+  v_in_app BOOLEAN;
+BEGIN
+  IF p_user_id IS NULL THEN
+    RETURN NULL;
+  END IF;
+
+  SELECT p.in_app INTO v_in_app
+  FROM public.notification_preferences p
+  WHERE p.user_id = p_user_id;
+
+  IF NOT coalesce(v_in_app, TRUE) THEN
+    RETURN NULL;
+  END IF;
+
+  INSERT INTO public.notifications (user_id, type, title, body, link, entity_type, entity_id)
+  VALUES (p_user_id, p_type, p_title, p_body, p_link, p_entity_type, p_entity_id)
+  RETURNING id INTO v_nid;
+
+  RETURN v_nid;
+EXCEPTION WHEN OTHERS THEN
+  RETURN NULL;
+END;
+$$;
+
+-- ------------------------------------------------------------
+-- 2. Préférence « alerte email nouveaux projets ».
+--    (no-op si la table vient d'être créée ci-dessus)
 -- ------------------------------------------------------------
 ALTER TABLE public.notification_preferences
-  ADD COLUMN IF NOT EXISTS email_new_projects boolean NOT NULL DEFAULT true;
+  ADD COLUMN IF NOT EXISTS email_new_projects BOOLEAN NOT NULL DEFAULT TRUE;
 
 COMMENT ON COLUMN public.notification_preferences.email_new_projects IS
   'Alerte email à chaque nouveau projet correspondant au profil développeur.';
 
 -- ------------------------------------------------------------
--- 2. Statistiques du développeur connecté.
---    Les vues/clics proviennent de analytic_events (si présente) :
---    la fonction reste utilisable même si la table n'existe pas.
---    Les contacts ouverts sont comptés depuis les conversations
+-- 3. Statistiques du développeur connecté.
+--    Vues/clics : analytic_events. Contacts ouverts : conversations
 --    directes (request_id NULL) créées par contact_developer.
 -- ------------------------------------------------------------
 CREATE OR REPLACE FUNCTION public.get_my_developer_stats()
