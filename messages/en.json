@@ -130,7 +130,7 @@
       "titleAfter": "in West Africa",
       "subtitle": "Post your project for free, receive quotes from verified developers and pick the right talent. You pay them directly, with no commission.",
       "socialProof": "Verified developers across 9 countries",
-      "searchPlaceholder": "Search a developer, a skill, a city…",
+      "searchPlaceholder": "Search for a developer or a skill…",
       "searchCta": "Search",
       "searchLabel": "I'm looking for:",
       "chips": [
@@ -733,7 +733,97 @@
         "landing page": "Landing page",
         "app web": "Web app",
         "refonte": "Redesign"
-      }
+      },
+      "demos": [
+        {
+          "client": "Ndiaye Boutique",
+          "city": "Dakar, Senegal",
+          "title": "Shopify store for a natural cosmetics brand",
+          "description": "Full Shopify build: catalogue, mobile money checkout and delivery in Dakar. Brand guidelines provided.",
+          "features": [
+            "Shopify",
+            "Mobile money",
+            "Design"
+          ]
+        },
+        {
+          "client": "Konaté Consulting",
+          "city": "Abidjan, Ivory Coast",
+          "title": "Showcase website redesign for a consulting firm",
+          "description": "New design, blog and online appointment booking. The current site is slow and broken on mobile.",
+          "features": [
+            "Next.js",
+            "Blog",
+            "Booking"
+          ]
+        },
+        {
+          "client": "AgriTech Sahel",
+          "city": "Bamako, Mali",
+          "title": "Harvest tracking web app for a cooperative",
+          "description": "Dashboard, harvest entry, sales tracking and Excel export. About ten field users on an unstable connection.",
+          "features": [
+            "Dashboard",
+            "API",
+            "Excel"
+          ]
+        },
+        {
+          "client": "Studio Loko",
+          "city": "Cotonou, Benin",
+          "title": "Launch landing page for a delivery app",
+          "description": "Launch page with a sign-up form, conversion tracking and a polished mobile version. Copywriting needed.",
+          "features": [
+            "Landing",
+            "SEO",
+            "Analytics"
+          ]
+        },
+        {
+          "client": "Numérik School",
+          "city": "Lomé, Togo",
+          "title": "Showcase site for a digital training school",
+          "description": "Course catalogue, session calendar, application form and a news section. Content provided by the school.",
+          "features": [
+            "Next.js",
+            "Forms",
+            "CMS"
+          ]
+        },
+        {
+          "client": "Artisan Connect",
+          "city": "Ouagadougou, Burkina Faso",
+          "title": "Mobile app connecting artisans with customers",
+          "description": "Android and iOS app: artisan profiles, quote requests, messaging and mobile payment. Mockups ready.",
+          "features": [
+            "React Native",
+            "Payments",
+            "Messaging"
+          ]
+        },
+        {
+          "client": "Maison Sarr",
+          "city": "Saint-Louis, Senegal",
+          "title": "Customer support chatbot integration",
+          "description": "Chatbot trained on the shop FAQ, connected to WhatsApp Business and the product catalogue. Answers in French and English.",
+          "features": [
+            "AI",
+            "WhatsApp",
+            "API"
+          ]
+        },
+        {
+          "client": "Kora Market",
+          "city": "Conakry, Guinea",
+          "title": "SEO and performance optimisation for an e-commerce site",
+          "description": "Technical audit, indexing fixes, image optimisation and Core Web Vitals improvements. Monthly report expected.",
+          "features": [
+            "SEO",
+            "Performance",
+            "Audit"
+          ]
+        }
+      ]
     },
     "offers": {
       "eyebrow": "For clients",

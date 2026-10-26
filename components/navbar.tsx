@@ -161,7 +161,7 @@ export function Navbar({
               <Link
                 href="/dev"
                 className={cn(
-                  "inline-flex items-center py-1 text-[13px] font-medium transition-colors outline-none focus-visible:text-foreground xl:text-sm",
+                  "inline-flex items-center py-1 text-[13px] font-medium rounded-md transition-colors outline-none focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50 xl:text-sm",
                   isActiveLink(pathname, "/dev")
                     ? "text-foreground"
                     : "text-foreground/80 hover:text-foreground"
@@ -172,7 +172,7 @@ export function Navbar({
               <Link
                 href="/briefs"
                 className={cn(
-                  "inline-flex items-center py-1 text-[13px] font-medium transition-colors outline-none focus-visible:text-foreground xl:text-sm",
+                  "inline-flex items-center py-1 text-[13px] font-medium rounded-md transition-colors outline-none focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50 xl:text-sm",
                   isActiveLink(pathname, "/briefs")
                     ? "text-foreground"
                     : "text-foreground/80 hover:text-foreground"
@@ -183,7 +183,7 @@ export function Navbar({
               <Link
                 href="/agences"
                 className={cn(
-                  "inline-flex items-center py-1 text-[13px] font-medium transition-colors outline-none focus-visible:text-foreground xl:text-sm",
+                  "inline-flex items-center py-1 text-[13px] font-medium rounded-md transition-colors outline-none focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50 xl:text-sm",
                   isActiveLink(pathname, "/agences")
                     ? "text-foreground"
                     : "text-foreground/80 hover:text-foreground"
@@ -193,19 +193,19 @@ export function Navbar({
               </Link>
               <Link
                 href="/#comment-ca-marche"
-                className="inline-flex items-center py-1 text-[13px] font-medium text-foreground/80 transition-colors outline-none hover:text-foreground focus-visible:text-foreground xl:text-sm"
+                className="inline-flex items-center rounded-md py-1 text-[13px] font-medium text-foreground/80 transition-colors outline-none hover:text-foreground focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50 xl:text-sm"
               >
                 {t("howItWorks")}
               </Link>
               <Link
                 href="/#tarifs"
-                className="inline-flex items-center py-1 text-[13px] font-medium text-foreground/80 transition-colors outline-none hover:text-foreground focus-visible:text-foreground xl:text-sm"
+                className="inline-flex items-center rounded-md py-1 text-[13px] font-medium text-foreground/80 transition-colors outline-none hover:text-foreground focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50 xl:text-sm"
               >
                 {t("pricing")}
               </Link>
               <Link
                 href="/#faq"
-                className="inline-flex items-center py-1 text-[13px] font-medium text-foreground/80 transition-colors outline-none hover:text-foreground focus-visible:text-foreground xl:text-sm"
+                className="inline-flex items-center rounded-md py-1 text-[13px] font-medium text-foreground/80 transition-colors outline-none hover:text-foreground focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50 xl:text-sm"
               >
                 {t("faq")}
               </Link>

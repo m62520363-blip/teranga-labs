@@ -25,11 +25,11 @@ Reproduction de la composition de codeur.com sur l'accueil public, en gardant l'
 ### Accessibilité et animations
 
 - **Onglets de métiers** en pattern WAI-ARIA complet (flèches gauche/droite, Home/End, `aria-selected`, `tabIndex` géré) ; **FAQ** en accordéon fluide (`grid-template-rows` 0fr → 1fr, `aria-expanded`/`aria-controls`, deux colonnes clients/développeurs, premier item ouvert).
-- **`app/globals.css`** : `hero-glow`, `hero-ring` (pulsation décalée par anneau) et `hero-underline` (tracé SVG animé), tous neutralisés sous `prefers-reduced-motion` ; cibles tactiles ≥ 44 px sur les CTA, `focus-visible` sur tous les liens/boutons.
+- **`app/globals.css`** : `hero-glow`, `hero-ring` (pulsation décalée par anneau) et `hero-underline` (tracé SVG animé), tous neutralisés sous `prefers-reduced-motion` ; cibles tactiles ≥ 44 px sur les CTA, `focus-visible` sur tous les liens/boutons — y compris un anneau vert sur les liens du menu principal, auparavant signalés par le seul changement de couleur.
 
 ### i18n
 
-- **`Landing.{hero,latestProjects,offers,process,categories,benefits,platform,why,bigCta,socialProof,faq,roleCards}`** et **`Footer.{columns,links}`** ajoutés/renforcés en FR et EN — parité vérifiée (457 clés de chaque côté, 0 écart). `formatRelativeTime` remplacé par `Intl.RelativeTimeFormat` dans les cartes projet pour un temps relatif correct dans les deux langues.
+- **`Landing.{hero,latestProjects,offers,process,categories,benefits,platform,why,bigCta,socialProof,faq,roleCards}`** et **`Footer.{columns,links}`** ajoutés/renforcés en FR et EN — parité vérifiée (458 clés de chaque côté, 0 écart). `formatRelativeTime` remplacé par `Intl.RelativeTimeFormat` dans les cartes projet pour un temps relatif correct dans les deux langues. Les 8 projets de démonstration sont traduits (`latestProjects.demos`), avec repli sur le français si une entrée manque.
 
 ## [Unreleased] — 2026-10-26 : espace développeur « à la Codeur » (stats + alerte email)
 

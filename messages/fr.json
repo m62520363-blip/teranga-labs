@@ -130,7 +130,7 @@
       "titleAfter": "de l'Afrique de l'Ouest",
       "subtitle": "Publiez votre projet gratuitement, recevez des devis de développeurs vérifiés et choisissez le bon talent. Vous payez directement, sans commission.",
       "socialProof": "Des développeurs vérifiés dans 9 pays",
-      "searchPlaceholder": "Rechercher un développeur, une compétence, une ville…",
+      "searchPlaceholder": "Rechercher un développeur, une compétence…",
       "searchCta": "Rechercher",
       "searchLabel": "Je cherche :",
       "chips": [
@@ -733,7 +733,97 @@
         "landing page": "Landing page",
         "app web": "App web",
         "refonte": "Refonte"
-      }
+      },
+      "demos": [
+        {
+          "client": "Boutique Ndiaye",
+          "city": "Dakar, Sénégal",
+          "title": "Boutique Shopify pour une marque de cosmétiques naturels",
+          "description": "Création d'une boutique Shopify complète : catalogue, paiement mobile money et livraison à Dakar. Charte graphique fournie.",
+          "features": [
+            "Shopify",
+            "Mobile money",
+            "Design"
+          ]
+        },
+        {
+          "client": "Cabinet Konaté",
+          "city": "Abidjan, Côte d'Ivoire",
+          "title": "Refonte du site vitrine d'un cabinet de conseil",
+          "description": "Nouveau design, blog et prise de rendez-vous en ligne. Le site actuel est lent et ne fonctionne pas correctement sur mobile.",
+          "features": [
+            "Next.js",
+            "Blog",
+            "Réservation"
+          ]
+        },
+        {
+          "client": "AgriTech Sahel",
+          "city": "Bamako, Mali",
+          "title": "Application web de suivi des récoltes pour une coopérative",
+          "description": "Tableau de bord, saisie des récoltes, suivi des ventes et export Excel. Une dizaine d'utilisateurs sur le terrain, connexion instable.",
+          "features": [
+            "Dashboard",
+            "API",
+            "Excel"
+          ]
+        },
+        {
+          "client": "Studio Loko",
+          "city": "Cotonou, Bénin",
+          "title": "Landing page de lancement pour une app de livraison",
+          "description": "Page de lancement avec formulaire d'inscription, tracking des conversions et version mobile soignée. Textes à rédiger.",
+          "features": [
+            "Landing",
+            "SEO",
+            "Analytics"
+          ]
+        },
+        {
+          "client": "École Numérik",
+          "city": "Lomé, Togo",
+          "title": "Site vitrine pour une école de formation numérique",
+          "description": "Présentation des formations, calendrier des sessions, formulaire de candidature et espace actualités. Contenu fourni par l'école.",
+          "features": [
+            "Next.js",
+            "Formulaire",
+            "CMS"
+          ]
+        },
+        {
+          "client": "Artisan Connect",
+          "city": "Ouagadougou, Burkina Faso",
+          "title": "Application mobile de mise en relation pour artisans",
+          "description": "Application Android et iOS : profils d'artisans, demande de devis, messagerie et paiement mobile. Maquettes déjà prêtes.",
+          "features": [
+            "React Native",
+            "Paiement",
+            "Messagerie"
+          ]
+        },
+        {
+          "client": "Maison Sarr",
+          "city": "Saint-Louis, Sénégal",
+          "title": "Intégration d'un chatbot de support client",
+          "description": "Chatbot entraîné sur la FAQ de la boutique, connecté à WhatsApp Business et au catalogue produits. Réponses en français et en anglais.",
+          "features": [
+            "IA",
+            "WhatsApp",
+            "API"
+          ]
+        },
+        {
+          "client": "Kora Market",
+          "city": "Conakry, Guinée",
+          "title": "Optimisation SEO et vitesse d'un site e-commerce",
+          "description": "Audit technique, correction des erreurs d'indexation, optimisation des images et des Core Web Vitals. Rapport mensuel attendu.",
+          "features": [
+            "SEO",
+            "Performance",
+            "Audit"
+          ]
+        }
+      ]
     },
     "offers": {
       "eyebrow": "Pour les clients",

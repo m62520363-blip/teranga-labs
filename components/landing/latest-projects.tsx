@@ -62,7 +62,14 @@ export async function LatestProjects() {
   }
 
   const isDemo = briefs.length === 0;
-  const items: FeedItem[] = isDemo ? DEMO_PROJECTS : briefs;
+  const demos = t.raw("demos") as {
+    client: string;
+    city: string;
+    title: string;
+    description: string;
+    features: string[];
+  }[];
+  const items: FeedItem[] = isDemo ? localizeDemos(demos) : briefs;
 
   return (
     <section id="projets" className="scroll-mt-24 border-t border-hairline py-20 sm:py-24">
@@ -257,6 +264,29 @@ function firstLine(text: string): string {
   const dot = clean.indexOf(".");
   const sentence = dot > 20 ? clean.slice(0, dot) : clean;
   return sentence.length > 72 ? sentence.slice(0, 72) + "…" : sentence;
+}
+
+/**
+ * Applique les textes localisés (FR/EN) aux exemples de démonstration.
+ * Les métadonnées non traduisibles (identifiant, budget, ancienneté, type)
+ * restent celles de `DEMO_PROJECTS` ; un libellé manquant retombe sur le
+ * français plutôt que d'afficher une clé brute.
+ */
+function localizeDemos(
+  demos: { client: string; city: string; title: string; description: string; features: string[] }[]
+): FeedItem[] {
+  return DEMO_PROJECTS.map((project, index) => {
+    const demo = demos[index];
+    if (!demo) return project;
+    return {
+      ...project,
+      client_name: demo.client,
+      client_city: demo.city,
+      title: demo.title,
+      description: demo.description,
+      features: demo.features,
+    };
+  });
 }
 
 const DEMO_PROJECTS: FeedItem[] = [
