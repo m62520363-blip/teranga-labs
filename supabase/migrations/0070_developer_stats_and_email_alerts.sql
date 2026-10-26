@@ -134,7 +134,12 @@ WHERE u.raw_user_meta_data -> 'email_prefs' IS NOT NULL
 ON CONFLICT (user_id) DO NOTHING;
 
 -- Gating : notify_user ne crée plus de notification in-app pour
--- un utilisateur l'ayant désactivée (signature inchangée).
+-- un utilisateur l'ayant désactivée. La version en production a un
+-- type de retour différent (42P13), donc on la supprime d'abord :
+-- le DROP et le CREATE sont dans la même transaction, un échec
+-- annule l'ensemble sans laisser la base sans fonction.
+DROP FUNCTION IF EXISTS public.notify_user(uuid, text, text, text, text, text, uuid);
+
 CREATE OR REPLACE FUNCTION public.notify_user(
   p_user_id UUID,
   p_type TEXT,
@@ -174,6 +179,11 @@ EXCEPTION WHEN OTHERS THEN
   RETURN NULL;
 END;
 $$;
+
+-- Le DROP a effacé les privilèges : on les rétablit explicitement.
+REVOKE ALL ON FUNCTION public.notify_user(uuid, text, text, text, text, text, uuid) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.notify_user(uuid, text, text, text, text, text, uuid)
+  TO authenticated, service_role;
 
 -- ------------------------------------------------------------
 -- 2. Préférence « alerte email nouveaux projets ».
