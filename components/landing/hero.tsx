@@ -1,143 +1,191 @@
+"use client";
+
 import * as React from "react";
 import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
-import { ShieldCheck } from "lucide-react";
-import { Scene3D } from "@/components/landing/scene-3d";
-import { HeroLaptop } from "@/components/landing/hero-laptop";
-import { RotatingWords } from "@/components/landing/rotating-words";
+import { Link, useRouter } from "@/i18n/navigation";
+import { ArrowRight, Search, ShieldCheck, Sparkles, UserRound } from "lucide-react";
 
+/**
+ * Hero de la landing — structure de la référence Codeur.com : grand fond
+ * bleu, cercles concentriques, preuve sociale, titre avec mot souligné,
+ * barre de recherche centrale et raccourcis de catégories.
+ *
+ * Le champ de recherche utilise la vraie recherche de l'annuaire
+ * (`/dev?q=`) : aucune requête factice.
+ */
 export function Hero() {
   const t = useTranslations("Landing.hero");
+  const router = useRouter();
+  const [query, setQuery] = React.useState("");
+
+  const chips = t.raw("chips") as { label: string; query: string }[];
+
+  const submit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const term = query.trim();
+    router.push(term ? `/dev?q=${encodeURIComponent(term)}` : "/dev");
+  };
+
   return (
-    <section id="accueil" className="relative scroll-mt-24 overflow-hidden">
-      {/* Halo de marque : radial primaire en haut, respiration lente */}
+    <section className="relative isolate overflow-hidden pb-20 pt-28 sm:pb-24 sm:pt-32 lg:pb-28 lg:pt-40">
+      {/* Fond : dégradé navy + halo vert, dans l'esprit du grand bleu Codeur. */}
       <div
         aria-hidden="true"
-        className="hero-glow pointer-events-none absolute inset-0 -z-10"
-        style={{
-          background:
-            "radial-gradient(60% 50% at 50% 0%, color-mix(in srgb, var(--primary) 18%, transparent), transparent)",
-        }}
+        className="pointer-events-none absolute inset-0 -z-20 bg-[radial-gradient(120%_90%_at_50%_-10%,#16265c_0%,#0d1734_45%,#0b132b_70%,#080e20_100%)]"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-1/2 bg-[radial-gradient(60%_60%_at_50%_100%,rgba(57,255,136,0.10),transparent)]"
       />
 
-      {/* Composition façon Montaaj : badge, titre, texte, boutons centrés,
-          puis l'ordinateur posé en dessous (perspective 800px). */}
-      <div className="relative flex flex-col items-center px-5 pt-24 pb-16 text-center sm:px-6 lg:mt-[6vh] lg:pt-[8rem] lg:pb-24">
-        <span
-          className="animate-rise mb-5 inline-flex items-center gap-2 rounded-full border border-primary/30 px-3 py-1 text-sm text-foreground"
-          style={{ "--rise-delay": "1100ms" } as React.CSSProperties}
-        >
-          <ShieldCheck className="size-4 text-primary" aria-hidden="true" />
-          {t("badge")}
-        </span>
-
-        <HeroTitle className="animate-rise" delay="1250ms" />
-
-        <p
-          className="animate-rise mt-4 font-headings text-lg font-bold tracking-tight text-primary sm:text-xl"
-          style={{ "--rise-delay": "1300ms" } as React.CSSProperties}
-        >
-          {t("slogan")}
-        </p>
-
-        <p
-          className="animate-rise mt-4 max-w-xl text-base text-muted-foreground sm:text-lg sm:leading-relaxed"
-          style={{ "--rise-delay": "1350ms" } as React.CSSProperties}
-        >
-          {t("subtitle")}
-        </p>
-
-        <div
-          className="animate-rise mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row"
-          style={{ "--rise-delay": "1550ms" } as React.CSSProperties}
-        >
-          <Link
-            href="/poster"
-            className="btn-shine inline-flex min-h-11 items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-[filter] outline-none hover:brightness-110 active:brightness-95 focus-visible:ring-2 focus-visible:ring-primary/50"
-          >
-            {t("ctaPrimary")}
-          </Link>
-          <Link
-            href="/dev"
-            className="inline-flex min-h-11 items-center gap-2 rounded-full border border-primary/60 px-5 py-2.5 text-sm text-foreground transition-colors outline-none hover:border-primary hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
-          >
-            {t("ctaSecondary")}
-          </Link>
-        </div>
-
-        <p
-          className="animate-rise mt-4 text-xs text-muted-foreground"
-          style={{ "--rise-delay": "1650ms" } as React.CSSProperties}
-        >
-          {t("ctaNote")}
-        </p>
-
-        {/* Accès rapide par type de projet, comme les catégories de Codeur. */}
-        <div
-          className="animate-rise mt-8 flex max-w-2xl flex-wrap items-center justify-center gap-2"
-          style={{ "--rise-delay": "1750ms" } as React.CSSProperties}
-        >
-          <span className="text-xs text-muted-foreground">{t("searchLabel")}</span>
-          {(t.raw("chips") as { key: string; label: string }[]).map((chip) => (
-            <Link
-              key={chip.key}
-              href={`/poster?type=${encodeURIComponent(chip.key)}`}
-              className="inline-flex h-8 items-center rounded-full border border-hairline bg-card px-3.5 text-xs font-medium text-muted-foreground transition-colors outline-none hover:border-primary/40 hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
-            >
-              {chip.label}
-            </Link>
-          ))}
-        </div>
-
-        {/* Showcase : ordinateur + scène 3D de fond (profondeur) */}
-        <div className="relative mx-auto mt-14 w-full max-w-md sm:max-w-lg lg:mt-16 lg:w-[32rem] lg:max-w-none">
-          <Scene3D
-            variant="marketplace"
-            className="pointer-events-none absolute -inset-x-16 -bottom-10 -top-8 -z-10 opacity-40"
-          />
-          <div className="pointer-events-none absolute -inset-x-10 top-16 -z-10 h-64 rounded-full bg-[radial-gradient(closest-side,rgba(57,255,136,0.16),transparent)]" />
-          <HeroLaptop />
-        </div>
+      {/* Cercles concentriques : profondeur et superposition. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute left-1/2 top-[-26rem] -z-10 aspect-square w-[min(92rem,190vw)] -translate-x-1/2"
+      >
+        <span className="hero-ring absolute inset-0 rounded-full border border-white/[0.07]" />
+        <span className="hero-ring absolute inset-[9%] rounded-full border border-white/[0.08]" />
+        <span className="hero-ring absolute inset-[19%] rounded-full border border-white/[0.09]" />
+        <span className="hero-ring absolute inset-[30%] rounded-full border border-primary/[0.12]" />
+        <span className="absolute inset-[40%] rounded-full bg-[radial-gradient(closest-side,rgba(57,255,136,0.16),transparent_72%)]" />
       </div>
 
-      {/* Voile de bas de section : fondu vers le fond */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-40 bg-gradient-to-b from-transparent to-background sm:h-56"
-      />
-    </section>
-  );
-}
+      <div className="container-tl relative">
+        <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
+          {/* Preuve sociale : avatars + indicateur. */}
+          <div className="animate-rise flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
+            <div className="flex -space-x-2" aria-hidden="true">
+              {[0, 1, 2, 3, 4].map((index) => (
+                <span
+                  key={index}
+                  className="flex size-8 items-center justify-center rounded-full border-2 border-[#0d1734] bg-gradient-to-br from-[#203260] to-[#14213f] text-primary/80 shadow-sm"
+                >
+                  <UserRound className="size-3.5" />
+                </span>
+              ))}
+            </div>
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1.5 text-xs font-medium text-white/85 backdrop-blur">
+              <span className="size-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(57,255,136,0.8)]" />
+              {t("socialProof")}
+            </span>
+          </div>
 
-function HeroTitle({ className, delay }: { className?: string; delay: string }) {
-  const t = useTranslations("Landing.hero");
-  const title = t("title");
-  const rotating = t.raw("rotating") as string[];
-  // Le titre se scinde sur le dernier espace : « … web, paie » / « …, pay ».
-  const splitAt = title.lastIndexOf(" ");
-  const head = splitAt > 0 ? title.slice(0, splitAt) : title;
-  const tail = splitAt > 0 ? title.slice(splitAt + 1) : "";
-  return (
-    <h1
-      className={
-        "flex flex-col items-center text-balance font-headings text-4xl leading-[1.05] font-black tracking-tight sm:text-4xl md:text-5xl lg:text-6xl " +
-        (className ?? "")
-      }
-      style={{ "--rise-delay": delay } as React.CSSProperties}
-    >
-      <span className="sr-only">
-        {title} {rotating[0]}
-      </span>
-      <span aria-hidden="true" className="text-center">
-        {head}
-      </span>
-      <span
-        aria-hidden="true"
-        className="flex flex-wrap items-baseline justify-center gap-x-3"
-      >
-        <span>{tail}</span>
-        <RotatingWords words={rotating} className="align-baseline" />
-      </span>
-    </h1>
+          <span
+            className="animate-rise mt-6 inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/[0.08] px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary"
+            style={{ "--rise-delay": "100ms" } as React.CSSProperties}
+          >
+            <Sparkles className="size-3.5" aria-hidden="true" />
+            {t("badge")}
+          </span>
+
+          <h1
+            className="animate-rise mt-6 text-balance font-headings text-4xl font-extrabold leading-[1.06] tracking-tight text-white sm:text-5xl lg:text-[3.9rem]"
+            style={{ "--rise-delay": "180ms" } as React.CSSProperties}
+          >
+            {t("titleBefore")}{" "}
+            <span className="relative inline-block whitespace-nowrap text-primary">
+              {t("titleHighlight")}
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 260 18"
+                preserveAspectRatio="none"
+                className="hero-underline absolute -bottom-2 left-0 h-3 w-full overflow-visible"
+              >
+                <path
+                  d="M4 12C58 4 142 3 256 10"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </span>{" "}
+            {t("titleAfter")}
+          </h1>
+
+          <p
+            className="animate-rise mt-7 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg"
+            style={{ "--rise-delay": "260ms" } as React.CSSProperties}
+          >
+            {t("subtitle")}
+          </p>
+
+          {/* Barre de recherche : blanche comme la référence, bouton vert. */}
+          <form
+            onSubmit={submit}
+            role="search"
+            aria-label={t("searchLabel")}
+            className="animate-rise mt-9 flex w-full max-w-2xl items-center gap-2 rounded-2xl border border-white/15 bg-white p-2 shadow-[0_24px_70px_-24px_rgba(0,0,0,0.85)] transition-shadow duration-300 focus-within:shadow-[0_28px_80px_-20px_rgba(57,255,136,0.35)]"
+            style={{ "--rise-delay": "330ms" } as React.CSSProperties}
+          >
+            <Search className="ml-2 size-5 shrink-0 text-[#0b132b]/45" aria-hidden="true" />
+            <label htmlFor="hero-search" className="sr-only">
+              {t("searchPlaceholder")}
+            </label>
+            <input
+              id="hero-search"
+              type="search"
+              name="q"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder={t("searchPlaceholder")}
+              autoComplete="off"
+              className="h-11 min-w-0 flex-1 bg-transparent text-sm text-[#0b132b] outline-none placeholder:text-[#0b132b]/45 sm:text-base"
+            />
+            <button
+              type="submit"
+              className="btn-shine inline-flex h-11 shrink-0 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-ink transition-[filter] outline-none hover:brightness-110 active:brightness-95 focus-visible:ring-2 focus-visible:ring-[#0b132b]/40 sm:px-6"
+            >
+              <span className="hidden sm:inline">{t("searchCta")}</span>
+              <ArrowRight className="size-4" aria-hidden="true" />
+            </button>
+          </form>
+
+          {/* Raccourcis de catégories sous le champ. */}
+          <div
+            className="animate-rise mt-5 flex max-w-3xl flex-wrap items-center justify-center gap-2"
+            style={{ "--rise-delay": "400ms" } as React.CSSProperties}
+          >
+            <span className="text-xs font-medium text-white/50">{t("searchLabel")}</span>
+            {chips.map((chip) => (
+              <Link
+                key={chip.label}
+                href={`/dev?q=${encodeURIComponent(chip.query)}`}
+                className="inline-flex h-8 items-center rounded-full border border-white/15 bg-white/[0.04] px-3.5 text-xs font-medium text-white/75 transition-colors outline-none hover:border-primary/50 hover:bg-primary/10 hover:text-white focus-visible:ring-2 focus-visible:ring-primary/60"
+              >
+                {chip.label}
+              </Link>
+            ))}
+          </div>
+
+          <div
+            className="animate-rise mt-8 flex flex-col items-center gap-3 sm:flex-row"
+            style={{ "--rise-delay": "470ms" } as React.CSSProperties}
+          >
+            <Link
+              href="/poster"
+              className="btn-shine inline-flex min-h-12 items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-ink transition-[filter] outline-none hover:brightness-110 active:brightness-95 focus-visible:ring-2 focus-visible:ring-primary/60"
+            >
+              {t("ctaPrimary")}
+              <ArrowRight className="size-4" aria-hidden="true" />
+            </Link>
+            <Link
+              href="/briefs"
+              className="inline-flex min-h-12 items-center gap-2 rounded-full border border-white/20 bg-white/[0.04] px-6 py-3 text-sm font-medium text-white transition-colors outline-none hover:border-white/40 hover:bg-white/[0.08] focus-visible:ring-2 focus-visible:ring-primary/60"
+            >
+              {t("ctaSecondary")}
+            </Link>
+          </div>
+
+          <p
+            className="animate-rise mt-5 inline-flex items-center gap-2 text-xs text-white/50"
+            style={{ "--rise-delay": "540ms" } as React.CSSProperties}
+          >
+            <ShieldCheck className="size-3.5 text-primary" aria-hidden="true" />
+            {t("ctaNote")}
+          </p>
+        </div>
+      </div>
+    </section>
   );
 }

@@ -66,14 +66,14 @@
   },
   "Footer": {
     "slogan": "Find Developers. Build Your Vision",
-    "tagline": "The marketplace of web projects for francophone West Africa. You pay in Tokens, your money never moves as commission.",
+    "tagline": "The marketplace for web projects in French-speaking West Africa. Free to post, direct payment, no commission.",
     "newsletter": {
       "title": "Stay informed",
       "description": "News, guides and offers — an email from time to time, never spam.",
       "placeholder": "you@email.com",
       "cta": "Subscribe",
       "loading": "Subscribing…",
-      "success": "Thank you! You're subscribed.",
+      "success": "Thank you! You are subscribed.",
       "error": "Something went wrong. Please try again.",
       "invalid": "Invalid email address."
     },
@@ -88,64 +88,84 @@
     },
     "columns": {
       "platform": "Platform",
-      "account": "Account",
-      "help": "Help"
+      "clients": "For clients",
+      "developers": "For developers",
+      "resources": "Resources"
     },
     "links": {
       "howItWorks": "How it works",
       "pricing": "Pricing",
-      "faq": "FAQ",
-      "briefs": "Projects",
+      "projects": "Projects",
+      "developers": "Developers",
+      "agencies": "Agencies",
+      "ranking": "Ranking",
       "publishBrief": "Post a project",
-      "becomeDev": "Become a developer",
-      "login": "Sign in",
-      "faqFull": "Frequently asked questions",
+      "findDev": "Find a developer",
       "buyTokens": "Buy Tokens",
+      "faq": "Frequently asked questions",
       "contact": "Contact us",
-      "legal": "Legal notice",
+      "becomeDev": "Developer sign-up",
+      "browseProjects": "Browse projects",
+      "verifyProfile": "Verify my profile",
+      "devSpace": "Developer space",
+      "support": "Support",
+      "about": "About",
+      "sitemap": "Sitemap",
+      "countries": "Countries",
+      "cities": "Cities",
+      "terms": "Terms",
       "privacy": "Privacy",
-      "terms": "Terms"
+      "legal": "Legal notice"
     },
-    "copyright": "Dakar, Senegal.",
-    "publishedBy": "Published by"
+    "copyright": "All rights reserved.",
+    "publishedBy": "Published by",
+    "description": "Devmarket connects clients across French-speaking West Africa with verified developers and digital providers. Post a project for free, compare proposals and work directly with the talent you choose.",
+    "location": "Dakar, Senegal."
   },
   "Landing": {
     "hero": {
-      "badge": "Free posting · 0% commission",
-      "title": "Find the developer you need,",
-      "rotating": [
-        "without commission.",
-        "at the right price.",
-        "with confidence."
-      ],
-      "slogan": "Find Developers. Build Your Vision",
-      "subtitle": "Post your web project for free in 2 minutes. Receive quotes from verified developers and pick the right one — your WhatsApp stays private.",
-      "ctaPrimary": "Post a project for free",
-      "ctaSecondary": "Find a developer",
-      "ctaNote": "Free · No commission · Direct payment between you",
-      "searchLabel": "I need:",
+      "badge": "Free to post · 0% commission",
+      "titleBefore": "The platform for",
+      "titleHighlight": "web projects",
+      "titleAfter": "in West Africa",
+      "subtitle": "Post your project for free, receive quotes from verified developers and pick the right talent. You pay them directly, with no commission.",
+      "socialProof": "Verified developers across 9 countries",
+      "searchPlaceholder": "Search a developer, a skill, a city…",
+      "searchCta": "Search",
+      "searchLabel": "I'm looking for:",
       "chips": [
         {
-          "key": "vitrine",
-          "label": "Showcase site"
+          "label": "Development",
+          "query": "developer"
         },
         {
-          "key": "e-commerce",
-          "label": "E-commerce"
+          "label": "E-commerce",
+          "query": "e-commerce"
         },
         {
-          "key": "app web",
-          "label": "Web app"
+          "label": "Design",
+          "query": "design"
         },
         {
-          "key": "landing page",
-          "label": "Landing page"
+          "label": "Marketing",
+          "query": "marketing"
         },
         {
-          "key": "refonte",
-          "label": "Redesign"
+          "label": "Services",
+          "query": "support"
+        },
+        {
+          "label": "Networks",
+          "query": "network"
+        },
+        {
+          "label": "AI",
+          "query": "artificial intelligence"
         }
-      ]
+      ],
+      "ctaPrimary": "Post a project for free",
+      "ctaSecondary": "Get quotes",
+      "ctaNote": "Free to post · No commission · Private WhatsApp"
     },
     "howItWorks": {
       "badge": "Simple, fast, transparent",
@@ -239,12 +259,15 @@
       }
     ],
     "roleCards": {
+      "eyebrow": "Ready to start?",
+      "title": "A space for every role",
+      "lead": "Post your first project or join the developers who receive missions every week.",
       "client": {
         "eyebrow": "Client",
-        "title": "Stop hunting on WhatsApp.",
-        "text": "In 5 minutes, describe your project, set your budget and join serious developers from across the region. Your money stays yours until you choose.",
+        "title": "Stop searching on WhatsApp.",
+        "text": "In 5 minutes, describe your project, set your budget and meet serious developers from across the region. Your money stays yours until you choose.",
         "bullets": [
-          "Free posting, no subscription",
+          "Free to post, no subscription",
           "Free quotes from verified developers",
           "Compare price, timeline and reviews",
           "Direct payment, 0% commission"
@@ -253,8 +276,8 @@
       },
       "developer": {
         "eyebrow": "Developer",
-        "title": "Be found on your real skills.",
-        "text": "Create your profile with your portfolio. Clients find you by your specialty and country. You get paid directly, no friction.",
+        "title": "Get found for your real skills.",
+        "text": "Create your profile with your portfolio. Clients find you by specialty and country. You get paid directly, with no friction.",
         "bullets": [
           "Public profile with portfolio",
           "New projects by country and specialty",
@@ -278,29 +301,71 @@
       "tg": "Togo"
     },
     "socialProof": {
-      "badge": "Trust first",
-      "titleA": "Clients and developers",
-      "titleB": "from across the region.",
-      "lead": "Devmarket connects francophone West African businesses with verified web developers — no commission, no middleman.",
+      "eyebrow": "Trust first",
+      "title": "A platform built on trust",
+      "bigValue": "0%",
+      "bigLabel": "commission on projects",
+      "bigText": "The budget you agree with the developer goes to them in full. Devmarket takes nothing from your project.",
       "stats": [
         {
-          "value": "0%",
-          "label": "commission on projects"
+          "value": "9",
+          "label": "countries covered"
         },
         {
-          "value": "Free",
+          "value": "2 min",
           "label": "to post a project"
         },
         {
-          "value": "100%",
-          "label": "of your budget goes to the developer"
+          "value": "1 Token",
+          "label": "per contact for developers"
         },
         {
           "value": "24 h",
-          "label": "to post and get contacted"
+          "label": "to receive proposals"
         }
       ],
-      "note": "Direct payment between you, private WhatsApp, monthly ranking of the best developers."
+      "testimonialsTitle": "What our users say",
+      "testimonialsLead": "Stories from clients and developers who use Devmarket every day.",
+      "testimonials": [
+        {
+          "quote": "I posted my project on a Sunday evening, for free. On Monday morning, three serious developers had sent me a quote. The site was live two weeks later.",
+          "name": "Aïssatou D.",
+          "role": "Client",
+          "location": "Dakar, Senegal"
+        },
+        {
+          "quote": "Before Devmarket, I wasted time on cold applications. Here, clients find me by skill, and I only pay one Token to contact them.",
+          "name": "Kwame O.",
+          "role": "Full-stack developer",
+          "location": "Abidjan, Côte d'Ivoire"
+        },
+        {
+          "quote": "Paying in FCFA from my wallet changes everything. No conversion, no bad surprise. And the monthly ranking motivates the whole team.",
+          "name": "Fatou N.",
+          "role": "Client",
+          "location": "Bamako, Mali"
+        },
+        {
+          "quote": "My profile is public and clients come directly with a budget. The inbox avoids sharing my number before I'm sure about the project.",
+          "name": "Moussa S.",
+          "role": "Mobile developer",
+          "location": "Dakar, Senegal"
+        },
+        {
+          "quote": "We had a tight budget to rebuild our site. Comparing proposals on Devmarket helped us find a developer within our range.",
+          "name": "Awa B.",
+          "role": "Client",
+          "location": "Abidjan, Côte d'Ivoire"
+        },
+        {
+          "quote": "The new-project email alert saves me a huge amount of time. I only answer the ones that truly match my skills.",
+          "name": "Yao K.",
+          "role": "Web developer",
+          "location": "Lomé, Togo"
+        }
+      ],
+      "demoNote": "Demo testimonials — they illustrate the journey, not verified reviews.",
+      "demoBadge": "Demo"
     },
     "token": {
       "badge": "The Token, simple and transparent",
@@ -492,52 +557,450 @@
       ]
     },
     "categories": {
-      "badge": "Every digital skill",
-      "titleA": "A developer for",
-      "titleB": "every project.",
-      "lead": "Filter by specialty, country and budget. Every profile shows a portfolio, verified reviews and a starting rate.",
-      "items": [
+      "eyebrow": "All digital trades",
+      "title": "Freelancers for every project",
+      "lead": "Development, design, marketing or AI: find the skill your project needs.",
+      "tabs": [
+        "Development",
+        "E-commerce",
+        "Design",
+        "Marketing",
+        "Services & networks",
+        "AI & data"
+      ],
+      "groups": [
         {
-          "label": "Web development",
-          "hint": "Showcase sites, web apps, redesigns"
+          "items": [
+            {
+              "label": "Web developer",
+              "hint": "Showcase sites, web apps, redesigns",
+              "query": "web developer"
+            },
+            {
+              "label": "Mobile developer",
+              "hint": "iOS, Android, React Native",
+              "query": "mobile developer"
+            },
+            {
+              "label": "Full-stack developer",
+              "hint": "Front end, back end and API",
+              "query": "full-stack"
+            },
+            {
+              "label": "WordPress developer",
+              "hint": "Themes, plugins and WooCommerce",
+              "query": "wordpress"
+            }
+          ]
         },
         {
-          "label": "E-commerce",
-          "hint": "Shopify, WooCommerce, payments"
+          "items": [
+            {
+              "label": "Shopify developer",
+              "hint": "Stores and sales funnels",
+              "query": "shopify"
+            },
+            {
+              "label": "WooCommerce developer",
+              "hint": "Payments and catalog management",
+              "query": "woocommerce"
+            },
+            {
+              "label": "PrestaShop developer",
+              "hint": "Modules and migration",
+              "query": "prestashop"
+            },
+            {
+              "label": "Payment integration",
+              "hint": "Mobile money, cards and wallets",
+              "query": "payment"
+            }
+          ]
         },
         {
-          "label": "Mobile apps",
-          "hint": "iOS, Android, React Native"
+          "items": [
+            {
+              "label": "UI/UX designer",
+              "hint": "Mockups, prototypes and journeys",
+              "query": "ui ux"
+            },
+            {
+              "label": "Graphic designer",
+              "hint": "Visual identity and assets",
+              "query": "graphic designer"
+            },
+            {
+              "label": "Web designer",
+              "hint": "Modern, responsive interfaces",
+              "query": "web design"
+            },
+            {
+              "label": "Motion designer",
+              "hint": "Animations and video",
+              "query": "motion"
+            }
+          ]
         },
         {
-          "label": "UI/UX design",
-          "hint": "Mockups, branding, prototypes"
+          "items": [
+            {
+              "label": "SEO consultant",
+              "hint": "Organic and technical SEO",
+              "query": "seo"
+            },
+            {
+              "label": "Google Ads",
+              "hint": "Campaigns and acquisition",
+              "query": "google ads"
+            },
+            {
+              "label": "Community manager",
+              "hint": "Social media and content",
+              "query": "community manager"
+            },
+            {
+              "label": "Web copywriter",
+              "hint": "Articles, pages and copywriting",
+              "query": "copywriting"
+            }
+          ]
         },
         {
-          "label": "SEO & acquisition",
-          "hint": "SEO, Google Ads, content"
+          "items": [
+            {
+              "label": "System administrator",
+              "hint": "Servers, backups and security",
+              "query": "system"
+            },
+            {
+              "label": "Networks & Wi-Fi",
+              "hint": "Installation and maintenance",
+              "query": "network"
+            },
+            {
+              "label": "IT support",
+              "hint": "Assistance and troubleshooting",
+              "query": "support"
+            },
+            {
+              "label": "Automation",
+              "hint": "Scripts, integrations and workflows",
+              "query": "automation"
+            }
+          ]
         },
         {
-          "label": "AI & automation",
-          "hint": "Chatbots, agents, integrations"
+          "items": [
+            {
+              "label": "AI integration",
+              "hint": "Chatbots, agents and APIs",
+              "query": "artificial intelligence"
+            },
+            {
+              "label": "Data analyst",
+              "hint": "Dashboards and reporting",
+              "query": "data"
+            },
+            {
+              "label": "Prompt engineer",
+              "hint": "Model and usage optimisation",
+              "query": "prompt"
+            },
+            {
+              "label": "No-code & low-code",
+              "hint": "Automation without development",
+              "query": "no-code"
+            }
+          ]
         }
-      ]
+      ],
+      "cta": "See all developers"
     },
     "latestProjects": {
-      "badge": "Recently posted projects",
-      "titleA": "Real projects,",
-      "titleB": "free quotes.",
-      "lead": "Every project is posted by a client looking for a developer. Browse them, then send your proposal — or post your own.",
-      "cta": "View all projects",
-      "demoNote": "Sample projects — post yours to appear here.",
-      "noCommission": "0 commission",
+      "badge": "Recent projects",
+      "title": "Recently posted projects",
+      "lead": "The latest projects posted by clients. Read the details, then send your proposal — or post your own project.",
+      "cta": "See more projects",
+      "demoNote": "Sample projects — real projects appear here as soon as they are published.",
+      "demoBadge": "Demo",
+      "open": "Open",
       "offers": "{count, plural, =0 {0 quote} one {# quote} other {# quotes}}",
+      "views": "{count, plural, =0 {0 view} one {# view} other {# views}}",
+      "viewProject": "View project",
       "types": {
         "vitrine": "Showcase",
         "e-commerce": "E-commerce",
         "landing page": "Landing page",
         "app web": "Web app",
         "refonte": "Redesign"
+      }
+    },
+    "offers": {
+      "eyebrow": "For clients",
+      "title": "Receive tailored proposals",
+      "lead": "Describe your need once. Interested developers send you a priced proposal, a timeline and their portfolio.",
+      "profileNote": "Preview of Devmarket profiles",
+      "profiles": [
+        {
+          "role": "Web developer",
+          "detail": "Next.js · 5 yrs"
+        },
+        {
+          "role": "UI/UX designer",
+          "detail": "Figma · 4 yrs"
+        },
+        {
+          "role": "E-commerce expert",
+          "detail": "Shopify · 6 yrs"
+        }
+      ],
+      "steps": [
+        {
+          "num": "1",
+          "title": "Post your project free in 2 min",
+          "text": "Describe your project, set your budget and deadline. Posting costs nothing."
+        },
+        {
+          "num": "2",
+          "title": "Receive proposals right away",
+          "text": "Interested developers send a priced quote, their timeline and references."
+        },
+        {
+          "num": "3",
+          "title": "Choose your developer",
+          "text": "Chat in the private inbox and pick the profile that best fits your expectations."
+        }
+      ],
+      "ctaPrimary": "Post my project",
+      "ctaSecondary": "View projects"
+    },
+    "process": {
+      "eyebrow": "How it works",
+      "title": "One project, two simple paths",
+      "lead": "Whether you need a developer or new missions, everything happens in one place, with no middleman.",
+      "client": {
+        "title": "You have a project",
+        "steps": [
+          {
+            "title": "Post your project",
+            "text": "Describe your need, budget and deadline. Posting is free and takes 2 minutes."
+          },
+          {
+            "title": "Compare proposals",
+            "text": "Receive quotes from verified developers and chat in the private inbox."
+          },
+          {
+            "title": "Choose and pay directly",
+            "text": "Pick the profile that fits and pay them directly. 0% commission."
+          }
+        ],
+        "cta": "Post a project"
+      },
+      "developer": {
+        "title": "You are a developer",
+        "steps": [
+          {
+            "title": "Create your profile",
+            "text": "Add your portfolio, skills and starting rate. Your profile is public and indexed."
+          },
+          {
+            "title": "Find targeted projects",
+            "text": "Browse projects by country, budget and skill. Turn on email alerts for new projects."
+          },
+          {
+            "title": "Contact for 1 Token",
+            "text": "Open the conversation with a client for 1 Token. The contact stays available for life."
+          }
+        ],
+        "cta": "View projects",
+        "preview": "Profile preview",
+        "profileRole": "Full-stack developer",
+        "profileMeta": "React · Node.js · Dakar",
+        "profileBadge": "Verified profile",
+        "profileAvailability": "Available"
+      }
+    },
+    "benefits": {
+      "eyebrow": "Simple, fast, transparent",
+      "title": "A simple, fast and transparent service",
+      "lead": "Devmarket brings together everything you need to launch your project: verified profiles, a private inbox and clear rules.",
+      "items": [
+        {
+          "title": "Verified developers",
+          "text": "Check portfolios, skills and reviews before choosing your provider."
+        },
+        {
+          "title": "Free to post, no commission",
+          "text": "Posting a project costs the client nothing. Developers pay 1 Token per contact, and you pay them directly."
+        },
+        {
+          "title": "Proposals within hours",
+          "text": "Post in 2 minutes and receive quotes that fit your budget and timeline."
+        }
+      ],
+      "cta": "Post a project",
+      "note": "0 FCFA to post · 1 Token (2,500 FCFA) per contact for developers · 0% commission",
+      "visual": {
+        "value": "0%",
+        "label": "commission on projects",
+        "rows": [
+          {
+            "label": "Post a project",
+            "value": "0 FCFA"
+          },
+          {
+            "label": "Contact a client",
+            "value": "1 Token"
+          },
+          {
+            "label": "Pay the developer",
+            "value": "Direct"
+          }
+        ]
+      }
+    },
+    "platform": {
+      "eyebrow": "A complete platform",
+      "title": "A platform built for every project",
+      "lead": "From a showcase site to a business app or an online store: the skills are here.",
+      "cards": [
+        {
+          "title": "For every project",
+          "text": "Post your need and access specialised developers, whatever your industry."
+        },
+        {
+          "title": "For every budget",
+          "text": "Set your budget: developers immediately know whether they can respond."
+        },
+        {
+          "title": "Support & assistance",
+          "text": "A question? The Devmarket team answers through support and the inbox."
+        }
+      ],
+      "toolsTitle": "Everything you need to work with confidence",
+      "tools": [
+        {
+          "title": "Private inbox",
+          "text": "Chat without exposing your number. Conversations stay in your account."
+        },
+        {
+          "title": "Wallet & Tokens",
+          "text": "Buy Tokens and track your balance from your developer space."
+        },
+        {
+          "title": "Verified profiles",
+          "text": "Profiles show portfolio, skills and reviews so you can choose with confidence."
+        },
+        {
+          "title": "Monthly ranking",
+          "text": "The most active developers are highlighted in the ranking."
+        },
+        {
+          "title": "Direct payment",
+          "text": "You pay the developer directly, with no Devmarket commission."
+        },
+        {
+          "title": "Project alerts",
+          "text": "Developers receive an email alert for new projects."
+        }
+      ],
+      "cta": "Create an account"
+    },
+    "why": {
+      "eyebrow": "Why a freelancer?",
+      "title": "Why hire a freelance developer for your project?",
+      "lead": "A freelancer brings focused expertise, a controlled budget and great responsiveness.",
+      "items": [
+        {
+          "title": "Expertise",
+          "text": "A freelance developer brings specialised skills built across a wide range of projects."
+        },
+        {
+          "title": "Attractive rates",
+          "text": "You get quality work at a cost that fits your need, without the overhead of a full-time hire."
+        },
+        {
+          "title": "Flexibility",
+          "text": "A freelancer adapts to your pace, for a one-off mission or long-term support."
+        },
+        {
+          "title": "Outside perspective",
+          "text": "A fresh look at your product, journeys and technical choices, with concrete ideas."
+        },
+        {
+          "title": "Speed",
+          "text": "Thanks to their experience, freelancers deliver quickly and know how to prioritise."
+        }
+      ],
+      "cta": "Post a project"
+    },
+    "bigCta": {
+      "title": "Developers ready to build your next project",
+      "lead": "Post for free, receive proposals and choose the talent that fits.",
+      "cta": "Post a project",
+      "secondary": "Find a developer"
+    },
+    "faq": {
+      "eyebrow": "Frequently asked questions",
+      "title": "Everything you need to know",
+      "lead": "Clients and developers: answers to the most common questions.",
+      "clients": {
+        "title": "For clients",
+        "items": [
+          {
+            "q": "Is posting a project really free?",
+            "a": "Yes. Posting is free and requires no subscription. Only developers pay to contact a client (1 Token) or for the Pro subscription."
+          },
+          {
+            "q": "How long does it take to receive proposals?",
+            "a": "Most projects receive their first proposals within 24 hours. Posting takes about 2 minutes."
+          },
+          {
+            "q": "Does Devmarket take a commission?",
+            "a": "No. Devmarket takes no commission on the project: you pay the developer directly."
+          },
+          {
+            "q": "How do I choose the right developer?",
+            "a": "Each profile shows a portfolio, skills, a rating and a starting rate. Compare proposals and chat in the inbox."
+          },
+          {
+            "q": "Does my WhatsApp stay private?",
+            "a": "Yes. Your number never appears on the project. Conversations happen in the internal inbox and you decide when to share your contact."
+          },
+          {
+            "q": "What happens if we disagree?",
+            "a": "Report the situation from the conversation or support. The team reviews the exchanges and can suspend a profile if needed."
+          }
+        ]
+      },
+      "developers": {
+        "title": "For developers",
+        "items": [
+          {
+            "q": "How do I receive projects?",
+            "a": "Create your profile, list your skills and turn on email alerts. New projects also appear on the Projects page."
+          },
+          {
+            "q": "How much does a contact cost?",
+            "a": "1 Token, or 2,500 FCFA, to open the conversation with a client. The contact stays available for life."
+          },
+          {
+            "q": "Is there a Pro subscription?",
+            "a": "Yes. Pro lets you apply without limit. Details and pricing are available in your space and on the Tokens page."
+          },
+          {
+            "q": "Does Devmarket take a commission on my missions?",
+            "a": "No. You are paid directly by the client. Devmarket takes nothing from the mission amount."
+          },
+          {
+            "q": "How can I get featured?",
+            "a": "Complete your profile, add a portfolio and collect reviews. The monthly ranking highlights the most active profiles."
+          },
+          {
+            "q": "Can I work from any country?",
+            "a": "Yes. Registration is open worldwide, with prices displayed in your local currency."
+          }
+        ]
       }
     }
   },

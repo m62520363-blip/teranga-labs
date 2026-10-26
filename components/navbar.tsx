@@ -156,23 +156,12 @@ export function Navbar({
           {authed ? (
             <DesktopNavLinks pathname={pathname} authed appLinks={appLinks} />
           ) : (
-            /* Nav visiteur façon Montaaj : liens centrés, pills arrondies. */
-            <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 lg:flex">
-              <Link
-                href="/"
-                className={cn(
-                  "text-sm font-medium transition-colors outline-none focus-visible:text-foreground",
-                  isActiveLink(pathname, "/")
-                    ? "text-foreground"
-                    : "text-foreground/80 hover:text-foreground"
-                )}
-              >
-                {t("home")}
-              </Link>
+            /* Nav visiteur façon Codeur : liens centrés, pills arrondies. */
+            <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-5 lg:flex xl:gap-8">
               <Link
                 href="/dev"
                 className={cn(
-                  "text-sm font-medium transition-colors outline-none focus-visible:text-foreground",
+                  "inline-flex items-center py-1 text-[13px] font-medium transition-colors outline-none focus-visible:text-foreground xl:text-sm",
                   isActiveLink(pathname, "/dev")
                     ? "text-foreground"
                     : "text-foreground/80 hover:text-foreground"
@@ -181,20 +170,42 @@ export function Navbar({
                 {t("developers")}
               </Link>
               <Link
+                href="/briefs"
+                className={cn(
+                  "inline-flex items-center py-1 text-[13px] font-medium transition-colors outline-none focus-visible:text-foreground xl:text-sm",
+                  isActiveLink(pathname, "/briefs")
+                    ? "text-foreground"
+                    : "text-foreground/80 hover:text-foreground"
+                )}
+              >
+                {t("briefs")}
+              </Link>
+              <Link
+                href="/agences"
+                className={cn(
+                  "inline-flex items-center py-1 text-[13px] font-medium transition-colors outline-none focus-visible:text-foreground xl:text-sm",
+                  isActiveLink(pathname, "/agences")
+                    ? "text-foreground"
+                    : "text-foreground/80 hover:text-foreground"
+                )}
+              >
+                {t("agencies")}
+              </Link>
+              <Link
                 href="/#comment-ca-marche"
-                className="text-sm font-medium text-foreground/80 transition-colors outline-none hover:text-foreground focus-visible:text-foreground"
+                className="inline-flex items-center py-1 text-[13px] font-medium text-foreground/80 transition-colors outline-none hover:text-foreground focus-visible:text-foreground xl:text-sm"
               >
                 {t("howItWorks")}
               </Link>
               <Link
                 href="/#tarifs"
-                className="text-sm font-medium text-foreground/80 transition-colors outline-none hover:text-foreground focus-visible:text-foreground"
+                className="inline-flex items-center py-1 text-[13px] font-medium text-foreground/80 transition-colors outline-none hover:text-foreground focus-visible:text-foreground xl:text-sm"
               >
                 {t("pricing")}
               </Link>
               <Link
                 href="/#faq"
-                className="text-sm font-medium text-foreground/80 transition-colors outline-none hover:text-foreground focus-visible:text-foreground"
+                className="inline-flex items-center py-1 text-[13px] font-medium text-foreground/80 transition-colors outline-none hover:text-foreground focus-visible:text-foreground xl:text-sm"
               >
                 {t("faq")}
               </Link>
@@ -270,15 +281,15 @@ export function Navbar({
               ) : (
                 <>
                   <MobileNavLink href="/">{t("home")}</MobileNavLink>
+                  <MobileNavLink href="/dev">{t("developers")}</MobileNavLink>
+                  <MobileNavLink href="/briefs">{t("briefs")}</MobileNavLink>
+                  <MobileNavLink href="/agences">{t("agencies")}</MobileNavLink>
                   <MobileNavLink href="/#comment-ca-marche">
                     {t("howItWorks")}
                   </MobileNavLink>
                   <MobileNavLink href="/#tarifs">{t("pricing")}</MobileNavLink>
                   <MobileNavLink href="/#faq">{t("faq")}</MobileNavLink>
-                  <MobileNavLink href="/dev">{t("findDev")}</MobileNavLink>
-                  <MobileNavLink href="/agences">{t("agencies")}</MobileNavLink>
                   <MobileNavLink href="/poster">{t("forClients")}</MobileNavLink>
-                  <MobileNavLink href="/briefs">{t("forDevs")}</MobileNavLink>
                   <div className="my-2 h-px bg-border-strong" />
                   <MobileNavLink href="/login">{t("signIn")}</MobileNavLink>
                   <Link

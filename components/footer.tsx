@@ -11,35 +11,51 @@ const columns = [
     links: [
       { linkKey: "howItWorks", href: "/#comment-ca-marche" },
       { linkKey: "pricing", href: "/#tarifs" },
-      { linkKey: "faq", href: "/#faq" },
-      { linkKey: "briefs", href: "/briefs" },
+      { linkKey: "projects", href: "/briefs" },
+      { linkKey: "developers", href: "/dev" },
     ],
   },
   {
-    titleKey: "columns.account",
+    titleKey: "columns.clients",
     links: [
       { linkKey: "publishBrief", href: "/poster" },
-      { linkKey: "becomeDev", href: "/inscription-developpeur" },
-      { linkKey: "login", href: "/login" },
+      { linkKey: "findDev", href: "/dev" },
+      { linkKey: "agencies", href: "/agences" },
+      { linkKey: "faq", href: "/faq" },
     ],
   },
   {
-    titleKey: "columns.help",
+    titleKey: "columns.developers",
     links: [
-      { linkKey: "faqFull", href: "/#faq" },
+      { linkKey: "becomeDev", href: "/inscription-developpeur" },
+      { linkKey: "browseProjects", href: "/briefs" },
+      { linkKey: "devSpace", href: "/dashboard" },
       { linkKey: "buyTokens", href: "/tokens" },
+    ],
+  },
+  {
+    titleKey: "columns.resources",
+    links: [
+      { linkKey: "ranking", href: "/classement" },
+      { linkKey: "about", href: "/a-propos" },
       { linkKey: "contact", href: "/contact" },
+      { linkKey: "sitemap", href: "/plan-du-site" },
     ],
   },
 ];
 
+/**
+ * Pied de page — la section M de la référence.
+ * Quatre colonnes de liens réels, la marque, la newsletter et les mentions.
+ * Aucun lien mort : chaque destination correspond à une route existante.
+ */
 export function Footer() {
   const t = useTranslations("Footer");
   return (
     <footer className="border-t border-hairline bg-surface">
-      <div className="container-tl py-16">
-        <div className="lg:flex lg:items-start lg:gap-12">
-          <div className="shrink-0">
+      <div className="container-tl py-14 sm:py-16">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.1fr_2fr] lg:gap-16">
+          <div>
             <Link
               href="/"
               className="inline-flex items-center outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
@@ -51,9 +67,10 @@ export function Footer() {
             <p className="mt-4 max-w-xs font-headings text-base font-bold tracking-tight text-primary">
               {t("slogan")}
             </p>
-            <p className="mt-2 max-w-xs text-sm leading-relaxed text-muted-foreground">
-              {t("tagline")}
+            <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">
+              {t("description")}
             </p>
+
             <div className="mt-6 max-w-sm">
               <p className="font-headings text-sm font-semibold text-foreground">
                 {t("newsletter.title")}
@@ -63,21 +80,22 @@ export function Footer() {
               </p>
               <NewsletterForm />
             </div>
+
             <SocialLinks />
           </div>
 
-          <div className="mt-12 grid grid-cols-2 gap-8 lg:mt-0 lg:flex-1 lg:grid-cols-3 lg:gap-y-16">
+          <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-4">
             {columns.map((column) => (
               <nav key={column.titleKey} aria-label={t(column.titleKey)}>
                 <h3 className="font-headings text-sm font-semibold text-foreground">
                   {t(column.titleKey)}
                 </h3>
-                <ul className="mt-6 flex flex-col gap-4 text-sm">
+                <ul className="mt-5 flex flex-col gap-3.5 text-sm">
                   {column.links.map((link) => (
                     <li key={link.linkKey}>
                       <Link
                         href={link.href}
-                        className="text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:text-foreground"
+                        className="inline-block py-1 text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:text-foreground focus-visible:underline focus-visible:underline-offset-4"
                       >
                         {t(`links.${link.linkKey}`)}
                       </Link>
@@ -94,11 +112,11 @@ export function Footer() {
             <p className="text-xs text-muted-foreground">
               © {new Date().getFullYear()} {BRAND}. {t("copyright")}
             </p>
-            <ul className="mt-6 flex flex-wrap justify-start gap-4 text-xs sm:mt-0 lg:justify-end">
+            <ul className="mt-5 flex flex-wrap justify-start gap-x-5 gap-y-2 text-xs sm:mt-0 lg:justify-end">
               <li>
                 <Link
                   href="/mentions-legales"
-                  className="text-muted-foreground transition-colors outline-none hover:text-foreground"
+                  className="inline-block py-1 text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:text-foreground focus-visible:underline focus-visible:underline-offset-4"
                 >
                   {t("links.legal")}
                 </Link>
@@ -106,7 +124,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/politique-de-confidentialite"
-                  className="text-muted-foreground transition-colors outline-none hover:text-foreground"
+                  className="inline-block py-1 text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:text-foreground focus-visible:underline focus-visible:underline-offset-4"
                 >
                   {t("links.privacy")}
                 </Link>
@@ -114,7 +132,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/conditions-utilisation"
-                  className="text-muted-foreground transition-colors outline-none hover:text-foreground"
+                  className="inline-block py-1 text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:text-foreground focus-visible:underline focus-visible:underline-offset-4"
                 >
                   {t("links.terms")}
                 </Link>
@@ -122,7 +140,7 @@ export function Footer() {
             </ul>
           </div>
           <p className="mt-4 text-xs text-muted-foreground">
-            {t("publishedBy")} {LEGAL_PUBLISHER}.
+            {t("publishedBy")} {LEGAL_PUBLISHER}. {t("location")}
           </p>
         </div>
       </div>

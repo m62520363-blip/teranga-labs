@@ -3,21 +3,19 @@ import { redirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { getCurrentRole, getCurrentUser } from "@/lib/supabase/server";
 import { Hero } from "@/components/landing/hero";
-import { StatsBand } from "@/components/landing/stats-band";
 import { LatestProjects } from "@/components/landing/latest-projects";
-import { Categories } from "@/components/landing/categories";
-import { HowItWorks } from "@/components/landing/how-it-works";
-import { PricingSection } from "@/components/landing/pricing";
-import { FaqSection } from "@/components/landing/faq";
-import { RoleCards } from "@/components/landing/role-cards";
-import { SocialProof } from "@/components/landing/social-proof";
-import { TokenSection } from "@/components/landing/token-section";
-import { ComparisonTable } from "@/components/landing/comparison-table";
-import { Testimonials } from "@/components/landing/testimonials";
-import { ForWhoTabs } from "@/components/landing/for-who-tabs";
 import { CountryFlags } from "@/components/landing/country-flags";
+import { CustomOffers } from "@/components/landing/custom-offers";
+import { HowItWorks } from "@/components/landing/how-it-works";
+import { Categories } from "@/components/landing/categories";
+import { Benefits } from "@/components/landing/benefits";
+import { Platform } from "@/components/landing/platform";
+import { WhyFreelance } from "@/components/landing/why-freelance";
+import { BigCta } from "@/components/landing/big-cta";
+import { SocialProof } from "@/components/landing/social-proof";
+import { Faq } from "@/components/landing/faq";
+import { RoleCards } from "@/components/landing/role-cards";
 import { META } from "@/components/landing/content";
-import { TOKEN_LABEL_PRICED } from "@/lib/formatting";
 import { absoluteUrl } from "@/lib/utils";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -60,7 +58,11 @@ export default async function HomePage() {
   const locale = await getLocale();
   const metaT = await getTranslations("Meta");
   const faqT = await getTranslations("Landing");
-  const faqs = faqT.raw("faqs") as { q: string; a: string }[];
+  const faq = faqT.raw("faq") as {
+    clients: { items: { q: string; a: string }[] };
+    developers: { items: { q: string; a: string }[] };
+  };
+  const faqs = [...faq.clients.items, ...faq.developers.items];
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -73,12 +75,12 @@ export default async function HomePage() {
       },
       {
         "@type": "FAQPage",
-        mainEntity: faqs.map((_, i) => ({
+        mainEntity: faqs.map((item) => ({
           "@type": "Question",
-          name: faqT(`faqs.${i}.q`),
+          name: item.q,
           acceptedAnswer: {
             "@type": "Answer",
-            text: faqT(`faqs.${i}.a`, { token: TOKEN_LABEL_PRICED }),
+            text: item.a,
           },
         })),
       },
@@ -93,18 +95,17 @@ export default async function HomePage() {
       />
       <div className="bg-background">
         <Hero />
-        <StatsBand />
         <LatestProjects />
-        <Categories />
         <CountryFlags />
-        <SocialProof />
+        <CustomOffers />
         <HowItWorks />
-        <ForWhoTabs />
-        <PricingSection />
-        <TokenSection />
-        <ComparisonTable />
-        <Testimonials />
-        <FaqSection />
+        <Categories />
+        <Benefits />
+        <Platform />
+        <WhyFreelance />
+        <BigCta />
+        <SocialProof />
+        <Faq />
         <RoleCards />
       </div>
     </>

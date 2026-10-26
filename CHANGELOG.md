@@ -2,6 +2,35 @@
 
 Toutes les modifications notables du projet sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [Unreleased] — 2026-10-26 : refonte de la landing « à la Codeur » (sections A → M)
+
+Reproduction de la composition de codeur.com sur l'accueil public, en gardant l'identité Devmarket (bleu `#0B132B`, vert `#39FF88`, logo, thème sombre unique) et sans reprendre aucune marque, aucun chiffre ni aucun avis de Codeur.
+
+### Composition (`app/[locale]/page.tsx`)
+
+- **Nouvel ordre** : Hero → Projets récents → Drapeaux pays → Offres sur-mesure → Comment ça marche → Catégories/métiers → Avantages (`#tarifs`) → Plateforme → Pourquoi un freelance → Grand CTA → Confiance/témoignages → FAQ → Cartes de rôle, puis le footer.
+- **Sections créées** (`components/landing/`) : `custom-offers.tsx`, `how-it-works.tsx` (parcours client/développeur), `categories.tsx`, `benefits.tsx`, `platform.tsx`, `why-freelance.tsx`, `big-cta.tsx`, `social-proof.tsx`, `faq.tsx`, `role-cards.tsx`.
+- **Sections réécrites** : `hero.tsx` (cercles concentriques, avatars, titre souligné, recherche `/dev?q=`, chips), `latest-projects.tsx` (grille 2 colonnes, 8 projets, temps relatif localisé), `components/footer.tsx` (4 colonnes de liens réels + marque + newsletter + mentions).
+- **Retirées du rendu** (fichiers conservés) : `stats-band.tsx`, `pricing.tsx`, `token-section.tsx`, `comparison-table.tsx`, `for-who-tabs.tsx`, `testimonials.tsx`. Leurs arguments (0 FCFA de publication, 1 Token côté développeur, 0 % commission) sont repris dans Avantages/Plateforme ; l'ancre `#tarifs` passe sur `Benefits`.
+
+### Recherche et navigation
+
+- **`/dev?q=` branché de bout en bout** : le paramètre est lu dans `app/[locale]/dev/page.tsx` (borné à 80 caractères), transmis à `list_approved_developers` (`p_query`) puis à `DirectoryPage` (`initialQuery`) — le hero, les 7 chips et les 24 métiers filtrent réellement l'annuaire.
+- **Navbar visiteur** alignée sur la référence : Développeurs, Projets, Agences, Comment ça marche, Tarifs, FAQ + CTA ; menu mobile enrichi des mêmes entrées.
+
+### Contenu honnête
+
+- **Aucune donnée inventée** : les 8 projets affichent les vraies métadonnées quand Supabase est configuré, sinon des démos explicitement badgées « Démo » ; les 6 témoignages portent aussi le badge « Démo » et une note de bas de section ; les chiffres de la section Confiance sont des faits produit (périmètre, coût, délai), pas des volumes d'utilisateurs.
+
+### Accessibilité et animations
+
+- **Onglets de métiers** en pattern WAI-ARIA complet (flèches gauche/droite, Home/End, `aria-selected`, `tabIndex` géré) ; **FAQ** en accordéon fluide (`grid-template-rows` 0fr → 1fr, `aria-expanded`/`aria-controls`, deux colonnes clients/développeurs, premier item ouvert).
+- **`app/globals.css`** : `hero-glow`, `hero-ring` (pulsation décalée par anneau) et `hero-underline` (tracé SVG animé), tous neutralisés sous `prefers-reduced-motion` ; cibles tactiles ≥ 44 px sur les CTA, `focus-visible` sur tous les liens/boutons.
+
+### i18n
+
+- **`Landing.{hero,latestProjects,offers,process,categories,benefits,platform,why,bigCta,socialProof,faq,roleCards}`** et **`Footer.{columns,links}`** ajoutés/renforcés en FR et EN — parité vérifiée (457 clés de chaque côté, 0 écart). `formatRelativeTime` remplacé par `Intl.RelativeTimeFormat` dans les cartes projet pour un temps relatif correct dans les deux langues.
+
 ## [Unreleased] — 2026-10-26 : espace développeur « à la Codeur » (stats + alerte email)
 
 Suite de la refonte « Codeur » (publication de projet gratuite côté client, monétisation côté développeur) : l'espace développeur gagne le suivi de performance de sa fiche et une préférence d'alerte email.

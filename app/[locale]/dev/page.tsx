@@ -18,7 +18,7 @@ const PAGE_SIZE = 12;
 export default async function DirectoryPageRoute({
   searchParams,
 }: {
-  searchParams: Promise<{ city?: string }>;
+  searchParams: Promise<{ city?: string; q?: string }>;
 }) {
   const sp = await searchParams;
   // Deep-link géographique : ?city=Dakar ou ?city=Sénégal (exact, borné).
@@ -26,6 +26,9 @@ export default async function DirectoryPageRoute({
     typeof sp.city === "string" && sp.city.trim()
       ? sp.city.trim().slice(0, 60)
       : "";
+  // Recherche depuis le hero / les catégories de la landing : /dev?q=…
+  const queryParam =
+    typeof sp.q === "string" && sp.q.trim() ? sp.q.trim().slice(0, 80) : "";
 
   const supabase = await createClient();
   if (!supabase) {
@@ -49,7 +52,7 @@ export default async function DirectoryPageRoute({
 
   const [listRes, costRes, filtersRes] = await Promise.all([
     supabase.rpc("list_approved_developers", {
-      p_query: undefined,
+      p_query: queryParam || undefined,
       p_city: cityParam || undefined,
       p_limit: PAGE_SIZE,
       p_offset: 0,
@@ -75,6 +78,7 @@ export default async function DirectoryPageRoute({
         <DirectoryPage
           initial={developers}
           initialCity={cityParam}
+          initialQuery={queryParam}
           filters={{
             specialties: filters.specialties ?? [],
             cities: filters.cities ?? [],

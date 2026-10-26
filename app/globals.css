@@ -830,6 +830,58 @@ h6 {
   }
 }
 
+/* Anneaux concentriques du hero : pulsation très lente, décalée par anneau */
+@keyframes hero-ring-pulse {
+  0%,
+  to {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.012);
+  }
+}
+.hero-ring {
+  transform-origin: 50% 50%;
+  will-change: opacity, transform;
+  animation: 14s ease-in-out infinite hero-ring-pulse;
+}
+.hero-ring:nth-child(2) {
+  animation-delay: -3.5s;
+}
+.hero-ring:nth-child(3) {
+  animation-delay: -7s;
+}
+.hero-ring:nth-child(4) {
+  animation-delay: -10.5s;
+}
+
+/* Soulignement dessiné sous le mot-clé du hero */
+@keyframes hero-underline-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.hero-underline path {
+  stroke-dasharray: 280;
+  stroke-dashoffset: 280;
+  animation: hero-underline-draw 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.75s forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-ring,
+  .hero-underline path {
+    animation: none;
+  }
+  .hero-ring {
+    opacity: 0.8;
+  }
+  .hero-underline path {
+    stroke-dashoffset: 0;
+  }
+}
+
 /* Cartes empilées « sticky » de la section Comment ça marche */
 .stack-card {
   opacity: 0;
