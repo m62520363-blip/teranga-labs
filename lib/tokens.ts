@@ -111,9 +111,9 @@ export function decodeUnlockError(
     case "TLRJC":
       return "Votre compte développeur ne permet pas de débloquer des contacts.";
     case "TLNOR":
-      return "Ce brief n'existe plus.";
+      return "Ce projet n'existe plus.";
     case "TLCLO":
-      return "Ce brief n'est plus disponible.";
+      return "Ce projet n'est plus disponible.";
     case "TLDUP":
       return "Vous avez déjà débloqué ce contact.";
     case "TLLOW":

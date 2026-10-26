@@ -149,10 +149,10 @@ export async function getConversations(
 
       let otherName = "Client";
       let otherUsername: string | null = null;
-      let subtitle = "Brief";
+      let subtitle = "Projet";
       if (isDev && req) {
         otherName = req.client_name ?? "Client";
-        subtitle = `${req.client_city || "Brief"} · ${req.project_type} · ${formatBudget(req.budget)}`;
+        subtitle = `${req.client_city || "Projet"} · ${req.project_type} · ${formatBudget(req.budget)}`;
       } else if (isDev && !req) {
         otherName = "Client";
         const peer = peerCache.get(c.client_id ?? "") ?? null;
@@ -177,7 +177,7 @@ export async function getConversations(
           otherUsername = peer.username ?? otherUsername;
           subtitle = peer.subtitle || "Contact direct";
         } else if (req) {
-          subtitle = `${req.client_city || "Brief"} · ${req.project_type} · ${formatBudget(req.budget)}`;
+          subtitle = `${req.client_city || "Projet"} · ${req.project_type} · ${formatBudget(req.budget)}`;
         } else {
           subtitle = "Contact direct";
         }
@@ -200,7 +200,7 @@ export async function getConversations(
         created_at: c.created_at,
         request: {
           id: c.request_id ?? "",
-          client_name: req?.client_name ?? "Brief",
+          client_name: req?.client_name ?? "Projet",
           client_city: req?.client_city ?? "",
           project_type: req?.project_type ?? "",
           budget: req?.budget ?? 0,
@@ -308,7 +308,7 @@ export async function getConversationThread(
   let otherName = request?.client_name ?? "Client";
   let otherUsername: string | null = null;
   let otherAvatar: string | null = null;
-  let subtitle = "Brief";
+  let subtitle = "Projet";
 
   if (!isDev && conv.developer_id) {
     const profile = await fetchDevProfile(supabase, conv.developer_id);
@@ -317,11 +317,11 @@ export async function getConversationThread(
       otherUsername = profile.username ?? null;
       otherAvatar = profile.avatar_url ?? null;
       subtitle = request
-        ? `${request.client_city || "Brief"} · ${request.project_type} · ${formatBudget(request.budget)}`
+        ? `${request.client_city || "Projet"} · ${request.project_type} · ${formatBudget(request.budget)}`
         : "Contact direct";
     }
   } else if (request) {
-    subtitle = `${request.client_city || "Brief"} · ${request.project_type} · ${formatBudget(request.budget)}`;
+    subtitle = `${request.client_city || "Projet"} · ${request.project_type} · ${formatBudget(request.budget)}`;
   } else if (isDev && conv.client_id) {
     const peer = await fetchPeerDisplay(supabase, conv.client_id);
     if (peer) {

@@ -272,7 +272,7 @@ export function MissionsDashboard({ missions, userId, role, focusId = null, disp
               className="mt-6 inline-flex h-11 items-center gap-2 rounded-full bg-primary px-6 text-sm font-semibold text-primary-foreground outline-none transition-colors hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50"
             >
               <Search className="size-4" aria-hidden="true" />
-              {isDeveloper ? "Voir les briefs" : "Parcourir le catalogue"}
+              {isDeveloper ? "Voir les projets" : "Parcourir le catalogue"}
             </Link>
           </div>
         ) : (

@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 402 });
     }
     return NextResponse.json(
-      { error: "Impossible de publier le brief pour le moment. Réessayez dans quelques secondes." },
+      { error: "Impossible de publier le projet pour le moment. Réessayez dans quelques secondes." },
       { status: 422 }
     );
   }
@@ -116,7 +116,7 @@ export async function POST(request: NextRequest) {
   return NextResponse.json({
     id: result.id,
     management_key: result.management_key,
-    // 1re publication du compte = offerte (migration 0033).
+    // Publication gratuite (migration 0069) : plus aucun Token n'est débité.
     gift: result.gift === true,
   });
 }

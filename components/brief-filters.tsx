@@ -28,7 +28,7 @@ type BudgetBand = {
 const BUDGET_BANDS: BudgetBand[] = [
   { value: "all", label: "Tous les budgets", matches: () => true },
   { value: "lt-100k", label: "Moins de 100 000 F", matches: (b) => b < 100000 },
-  { value: "100k-300k", label: "100 000 â€“ 300 000 F", matches: (b) => b >= 100000 && b <= 300000 },
+  { value: "100k-300k", label: "100 000 – 300 000 F", matches: (b) => b >= 100000 && b <= 300000 },
   { value: "gt-300k", label: "Plus de 300 000 F", matches: (b) => b > 300000 },
 ];
 
@@ -88,7 +88,7 @@ export function BriefFilters({
         return [...prev, ...rows.filter((b) => !seen.has(b.id))];
       });
     } catch {
-      setLoadError("Impossible de charger d'autres briefs. Reessayez dans un instant.");
+      setLoadError("Impossible de charger d'autres projets. Réessayez dans un instant.");
     } finally {
       setLoading(false);
     }
@@ -164,7 +164,7 @@ export function BriefFilters({
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Rechercher par mots-clés : e-commerce, Dakar, WordPress…"
             className="h-10 rounded-xl pl-9"
-            aria-label="Rechercher dans les briefs"
+            aria-label="Rechercher dans les projets"
           />
         </div>
         <div className="mt-2">
@@ -213,12 +213,12 @@ export function BriefFilters({
       </div>
 
       <p className="mt-6 text-sm font-medium text-muted-foreground">
-        {filtered.length} brief{filtered.length > 1 ? "s" : ""} disponible
+        {filtered.length} projet{filtered.length > 1 ? "s" : ""} disponible
         {filtered.length > 1 ? "s" : ""} sur le marketplace
         {hasMore ? (
           <span className="font-normal">
             {" "}
-            Â· {knownTotal} au total, affinez vos filtres ou affichez-en plus
+            · {knownTotal} au total, affinez vos filtres ou affichez-en plus
           </span>
         ) : null}
       </p>
@@ -254,8 +254,8 @@ export function BriefFilters({
       {filtered.length === 0 && (
         <div className="mt-6">
           <EmptyState
-            title="Aucun brief ne correspond Ã  ces critÃ¨res"
-            description="Modifiez vos filtres ou revenez plus tard : de nouveaux projets sont publiÃ©s rÃ©guliÃ¨rement."
+            title="Aucun projet ne correspond à ces critères"
+            description="Modifiez vos filtres ou revenez plus tard : de nouveaux projets sont publiés régulièrement."
           />
         </div>
       )}
@@ -271,10 +271,10 @@ export function BriefFilters({
             {loading ? (
               <Loader2 className="size-4 animate-spin" aria-hidden="true" />
             ) : null}
-            {loading ? "Chargementâ€¦" : "Afficher plus de briefs"}
+            {loading ? "Chargement…" : "Afficher plus de projets"}
           </button>
           <p className="text-xs text-muted-foreground">
-            {all.length} sur {knownTotal} brief{knownTotal > 1 ? "s" : ""} chargÃ©
+            {all.length} sur {knownTotal} projet{knownTotal > 1 ? "s" : ""} chargé
             {all.length > 1 ? "s" : ""}
           </p>
           {loadError ? (

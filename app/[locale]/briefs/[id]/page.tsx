@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -49,7 +49,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { id } = await params;
   const supabase = await createClient();
-  if (!supabase) return { title: "Brief développeur" };
+  if (!supabase) return { title: "Projet développeur" };
 
   const { data } = await supabase
     .from("requests")
@@ -59,10 +59,10 @@ export async function generateMetadata({
     .eq("hidden", false)
     .maybeSingle();
 
-  if (!data) return { title: "Brief développeur" };
+  if (!data) return { title: "Projet développeur" };
 
   return {
-    title: `${data.client_name} — Brief développeur`,
+    title: `${data.client_name} — Projet développeur`,
     description: `${PROJECT_TYPE_LABELS[data.project_type] ?? data.project_type} · ${data.client_city} · Budget ${formatFCFA(data.budget)}. Débloquez le contact pour proposer votre service.`,
   };
 }
@@ -78,11 +78,11 @@ export default async function BriefDetailPage({
 
   let brief: BriefDetail | null = null;
 
-let conversationId: string | null = null;
-let balance: number | null = null;
-// 1er contact offert si le compte n'a jamais débloqué et n'a jamais
-// consommé l'offre de bienvenue (migration 0033).
-let welcomeContactFree = false;
+  let conversationId: string | null = null;
+  let balance: number | null = null;
+  // 1er contact offert si le compte n'a jamais débloqué et n'a jamais
+  // consommé l'offre de bienvenue (migration 0033).
+  let welcomeContactFree = false;
 
   if (supabase) {
     const { data } = await supabase
@@ -136,7 +136,7 @@ let welcomeContactFree = false;
             className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:text-foreground"
           >
             <ArrowLeft className="size-4" aria-hidden="true" />
-            Tous les briefs
+            Tous les projets
           </Link>
 
           <div className="mt-6 rounded-2xl border border-hairline bg-card p-6 shadow-sm sm:p-8">
@@ -211,17 +211,17 @@ let welcomeContactFree = false;
               {demo ? (
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <p className="text-sm font-semibold">Brief d’exemple</p>
+                    <p className="text-sm font-semibold">Projet d’exemple</p>
                     <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
-                  Déblocage gratuit : testez la messagerie sans dépenser de
-                  Token.
-                </p>
-                <DeveloperPreview
-                  clientName={brief.client_name}
-                  city={brief.client_city}
-                  budget={brief.budget}
-                  demo
-                />
+                      Déblocage gratuit : testez la messagerie sans dépenser de
+                      Token.
+                    </p>
+                    <DeveloperPreview
+                      clientName={brief.client_name}
+                      city={brief.client_city}
+                      budget={brief.budget}
+                      demo
+                    />
                   </div>
                   <UnlockDialog
                     brief={{
@@ -291,7 +291,7 @@ let welcomeContactFree = false;
 /**
  * Ce que le développeur voit AVANT de payer son Token.
  *
- * Objectif : qu'il puisse décider en 5 secondes si le brief vaut 1 Token. On
+ * Objectif : qu'il puisse décider en 5 secondes si le projet vaut 1 Token. On
  * donne le prénom, la région, le budget et l'engagement de réponse — mais
  * jamais le WhatsApp, qui est précisément ce que le Token achète.
  */

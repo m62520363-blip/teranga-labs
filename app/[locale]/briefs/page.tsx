@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Plus, UserRound } from "lucide-react";
 import { BriefFilters } from "@/components/brief-filters";
 import {
   createClient,
@@ -10,7 +11,7 @@ import { findRegionByPlace } from "@/lib/geography";
 import type { PublicRequest } from "@/types/database";
 
 export const metadata: Metadata = {
-  title: "Briefs",
+  title: "Projets",
   description:
     "Consultez les projets web disponibles en Afrique de l'Ouest francophone et démarrez une discussion privée avec le client pour 1 Token.",
 };
@@ -101,31 +102,51 @@ export default async function BriefsPage({
   }
 
   return (
-    <div className="bg-surface py-16 md:py-24">
+    <div className="bg-surface py-10 md:py-14">
       <div className="container-tl">
-        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-          <div>
-            <h1 className="text-3xl font-semibold leading-tight tracking-tight">
-              {total} brief{total > 1 ? "s" : ""} disponible{total > 1 ? "s" : ""} sur le marketplace
-            </h1>
-            <p className="mt-3 text-base leading-relaxed text-muted-foreground">
-              1 Token ouvre une discussion privée avec le client, en direct.
-            </p>
-          </div>
-          {!user && (
-            <Link
-              href="/inscription-developpeur"
-              className="inline-flex h-10 shrink-0 items-center gap-2 rounded-xl bg-foreground px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
-            >
-              Créer un compte développeur
-            </Link>
-          )}
-        </div>
+        {/* En-tête façon Codeur : compte, promesse et double CTA. */}
+        <section className="relative overflow-hidden rounded-3xl border border-hairline bg-card p-6 sm:p-8">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_140%_at_0%_0%,color-mix(in_srgb,var(--primary)_14%,transparent),transparent_55%)]"
+          />
+          <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div className="min-w-0">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
+                Projets ouverts
+              </p>
+              <h1 className="mt-2 text-2xl font-semibold leading-tight tracking-tight md:text-3xl">
+                {total} projet{total > 1 ? "s" : ""} qui cherche{total > 1 ? "nt" : ""} un
+                développeur
+              </h1>
+              <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
+                Publication gratuite côté client, devis gratuits. 1 Token ouvre la
+                discussion privée avec le client — aucun commission sur le projet.
+              </p>
+            </div>
 
-        <h2 className="mt-10 text-sm font-semibold tracking-tight">
-            Parcourir les briefs
-          </h2>
-        <div className="mt-4">
+            <div className="flex flex-wrap gap-2">
+              <Link
+                href="/poster"
+                className="inline-flex h-10 items-center gap-2 rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground outline-none transition-colors hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50"
+              >
+                <Plus className="size-4" aria-hidden="true" />
+                Publier un projet
+              </Link>
+              {!user && (
+                <Link
+                  href="/inscription-developpeur"
+                  className="inline-flex h-10 items-center gap-2 rounded-full border border-hairline bg-background/60 px-5 text-sm font-medium outline-none transition-colors hover:border-primary/40 focus-visible:ring-2 focus-visible:ring-primary/50"
+                >
+                  <UserRound className="size-4" aria-hidden="true" />
+                  Devenir développeur
+                </Link>
+              )}
+            </div>
+          </div>
+        </section>
+
+        <div className="mt-8">
           <BriefFilters
             briefs={briefs}
             total={total}

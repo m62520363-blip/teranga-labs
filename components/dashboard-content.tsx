@@ -252,7 +252,7 @@ function DevStatusBanner({ profile }: { profile: DeveloperProfile }) {
     <DevStatusBannerShell
       tone="warn"
       title="En attente de validation"
-      message="Votre profil développeur sera examiné par notre équipe. Tant que le compte n’est pas validé, le déblocage des briefs est suspendu."
+      message="Votre profil développeur sera examiné par notre équipe. Tant que le compte n’est pas validé, le déblocage des projets est suspendu."
       cta={{ href: "/inscription-developpeur", label: "Voir mon dossier" }}
     />
   );
@@ -320,6 +320,7 @@ export function DashboardContent({
   myMissions,
   tlMissions,
   devisEnAttente,
+  openProjects = 0,
   initialTab,
 }: {
   userId: string;
@@ -334,6 +335,7 @@ export function DashboardContent({
   myMissions: MyDeveloperMission[];
   tlMissions: TlMissionOption[];
   devisEnAttente: ConversationListItem[];
+  openProjects?: number;
   initialTab?: string;
 }) {
   const [p, setP] = React.useState({
@@ -662,41 +664,67 @@ export function DashboardContent({
   ];
 
   return (
-    <div className="bg-surface py-16 md:py-24">
+    <div className="bg-surface py-6 md:py-10">
       <div className="container-tl">
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
-              {p.full_name ? `Bonjour, ${p.full_name.split(" ")[0]}` : "Votre espace développeur"}
-            </h1>
-            <p className="mt-2 text-base text-muted-foreground">
-              {heroSubtitle}
-            </p>
+        <section className="relative overflow-hidden rounded-3xl border border-hairline bg-card p-6 sm:p-8">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_140%_at_0%_0%,color-mix(in_srgb,var(--primary)_14%,transparent),transparent_55%)]"
+          />
+          <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div className="min-w-0">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
+                Espace développeur
+              </p>
+              <h1 className="mt-2 text-2xl font-semibold leading-tight tracking-tight md:text-3xl">
+                {p.full_name ? `Bonjour, ${p.full_name.split(" ")[0]}` : "Votre espace développeur"}
+              </h1>
+              <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
+                {heroSubtitle}
+              </p>
+
+              <div className="mt-4 flex flex-wrap gap-2">
+                <span className="inline-flex h-8 items-center gap-1.5 rounded-full border border-primary/30 bg-primary-soft px-3 text-xs font-medium text-primary">
+                  <Coins className="size-3.5" aria-hidden="true" />
+                  {balance} Token{balance > 1 ? "s" : ""}
+                </span>
+                <span className="inline-flex h-8 items-center gap-1.5 rounded-full border border-hairline bg-background/60 px-3 text-xs text-muted-foreground">
+                  {unlocks.length} contact{unlocks.length > 1 ? "s" : ""} débloqué{unlocks.length > 1 ? "s" : ""}
+                </span>
+                <span className="inline-flex h-8 items-center gap-1.5 rounded-full border border-hairline bg-background/60 px-3 text-xs text-muted-foreground">
+                  {devisEnAttente.length} devis en attente
+                </span>
+                <span className="inline-flex h-8 items-center gap-1.5 rounded-full border border-hairline bg-background/60 px-3 text-xs text-muted-foreground">
+                  {myMissions.length} mission{myMissions.length > 1 ? "s" : ""}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <Link
+                href="/briefs"
+                className="inline-flex h-10 items-center gap-2 rounded-full bg-primary px-5 text-sm font-semibold text-ink transition-colors outline-none hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50"
+              >
+                <ArrowRight className="size-4" aria-hidden="true" />
+                Voir les {openProjects > 0 ? `${openProjects} ` : ""}projets
+              </Link>
+              <Link
+                href="/conversations"
+                className="inline-flex h-10 items-center gap-2 rounded-full border border-hairline bg-background/60 px-5 text-sm font-medium text-foreground transition-colors outline-none hover:border-primary/40 focus-visible:ring-2 focus-visible:ring-primary/50"
+              >
+                <MessageCircle className="size-4" aria-hidden="true" />
+                Mes discussions
+              </Link>
+              <Link
+                href="/wallet"
+                className="inline-flex h-10 items-center gap-2 rounded-full border border-hairline bg-background/60 px-5 text-sm font-medium text-foreground transition-colors outline-none hover:border-primary/40 focus-visible:ring-2 focus-visible:ring-primary/50"
+              >
+                <Coins className="size-4" aria-hidden="true" />
+                Mon wallet
+              </Link>
+            </div>
           </div>
-          <div className="flex flex-wrap gap-2">
-            <Link
-              href="/conversations"
-              className="inline-flex h-10 items-center gap-2 rounded-xl border border-hairline bg-card px-5 text-sm font-medium text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
-            >
-              <MessageCircle className="size-4" aria-hidden="true" />
-              Mes discussions
-            </Link>
-            <Link
-              href="/wallet#acheter-tokens"
-              className="inline-flex h-10 items-center gap-2 rounded-xl border border-hairline bg-card px-5 text-sm font-medium text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
-            >
-              <Coins className="size-4" aria-hidden="true" />
-              Acheter des Tokens
-            </Link>
-            <Link
-              href="/wallet"
-              className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50"
-            >
-              Mon wallet
-              <ArrowRight className="size-4" aria-hidden="true" />
-            </Link>
-          </div>
-        </div>
+        </section>
 
         {profile ? <DevStatusBanner profile={profile} /> : null}
 
@@ -983,13 +1011,13 @@ export function DashboardContent({
               <div className="mt-6">
                 <EmptyState
                   title="Aucun contact débloqué pour le moment"
-                  description="Débloquez un brief avec 1 Token pour démarrer une discussion avec le client et suivre vos candidatures ici."
+                  description="Débloquez un projet avec 1 Token pour démarrer une discussion avec le client et suivre vos candidatures ici."
                   action={
                     <Link
                       href="/briefs"
                       className="inline-flex h-10 items-center gap-2 rounded-xl bg-foreground px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-foreground"
                     >
-                      Voir les briefs
+                      Voir les projets
                       <ArrowRight className="size-4" aria-hidden="true" />
                     </Link>
                   }
@@ -1418,7 +1446,7 @@ export function DashboardContent({
                         setP({ ...p, notifications_enabled: e.target.checked })
                       }
                       className="mt-0.5 size-4 rounded border-hairline accent-primary"
-                      aria-label="Recevoir les nouveaux briefs par WhatsApp"
+                      aria-label="Recevoir les nouveaux projets par WhatsApp"
                     />
                     <span>
                       <span className="block text-sm font-medium">

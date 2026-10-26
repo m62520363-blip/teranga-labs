@@ -52,13 +52,13 @@ export function Hero() {
           style={{ "--rise-delay": "1550ms" } as React.CSSProperties}
         >
           <Link
-            href="/dev"
+            href="/poster"
             className="btn-shine inline-flex min-h-11 items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-[filter] outline-none hover:brightness-110 active:brightness-95 focus-visible:ring-2 focus-visible:ring-primary/50"
           >
             {t("ctaPrimary")}
           </Link>
           <Link
-            href="/poster"
+            href="/dev"
             className="inline-flex min-h-11 items-center gap-2 rounded-full border border-primary/60 px-5 py-2.5 text-sm text-foreground transition-colors outline-none hover:border-primary hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
           >
             {t("ctaSecondary")}
@@ -71,6 +71,23 @@ export function Hero() {
         >
           {t("ctaNote")}
         </p>
+
+        {/* Accès rapide par type de projet, comme les catégories de Codeur. */}
+        <div
+          className="animate-rise mt-8 flex max-w-2xl flex-wrap items-center justify-center gap-2"
+          style={{ "--rise-delay": "1750ms" } as React.CSSProperties}
+        >
+          <span className="text-xs text-muted-foreground">{t("searchLabel")}</span>
+          {(t.raw("chips") as { key: string; label: string }[]).map((chip) => (
+            <Link
+              key={chip.key}
+              href={`/poster?type=${encodeURIComponent(chip.key)}`}
+              className="inline-flex h-8 items-center rounded-full border border-hairline bg-card px-3.5 text-xs font-medium text-muted-foreground transition-colors outline-none hover:border-primary/40 hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
+            >
+              {chip.label}
+            </Link>
+          ))}
+        </div>
 
         {/* Showcase : ordinateur + scène 3D de fond (profondeur) */}
         <div className="relative mx-auto mt-14 w-full max-w-md sm:max-w-lg lg:mt-16 lg:w-[32rem] lg:max-w-none">

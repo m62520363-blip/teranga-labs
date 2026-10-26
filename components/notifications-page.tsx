@@ -146,7 +146,7 @@ export function NotificationsPage({ userId }: { userId: string }) {
           ) : items.length === 0 ? (
             <EmptyState
               title="Aucune notification"
-              description="Les nouveaux messages, devis acceptés et briefs débloqués apparaîtront ici."
+              description="Les nouveaux messages, devis acceptés et projets débloqués apparaîtront ici."
               action={
                 <Link
                   href="/conversations"

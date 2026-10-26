@@ -174,19 +174,46 @@ export default async function ClientPage() {
   return (
     <div className="bg-surface py-6 md:py-10">
       <div className="container-tl">
-        <div className="flex items-center justify-between gap-4">
-          <h1 className="text-2xl font-medium leading-tight tracking-tight md:text-3xl">
-            <span className="md:hidden">
-              {hour >= 18 || hour < 5 ? "Bonsoir" : "Bonjour"}, {firstName}
-            </span>
-            <span className="hidden md:inline">
-              Heureux de te revoir, {firstName} ✨
-            </span>
-          </h1>
-          <span className="hidden size-10 shrink-0 place-items-center rounded-full border border-border md:grid">
-            <NotificationBell userId={user.id} />
-          </span>
-        </div>
+        {/* Bandeau d'accueil : identité + actions principales. */}
+        <section className="relative overflow-hidden rounded-3xl border border-hairline bg-card p-6 sm:p-8">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_140%_at_0%_0%,color-mix(in_srgb,var(--primary)_14%,transparent),transparent_55%)]"
+          />
+          <div className="relative flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+            <div className="min-w-0">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
+                Espace client
+              </p>
+              <h1 className="mt-2 text-2xl font-semibold leading-tight tracking-tight md:text-3xl">
+                {hour >= 18 || hour < 5 ? "Bonsoir" : "Bonjour"}, {firstName}
+              </h1>
+              <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
+                Publiez un projet, comparez les devis des développeurs vérifiés
+                et suivez vos missions — sans commission.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <Link
+                href="/poster"
+                className="inline-flex h-10 items-center gap-2 rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground outline-none transition-colors hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50"
+              >
+                <Plus className="size-4" aria-hidden="true" />
+                Publier un projet
+              </Link>
+              <Link
+                href="/dev"
+                className="inline-flex h-10 items-center gap-2 rounded-full border border-hairline bg-background/60 px-5 text-sm font-medium outline-none transition-colors hover:border-primary/40 focus-visible:ring-2 focus-visible:ring-primary/50"
+              >
+                <Search className="size-4" aria-hidden="true" />
+                Trouver un développeur
+              </Link>
+              <span className="grid size-10 shrink-0 place-items-center rounded-full border border-border bg-background/60">
+                <NotificationBell userId={user.id} />
+              </span>
+            </div>
+          </div>
+        </section>
 
         {isEmpty ? (
           <section
@@ -200,9 +227,8 @@ export default async function ClientPage() {
               Prêt à publier ton prochain projet ?
             </h2>
             <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-muted-foreground">
-              Trouve un développeur qui correspond à ton besoin et ton budget.
-              Ton paiement reste bloqué en sécurité jusqu’à ce que tu valides la
-              livraison.
+              Publie ton projet gratuitement : les développeurs vérifiés t’envoient
+              leurs devis, tu compares et tu choisis librement, sans commission.
             </p>
             <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
               <Link
@@ -210,7 +236,7 @@ export default async function ClientPage() {
                 className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-primary px-6 text-sm font-semibold text-primary-foreground outline-none transition-colors hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50 sm:w-auto"
               >
                 <Megaphone className="size-4" aria-hidden="true" />
-                Publier un brief
+                Publier un projet
               </Link>
               <Link
                 href="/dev"
@@ -287,8 +313,65 @@ export default async function ClientPage() {
             </div>
           </div>
             ) : null}
-          </>
-        )}
+
+        {devisToReview.length > 0 ? (
+          <section className="mt-6 overflow-hidden rounded-2xl border border-primary/30 bg-card">
+            <div className="flex flex-col gap-4 border-b border-hairline bg-primary-soft p-5 sm:flex-row sm:items-center sm:justify-between">
+              <div className="min-w-0">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
+                  À comparer
+                </p>
+                <h2 className="mt-1 text-lg font-semibold tracking-tight">
+                  {totalPendingOffers} devis {totalPendingOffers > 1 ? "reçus" : "reçu"}
+                </h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Prix, délai, portfolio : comparez les propositions et choisissez
+                  librement le développeur.
+                </p>
+              </div>
+              <Link
+                href={`/conversations/${devisToReview[0].id}`}
+                className="inline-flex h-10 shrink-0 items-center gap-2 rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover"
+              >
+                Comparer les devis
+                <FileSearch className="size-4" aria-hidden="true" />
+              </Link>
+            </div>
+            <ul className="divide-y divide-hairline">
+              {devisToReview.slice(0, 4).map((c) => (
+                <li key={c.id}>
+                  <Link
+                    href={`/conversations/${c.id}`}
+                    className="flex items-center gap-4 p-4 outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50 sm:px-5"
+                  >
+                    <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary font-display text-sm font-bold text-ink">
+                      {c.otherName.charAt(0).toUpperCase()}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-semibold">
+                        {c.otherName}
+                        {c.otherUsername ? (
+                          <span className="font-normal text-muted-foreground">
+                            {" "}· @{c.otherUsername}
+                          </span>
+                        ) : null}
+                      </p>
+                      <p className="truncate text-xs text-muted-foreground">
+                        {c.request.project_type} · {formatFCFA(c.request.budget)}
+                      </p>
+                    </div>
+                    <span className="badge badge-warning shrink-0">
+                      {c.pendingOffers} devis
+                    </span>
+                    <span className="hidden shrink-0 text-xs font-medium text-primary sm:inline">
+                      Examiner
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
 
         <section className="mt-8 rounded-2xl border border-hairline bg-card p-5 sm:p-6" aria-label="Mes Tokens">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -305,7 +388,7 @@ export default async function ClientPage() {
                   </span>
                 </p>
                 <p className="mt-0.5 text-xs text-muted-foreground">
-                  1 brief publie / 1 contact direct = 1 Token.
+                  Publication gratuite. 1 Token = 1 contact débloqué par un développeur.
                 </p>
               </div>
             </div>
@@ -358,9 +441,7 @@ export default async function ClientPage() {
           )}
         </section>
 
-        {!isEmpty ? (
-          <>
-            <section className="mt-10">
+        <section className="mt-10">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
                   <ClipboardPen
@@ -376,7 +457,7 @@ export default async function ClientPage() {
                   className="inline-flex h-9 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground outline-none transition-colors hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50"
                 >
                   <Plus className="size-4" aria-hidden="true" />
-                  Publier un nouveau brief
+                  Publier un nouveau projet
                 </Link>
               </div>
 
@@ -393,7 +474,7 @@ export default async function ClientPage() {
 
           {conversations.length === 0 ? (
             <p className="mt-5 text-sm text-muted-foreground">
-              Quand un développeur débloque votre brief, il vous écrit ici —
+              Quand un développeur répond à votre projet, il vous écrit ici —
               vous recevez sa proposition sans partager votre WhatsApp.
             </p>
           ) : (
@@ -469,51 +550,8 @@ export default async function ClientPage() {
             </ul>
           )}
         </section>
-
-        {devisToReview.length > 0 ? (
-          <section className="mt-14">
-            <div className="flex items-center gap-2">
-              <FileSearch className="size-5 text-primary" aria-hidden="true" />
-              <h2 className="text-xl font-semibold tracking-tight">Devis à examiner</h2>
-              <span className="rounded-full bg-hairline px-2 py-0.5 text-xs text-muted-foreground">
-                {totalPendingOffers}
-              </span>
-            </div>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Comparez les propositions chiffrées et acceptez celle qui vous
-              convient — vous décidez à qui vous confiez le projet.
-            </p>
-            <ul className="mt-5 flex flex-col gap-3">
-              {devisToReview.map((c) => (
-                <li
-                  key={c.id}
-                  className="flex flex-col gap-3 rounded-2xl border border-primary/30 bg-primary-soft p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5"
-                >
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold">{c.otherName}</p>
-                    <p className="mt-0.5 text-sm text-muted-foreground">
-                      {c.request.project_type} · {formatFCFA(c.request.budget)}
-                    </p>
-                    <span className="mt-1.5 inline-block">
-                      <span className="badge badge-warning">
-                        {c.pendingOffers} devis {c.pendingOffers > 1 ? "déposés" : "déposé"}
-                      </span>
-                    </span>
-                  </div>
-                  <Link
-                    href={`/conversations/${c.id}`}
-                    className="inline-flex h-9 shrink-0 items-center gap-2 rounded-xl bg-foreground px-4 text-sm font-medium text-ink transition-colors outline-none hover:bg-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
-                  >
-                    Examiner les devis
-                    <FileSearch className="size-4" aria-hidden="true" />
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </section>
-            ) : null}
           </>
-        ) : null}
+        )}
       </div>
     </div>
   );

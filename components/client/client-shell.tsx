@@ -268,7 +268,7 @@ export function ClientShell({
           <li className="flex justify-center">
             <Link
               href="/poster"
-              aria-label="Publier un brief"
+              aria-label="Publier un projet"
               className="grid size-11 place-items-center rounded-full bg-primary text-ink shadow-[0_10px_24px_-8px_rgba(57,255,136,0.65)] outline-none transition-transform active:scale-95 focus-visible:ring-2 focus-visible:ring-primary/50"
             >
               <Plus className="size-6" aria-hidden="true" />

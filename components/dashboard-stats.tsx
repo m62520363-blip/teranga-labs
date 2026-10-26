@@ -27,7 +27,7 @@ export function DashboardStats({
     },
     {
       icon: TrendingUp,
-      label: "Briefs débloqués",
+      label: "Projets débloqués",
       value: String(unlocksCount),
       sub: unlocksCount === 0 ? "Aucun pour l'instant" : "Contacts accessibles",
       highlight: false,

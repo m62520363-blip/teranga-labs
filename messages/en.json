@@ -1,10 +1,10 @@
 {
   "Meta": {
-    "title": "West Africa's francophone web projects marketplace",
-    "description": "Devmarket, the marketplace of web projects for francophone West Africa. The client posts their brief for 1 Token, the developer unlocks contact with 1 Token and everything is settled directly. No commission.",
-    "keywords": "francophone West Africa marketplace, Senegal developers, Ivory Coast developers, Dakar freelance, Abidjan, Bamako, web brief, find web clients, buy tokens, developer rankings, Dakar e-commerce site, Devmarket",
-    "ogTitle": "Devmarket — Clients looking for a website",
-    "ogDescription": "The client posts their need for 1 Token. The developer spends 1 Token to unlock contact. Zero commission.",
+    "title": "The marketplace for web projects in West Africa | Devmarket",
+    "description": "Post your web project for free. Receive quotes from verified developers, compare and choose. 0% commission, direct payment.",
+    "keywords": "francophone West Africa marketplace, Senegal developers, Ivory Coast developers, Dakar freelance, Abidjan, Bamako, web project, find web clients, buy tokens, developer rankings, Dakar e-commerce site, Devmarket",
+    "ogTitle": "Devmarket — Post your project, receive quotes",
+    "ogDescription": "Free posting, free quotes, 0% commission. Find the developer you need in French-speaking West Africa.",
     "ogAlt": "Devmarket — West Africa's francophone web projects marketplace."
   },
   "Nav": {
@@ -19,16 +19,16 @@
     "forClients": "For clients",
     "forDevs": "For developers",
     "signIn": "Sign in",
-    "publishRequest": "Post a request",
+    "publishRequest": "Post a project",
     "messages": "Messages",
     "missions": "Missions",
-    "publishBrief": "Post a brief",
+    "publishBrief": "Post a project",
     "myProfile": "My profile",
     "verifyProfile": "Verify my profile",
     "buyTokens": "Buy Tokens",
     "settings": "Settings",
-    "briefs": "Briefs",
-    "briefsView": "View briefs",
+    "briefs": "Projects",
+    "briefsView": "View projects",
     "notifications": "Notifications",
     "admin": "Admin",
     "account": "Account",
@@ -79,8 +79,8 @@
       "howItWorks": "How it works",
       "pricing": "Pricing",
       "faq": "FAQ",
-      "briefs": "Briefs",
-      "publishBrief": "Post a brief",
+      "briefs": "Projects",
+      "publishBrief": "Post a project",
       "becomeDev": "Become a developer",
       "login": "Sign in",
       "faqFull": "Frequently asked questions",
@@ -95,72 +95,95 @@
   },
   "Landing": {
     "hero": {
-      "badge": "No commission, ever",
-      "title": "Find your web developer, pay",
+      "badge": "Free posting · 0% commission",
+      "title": "Find the developer you need,",
       "rotating": [
         "without commission.",
-        "with 1 Token.",
-        "without middlemen."
+        "at the right price.",
+        "with confidence."
       ],
-    "slogan": "Find Developers. Build Your Vision",
-    "subtitle": "Post your brief in 2 minutes. Serious developers come to you — your WhatsApp stays private.",
-    "ctaPrimary": "Find a developer",
-    "ctaSecondary": "Post a brief",
-    "ctaNote": "Free to start · No commission · Direct payment between you"
-  },
+      "slogan": "Find Developers. Build Your Vision",
+      "subtitle": "Post your web project for free in 2 minutes. Receive quotes from verified developers and pick the right one — your WhatsApp stays private.",
+      "ctaPrimary": "Post a project for free",
+      "ctaSecondary": "Find a developer",
+      "ctaNote": "Free · No commission · Direct payment between you",
+      "searchLabel": "I need:",
+      "chips": [
+        {
+          "key": "vitrine",
+          "label": "Showcase site"
+        },
+        {
+          "key": "e-commerce",
+          "label": "E-commerce"
+        },
+        {
+          "key": "app web",
+          "label": "Web app"
+        },
+        {
+          "key": "landing page",
+          "label": "Landing page"
+        },
+        {
+          "key": "refonte",
+          "label": "Redesign"
+        }
+      ]
+    },
     "howItWorks": {
-      "badge": "No commission, ever",
-      "titleA": "How it works",
-      "titleB": "for real.",
-      "lead": "Neither WhatsApp groups nor foreign platforms guarantee the right match at the right price — Devmarket does it in one place.",
+      "badge": "Simple, fast, transparent",
+      "titleA": "How it really",
+      "titleB": "works.",
+      "lead": "Post, receive quotes, compare, choose. Neither WhatsApp groups nor foreign platforms do all of that in one place.",
       "steps": [
         {
           "num": "01",
-          "title": "Find the right developer",
-          "text": "Filter by country, skill and rating. Every profile shows a portfolio of real projects delivered across francophone West Africa.",
-          "icon": "search"
-        },
-        {
-          "num": "02",
-          "title": "Post your brief",
-          "text": "Structured brief: site type, budget in FCFA, delivery deadline. 1 Token, no subscription.",
+          "title": "Post your project",
+          "text": "Describe your need: site type, budget in FCFA, delivery date. Posting is free and takes 2 minutes.",
           "icon": "file-text"
         },
         {
-          "num": "03",
-          "title": "Contact unlocks with 1 Token",
-          "text": "The interested developer pays 1 Token to write to you. Your private conversation opens — no more cold applications.",
-          "icon": "shield-check"
+          "num": "02",
+          "title": "Receive quotes",
+          "text": "Interested developers send you a priced proposal and a timeline. Compare them all in one place.",
+          "icon": "search"
         },
         {
-          "num": "04",
-          "title": "Talk it out directly",
-          "text": "Quotes, details, schedule: everything goes through the internal messaging. Your WhatsApp stays private until you agree.",
+          "num": "03",
+          "title": "Chat privately",
+          "text": "Ask your questions in the internal messaging. Your WhatsApp number stays private until you agree.",
           "icon": "message-circle"
         },
         {
+          "num": "04",
+          "title": "Choose the right developer",
+          "text": "Portfolio, verified reviews, price and timeline: you decide freely, with no pressure and no middleman.",
+          "icon": "shield-check"
+        },
+        {
           "num": "05",
-          "title": "Choose and pay with no commission",
-          "text": "You settle together, directly. Devmarket takes nothing from your project.",
+          "title": "Pay without commission",
+          "text": "Pay the developer directly, in your currency. Devmarket takes nothing from your project.",
           "icon": "circle-check"
         }
       ]
     },
     "pricing": {
       "titleA": "Pricing",
-      "titleB": "with no surprises.",
-      "lead": "No subscription, no hidden fees. Devmarket only earns money when you use a Token.",
+      "titleB": "without surprises.",
+      "lead": "Posting is free. Developers pay to contact a client or for the Pro subscription. Devmarket takes no commission on your projects.",
       "cards": [
         {
           "eyebrow": "Client",
-          "price": "1 Token",
-          "text": "You pay 1 Token to post your brief. Nothing more — your whole budget goes to the developer.",
+          "price": "0 FCFA",
+          "text": "Posting your project is free. Receive quotes, compare and choose — no commission, no subscription.",
           "highlighted": false
         },
         {
           "eyebrow": "Developer",
-          "price": "0 %",
-          "text": "No commission on projects. 1 Token unlocks a client contact — far less than Fiverr's 20 %, and nothing until you earn.",
+          "price": "1 Token",
+          "text": "1 Token (2,500 FCFA) to send a proposal and open the chat, or the Pro subscription to apply without limits. 0% commission.",
           "highlighted": true
         }
       ]
@@ -172,23 +195,31 @@
     "faqs": [
       {
         "q": "What is Devmarket?",
-        "a": "Devmarket is the marketplace of web projects for francophone West Africa: you post your website brief for 1 Token, and the interested developer unlocks your contact with 1 Token. Then you deal directly — no commission."
+        "a": "Devmarket is the marketplace for web projects in French-speaking West Africa. Post your project for free, receive quotes from verified developers, compare them and choose. You then deal directly, with no commission."
       },
       {
-        "q": "How much does a Token cost?",
-          "a": "1 Token (2,500 FCFA / ~$3.80). Registration is free: you order your Tokens online from your wallet, then post your brief or unlock a contact."
+        "q": "Is posting a project really free?",
+        "a": "Yes. Posting a project is free and requires no subscription. Only developers pay to contact a client (1 Token) or for the Pro subscription."
+      },
+      {
+        "q": "How much is a Token?",
+        "a": "1 Token costs 2,500 FCFA. Developers use it to send a proposal and open a private chat with a client. The contact stays available for life."
       },
       {
         "q": "Is there a commission on projects?",
-        "a": "No. Devmarket takes no commission on projects: the developer and the client deal together, with no middleman. Against 15 to 20 % taken elsewhere, here you keep 100 % of your budget."
+        "a": "No. Devmarket takes no commission on projects: the developer and the client deal together, with no middleman. Instead of the 15–20% charged elsewhere, you keep 100% of the budget."
+      },
+      {
+        "q": "How do I choose the right developer?",
+        "a": "Every profile shows a portfolio, verified reviews, a rating and a starting rate. Compare the quotes you receive, ask questions in the inbox, then choose freely."
       },
       {
         "q": "Does my WhatsApp stay private?",
-        "a": "Yes. Your number never appears on briefs or in search results: exchanges go through the internal messaging, and you alone decide when to share your contact."
+        "a": "Yes. Your number never appears on projects or in search results: conversations happen in the internal inbox, and you alone decide when to share your contact."
       },
       {
-        "q": "Where is the service available?",
-        "a": "Worldwide: every country and region is available at signup, and prices are shown in your local currency (FCFA, USD, EUR, …)."
+        "q": "Which countries is the service available in?",
+        "a": "Everywhere: every country and region is available at sign-up, and prices are shown in your local currency (FCFA, USD, EUR, …)."
       }
     ],
     "roleCards": {
@@ -197,24 +228,24 @@
         "title": "Stop hunting on WhatsApp.",
         "text": "In 5 minutes, describe your project, set your budget and join serious developers from across the region. Your money stays yours until you choose.",
         "bullets": [
-          "Brief posted for 1 Token, no subscription",
-          "Serious devs: they pay 1 Token to write to you",
-          "No commission on your project",
-          "100% payments from your wallet"
+          "Free posting, no subscription",
+          "Free quotes from verified developers",
+          "Compare price, timeline and reviews",
+          "Direct payment, 0% commission"
         ],
-        "cta": "Post my brief"
+        "cta": "Post my project"
       },
       "developer": {
         "eyebrow": "Developer",
         "title": "Be found on your real skills.",
         "text": "Create your profile with your portfolio. Clients find you by your specialty and country. You get paid directly, no friction.",
         "bullets": [
-          "Public profile with project portfolio",
-          "Receive briefs by country and niche",
-          "1 Token = 1 client contact, 0 commission",
-          "Direct payment, no commission"
+          "Public profile with portfolio",
+          "New projects by country and specialty",
+          "1 Token per contact, 0 commission",
+          "Direct payment + Pro subscription"
         ],
-        "cta": "View briefs"
+        "cta": "View projects"
       }
     },
     "flags": {
@@ -236,24 +267,45 @@
       "titleB": "from across the region.",
       "lead": "Devmarket connects francophone West African businesses with verified web developers — no commission, no middleman.",
       "stats": [
-        { "value": "0%", "label": "commission on projects" },
-        { "value": "1 Token", "label": "to post a brief or unlock a contact" },
-        { "value": "100%", "label": "of your budget goes to the developer" },
-        { "value": "24 h", "label": "to post and get contacted" }
+        {
+          "value": "0%",
+          "label": "commission on projects"
+        },
+        {
+          "value": "Free",
+          "label": "to post a project"
+        },
+        {
+          "value": "100%",
+          "label": "of your budget goes to the developer"
+        },
+        {
+          "value": "24 h",
+          "label": "to post and get contacted"
+        }
       ],
       "note": "Direct payment between you, private WhatsApp, monthly ranking of the best developers."
     },
     "token": {
-      "badge": "Transparent",
+      "badge": "The Token, simple and transparent",
       "titleA": "One Token,",
       "titleB": "one clear price.",
-      "lead": "No subscription, no hidden fees. The Token is the only currency of exchange on Devmarket.",
+      "lead": "No hidden fees: the Token lets developers answer projects and open a private chat with a client.",
       "price": "2,500 FCFA",
       "priceUnit": "per Token",
       "uses": [
-        { "title": "Post a brief", "text": "A client pays 1 Token to put their project online and reach every developer on the platform." },
-        { "title": "Unlock a contact", "text": "A developer pays 1 Token to open the private discussion with a client. The contact is for life." },
-        { "title": "No commission", "text": "The project price is negotiated directly. Devmarket takes nothing from what you pay each other." }
+        {
+          "title": "Answer a project",
+          "text": "The developer spends 1 Token to send a proposal and open a private discussion with the client."
+        },
+        {
+          "title": "A lifetime contact",
+          "text": "Once the chat is open, you can keep it going without paying again. The client stays reachable in the inbox."
+        },
+        {
+          "title": "No commission",
+          "text": "The project price is negotiated directly. Devmarket takes nothing from what you pay each other."
+        }
       ],
       "note": "Prices are shown in your local currency (FCFA, USD, EUR, …).",
       "cta": "Buy Tokens",
@@ -264,14 +316,49 @@
       "titleA": "Why Devmarket,",
       "titleB": "not WhatsApp groups.",
       "lead": "Against the alternatives, the difference comes down to one word: transparency.",
-      "headers": { "feature": "What matters", "devmarket": "Devmarket", "whatsapp": "WhatsApp groups", "foreign": "Foreign platforms" },
+      "headers": {
+        "feature": "What matters",
+        "devmarket": "Devmarket",
+        "whatsapp": "WhatsApp groups",
+        "foreign": "Foreign platforms"
+      },
       "rows": [
-        { "feature": "Commission on the project", "devmarket": "0%", "whatsapp": "Negotiated case by case", "foreign": "15 – 20%" },
-        { "feature": "Cost to post a brief", "devmarket": "1 Token (2,500 FCFA)", "whatsapp": "Free", "foreign": "Free" },
-        { "feature": "Verified developers", "devmarket": "Yes, portfolio and ratings", "whatsapp": "No", "foreign": "Varies" },
-        { "feature": "Private WhatsApp", "devmarket": "Protected until you agree", "whatsapp": "Exposed to the group", "foreign": "Often public" },
-        { "feature": "Payment in your currency", "devmarket": "FCFA, USD, EUR…", "whatsapp": "Cash / mobile money", "foreign": "USD or EUR only" },
-        { "feature": "Recourse in case of dispute", "devmarket": "Report and refund", "whatsapp": "None", "foreign": "Slow mediation" }
+        {
+          "feature": "Commission on the project",
+          "devmarket": "0%",
+          "whatsapp": "Negotiated case by case",
+          "foreign": "15 – 20%"
+        },
+        {
+          "feature": "Cost to post a project",
+          "devmarket": "Free",
+          "whatsapp": "Free",
+          "foreign": "Free"
+        },
+        {
+          "feature": "Verified developers",
+          "devmarket": "Yes, portfolio and ratings",
+          "whatsapp": "No",
+          "foreign": "Varies"
+        },
+        {
+          "feature": "Private WhatsApp",
+          "devmarket": "Protected until you agree",
+          "whatsapp": "Exposed to the group",
+          "foreign": "Often public"
+        },
+        {
+          "feature": "Payment in your currency",
+          "devmarket": "FCFA, USD, EUR…",
+          "whatsapp": "Cash / mobile money",
+          "foreign": "USD or EUR only"
+        },
+        {
+          "feature": "Recourse in case of dispute",
+          "devmarket": "Report and refund",
+          "whatsapp": "None",
+          "foreign": "Slow mediation"
+        }
       ],
       "note": "Devmarket does not replace your contract: it connects you, without taking your money."
     },
@@ -281,9 +368,24 @@
       "titleB": "matches made.",
       "lead": "What clients and developers who use Devmarket every day have to say.",
       "items": [
-        { "quote": "I posted my brief on a Sunday evening. By Monday morning, three serious developers had contacted me. The site was live within two weeks.", "name": "Aïssatou D.", "role": "Client", "location": "Dakar, Senegal" },
-        { "quote": "Before Devmarket, I wasted my time on wild applications. Here, clients find me based on my skills, and I only pay one Token to contact them.", "name": "Kwame O.", "role": "Full-stack Developer", "location": "Abidjan, Côte d'Ivoire" },
-        { "quote": "Paying in FCFA from my wallet changes everything. No conversion, no bad surprises. And the monthly ranking motivates the whole team.", "name": "Fatou N.", "role": "Client", "location": "Bamako, Mali" }
+        {
+          "quote": "I posted my project on a Sunday evening, for free. By Monday morning, three serious developers had sent me a quote. The site was live within two weeks.",
+          "name": "Aïssatou D.",
+          "role": "Client",
+          "location": "Dakar, Senegal"
+        },
+        {
+          "quote": "Before Devmarket, I wasted my time on wild applications. Here, clients find me based on my skills, and I only pay one Token to contact them.",
+          "name": "Kwame O.",
+          "role": "Full-stack Developer",
+          "location": "Abidjan, Côte d'Ivoire"
+        },
+        {
+          "quote": "Paying in FCFA from my wallet changes everything. No conversion, no bad surprises. And the monthly ranking motivates the whole team.",
+          "name": "Fatou N.",
+          "role": "Client",
+          "location": "Bamako, Mali"
+        }
       ],
       "note": "Demo testimonials — replace them with real client feedback."
     },
@@ -293,33 +395,139 @@
       "titleB": "three ways to use it.",
       "lead": "Whether you have a project to build or an expertise to monetize, Devmarket is made for you.",
       "tabs": [
-        { "key": "client", "label": "Client" },
-        { "key": "developer", "label": "Developer" },
-        { "key": "agency", "label": "Agency" }
+        {
+          "key": "client",
+          "label": "Client"
+        },
+        {
+          "key": "developer",
+          "label": "Developer"
+        },
+        {
+          "key": "agency",
+          "label": "Agency"
+        }
       ],
       "client": {
         "title": "Find the right developer without spending hours.",
-        "text": "Describe your project in 2 minutes, set your budget and let serious developers come to you. Your WhatsApp stays private until you agree.",
-        "bullets": ["Brief posted for 1 Token", "Developers verified by portfolio", "No commission on your project", "Direct payment, in your currency"],
-        "cta": { "label": "Post my brief", "href": "/poster" }
+        "text": "Describe your project in 2 minutes, set your budget and receive quotes from verified developers. Your WhatsApp stays private until you agree.",
+        "bullets": [
+          "Free project posting",
+          "Quotes from verified developers",
+          "No commission on your project",
+          "Direct payment, in your currency"
+        ],
+        "cta": {
+          "label": "Post my project",
+          "href": "/poster"
+        }
       },
       "developer": {
         "title": "Bring clients to your expertise.",
-        "text": "Create a profile with your portfolio, receive targeted briefs by country and niche, and unlock contacts for 1 Token. You get paid directly.",
-        "bullets": ["Public profile with portfolio", "Briefs by country and skill", "1 Token = 1 client contact", "0% commission"],
-        "cta": { "label": "View briefs", "href": "/briefs" }
+        "text": "Create a profile with your portfolio, receive targeted projects by country and niche, and answer for 1 Token. You get paid directly.",
+        "bullets": [
+          "Public profile with portfolio",
+          "Projects by country and skill",
+          "1 Token = 1 client contact",
+          "0% commission"
+        ],
+        "cta": {
+          "label": "View projects",
+          "href": "/projects"
+        }
       },
       "agency": {
         "title": "Find the best talents in the region.",
         "text": "Access a pool of verified developers in francophone West Africa. Filter by skill, rating and availability, and collaborate transparently.",
-        "bullets": ["Access to verified profiles", "Filters by skill and rating", "Monthly ranking of the best", "Collaboration without commission"],
-        "cta": { "label": "Explore profiles", "href": "/dev" }
+        "bullets": [
+          "Access to verified profiles",
+          "Filters by skill and rating",
+          "Monthly ranking of the best",
+          "Collaboration without commission"
+        ],
+        "cta": {
+          "label": "Explore profiles",
+          "href": "/dev"
+        }
+      }
+    },
+    "statsBand": {
+      "items": [
+        {
+          "value": "9",
+          "label": "countries covered",
+          "hint": "Francophone West Africa"
+        },
+        {
+          "value": "0%",
+          "label": "commission",
+          "hint": "100% of the budget to the developer"
+        },
+        {
+          "value": "24 h",
+          "label": "to receive quotes",
+          "hint": "Posting takes 2 minutes"
+        },
+        {
+          "value": "100%",
+          "label": "direct payment",
+          "hint": "Private WhatsApp, no middleman"
+        }
+      ]
+    },
+    "categories": {
+      "badge": "Every digital skill",
+      "titleA": "A developer for",
+      "titleB": "every project.",
+      "lead": "Filter by specialty, country and budget. Every profile shows a portfolio, verified reviews and a starting rate.",
+      "items": [
+        {
+          "label": "Web development",
+          "hint": "Showcase sites, web apps, redesigns"
+        },
+        {
+          "label": "E-commerce",
+          "hint": "Shopify, WooCommerce, payments"
+        },
+        {
+          "label": "Mobile apps",
+          "hint": "iOS, Android, React Native"
+        },
+        {
+          "label": "UI/UX design",
+          "hint": "Mockups, branding, prototypes"
+        },
+        {
+          "label": "SEO & acquisition",
+          "hint": "SEO, Google Ads, content"
+        },
+        {
+          "label": "AI & automation",
+          "hint": "Chatbots, agents, integrations"
+        }
+      ]
+    },
+    "latestProjects": {
+      "badge": "Recently posted projects",
+      "titleA": "Real projects,",
+      "titleB": "free quotes.",
+      "lead": "Every project is posted by a client looking for a developer. Browse them, then send your proposal — or post your own.",
+      "cta": "View all projects",
+      "demoNote": "Sample projects — post yours to appear here.",
+      "noCommission": "0 commission",
+      "offers": "{count, plural, =0 {0 quote} one {# quote} other {# quotes}}",
+      "types": {
+        "vitrine": "Showcase",
+        "e-commerce": "E-commerce",
+        "landing page": "Landing page",
+        "app web": "Web app",
+        "refonte": "Redesign"
       }
     }
   },
   "RootMeta": {
     "default": "Devmarket — West Africa's francophone web projects marketplace",
-    "description": "Devmarket, the marketplace of web projects for francophone West Africa. The client posts their brief for 1 Token, the developer unlocks contact with 1 Token and everything is settled directly. No commission.",
+    "description": "Devmarket connects businesses in francophone West Africa with web developers: clients post their project for free, verified developers send quotes, and everything is settled directly. No commission.",
     "keywords": [
       "developer",
       "francophone West Africa",
@@ -342,7 +550,7 @@
     "ogTitle": "Devmarket — Clients looking for a website",
     "ogDescription": "The client posts their need for 1 Token. The developer spends 1 Token to unlock contact. Zero commission.",
     "ogAlt": "Devmarket — West Africa's francophone web projects marketplace.",
-    "twitterDescription": "West Africa's francophone web projects marketplace: briefs, Tokens, zero commission.",
+    "twitterDescription": "West Africa's francophone web projects marketplace: projects, Tokens, zero commission.",
     "orgDescription": "Marketplace connecting businesses in francophone West Africa with web developers, on an inverted model where clients post their needs.",
     "countries": [
       "Senegal",
@@ -359,19 +567,19 @@
   "Pages": {
     "faq": {
       "metaTitle": "FAQ",
-      "metaDesc": "All the answers about Devmarket: Token pricing, posting a brief, the developer's role and how the inverted marketplace works.",
+      "metaDesc": "All the answers about Devmarket: free project posting, Token pricing for developers, quotes and how the marketplace works.",
       "h1": "Frequently asked questions",
-      "intro": "Everything you need to know before posting your first brief, or unlocking your first contact as a developer.",
+      "intro": "Everything you need to know before posting your first project, or answering your first project as a developer.",
       "groups": [
         {
           "title": "For clients",
-          "text": "Posting a brief costs 1 Token and takes 2 minutes. Only serious developers — those who have unlocked your contact with 1 Token — can write to you.",
-          "cta": "Post a brief"
+          "text": "Posting a project is free and takes 2 minutes. You receive quotes from verified developers, then choose freely — with no commission.",
+          "cta": "Post a project"
         },
         {
           "title": "For developers",
-          "text": "Each brief shows you the budget and the region. You invest 1 Token to unlock the contact and open the private conversation. Zero commission on the project.",
-          "cta": "Browse briefs"
+          "text": "Each project shows its budget and region. You spend 1 Token to send your proposal and open the private conversation. Zero commission on the project.",
+          "cta": "Browse projects"
         },
         {
           "title": "Private conversations",
@@ -382,15 +590,15 @@
       "faqs": [
         {
           "q": "What is Devmarket?",
-          "a": "Devmarket is the marketplace for web projects in francophone West Africa: clients post their website brief for 1 Token, and serious developers come to them."
+          "a": "Devmarket is the marketplace for web projects in francophone West Africa: clients post their website project for free, verified developers send quotes, and you pick the right one."
         },
         {
           "q": "How does the model work?",
-          "a": "The client posts their brief in 2 minutes: type of site, budget and region. The brief appears in /briefs. The developer who is interested spends 1 Token to open a private conversation with the client, then the exchange continues directly on the platform."
+          "a": "The client posts their project in 2 minutes: type of site, budget and region. The project appears in the project list. The interested developer spends 1 Token to send a proposal and open a private conversation with the client, then the exchange continues directly on the platform."
         },
         {
           "q": "How much does a Token cost?",
-          "a": "1 Token (2,500 FCFA / ~$3.80). Registration is free: you order your Tokens, then post your brief or unlock a contact."
+          "a": "1 Token (2,500 FCFA / ~$3.80). Registration and project posting are free: only developers buy Tokens to answer projects or unlock a contact."
         },
         {
           "q": "How do I pay for my Tokens?",
@@ -398,7 +606,7 @@
         },
         {
           "q": "Does my WhatsApp number stay private?",
-          "a": "Yes. Your number never appears on briefs or in search results: exchanges go through the built-in messenger, and you alone decide when to share your contact."
+          "a": "Yes. Your number never appears on projects or in search results: exchanges go through the built-in messenger, and you alone decide when to share your contact."
         },
         {
           "q": "Which countries is the service available in?",
@@ -419,18 +627,18 @@
     },
     "about": {
       "metaTitle": "About",
-      "metaDesc": "Devmarket is the inverted marketplace of West Africa: clients post the brief for their website for 1 Token, developers unlock the contact with 1 Token.",
+      "metaDesc": "Devmarket is the marketplace for web projects in West Africa: clients post their project for free, developers answer with 1 Token.",
       "h1": "About Devmarket",
-      "leadBold": "We don't sell websites. We sell access to clients who want websites.",
-      "leadRest": "Devmarket is the inverted marketplace of West Africa: a shop in Thiès, a restaurant in Dakar, a school in Abidjan posts the brief for their project (1 Token), and serious developers come to them.",
+      "leadBold": "We don't sell websites. We connect the clients who want them with the developers who build them.",
+      "leadRest": "Devmarket is the marketplace for web projects in West Africa: a shop in Thiès, a restaurant in Dakar, a school in Abidjan post their project for free, and verified developers send their quotes.",
       "values": [
         {
           "title": "The client saves time",
-          "text": "Posting a brief takes 2 minutes and costs 1 Token. Only serious developers — those who have invested a Token — contact you."
+          "text": "Posting a project takes 2 minutes and costs nothing. Verified developers send quotes, and the client compares them in one place."
         },
         {
           "title": "The developer pays fairly",
-          "text": "1 Token = 2,500 F = 1 contact. You only pay for the briefs that truly interest you, with no commission on the project."
+          "text": "1 Token = 2,500 F = 1 contact. You only pay for the projects that truly interest you, with no commission on the project."
         },
         {
           "title": "A direct exchange",
@@ -438,9 +646,9 @@
         }
       ],
       "ctaTitle": "Ready to try it?",
-      "ctaText": "Post your first brief (1 Token), or browse the briefs that are already looking for a developer.",
-      "ctaPrimary": "Post my brief",
-      "ctaSecondary": "Browse briefs"
+      "ctaText": "Post your first project (free), or browse the projects that already need a developer.",
+      "ctaPrimary": "Post my project",
+      "ctaSecondary": "Browse projects"
     },
     "contact": {
       "metaTitle": "Contact",
@@ -455,7 +663,7 @@
         },
         {
           "title": "Report an abuse",
-          "text": "Fake profile, fake brief, off-topic solicitation: we review every report."
+          "text": "Fake profile, fake project, off-topic solicitation: we review every report."
         },
         {
           "title": "Technical problem",
@@ -493,13 +701,13 @@
     },
     "favorites": {
       "metaTitle": "My favorites",
-      "metaDesc": "Find the briefs you saved on Devmarket.",
-      "h1": "Your saved briefs",
-      "lead": "Tap a brief's heart to keep it here. 1 Token opens a private chat with the client.",
-      "count": "{count, plural, =0 {No saved brief} one {# saved brief} other {# saved briefs}}",
+      "metaDesc": "Find the projects you saved on Devmarket.",
+      "h1": "Your saved projects",
+      "lead": "Tap a project's heart to keep it here. 1 Token opens a private chat with the client.",
+      "count": "{count, plural, =0 {No saved project} one {# saved project} other {# saved projects}}",
       "emptyTitle": "No favorites yet",
-      "emptyDesc": "Browse the available briefs and tap the heart to keep them handy.",
-      "browse": "Browse briefs"
+      "emptyDesc": "Browse the available projects and tap the heart to keep them handy.",
+      "browse": "Browse projects"
     },
     "sitemap": {
       "metaTitle": "Sitemap",
@@ -592,11 +800,11 @@
         },
         "s5": {
           "h": "Personal data and cookies",
-          "b": "<p>Personal data (name, WhatsApp, brief content) is processed solely for the matching described in the <privacy>privacy policy</privacy>. Cookies are detailed in the <cookies>cookie policy</cookies>.</p>"
+          "b": "<p>Personal data (name, WhatsApp, project content) is processed solely for the matching described in the <privacy>privacy policy</privacy>. Cookies are detailed in the <cookies>cookie policy</cookies>.</p>"
         },
         "s6": {
           "h": "Liabilities",
-          "b": "<p>Exchanges between clients and developers take place under their own responsibility. Devmarket provides the matching (Tokens, briefs, messaging) and takes no part in the conclusion of contracts or in financial transactions between the parties. Reasonable efforts are made to prevent abuse and fraud, without any guarantee of outcome.</p>"
+          "b": "<p>Exchanges between clients and developers take place under their own responsibility. Devmarket provides the matching (Tokens, projects, messaging) and takes no part in the conclusion of contracts or in financial transactions between the parties. Reasonable efforts are made to prevent abuse and fraud, without any guarantee of outcome.</p>"
         },
         "s7": {
           "h": "Governing law",
@@ -613,25 +821,25 @@
       },
       "terms": {
         "metaTitle": "Terms of use",
-        "metaDesc": "The rules for using the Devmarket service: briefs, Tokens and matching.",
+        "metaDesc": "The rules for using the Devmarket service: projects, Tokens and matching.",
         "title": "Terms of use",
         "lead": "By using Devmarket, you accept the following rules.",
         "updated": "Last updated: September 24, 2026",
         "s1": {
           "h": "Purpose of the service",
-          "b": "<p>Devmarket is a matching service between clients who post the need for a website for 1 Token and developers who unlock the contact with a Token.</p>"
+          "b": "<p>Devmarket is a matching service between clients who post their website project for free and developers who unlock the contact with a Token.</p>"
         },
         "s2": {
-          "h": "Posting a brief",
-          "b": "<p>Posting a brief costs 1 Token and is reserved for people able to take on the commitments described.</p><ul><li>the information provided must be accurate;</li><li>the brief must relate to a real and serious project;</li><li>any abusive or fraudulent use is penalized by account deletion.</li></ul>"
+          "h": "Posting a project",
+          "b": "<p>Posting a project is free and reserved for people able to take on the commitments described.</p><ul><li>the information provided must be accurate;</li><li>the project must be real and serious;</li><li>any abusive or fraudulent use is penalized by account deletion.</li></ul>"
         },
         "s3": {
           "h": "Tokens",
-          "b": "<p>A Token unlocks a contact on a brief. Usual rate: <strong>1 Token = 2,500 FCFA</strong>.</p><ul><li>a Token is consumed when the contact is unlocked;</li><li>purchases are currently made through the team; online payment is coming soon;</li><li>transactions are final once the contact is unlocked, except in proven dispute.</li></ul>"
+          "b": "<p>A Token unlocks a contact on a project. Usual rate: <strong>1 Token = 2,500 FCFA</strong>.</p><ul><li>a Token is consumed when the contact is unlocked;</li><li>purchases are currently made through the team; online payment is coming soon;</li><li>transactions are final once the contact is unlocked, except in proven dispute.</li></ul>"
         },
         "s4": {
           "h": "Direct contact",
-          "b": "<p>Direct contact with the client is the very purpose of the service: the developer who unlocks a brief with 1 Token obtains the contact and continues the exchange in the built-in messenger, then directly (WhatsApp) after mutual agreement. Developers and clients are responsible for their exchanges and for concluding their own contract. Devmarket takes no part in financial transactions between the parties and charges no commission.</p>"
+          "b": "<p>Direct contact with the client is the very purpose of the service: the developer who unlocks a project with 1 Token obtains the contact and continues the exchange in the built-in messenger, then directly (WhatsApp) after mutual agreement. Developers and clients are responsible for their exchanges and for concluding their own contract. Devmarket takes no part in financial transactions between the parties and charges no commission.</p>"
         },
         "s5": {
           "h": "Expected behaviour",
@@ -639,15 +847,15 @@
         },
         "s6": {
           "h": "Intellectual property",
-          "b": "<p>The content of a brief belongs to its author (the client). Developers may use it solely to respond to that brief. The Devmarket brand, texts and visual identity may not be reused without written permission.</p>"
+          "b": "<p>The content of a project belongs to its author (the client). Developers may use it solely to respond to that project. The Devmarket brand, texts and visual identity may not be reused without written permission.</p>"
         },
         "s7": {
           "h": "Refunds and disputes",
-          "b": "<p>A Token spent on a contact cannot be refunded. In case of a fraudulent contact or a fictitious brief, the report must be made within the <strong>48 hours</strong> following the unlocking of the contact.</p><p>Reports are made from the conversation via the “Report” button. The team reviews the exchanges and refunds in Tokens if the dispute is confirmed.</p>"
+          "b": "<p>A Token spent on a contact cannot be refunded. In case of a fraudulent contact or a fictitious project, the report must be made within the <strong>48 hours</strong> following the unlocking of the contact.</p><p>Reports are made from the conversation via the “Report” button. The team reviews the exchanges and refunds in Tokens if the dispute is confirmed.</p>"
         },
         "s8": {
           "h": "Liability",
-          "b": "<p>Devmarket provides a matching service. The quality of the work delivered, adherence to deadlines and project content are the sole responsibility of the developer, and the accuracy of the brief that of the client. Our liability is limited to the amount of Tokens involved.</p>"
+          "b": "<p>Devmarket provides a matching service. The quality of the work delivered, adherence to deadlines and project content are the sole responsibility of the developer, and the accuracy of the project that of the client. Our liability is limited to the amount of Tokens involved.</p>"
         },
         "s9": {
           "h": "Service changes",
@@ -674,7 +882,7 @@
         "updated": "Last updated: September 24, 2026",
         "s1": {
           "h": "Data we collect",
-          "b": "<p>When you use the service, we collect:</p><ul><li>your brief data: name, region, project type, budget and description;</li><li>your WhatsApp number, used for direct contact;</li><li>navigation data strictly necessary for operation.</li></ul>"
+          "b": "<p>When you use the service, we collect:</p><ul><li>your project data: name, region, project type, budget and description;</li><li>your WhatsApp number, used for direct contact;</li><li>navigation data strictly necessary for operation.</li></ul>"
         },
         "s2": {
           "h": "Why do we collect this data?",
@@ -682,11 +890,11 @@
         },
         "s3": {
           "h": "Sharing and visibility",
-          "b": "<p>A brief's contact (WhatsApp number) is only visible to developers who unlock the contact with a Token. No other disclosure is made without your consent.</p>"
+          "b": "<p>A project's contact (WhatsApp number) is only visible to developers who unlock the contact with a Token. No other disclosure is made without your consent.</p>"
         },
         "s4": {
           "h": "Retention",
-          "b": "<p>Data is kept for as long as necessary to provide the service: your session stays active for 30 days (see the <cookies>cookie policy</cookies>), your briefs stay visible while they are open, and account data is deleted upon request. Security logs are kept for 12 months, then anonymized.</p>"
+          "b": "<p>Data is kept for as long as necessary to provide the service: your session stays active for 30 days (see the <cookies>cookie policy</cookies>), your projects stay visible while they are open, and account data is deleted upon request. Security logs are kept for 12 months, then anonymized.</p>"
         },
         "s5": {
           "h": "Subprocessors",

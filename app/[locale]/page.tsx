@@ -3,6 +3,9 @@ import { redirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { getCurrentRole, getCurrentUser } from "@/lib/supabase/server";
 import { Hero } from "@/components/landing/hero";
+import { StatsBand } from "@/components/landing/stats-band";
+import { LatestProjects } from "@/components/landing/latest-projects";
+import { Categories } from "@/components/landing/categories";
 import { HowItWorks } from "@/components/landing/how-it-works";
 import { PricingSection } from "@/components/landing/pricing";
 import { FaqSection } from "@/components/landing/faq";
@@ -90,13 +93,16 @@ export default async function HomePage() {
       />
       <div className="bg-background">
         <Hero />
+        <StatsBand />
+        <LatestProjects />
+        <Categories />
         <CountryFlags />
         <SocialProof />
         <HowItWorks />
-        <TokenSection />
-        <PricingSection />
-        <ComparisonTable />
         <ForWhoTabs />
+        <PricingSection />
+        <TokenSection />
+        <ComparisonTable />
         <Testimonials />
         <FaqSection />
         <RoleCards />

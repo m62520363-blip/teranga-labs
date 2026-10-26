@@ -6,13 +6,22 @@ import { getCurrentRole, getCurrentUser } from "@/lib/supabase/server";
 import { Scene3D } from "@/components/landing/scene-3d";
 
 export const metadata: Metadata = {
-  title: "Poster un brief",
+  title: "Publier un projet",
   description:
-    "Publiez votre besoin de site web pour 1 Token. Les développeurs viennent à vous.",
+    "Publiez votre projet web gratuitement. Les développeurs vérifiés vous envoient leurs devis.",
   robots: { index: false, follow: false },
 };
 
-export default async function PosterPage() {
+export default async function PosterPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ type?: string }>;
+}) {
+  const sp = await searchParams;
+  const allowedTypes = ["vitrine", "e-commerce", "landing page", "app web", "refonte"];
+  const requestedType =
+    typeof sp.type === "string" && allowedTypes.includes(sp.type) ? sp.type : null;
+
   const user = await getCurrentUser();
   const role = user ? await getCurrentRole() : null;
 
@@ -23,21 +32,20 @@ export default async function PosterPage() {
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <div className="max-w-xl">
               <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
-                Connectez-vous pour publier un brief
+                Connectez-vous pour publier un projet
               </h1>
               <p className="mt-3 text-base leading-relaxed text-muted-foreground">
-                La publication d’un brief coûte <strong className="text-foreground">1 Token</strong>.
-                Créez un compte, commandez vos Tokens en ligne (carte bancaire ou
-                mobile money), puis décrivez votre projet : les développeurs vous contactent
-                dans la messagerie interne.
+                La publication est <strong className="text-foreground">gratuite</strong>.
+                Créez un compte, décrivez votre projet en 2 minutes, puis recevez
+                les devis des développeurs dans la messagerie interne.
               </p>
 
               <div className="mt-10 flex flex-wrap gap-3">
                 <Link href="/login" className="btn btn-primary">
                   Se connecter
                 </Link>
-                <Link href="/tokens" className="btn btn-secondary">
-                  Acheter des Tokens
+                <Link href="/dev" className="btn btn-secondary">
+                  Trouver un développeur
                 </Link>
               </div>
 
@@ -46,7 +54,7 @@ export default async function PosterPage() {
                 <Link href="/login?mode=signup" className="underline decoration-primary/60 underline-offset-4 hover:text-foreground">
                   Inscrivez-vous gratuitement
                 </Link>{" "}
-                — l’inscription est gratuite, seule la publication consomme 1 Token.
+                — aucun Token n’est nécessaire pour publier votre projet.
               </p>
 
               {/* SVG local de marque : next/image n'apporterait rien sur du vectoriel. */}
@@ -82,16 +90,17 @@ export default async function PosterPage() {
               Retour
             </Link>
             <h1 className="mt-3 text-3xl font-semibold leading-tight tracking-tight">
-              Publier un brief
+              Publier un projet
             </h1>
             <p className="mt-3 text-base leading-relaxed text-muted-foreground">
-              Décris ton besoin. Les développeurs intéressés pourront te
-              contacter directement dans la messagerie interne.
+              Décris ton besoin en 2 minutes. La publication est gratuite — les
+              développeurs intéressés t’envoient leur devis dans la messagerie
+              interne.
             </p>
           </div>
 
           <div className="mt-6 rounded-2xl border border-hairline bg-card p-6 shadow-sm sm:p-8">
-            <PosterForm />
+            <PosterForm initialType={requestedType ?? undefined} />
           </div>
         </div>
       </div>

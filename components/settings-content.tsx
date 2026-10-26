@@ -333,11 +333,11 @@ export function SettingsContent({
                 <SideLink href={homeHref} label="Accueil de mon espace" />
                 <SideLink href="/conversations" label="Messages" />
                 {isClient ? (
-                  <SideLink href="/poster" label="Publier un brief" icon={<Plus className="size-4" aria-hidden="true" />} />
+                  <SideLink href="/poster" label="Publier un projet" icon={<Plus className="size-4" aria-hidden="true" />} />
                 ) : null}
                 {isDev ? (
                   <>
-                    <SideLink href="/briefs" label="Voir les briefs" />
+                    <SideLink href="/briefs" label="Voir les projets" />
                     <SideLink href="/dashboard?tab=profil" label="Compléter mon profil" icon={<User className="size-4" aria-hidden="true" />} />
                     {devPublicUrl ? (
                       <>

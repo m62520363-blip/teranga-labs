@@ -169,7 +169,7 @@ export function ContactButton({
           <NotAllowed
             icon={<Lock className="size-5" aria-hidden="true" />}
             title="Réservé aux clients"
-            body="Le contact direct est proposé aux comptes clients. Les développeurs rejoignent l’annuaire via la messagerie des briefs."
+            body="Le contact direct est proposé aux comptes clients. Les développeurs rejoignent l’annuaire via la messagerie des projets."
             action={
               <Link href="/poster">
                 <Button variant="outline" className="w-full">

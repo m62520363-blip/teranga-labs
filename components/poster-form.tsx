@@ -112,7 +112,7 @@ const BUDGET_HINTS: Record<string, string> = {
   refonte: "Une refonte repart souvent de 150 000 FCFA selon l’existant.",
 };
 
-export function PosterForm() {
+export function PosterForm({ initialType }: { initialType?: string } = {}) {
   const router = useRouter();
   const { refresh: refreshBalance } = useBalance();
   const [formError, setFormError] = React.useState<string | null>(null);
@@ -123,7 +123,7 @@ export function PosterForm() {
   } | null>(null);
   const [copied, setCopied] = React.useState(false);
   const [customFeatures, setCustomFeatures] = React.useState("");
-  // Dernière étape : récapitulatif avant le débit du Token.
+  // Dernière étape : récapitulatif avant la publication gratuite.
   const [confirmOpen, setConfirmOpen] = React.useState(false);
   const [isPublishing, setIsPublishing] = React.useState(false);
   const [pending, setPending] = React.useState<BriefFormValues | null>(null);
@@ -136,7 +136,7 @@ export function PosterForm() {
       client_name: "",
       client_whatsapp: "",
       client_city: "Dakar",
-      project_type: "vitrine",
+      project_type: (initialType ?? "vitrine") as BriefFormValues["project_type"],
       budget: undefined,
       description: "",
       features: [],
@@ -212,7 +212,7 @@ export function PosterForm() {
 
   // L'utilisateur valide d'abord le formulaire, puis CONFIRME dans la
   // modale. Aucun appel réseau et aucun débit avant cette confirmation :
-  // c'est le dernier écran avant l'engagement de 1 Token.
+  // c'est le dernier écran avant la publication gratuite.
   const onSubmit = (values: BriefFormValues) => {
     setFormError(null);
     setPending(values);
@@ -223,7 +223,7 @@ export function PosterForm() {
     setFormError(null);
 
     if (honeypot) {
-      toast.success("Brief publié !");
+      toast.success("Projet publié !");
       router.push("/briefs");
       router.refresh();
       return;
@@ -265,13 +265,13 @@ export function PosterForm() {
     if (!res.ok) {
       setFormError(
         payload?.error ??
-          "Impossible de publier le brief pour le moment. Réessayez dans quelques secondes."
+          "Impossible de publier le projet pour le moment. Réessayez dans quelques secondes."
       );
       return;
     }
 
     if (payload?.accepted) {
-      toast.success("Brief publié !");
+      toast.success("Projet publié !");
       router.push("/briefs");
       router.refresh();
       return;
@@ -284,16 +284,10 @@ export function PosterForm() {
 
     setConfirmOpen(false);
     setCreated({ id: payload.id, managementKey: payload.management_key });
-    if (payload.gift) {
-      toast.success("Brief publié !", {
-        description:
-          "Votre première publication est offerte : aucun Token n’a été débité.",
-      });
-    } else {
-      toast.success("Brief publié !", {
-        description: "1 Token a été déduit de votre solde. Conservez votre lien de suivi : il vous sert à gérer votre projet.",
-      });
-    }
+    toast.success("Projet publié !", {
+      description:
+        "Publication gratuite : aucun Token n’a été débité. Conservez votre lien de suivi pour gérer votre projet.",
+    });
     void refreshBalance();
   };
 
@@ -327,7 +321,7 @@ export function PosterForm() {
         <div className="flex items-start gap-3 rounded-2xl border border-success/25 bg-success-soft p-4 sm:p-5">
           <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-success" aria-hidden="true" />
           <div>
-            <p className="font-semibold tracking-tight">Brief publié avec succès</p>
+            <p className="font-semibold tracking-tight">Projet publié avec succès</p>
             <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
               Votre projet est en ligne et visible par les développeurs. Les
               premières propositions arrivent dans votre espace client.
@@ -366,7 +360,7 @@ export function PosterForm() {
 
         <div className="flex flex-wrap gap-3">
           <Link href="/briefs" className="btn btn-secondary">
-            Voir les briefs
+            Voir les projets
           </Link>
           <Link href="/client" className="btn btn-primary">
             Mon espace client
@@ -395,7 +389,7 @@ export function PosterForm() {
         <p className="flex items-start gap-3 text-sm leading-relaxed text-foreground/90">
           <Sparkles className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
           <span>
-            Publier un brief coûte <strong>1 Token</strong>. Un assistant calcule
+            Publier un projet est <strong>gratuit</strong>. Un assistant calcule
             avec vous les besoins et le budget réaliste de votre projet.
           </span>
         </p>
@@ -658,7 +652,7 @@ export function PosterForm() {
 
       <p className="flex items-center gap-2 rounded-xl border border-primary/20 bg-primary-soft px-4 py-3 text-sm text-foreground/90">
         <ShieldCheck className="size-4 shrink-0 text-primary" aria-hidden="true" />
-        La publication consomme <strong>1 Token</strong> sur votre solde.
+        Publication <strong>gratuite</strong> — aucun Token débité.
       </p>
 
       <Button type="submit" disabled={isSubmitting} className="h-11 rounded-xl">
@@ -667,7 +661,7 @@ export function PosterForm() {
         ) : (
           <Send className="size-4" aria-hidden="true" />
         )}
-        Vérifier mon brief
+        Vérifier mon projet
       </Button>
 
       <Dialog open={confirmOpen} onOpenChange={(open) => (open ? setConfirmOpen(true) : onCancel())}>
@@ -676,7 +670,7 @@ export function PosterForm() {
             <DialogTitle>Confirmer la publication</DialogTitle>
             <DialogDescription>
               Vérifiez les informations ci-dessous. Elles seront visibles par les
-              développeurs une fois le brief publié.
+              développeurs une fois le projet publié.
             </DialogDescription>
           </DialogHeader>
 
@@ -701,7 +695,7 @@ export function PosterForm() {
                 {formError}
               </span>
             ) : (
-              "La publication consomme 1 Token sur votre solde."
+              "Publication gratuite : aucun Token ne sera débité."
             )}
           </p>
 
@@ -726,7 +720,7 @@ export function PosterForm() {
               ) : (
                 <Send className="size-4" aria-hidden="true" />
               )}
-              Publier et déduire 1 Token
+              Publier mon projet
             </Button>
           </DialogFooter>
         </DialogContent>

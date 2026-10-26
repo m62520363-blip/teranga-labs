@@ -11,8 +11,8 @@ import {
 } from "@/components/client-projects";
 
 export const metadata: Metadata = {
-  title: "Mes briefs",
-  description: "Tous les briefs publiés sur votre compte Devmarket.",
+  title: "Mes publications",
+  description: "Tous les projets publiés sur votre compte Devmarket.",
   robots: { index: false, follow: false },
 };
 
@@ -131,10 +131,10 @@ export default async function ClientBriefsPage() {
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <h1 className="text-3xl font-semibold leading-tight tracking-tight">
-              Mes briefs
+              Mes publications
             </h1>
             <p className="mt-2 text-base text-muted-foreground">
-              Tous les briefs que tu as publiés, avec l’état des candidatures.
+              Tous les projets que tu as publiés, avec l’état des candidatures.
             </p>
           </div>
           <Link
@@ -142,7 +142,7 @@ export default async function ClientBriefsPage() {
             className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground outline-none transition-colors hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50"
           >
             <Megaphone className="size-4" aria-hidden="true" />
-            Publier un brief
+            Publier un projet
           </Link>
         </div>
 
@@ -152,7 +152,7 @@ export default async function ClientBriefsPage() {
               <Megaphone className="size-6 text-primary" aria-hidden="true" />
             </span>
             <p className="mt-4 text-base font-semibold tracking-tight">
-              Aucun brief publié
+              Aucun projet publié
             </p>
             <p className="mt-1.5 max-w-sm text-sm leading-relaxed text-muted-foreground">
               Publie ton besoin en 2 minutes : les développeurs te répondent
@@ -163,7 +163,7 @@ export default async function ClientBriefsPage() {
               className="mt-6 inline-flex h-11 items-center gap-2 rounded-full bg-primary px-6 text-sm font-semibold text-primary-foreground outline-none transition-colors hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50"
             >
               <Megaphone className="size-4" aria-hidden="true" />
-              Publier mon premier brief
+              Publier mon premier projet
             </Link>
           </div>
         ) : (

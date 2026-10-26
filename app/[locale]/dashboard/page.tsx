@@ -48,7 +48,7 @@ export default async function DashboardPage({
   const roleRes = await supabase.rpc("get_my_role");
   if (roleRes.data === "client") redirect("/client");
 
-  const [devRes, balanceRes, unlocksRes, transactionsRes, ordersRes, reviewsRes, myReviewsRes, missionsRes, conversations] =
+  const [devRes, balanceRes, unlocksRes, transactionsRes, ordersRes, reviewsRes, myReviewsRes, missionsRes, conversations, openProjectsRes] =
     await Promise.all([
       supabase
         .from("developers")
@@ -68,6 +68,11 @@ export default async function DashboardPage({
       supabase.rpc("list_my_developer_reviews"),
       supabase.rpc("list_my_missions"),
       getConversations(supabase, user.id),
+      supabase
+        .from("requests")
+        .select("id", { count: "exact", head: true })
+        .eq("status", "ouvert")
+        .eq("hidden", false),
     ]);
 
   const profile = devRes.data ?? null;
@@ -119,6 +124,7 @@ export default async function DashboardPage({
       myMissions={myMissions}
       tlMissions={tlMissions}
       devisEnAttente={devisEnAttente}
+      openProjects={openProjectsRes.count ?? 0}
       initialTab={(tab ?? "") as never}
     />
   );

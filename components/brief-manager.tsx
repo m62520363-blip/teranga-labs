@@ -47,7 +47,7 @@ export type BriefManagementData = {
 const STATUS_ACTIONS: { status: string; label: string; main?: boolean }[] = [
   { status: "attribué", label: "Attribuer" },
   { status: "terminé", label: "Marquer terminé" },
-  { status: "fermé", label: "Fermer le brief" },
+  { status: "fermé", label: "Fermer le projet" },
 ];
 
 export function BriefManager({
@@ -77,7 +77,7 @@ export function BriefManager({
       return;
     }
     setBrief({ ...brief, status });
-    toast.success("Brief mis à jour");
+    toast.success("Projet mis à jour");
   };
 
   const promote = async () => {
@@ -91,16 +91,16 @@ export function BriefManager({
     });
     setPromoting(false);
     if (error) {
-      toast.error(error.message || "Impossible de mettre en avant ce brief.");
+      toast.error(error.message || "Impossible de mettre en avant ce projet.");
       return;
     }
     const ends = (data as { ends_at?: string } | null)?.ends_at;
     toast.success(
       ends
-        ? `Brief mis en avant jusqu'au ${new Date(ends).toLocaleDateString("fr-FR")}`
-        : "Brief mis en avant."
+        ? `Projet mis en avant jusqu'au ${new Date(ends).toLocaleDateString("fr-FR")}`
+        : "Projet mis en avant."
     );
-    setPromoteMsg("Ce brief apparaît désormais en tête du marketplace.");
+    setPromoteMsg("Ce projet apparaît désormais en tête du marketplace.");
   };
 
   return (
