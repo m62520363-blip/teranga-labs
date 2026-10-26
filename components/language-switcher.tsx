@@ -29,7 +29,7 @@ export function LanguageSwitcher() {
     window.location.assign(event.currentTarget.href);
   };
   const base =
-    "px-2 py-1 text-[11px] font-semibold leading-none tracking-wide outline-none transition-colors";
+    "inline-flex min-h-7 min-w-7 items-center justify-center px-2 py-1 text-[11px] font-semibold leading-none tracking-wide outline-none transition-colors";
   const currentClass = cn(base, "bg-primary text-primary-foreground");
   const linkClass = cn(
     base,

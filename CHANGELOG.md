@@ -25,7 +25,8 @@ Reproduction de la composition de codeur.com sur l'accueil public, en gardant l'
 ### Accessibilité et animations
 
 - **Onglets de métiers** en pattern WAI-ARIA complet (flèches gauche/droite, Home/End, `aria-selected`, `tabIndex` géré) ; **FAQ** en accordéon fluide (`grid-template-rows` 0fr → 1fr, `aria-expanded`/`aria-controls`, deux colonnes clients/développeurs, premier item ouvert).
-- **`app/globals.css`** : `hero-glow`, `hero-ring` (pulsation décalée par anneau) et `hero-underline` (tracé SVG animé), tous neutralisés sous `prefers-reduced-motion` ; cibles tactiles ≥ 44 px sur les CTA, `focus-visible` sur tous les liens/boutons — y compris un anneau vert sur les liens du menu principal, auparavant signalés par le seul changement de couleur.
+- **`app/globals.css`** : `hero-glow`, `hero-ring` (pulsation décalée par anneau) et `hero-underline` (tracé SVG animé), tous neutralisés sous `prefers-reduced-motion` ; cibles tactiles ≥ 44 px sur les CTA, `focus-visible` sur tous les liens/boutons — y compris un anneau vert sur les liens du menu principal, auparavant signalés par le seul changement de couleur. Le sélecteur FR/EN passe de 31 × 19 px à 28 × 28 px (minimum WCAG 2.5.8).
+- **Hydratation** : `next-themes` retiré (`components/providers.tsx`) — le site n'a qu'un thème et son script injectait un `class`/`style` dans `<html>` avant l'hydratation, provoquant par intermittence une erreur React #418 et une régénération de l'arbre. Les toasts gardent leur apparence (`theme="light"` explicite). 15 chargements consécutifs sans erreur après correctif.
 
 ### i18n
 
