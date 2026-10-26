@@ -982,6 +982,13 @@ export interface Database {
         };
         Returns: Json;
       };
+      track_public_event: {
+        Args: {
+          p_event: string;
+          p_developer_id: string;
+        };
+        Returns: Json;
+      };
       track_event: {
         Args: {
           p_event: string;

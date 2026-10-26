@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { apiRequireUser, apiOptionalUser } from "@/lib/auth/guards";
+import { createClient } from "@/lib/supabase/server";
 import { createAdminClient, isServiceConfigured } from "@/lib/supabase/admin";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { trackClientEventSchema } from "@/lib/validations";
@@ -14,9 +15,16 @@ export const dynamic = "force-dynamic";
  *   - `contact_unlocked` : après le déblocage direct par RPC ;
  *   - `profile_view`     : visite de la fiche publique d'un développeur ;
  *   - `contact_click`    : ouverture du bouton « Contacter » d'un profil.
- * `track_event` est réservé au service_role, d'où cette route. Liste
- * d'événements fermée (zod enum), rate-limitée, réponse toujours `ok`
- * pour ne jamais peser sur le parcours.
+ * Liste d'événements fermée (zod enum), rate-limitée, réponse toujours
+ * `ok` pour ne jamais peser sur le parcours.
+ *
+ * Deux chemins d'écriture :
+ *   1. `service_role` (track_event) quand la clé est configurée ;
+ *   2. sinon `track_public_event` (migration 0071) : RPC SECURITY
+ *      DEFINER ouverte à anon/authenticated, limitée aux deux
+ *      événements de fiche. La table reste fermée en écriture directe.
+ *      Sans ce repli, l'absence de clé service laissait les
+ *      statistiques définitivement à zéro en production.
  *
  * `profile_view` est le seul événement accepté pour un visiteur anonyme
  * (les fiches publiques sont indexées et consultées sans compte). Les
@@ -66,13 +74,14 @@ export async function POST(request: NextRequest) {
     actorId = guard.user!.id;
   }
 
-  if (!isServiceConfigured()) {
-    return NextResponse.json({ ok: true, recorded: false });
-  }
+  const admin = isServiceConfigured() ? createAdminClient() : null;
 
-  const admin = createAdminClient();
   if (!admin) {
-    return NextResponse.json({ ok: true, recorded: false });
+    // Repli sans clé service : uniquement les événements de fiche.
+    if (event === "contact_unlocked" || !developerId) {
+      return NextResponse.json({ ok: true, recorded: false });
+    }
+    return recordViaPublicRpc(event, developerId);
   }
 
   const { error } = await admin.rpc("track_event", {
@@ -101,4 +110,46 @@ export async function POST(request: NextRequest) {
   }
 
   return NextResponse.json({ ok: true, recorded: true });
+}
+
+/**
+ * Écriture via la session de l'appelant (anon ou authentifiée).
+ * L'acteur est déduit de auth.uid() côté base : rien n'est falsifiable.
+ */
+async function recordViaPublicRpc(event: string, developerId: string) {
+  const supabase = await createClient();
+  if (!supabase) return NextResponse.json({ ok: true, recorded: false });
+
+  const { data, error } = await supabase.rpc("track_public_event", {
+    p_event: event,
+    p_developer_id: developerId,
+  });
+
+  if (error) {
+    const code = (error as { code?: string }).code;
+    // Migration 0071 ou 0039 non appliquée : suivi inactif, sans erreur.
+    if (
+      code === "42P01" ||
+      code === "PGRST202" ||
+      /does not exist|could not find the function/i.test(error.message)
+    ) {
+      return NextResponse.json({ ok: true, recorded: false });
+    }
+    log.error({
+      action: "analytics.track.public",
+      event,
+      message: error.message,
+    });
+    return NextResponse.json(
+      { code: "TRACK_FAILED", message: "Événement non enregistré." },
+      { status: 500 }
+    );
+  }
+
+  const result = (data ?? {}) as { recorded?: boolean; self?: boolean };
+  return NextResponse.json({
+    ok: true,
+    recorded: result.recorded ?? true,
+    ...(result.self ? { self: true } : {}),
+  });
 }
