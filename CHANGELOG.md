@@ -2,6 +2,44 @@
 
 Toutes les modifications notables du projet sont documentées ici (§61 du cahier des charges). Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [Unreleased] — 2026-10-29 : mise en état de la base de production
+
+Audit de la base Supabase de production (`virihuuksoepswccxsne`) par **appels directs**, et correction des migrations qui avaient échoué.
+
+### Anomalie bloquante : `RAISE EXCEPTION` n'accepte pas `||`
+
+En PL/pgSQL, `RAISE EXCEPTION` interdit la concaténation ; il faut les placeholders `%`. Quatre migrations portaient cette faute et échouaient en `42601: syntax error at or near "||"`, ce qui annule **silencieusement toute la migration** :
+
+- `0059` (`Montant minimum de retrait : % FCFA.`)
+- `0060` et `0065` (`Transition invalide (% → %).`)
+- `0063` (`Tokens insuffisants pour créer une agence (il en faut %).`)
+
+Vérification statique rejouée sur toutes les migrations : plus aucune occurrence.
+
+### Anomalie de cohérence : type de token `agency_creation`
+
+- `0063` débite 4 tokens via `debit_tokens(..., 'agency_creation', ...)`, mais la contrainte `token_transactions_type_check` (dernière définition : `0055`) ne listait pas ce type. **Toute création d'agence aurait échoué sur contrainte CHECK** une fois les deux migrations appliquées. `0063` étend désormais la contrainte elle-même. Les autres types injectés (`purchase`/`bonus` en 0003, `sponsor`/`sponsor_brief` en 0045, `pro` en 0046) étaient déjà autorisés.
+
+### État réel de la production (constaté par appel direct, jamais par OpenAPI)
+
+- **Déjà appliquées** : `0057` (présence en messagerie), `0066` + `0068` (newsletter), `0069`, `0070`, `0071`.
+- **Jamais appliquées — 8 migrations** : `0058`, `0059`, `0060`, `0061`, `0062`, `0063`, `0064`, `0065`.
+
+Les migrations ont donc été appliquées **au cas par cas, pas dans l'ordre**. Preuve : `get_my_developer_stats` (`0070`) existe alors que `0059`, antérieure, n'a jamais passé. Une fonction présente ne prouve rien quand une version plus ancienne existe par ailleurs — c'est le cas de `mission_update_status` (`0038`), `get_leaderboard` (`0041`/`0056`), `create_agency` (`0044`/`0047`) ou `list_approved_developers` (`0028`/`0045`).
+
+### Ce qui est désormais opérationnel
+
+- **Newsletter de bout en bout** : `POST /api/newsletter` passe de `503` (service non configuré) à `404` (drapeau éteint) puis à **`400` sur email invalide** et **`200 {"ok":true}`** sur inscription valide. L'upsert est idempotent (un second appel renvoie `already_subscribed: true`, toujours 1 ligne).
+- **Présence en messagerie** (`0057`) : `user_presence` + `get_peer_presence` opérationnels.
+
+### Livrable
+
+- **`docs/RESTAURATION_PROD_MIGRATIONS.sql`** : les 8 migrations consolidées dans l'ordre des dépendances, chacune conservant son propre `BEGIN; … COMMIT;` (un bloc qui échoue n'invalide pas les précédents). Non destructif et idempotent. Pied de page avec les requêtes de vérification.
+
+### Méthode d'audit
+
+Verdict établi par **appel direct avec les signatures exactes lues dans les `.sql`**, en forçant un échec de cast (uuid/int/bool malformé) pour prouver l'existence **sans exécuter le corps de la fonction** — donc sans aucune écriture parasite. Trois approches ont été écartées au cours de l'audit car leurs verdicts étaient faux : l'OpenAPI de PostgREST (n'expose que 50 objets sur 207), le parsing par regex, et les appels sans arguments.
+
 ## [Unreleased] — 2026-10-26 : refonte de la landing « à la Codeur » (sections A → M)
 
 Reproduction de la composition de codeur.com sur l'accueil public, en gardant l'identité Devmarket (bleu `#0B132B`, vert `#39FF88`, logo, thème sombre unique) et sans reprendre aucune marque, aucun chiffre ni aucun avis de Codeur.
@@ -151,7 +189,7 @@ Lot complet du plan de refonte à 38 points : **A** SEO/corrections, **B** landi
 ### Vérifications (A → H)
 
 - `npm run check` ✓ (check-rpc : 173 appels RPC tous résolus, typecheck, lint, vitest **177/177**), `npm run build` ✓ (First Load JS 304 kB ; routes `analytics`, `newsletter`, page `favoris` en place), e2e port 3100 : **58/63 en suite complète** — les 5 échecs (navbar/3D/tarifs landing, home guards, smoke header) sont des **flakes de charge** (scénarios à 43-56 s), **26/26 au rejeu** des 3 fichiers concernés.
-- **À faire en prod** : appliquer les migrations `0066`, `0067` et `0068` dans le SQL Editor ; renseigner `SUPABASE_SERVICE_ROLE_KEY`, `CRON_SECRET`, `CHARIOW_MISSION_PRODUCT_ID` et les URLs sociales `NEXT_PUBLIC_*_URL`.
+- **À faire en prod** : ~~appliquer les migrations `0066`, `0067` et `0068`~~ → **fait le 2026-10-29** (`0066` + `0068` ; `0067` est supplantée par `0070`, déjà appliquée) ; ~~renseigner `SUPABASE_SERVICE_ROLE_KEY`~~ → **fait**. Restent : `CRON_SECRET`, `CHARIOW_MISSION_PRODUCT_ID` et les URLs sociales `NEXT_PUBLIC_*_URL`. Voir l'entrée du 2026-10-29 pour les 8 migrations encore absentes.
 
 ## [Unreleased] — 2026-10-21 : bandeau noir supprimé de l'espace client et de l'espace développeur
 
