@@ -16,14 +16,20 @@ En PL/pgSQL, `RAISE EXCEPTION` interdit la concaténation ; il faut les placehol
 
 Vérification statique rejouée sur toutes les migrations : plus aucune occurrence.
 
-### Anomalie de cohérence : type de token `agency_creation`
+### Anomalie d'ambiguïté : `ON CONFLICT … DO UPDATE … WHERE`
 
-- `0063` débite 4 tokens via `debit_tokens(..., 'agency_creation', ...)`, mais la contrainte `token_transactions_type_check` (dernière définition : `0055`) ne listait pas ce type. **Toute création d'agence aurait échoué sur contrainte CHECK** une fois les deux migrations appliquées. `0063` étend désormais la contrainte elle-même. Les autres types injectés (`purchase`/`bonus` en 0003, `sponsor`/`sponsor_brief` en 0045, `pro` en 0046) étaient déjà autorisés.
+- Dans une clause `ON CONFLICT (…) DO UPDATE … WHERE`, la table virtuelle **`excluded`** est dans le portée et porte **les mêmes colonnes** que la table cible. Une colonne écrite sans qualification y est donc ambiguë : Postgres renvoie `42702: column reference "…" is ambiguous`. Deux migrations touchaient :
+  - `0061` → `WHERE (value #>> '{}')::integer <> 4` corrigé en `app_settings.value`
+  - `0063` → `WHERE key IN (…)` corrigé en `app_settings.key`
+- Un `UPDATE` simple n'est pas concerné (pas d'excluded en portée), ce qui explique que le même motif passé ligne 1583 n'avait pas d'erreur. Les deux `DO UPDATE` de `0064` n'ont pas de `WHERE` et sont sains. Toutes les clauses `ON CONFLICT … DO UPDATE` des 8 migrations ont été revues à la main.
+
+### Anomalie de cohérence : type de token `agency_creation`- `0063` débite 4 tokens via `debit_tokens(..., 'agency_creation', ...)`, mais la contrainte `token_transactions_type_check` (dernière définition : `0055`) ne listait pas ce type. **Toute création d'agence aurait échoué sur contrainte CHECK** une fois les deux migrations appliquées. `0063` étend désormais la contrainte elle-même. Les autres types injectés (`purchase`/`bonus` en 0003, `sponsor`/`sponsor_brief` en 0045, `pro` en 0046) étaient déjà autorisés.
 
 ### État réel de la production (constaté par appel direct, jamais par OpenAPI)
 
-- **Déjà appliquées** : `0057` (présence en messagerie), `0066` + `0068` (newsletter), `0069`, `0070`, `0071`.
+- **Déjà appliquées avant l'audit** : `0057` (présence en messagerie), `0066` + `0068` (newsletter), `0069`, `0070`, `0071`.
 - **Jamais appliquées — 8 migrations** : `0058`, `0059`, `0060`, `0061`, `0062`, `0063`, `0064`, `0065`.
+- **Après la première exécution du fichier de restauration** : `0058`, `0059`, `0060` sont passées. Le bloc `0061` a échoué sur l'ambiguïté `value` (voir plus haut) et les blocs `0062` à `0065` ne se sont donc pas exécutés.
 
 Les migrations ont donc été appliquées **au cas par cas, pas dans l'ordre**. Preuve : `get_my_developer_stats` (`0070`) existe alors que `0059`, antérieure, n'a jamais passé. Une fonction présente ne prouve rien quand une version plus ancienne existe par ailleurs — c'est le cas de `mission_update_status` (`0038`), `get_leaderboard` (`0041`/`0056`), `create_agency` (`0044`/`0047`) ou `list_approved_developers` (`0028`/`0045`).
 
