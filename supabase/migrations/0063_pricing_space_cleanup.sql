@@ -10,13 +10,16 @@ BEGIN;
 -- ------------------------------------------------------------
 -- 1. Tarifs mis à jour
 -- ------------------------------------------------------------
+-- `key` doit etre qualifie : dans ON CONFLICT ... DO UPDATE, la table
+-- virtuelle `excluded` porte les memes colonnes que la cible, donc un nom
+-- nu y est ambigu (erreur 42702 "column reference is ambiguous").
 INSERT INTO public.app_settings (key, value) VALUES
   ('pro_price_tokens', '3'::jsonb),
   ('pro_duration_days', '30'::jsonb),
   ('agency_price_tokens', '4'::jsonb),
   ('agency_duration_days', '30'::jsonb)
 ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value
-WHERE key IN ('pro_price_tokens', 'pro_duration_days', 'agency_price_tokens', 'agency_duration_days');
+WHERE app_settings.key IN ('pro_price_tokens', 'pro_duration_days', 'agency_price_tokens', 'agency_duration_days');
 
 -- ------------------------------------------------------------
 -- 2. Contrainte CHECK : autoriser le type 'agency_creation'

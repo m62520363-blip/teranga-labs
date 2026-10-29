@@ -73,9 +73,12 @@ INSERT INTO public.app_settings (key, value)
 VALUES ('leaderboard_reward_silver', '7'::jsonb)
 ON CONFLICT (key) DO NOTHING;
 
+-- `value` doit etre qualifie : dans ON CONFLICT ... DO UPDATE, la table
+-- virtuelle `excluded` porte les memes colonnes que la cible, donc un nom
+-- nu y est ambigu (erreur 42702 "column reference is ambiguous").
 INSERT INTO public.app_settings (key, value)
 VALUES ('leaderboard_reward_bronze', '4'::jsonb)
 ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value
-WHERE (value #>> '{}')::integer <> 4;
+WHERE (app_settings.value #>> '{}')::integer <> 4;
 
 COMMIT;
