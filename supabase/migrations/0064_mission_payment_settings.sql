@@ -14,8 +14,13 @@ BEGIN;
 -- ------------------------------------------------------------
 -- 1. Seeds (on conflict do nothing : ne jamais écraser une config)
 -- ------------------------------------------------------------
+-- 'mission_product_id' : represente "pas encore configure" par une chaine
+-- JSON vide. Un cast ''::jsonb serait invalide (chaine vide = JSON invalide)
+-- et ferait echouer la migration en 22P02. On reprend la representation
+-- que produit deja admin_set_mission_payment_config via to_jsonb(''),
+-- soit '""'::jsonb — d'ou un value #>> '{}' = '' lisible par la RPC.
 INSERT INTO public.app_settings (key, value) VALUES
-  ('mission_product_id', ''::jsonb),
+  ('mission_product_id', '""'::jsonb),
   ('mission_price_variants', '{}'::jsonb)
 ON CONFLICT (key) DO NOTHING;
 
