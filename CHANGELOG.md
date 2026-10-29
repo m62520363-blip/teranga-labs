@@ -23,6 +23,15 @@ Vérification statique rejouée sur toutes les migrations : plus aucune occurren
   - `0063` → `WHERE key IN (…)` corrigé en `app_settings.key`
 - Un `UPDATE` simple n'est pas concerné (pas d'excluded en portée), ce qui explique que le même motif passé ligne 1583 n'avait pas d'erreur. Les deux `DO UPDATE` de `0064` n'ont pas de `WHERE` et sont sains. Toutes les clauses `ON CONFLICT … DO UPDATE` des 8 migrations ont été revues à la main.
 
+### Anomalie de signatures : `COMMENT`/`REVOKE ON FUNCTION` inexistantes
+
+- `COMMENT ON FUNCTION` et `REVOKE … ON FUNCTION` **échouent en `42883` si la fonction ciblée n'existe pas** — ce qui annule la migration entière. `0063` ciblait des signatures erronées :
+  - `sponsor_dev_profile(uuid, integer)` → la fonction réelle est `sponsor_dev_profile(integer)` (0045)
+  - `sponsor_brief(uuid, integer)` → la réelle est `sponsor_brief(uuid, uuid, integer)` (0045)
+  - `generate_sponsor_payment_link(uuid, integer, text)` → **n'est définie par aucune migration** ; les deux lignes ont été supprimées.
+- Les 6 instructions sont désormais encadrées dans un `DO` qui teste `pg_proc` via `pg_get_function_identity_arguments` : si une fonction venait à disparaître, l'instruction est sautée au lieu de faire échouer la migration.
+- Contrôle automatisé des **48 références** `COMMENT`/`REVOKE`/`GRANT ON FUNCTION` des 8 migrations contre le référentiel des 207 fonctions créées : **0 écart résiduel**.
+
 ### Anomalie de cohérence : type de token `agency_creation`- `0063` débite 4 tokens via `debit_tokens(..., 'agency_creation', ...)`, mais la contrainte `token_transactions_type_check` (dernière définition : `0055`) ne listait pas ce type. **Toute création d'agence aurait échoué sur contrainte CHECK** une fois les deux migrations appliquées. `0063` étend désormais la contrainte elle-même. Les autres types injectés (`purchase`/`bonus` en 0003, `sponsor`/`sponsor_brief` en 0045, `pro` en 0046) étaient déjà autorisés.
 
 ### État réel de la production (constaté par appel direct, jamais par OpenAPI)
