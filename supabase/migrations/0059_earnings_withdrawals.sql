@@ -330,7 +330,9 @@ BEGIN
     5000
   );
   IF p_amount_fcfa < v_min THEN
-    RAISE EXCEPTION 'Montant minimum de retrait : ' || v_min || ' FCFA.' USING ERRCODE = 'TLBAD';
+    -- RAISE EXCEPTION n'accepte pas la concatenation "||" en Postgres :
+    -- on utilise le placeholder "%" de RAISE.
+    RAISE EXCEPTION 'Montant minimum de retrait : % FCFA.', v_min USING ERRCODE = 'TLBAD';
   END IF;
 
   PERFORM 1 FROM public.user_presence WHERE user_id = v_user;

@@ -219,7 +219,8 @@ BEGIN
   END IF;
 
   IF NOT v_allowed THEN
-    RAISE EXCEPTION 'Transition invalide (' || v_from || ' → ' || p_to_status || ').' USING ERRCODE = 'TLTRN';
+    -- RAISE EXCEPTION n'accepte pas la concatenation "||" : placeholders "%".
+    RAISE EXCEPTION 'Transition invalide (% → %).', v_from, p_to_status USING ERRCODE = 'TLTRN';
   END IF;
 
   UPDATE public.missions

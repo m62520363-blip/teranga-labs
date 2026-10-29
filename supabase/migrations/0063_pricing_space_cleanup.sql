@@ -62,7 +62,8 @@ BEGIN
     FROM public.token_transactions
    WHERE developer_id = v_user;
   IF v_balance < v_cost THEN
-    RAISE EXCEPTION 'Tokens insuffisants pour créer une agence (il en faut ' || v_cost || ').' USING ERRCODE = 'TLLOW';
+    -- RAISE EXCEPTION n'accepte pas la concatenation "||" : placeholders "%".
+    RAISE EXCEPTION 'Tokens insuffisants pour créer une agence (il en faut %).', v_cost USING ERRCODE = 'TLLOW';
   END IF;
 
   -- Débiter les tokens (idempotent via request_id).
