@@ -23,6 +23,20 @@ Vérification statique rejouée sur toutes les migrations : plus aucune occurren
   - `0063` → `WHERE key IN (…)` corrigé en `app_settings.key`
 - Un `UPDATE` simple n'est pas concerné (pas d'excluded en portée), ce qui explique que le même motif passé ligne 1583 n'avait pas d'erreur. Les deux `DO UPDATE` de `0064` n'ont pas de `WHERE` et sont sains. Toutes les clauses `ON CONFLICT … DO UPDATE` des 8 migrations ont été revues à la main.
 
+### Anomalie de littéral JSON : `''::jsonb`
+
+- `0064` seedait `mission_product_id` avec `''::jsonb`. **Une chaîne vide n'est pas du JSON valide** : Postgres refuse le cast en `22P02: invalid input syntax for type json` et la migration tombe.
+- Remplacé par `'""'::jsonb`, qui est exactement ce que produit déjà `admin_set_mission_payment_config` via `to_jsonb('')` quand l'admin n'a rien renseigné — donc seed et écriture convergent. Le getter lira `value #>> '{}' = ''`, cohérent avec son `COALESCE(…, '')`.
+
+### Contrôles croisés menés avant de demander une nouvelle exécution
+
+Les quatre anomalies ci-dessus partagent une cause unique : **ces migrations n'ont jamais été exécutées nulle part**, pas même en développement. Plutôt que de les découvrir une par une à chaque exécution, quatre contrôles automatiques ont été écrits et rejoués :
+
+- **Références de fonctions** : les 48 `COMMENT`/`REVOKE`/`GRANT ON FUNCTION` confrontées aux 207 fonctions réellement créées → **0 écart**.
+- **Littéraux JSON** : les 38 `'…'::jsonb` parsés comme du JSON réel, commentaires exclus pour éviter les faux positifs → **0 invalide**.
+- **Tables cibles de DDL** : les tables visées par `ALTER TABLE` / `CREATE TRIGGER ON` / `CREATE INDEX ON` / `CREATE(POLICY|TRIGGER)` son dans production → **0 absente**. Distinction appliquée : le SQL embarqué dans un corps `plpgsql` n'est *pas* validé à la création (échec tardif), seules les DDL structurelles échouent sur le champ.
+- **Sélectivité des verdicts** : PostgREST renvoie `PGRST202` lorsqu'un appel omet un paramètre sans valeur par défaut, ce qui est indistinguable d'une fonction absente. Les sondes fournissent désormais tous les paramètres obligatoires — un faux négatif avait fait déclarer `confirm_mission_payment` absente à tort.
+
 ### Anomalie de signatures : `COMMENT`/`REVOKE ON FUNCTION` inexistantes
 
 - `COMMENT ON FUNCTION` et `REVOKE … ON FUNCTION` **échouent en `42883` si la fonction ciblée n'existe pas** — ce qui annule la migration entière. `0063` ciblait des signatures erronées :
