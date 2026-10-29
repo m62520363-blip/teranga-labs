@@ -19,7 +19,35 @@ ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value
 WHERE key IN ('pro_price_tokens', 'pro_duration_days', 'agency_price_tokens', 'agency_duration_days');
 
 -- ------------------------------------------------------------
--- 2. create_agency avec débit de tokens (4 tokens, idempotent)
+-- 2. Contrainte CHECK : autoriser le type 'agency_creation'
+--    introduce par debit_tokens dans create_agency (section 3).
+--    Sans cela, TOUTE creation d'agence echouerait sur
+--    token_transactions_type_check (derniere definition : 0055,
+--    qui n'anticipe pas ce type).
+--    Idempotent : drop if exists + re-add.
+-- ------------------------------------------------------------
+alter table public.token_transactions
+  drop constraint if exists token_transactions_type_check;
+
+alter table public.token_transactions
+  add constraint token_transactions_type_check
+  check (type in (
+    'purchase',        -- achat de pack (Pulse Chariow / admin)
+    'unlock',          -- deblocage d'un contact
+    'bonus',           -- bonus divers
+    'publish',         -- publication d'un brief
+    'contact',         -- contact direct payant
+    'adjust',          -- ajustement administrateur
+    'gift',            -- offre de bienvenue / cadeau
+    'reward',          -- recompense de classement
+    'sponsor',         -- sponsoring de profil (OBSOLETE, conserve pour l'historique)
+    'sponsor_brief',   -- sponsoring de brief (OBSOLETE, conserve pour l'historique)
+    'pro',             -- abonnement PRO
+    'agency_creation'  -- creation d'agence (0063)
+  ));
+
+-- ------------------------------------------------------------
+-- 3. create_agency avec débit de tokens (4 tokens, idempotent)
 -- ------------------------------------------------------------
 CREATE OR REPLACE FUNCTION public.create_agency(
   p_name TEXT,
@@ -105,7 +133,7 @@ REVOKE ALL ON FUNCTION public.create_agency(TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, 
 GRANT EXECUTE ON FUNCTION public.create_agency(TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT) TO authenticated;
 
 -- ------------------------------------------------------------
--- 3. Retirer le sponsoring de l'espace dev (REVOKE authenticated)
+-- 4. Retirer le sponsoring de l'espace dev (REVOKE authenticated)
 -- ------------------------------------------------------------
 REVOKE EXECUTE ON FUNCTION public.sponsor_dev_profile(uuid, integer) FROM authenticated;
 REVOKE EXECUTE ON FUNCTION public.sponsor_brief(uuid, integer) FROM authenticated;
