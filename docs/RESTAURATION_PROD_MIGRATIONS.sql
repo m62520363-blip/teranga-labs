@@ -2036,15 +2036,48 @@ GRANT EXECUTE ON FUNCTION public.create_agency(TEXT, TEXT, TEXT, TEXT, TEXT, TEX
 
 -- ------------------------------------------------------------
 -- 4. Retirer le sponsoring de l'espace dev (REVOKE authenticated)
+--
+-- Signatures REELLES, telles que creees par 0045 :
+--   public.sponsor_dev_profile(integer)
+--   public.sponsor_brief(uuid, uuid, integer)
+--
+-- La version d'origine de 0063 ciblait (uuid, integer) — signatures
+-- qui n'existent pas : chaque REVOKE/COMMENT echouait en 42883
+-- "function ... does not exist" et faisait tomber toute la migration.
+--
+-- `generate_sponsor_payment_link` n'est definie par aucune migration :
+-- ses deux lignes sont supprimees (inutiles, la fonction n'existe pas).
+--
+-- Encadre dans un DO : si une fonction a ete retiree entre-temps,
+-- l'instruction est sautee au lieu de faire echouer la migration.
 -- ------------------------------------------------------------
-REVOKE EXECUTE ON FUNCTION public.sponsor_dev_profile(uuid, integer) FROM authenticated;
-REVOKE EXECUTE ON FUNCTION public.sponsor_brief(uuid, integer) FROM authenticated;
-REVOKE EXECUTE ON FUNCTION public.generate_sponsor_payment_link(uuid, integer, text) FROM authenticated;
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM pg_proc p
+      JOIN pg_namespace n ON n.oid = p.pronamespace
+     WHERE n.nspname = 'public'
+       AND p.proname = 'sponsor_dev_profile'
+       AND pg_get_function_identity_arguments(p.oid) = 'integer'
+  ) THEN
+    REVOKE EXECUTE ON FUNCTION public.sponsor_dev_profile(integer) FROM authenticated;
+    COMMENT ON FUNCTION public.sponsor_dev_profile(integer)
+      IS 'OBSOLÈTE : sponsoring supprimé. Utilisez le wallet.';
+  END IF;
 
--- Marquer les fonctions comme obsolètes (ne pas DROP pour compat).
-COMMENT ON FUNCTION public.sponsor_dev_profile(uuid, integer) IS 'OBSOLÈTE: sponsoring supprimé. Utilisez le wallet.';
-COMMENT ON FUNCTION public.sponsor_brief(uuid, integer) IS 'OBSOLÈTE: sponsoring supprimé. Utilisez le wallet.';
-COMMENT ON FUNCTION public.generate_sponsor_payment_link(uuid, integer, text) IS 'OBSOLÈTE: sponsoring supprimé. Utilisez le wallet.';
+  IF EXISTS (
+    SELECT 1 FROM pg_proc p
+      JOIN pg_namespace n ON n.oid = p.pronamespace
+     WHERE n.nspname = 'public'
+       AND p.proname = 'sponsor_brief'
+       AND pg_get_function_identity_arguments(p.oid) = 'uuid, uuid, integer'
+  ) THEN
+    REVOKE EXECUTE ON FUNCTION public.sponsor_brief(uuid, uuid, integer) FROM authenticated;
+    COMMENT ON FUNCTION public.sponsor_brief(uuid, uuid, integer)
+      IS 'OBSOLÈTE : sponsoring supprimé. Utilisez le wallet.';
+  END IF;
+END
+$$;
 
 COMMIT;
 
