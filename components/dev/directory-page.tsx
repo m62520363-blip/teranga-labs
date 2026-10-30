@@ -146,6 +146,47 @@ export function DirectoryPage({
 
   return (
     <div>
+      {filters.specialties.length > 0 ? (
+        <div
+          className="mb-4 flex flex-wrap items-center gap-2"
+          role="group"
+          aria-label="Filtrer par spécialité"
+        >
+          <button
+            type="button"
+            onClick={() => setSpecialty("")}
+            aria-pressed={specialty === ""}
+            className={cn(
+              "inline-flex h-9 items-center rounded-full border px-3.5 text-xs font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
+              specialty === ""
+                ? "border-primary bg-primary-soft text-primary"
+                : "border-hairline bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground"
+            )}
+          >
+            Toutes les catégories
+          </button>
+          {filters.specialties.map((spec) => {
+            const active = specialty === spec;
+            return (
+              <button
+                key={spec}
+                type="button"
+                onClick={() => setSpecialty(active ? "" : spec)}
+                aria-pressed={active}
+                className={cn(
+                  "inline-flex h-9 items-center rounded-full border px-3.5 text-xs font-medium capitalize transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
+                  active
+                    ? "border-primary bg-primary-soft text-primary"
+                    : "border-hairline bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                )}
+              >
+                {spec}
+              </button>
+            );
+          })}
+        </div>
+      ) : null}
+
       <div className="mb-6 flex flex-col gap-3">
         <div className="flex flex-col gap-3 sm:flex-row">
           <div className="relative flex-1">

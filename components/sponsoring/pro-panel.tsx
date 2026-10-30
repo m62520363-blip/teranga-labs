@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { BadgeCheck, Crown, Loader2 } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, BadgeCheck, Crown, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 type ProPrices = { price_tokens: number; duration_days: number };
@@ -75,23 +76,33 @@ export default function ProPanel() {
         </span>
       </div>
 
-      <button
-        type="button"
-        onClick={() => void subscribe()}
-        disabled={busy}
-        className="mt-4 inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-ink transition-colors hover:bg-primary-hover disabled:opacity-60"
-      >
-        {busy ? (
-          <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-        ) : status?.active ? (
-          <BadgeCheck className="size-4" aria-hidden="true" />
-        ) : (
-          <Crown className="size-4" aria-hidden="true" />
-        )}
-        {status?.active
-          ? "Prolonger l'abonnement"
-          : `Activer PRO (${prices.price_tokens} Tokens)`}
-      </button>
+      <div className="mt-4 flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          onClick={() => void subscribe()}
+          disabled={busy}
+          className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-ink transition-colors hover:bg-primary-hover disabled:opacity-60"
+        >
+          {busy ? (
+            <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+          ) : status?.active ? (
+            <BadgeCheck className="size-4" aria-hidden="true" />
+          ) : (
+            <Crown className="size-4" aria-hidden="true" />
+          )}
+          {status?.active
+            ? "Prolonger l'abonnement"
+            : `Activer PRO (${prices.price_tokens} Tokens)`}
+        </button>
+
+        <Link
+          href="/abonnement"
+          className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-hairline bg-background/60 px-4 text-sm font-medium text-foreground transition-colors outline-none hover:border-primary/40 focus-visible:ring-2 focus-visible:ring-primary/50"
+        >
+          Comparer Gratuit et PRO
+          <ArrowRight className="size-4" aria-hidden="true" />
+        </Link>
+      </div>
 
       {error ? (
         <p className="mt-3 text-sm font-medium text-destructive">{error}</p>

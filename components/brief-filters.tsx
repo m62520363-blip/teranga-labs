@@ -1,7 +1,8 @@
 ﻿"use client"
 
 import * as React from "react"
-import { Loader2, Search } from "lucide-react"
+import { Loader2, Search, Sparkles } from "lucide-react"
+import { cn } from "cn"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { CountryRegionSelect } from "@/components/ui/CountryRegionSelect"
@@ -42,6 +43,7 @@ export function BriefFilters({
   initialCountry = "",
   initialRegion = "",
   welcomeContactFree = false,
+  developerSkills = [],
 }: {
   briefs: PublicRequest[];
   total: number;
@@ -52,6 +54,7 @@ export function BriefFilters({
   initialCountry?: string;
   initialRegion?: string;
   welcomeContactFree?: boolean;
+  developerSkills?: string[];
 }) {
   const [all, setAll] = React.useState<PublicRequestWithSponsor[]>(
     briefs as PublicRequestWithSponsor[]
@@ -62,8 +65,17 @@ export function BriefFilters({
   const [city, setCity] = React.useState("all");
   const [type, setType] = React.useState("all");
   const [budget, setBudget] = React.useState("all");
+  const [inMySkills, setInMySkills] = React.useState(false);
   const [country, setCountry] = React.useState(initialCountry)
   const [region, setRegion] = React.useState(initialRegion)
+
+  const normalizedSkills = React.useMemo(
+    () =>
+      developerSkills
+        .map((s) => s.trim().toLowerCase())
+        .filter((s) => s.length >= 2),
+    [developerSkills]
+  );
 
   const knownTotal = Math.max(total, all.length);
   const hasMore = all.length < knownTotal;
@@ -131,16 +143,24 @@ export function BriefFilters({
       }
       if (type !== "all" && brief.project_type !== type) return false;
       if (!budgetBand.matches(brief.budget)) return false;
+      if (inMySkills && normalizedSkills.length > 0) {
+        const skillHaystack = `${brief.project_type} ${label} ${brief.description ?? ""}`.toLowerCase();
+        const matchesSkill = normalizedSkills.some((sk) => skillHaystack.includes(sk));
+        if (!matchesSkill) return false;
+      }
       return true;
     }).sort((a, b) => {
       const aS = isBriefSponsored(a) ? 0 : 1;
       const bS = isBriefSponsored(b) ? 0 : 1;
       return aS - bS;
     });
-  }, [all, query, city, type, country, region, budgetBand]);
+  }, [all, query, city, type, country, region, budgetBand, inMySkills, normalizedSkills]);
 
   const typeItems = React.useMemo(() => {
     const items: Record<string, string> = { all: "Tous les types" };
+    for (const [k, v] of Object.entries(PROJECT_TYPE_LABELS)) {
+      items[k] = v;
+    }
     return items;
   }, []);
 
@@ -152,6 +172,63 @@ export function BriefFilters({
 
   return (
     <div>
+      <div className="mb-4 flex flex-wrap items-center gap-2" role="group" aria-label="Filtrer par catégorie">
+        {normalizedSkills.length > 0 ? (
+          <button
+            type="button"
+            onClick={() => setInMySkills((v) => !v)}
+            aria-pressed={inMySkills}
+            className={cn(
+              "inline-flex h-9 items-center gap-1.5 rounded-full border px-3.5 text-xs font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
+              inMySkills
+                ? "border-primary bg-primary-soft text-primary"
+                : "border-hairline bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground"
+            )}
+          >
+            <Sparkles className="size-3.5" aria-hidden="true" />
+            Dans mes compétences ({developerSkills.slice(0, 3).join(", ")}
+            {developerSkills.length > 3 ? ` +${developerSkills.length - 3}` : ""})
+          </button>
+        ) : null}
+
+        <button
+          type="button"
+          onClick={() => {
+            setType("all");
+            setInMySkills(false);
+          }}
+          aria-pressed={type === "all" && !inMySkills}
+          className={cn(
+            "inline-flex h-9 items-center rounded-full border px-3.5 text-xs font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
+            type === "all" && !inMySkills
+              ? "border-primary bg-primary-soft text-primary"
+              : "border-hairline bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground"
+          )}
+        >
+          Toutes les catégories
+        </button>
+
+        {Object.entries(PROJECT_TYPE_LABELS).map(([key, label]) => {
+          const active = type === key;
+          return (
+            <button
+              key={key}
+              type="button"
+              onClick={() => setType(active ? "all" : key)}
+              aria-pressed={active}
+              className={cn(
+                "inline-flex h-9 items-center rounded-full border px-3.5 text-xs font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
+                active
+                  ? "border-primary bg-primary-soft text-primary"
+                  : "border-hairline bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground"
+              )}
+            >
+              {label}
+            </button>
+          );
+        })}
+      </div>
+
       <div className="flex flex-col gap-3">
         <div className="relative">
           <Search

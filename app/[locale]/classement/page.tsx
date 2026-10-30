@@ -1,7 +1,7 @@
 ﻿import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { Award, Crown, ShieldCheck, Trophy, UserRound } from "lucide-react";
+import { ArrowRight, Award, CheckCircle2, Crown, ShieldCheck, Trophy, UserRound } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { COUNTRIES } from "@/lib/countries";
 import { Flag } from "@/components/ui/Flag";
@@ -474,6 +474,74 @@ export default async function ClassementPage() {
                   );
                 })
             )}
+          </div>
+        </section>
+
+        <section className="mt-14" aria-label="Critères clés du classement et du score">
+          <div className="rounded-2xl border border-hairline bg-card p-6 sm:p-8">
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <h2 className="flex items-center gap-2 text-lg font-semibold tracking-tight sm:text-xl">
+                  <Trophy className="size-5 text-primary" aria-hidden="true" />
+                  Boostez votre rang — Critères clés
+                </h2>
+                <p className="mt-1.5 max-w-2xl text-sm text-muted-foreground">
+                  Votre position au classement mensuel et votre score de réputation (sur 100) reposent uniquement sur des signaux vérifiables :
+                </p>
+              </div>
+              <Link
+                href="/dashboard?tab=profil"
+                className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-hairline bg-background/60 px-3.5 text-xs font-medium text-foreground transition-colors outline-none hover:border-primary/40 focus-visible:ring-2 focus-visible:ring-primary/50"
+              >
+                Compléter mon profil
+                <ArrowRight className="size-3.5" aria-hidden="true" />
+              </Link>
+            </div>
+
+            <ul className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {[
+                {
+                  title: "Note moyenne des clients",
+                  detail: "Jusqu’à 35 points dans le score de réputation.",
+                },
+                {
+                  title: "Missions réalisées et confirmées",
+                  detail: `${config?.points_per_project ?? POINTS_PER_PROJECT} pts par projet au classement mensuel, et jusqu’à 20 pts au score.`,
+                },
+                {
+                  title: "Volume d’avis vérifiés",
+                  detail: "Jusqu’à 15 points selon le nombre de retours clients.",
+                },
+                {
+                  title: "Complétude du profil",
+                  detail: "Photo, bio, ville, compétences et portfolio : jusqu’à 15 points.",
+                },
+                {
+                  title: "Réactivité aux messages",
+                  detail: "Jusqu’à 10 points selon votre taux et délai de réponse.",
+                },
+                {
+                  title: "Profil vérifié",
+                  detail: "+5 points de bonus après validation de votre identité.",
+                },
+              ].map((item) => (
+                <li
+                  key={item.title}
+                  className="flex items-start gap-2.5 rounded-xl border border-hairline bg-surface p-3.5"
+                >
+                  <CheckCircle2
+                    className="mt-0.5 size-4 shrink-0 text-primary"
+                    aria-hidden="true"
+                  />
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-foreground">{item.title}</p>
+                    <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
+                      {item.detail}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
 

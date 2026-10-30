@@ -9,6 +9,7 @@ import { NotificationBell } from "@/components/notification-bell";
 import { TokenBalance } from "@/components/token-balance";
 import { SignOutButton } from "@/components/sign-out-button";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { SkipLink } from "@/components/skip-link";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import {
   APP_NAV_SECTIONS,
@@ -165,6 +166,7 @@ export function DashboardShell({
 
   return (
     <div className="min-h-screen bg-background">
+      <SkipLink />
       {/* ---------------------------- SIDEBAR ORDINATEUR --------------------------- */}
       <aside
         aria-label="Navigation du dashboard"

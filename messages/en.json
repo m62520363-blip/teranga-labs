@@ -1193,7 +1193,10 @@
       ],
       "notFoundTitle": "Didn't find your answer?",
       "notFoundText": "Write to us — we reply quickly to every request.",
-      "notFoundCta": "Contact the team"
+      "notFoundCta": "Contact the team",
+      "searchPlaceholder": "Find answers to all your questions…",
+      "searchAria": "Search a question in the FAQ",
+      "searchEmpty": "No question matches your search."
     },
     "about": {
       "metaTitle": "About",

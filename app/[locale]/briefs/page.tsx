@@ -42,6 +42,7 @@ export default async function BriefsPage({
   const unlocks: Record<string, { conversation_id?: string; whatsapp?: string }> = {};
   let balance: number | null = null;
   const favorites = new Set<string>();
+  let developerSkills: string[] = [];
   // true si le compte n'a jamais débloqué de contact ET n'a jamais consommé
   // l'offre de bienvenue : son 1er contact sera donc gratuit (migration 0033).
   let welcomeContactFree = false;
@@ -97,6 +98,17 @@ export default async function BriefsPage({
         .select("request_id");
       for (const fav of myFavorites ?? []) {
         if (fav.request_id) favorites.add(fav.request_id);
+      }
+
+      const { data: devRow } = await supabase
+        .from("developers")
+        .select("skills")
+        .eq("id", user.id)
+        .maybeSingle();
+      if (Array.isArray(devRow?.skills)) {
+        developerSkills = devRow.skills
+          .map((s) => (typeof s === "string" ? s.trim() : ""))
+          .filter(Boolean);
       }
     }
   }
@@ -157,6 +169,7 @@ export default async function BriefsPage({
             initialCountry={initialCountry}
             initialRegion={initialRegion}
             welcomeContactFree={welcomeContactFree}
+            developerSkills={developerSkills}
           />
         </div>
       </div>

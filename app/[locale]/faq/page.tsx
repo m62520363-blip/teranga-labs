@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { FaqItem } from "@/components/faq-item";
+import { FaqSearchableList } from "@/components/faq-searchable-list";
 import { Reveal } from "@/components/reveal";
 import { TOKEN_LABEL_PRICED } from "@/lib/formatting";
 
@@ -33,6 +33,10 @@ export default async function FaqPage() {
     href: GROUP_HREFS[index],
   }));
   const faqs = t.raw("faqs") as { q: string; a: string }[];
+  const resolvedFaqs = faqs.map((f, index) => ({
+    q: f.q,
+    a: t(`faqs.${index}.a`, { token: TOKEN_LABEL_PRICED }),
+  }));
 
   return (
     <div className="bg-surface py-16 md:py-24">
@@ -78,15 +82,12 @@ export default async function FaqPage() {
           </div>
 
           <Reveal className="mt-12">
-            <div className="rounded-2xl border border-hairline bg-card p-6 sm:p-8">
-              {faqs.map((f, index) => (
-                <FaqItem
-                  key={f.q}
-                  question={f.q}
-                  answer={t(`faqs.${index}.a`, { token: TOKEN_LABEL_PRICED })}
-                />
-              ))}
-            </div>
+            <FaqSearchableList
+              items={resolvedFaqs}
+              placeholder={t("searchPlaceholder")}
+              ariaLabel={t("searchAria")}
+              emptyLabel={t("searchEmpty")}
+            />
           </Reveal>
 
           <div className="mt-12 flex flex-col items-start justify-between gap-4 rounded-2xl bg-muted p-6 sm:flex-row sm:items-center sm:p-8">
