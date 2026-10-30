@@ -21,6 +21,7 @@ export function ImageLogoMark({
       alt={alt}
       width={1997}
       height={787}
+      sizes="140px"
       priority={priority}
       className={cn("h-8 w-auto", className)}
     />
@@ -31,7 +32,7 @@ export function Logo({ className }: { className?: string }) {
   return (
     <span className={cn("inline-flex items-center", className)}>
       <span className="sr-only">Devmarket</span>
-      <ImageLogoMark alt="" />
+      <ImageLogoMark alt="" priority />
     </span>
   );
 }
