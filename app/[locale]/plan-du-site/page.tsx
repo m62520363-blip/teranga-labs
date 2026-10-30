@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import {
   ArrowRight,
+  Crown,
   FileText,
   HelpCircle,
   Home,
@@ -30,6 +31,7 @@ const GROUP_LINKS = [
     { href: "/poster", icon: ShoppingBag },
     { href: "/briefs", icon: UserPlus },
     { href: "/tokens", icon: ShoppingBag },
+    { href: "/abonnement", icon: Crown },
   ],
   [
     { href: "/a-propos", icon: Info },

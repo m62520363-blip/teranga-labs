@@ -115,7 +115,8 @@
       "cities": "Cities",
       "terms": "Terms",
       "privacy": "Privacy",
-      "legal": "Legal notice"
+      "legal": "Legal notice",
+      "proSubscription": "PRO subscription"
     },
     "copyright": "All rights reserved.",
     "publishedBy": "Published by",
@@ -1301,6 +1302,9 @@
             },
             {
               "label": "Buy Tokens"
+            },
+            {
+              "label": "PRO subscription"
             }
           ]
         },
@@ -1574,6 +1578,125 @@
       "score": "Score",
       "see": "View leaderboard",
       "level": "Level"
+    }
+  },
+  "Subscription": {
+    "eyebrow": "Developer space",
+    "titleA": "PRO",
+    "titleB": "subscription",
+    "lead": "One single plan, clear and never auto-renewed: pay with Tokens, switch on your PRO badge, and extend whenever you want.",
+    "notConfigured": "Prices cannot be displayed: the configuration is incomplete.",
+    "pricesUnavailable": "The price is temporarily unavailable. Please try again shortly.",
+    "honestyNote": "The PRO subscription gives you the PRO badge on your public profile and in the directory. It does not change your position in the directory: top placement is reserved for sponsored profiles.",
+    "status": {
+      "active": "Your PRO subscription is active until {date}.",
+      "balance": "Token balance: {count}",
+      "justSubscribed": "Your PRO subscription is now active."
+    },
+    "offer": {
+      "aria": "Comparison of the Free and PRO plans",
+      "free": {
+        "title": "Free",
+        "price": "$0",
+        "note": "To build your profile and receive projects.",
+        "features": [
+          {
+            "label": "Complete public profile",
+            "ok": true
+          },
+          {
+            "label": "Listed in the directory",
+            "ok": true
+          },
+          {
+            "label": "Receive projects and contacts",
+            "ok": true
+          },
+          {
+            "label": "PRO badge on the public profile",
+            "ok": false
+          },
+          {
+            "label": "PRO badge in the directory",
+            "ok": false
+          }
+        ]
+      },
+      "pro": {
+        "title": "PRO",
+        "tag": "PRO badge",
+        "tokens": "{count} Token",
+        "fcfa": "equivalent to {price}",
+        "duration": "Valid for {days} days, extendable at any time",
+        "durationUnknown": "Duration available in your account.",
+        "features": [
+          {
+            "label": "Everything in the Free plan",
+            "ok": true
+          },
+          {
+            "label": "PRO badge on the public profile",
+            "ok": true
+          },
+          {
+            "label": "PRO badge in the directory",
+            "ok": true
+          },
+          {
+            "label": "Notification on activation and renewal",
+            "ok": true
+          },
+          {
+            "label": "Paid with Tokens, no bank card",
+            "ok": true
+          },
+          {
+            "label": "Top placement in the directory",
+            "ok": false
+          }
+        ]
+      }
+    },
+    "cta": {
+      "signIn": "Sign in to activate",
+      "register": "Create my developer profile",
+      "activate": "Activate PRO ({count} Tokens)",
+      "extend": "Extend PRO ({count} Tokens)",
+      "paidFromBalance": "Deducted from your Token balance. No automatic charge.",
+      "yourBalance": "Your balance: {count} Tokens"
+    },
+    "errors": {
+      "generic": "Something went wrong. Please try again."
+    },
+    "faq": {
+      "aria": "Frequently asked questions about the PRO subscription",
+      "title": "Frequently asked questions",
+      "items": [
+        {
+          "q": "What exactly does the PRO subscription include?",
+          "a": "Two things, and nothing more: a PRO badge on your public profile, and the same badge on your card in the developer directory. No other feature is unlocked."
+        },
+        {
+          "q": "How is the payment made?",
+          "a": "The price is deducted from your Token balance, like any other purchase on the platform. No bank card is stored and no automatic charge is scheduled."
+        },
+        {
+          "q": "Does the subscription improve my position in the directory?",
+          "a": "No. Your directory ranking is based on your reputation, experience, projects and reviews. Only sponsored profiles appear at the top, independently of the PRO subscription."
+        },
+        {
+          "q": "What happens when the period ends?",
+          "a": "The PRO badge is automatically removed from your profile and the directory. Your profile, projects and reviews stay unchanged, and nothing is lost."
+        },
+        {
+          "q": "Can I extend before it ends?",
+          "a": "Yes. Each extension adds the full duration to the current end date: no remaining time is lost."
+        },
+        {
+          "q": "How do I top up my Tokens?",
+          "a": "From the Tokens section of your wallet. The price shown on this page is converted from the single Token rate."
+        }
+      ]
     }
   }
 }

@@ -31,6 +31,7 @@ const columns = [
       { linkKey: "browseProjects", href: "/briefs" },
       { linkKey: "devSpace", href: "/dashboard" },
       { linkKey: "buyTokens", href: "/tokens" },
+      { linkKey: "proSubscription", href: "/abonnement" },
     ],
   },
   {

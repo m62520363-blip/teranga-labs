@@ -115,7 +115,8 @@
       "cities": "Villes",
       "terms": "CGU",
       "privacy": "Confidentialité",
-      "legal": "Mentions légales"
+      "legal": "Mentions légales",
+      "proSubscription": "Abonnement PRO"
     },
     "copyright": "Tous droits réservés.",
     "publishedBy": "Édité par",
@@ -1301,6 +1302,9 @@
             },
             {
               "label": "Acheter des Tokens"
+            },
+            {
+              "label": "Abonnement PRO"
             }
           ]
         },
@@ -1574,6 +1578,125 @@
       "score": "Score",
       "see": "Voir le classement",
       "level": "Niveau"
+    }
+  },
+  "Subscription": {
+    "eyebrow": "Espace développeur",
+    "titleA": "Abonnement",
+    "titleB": "PRO",
+    "lead": "Une seule offre, claire et sans reconduction forcée : payez en Tokens, activez votre badge PRO, et prolongez quand vous voulez.",
+    "notConfigured": "Les tarifs ne peuvent pas être affichés : la configuration est incomplète.",
+    "pricesUnavailable": "Le tarif est momentanément indisponible. Réessayez dans un instant.",
+    "honestyNote": "L’abonnement PRO donne accès au badge PRO sur votre profil public et dans l’annuaire. Il ne modifie pas votre position dans l’annuaire : la mise en avant en tête est réservée aux profils sponsorisés.",
+    "status": {
+      "active": "Votre abonnement PRO est actif jusqu’au {date}.",
+      "balance": "Solde de Tokens : {count}",
+      "justSubscribed": "Votre abonnement PRO est maintenant actif."
+    },
+    "offer": {
+      "aria": "Comparaison des offres Gratuit et PRO",
+      "free": {
+        "title": "Gratuit",
+        "price": "0 F",
+        "note": "Pour créer votre profil et recevoir des projets.",
+        "features": [
+          {
+            "label": "Profil public complet",
+            "ok": true
+          },
+          {
+            "label": "Présence dans l’annuaire",
+            "ok": true
+          },
+          {
+            "label": "Réception des projets et des contacts",
+            "ok": true
+          },
+          {
+            "label": "Badge PRO sur le profil public",
+            "ok": false
+          },
+          {
+            "label": "Badge PRO dans l’annuaire",
+            "ok": false
+          }
+        ]
+      },
+      "pro": {
+        "title": "PRO",
+        "tag": "Badge PRO",
+        "tokens": "{count} Token",
+        "fcfa": "soit {price}",
+        "duration": "Valable {days} jours, prolongeable à tout moment",
+        "durationUnknown": "Durée consultable dans votre espace.",
+        "features": [
+          {
+            "label": "Tout le plan Gratuit",
+            "ok": true
+          },
+          {
+            "label": "Badge PRO sur le profil public",
+            "ok": true
+          },
+          {
+            "label": "Badge PRO dans l’annuaire",
+            "ok": true
+          },
+          {
+            "label": "Notification à l’activation et au renouvellement",
+            "ok": true
+          },
+          {
+            "label": "Paiement en Tokens, sans carte bancaire",
+            "ok": true
+          },
+          {
+            "label": "Mise en avant en tête de l’annuaire",
+            "ok": false
+          }
+        ]
+      }
+    },
+    "cta": {
+      "signIn": "Se connecter pour activer",
+      "register": "Créer mon profil développeur",
+      "activate": "Activer PRO ({count} Tokens)",
+      "extend": "Prolonger PRO ({count} Tokens)",
+      "paidFromBalance": "Débité de votre solde de Tokens. Aucun prélèvement automatique.",
+      "yourBalance": "Votre solde : {count} Token"
+    },
+    "errors": {
+      "generic": "Une erreur est survenue. Réessayez."
+    },
+    "faq": {
+      "aria": "Questions fréquentes sur l’abonnement PRO",
+      "title": "Questions fréquentes",
+      "items": [
+        {
+          "q": "Que comprend exactement l’abonnement PRO ?",
+          "a": "Deux choses, et rien de plus : un badge PRO apparaît sur votre profil public, et le même badge s’affiche sur votre carte dans l’annuaire des développeurs. Aucune autre fonctionnalité n’est débloquée."
+        },
+        {
+          "q": "Comment le paiement est-il effectué ?",
+          "a": "Le prix est débité de votre solde de Tokens, comme pour tout autre achat de la plateforme. Aucune carte bancaire n’est enregistrée et aucun prélèvement automatique n’est programmé."
+        },
+        {
+          "q": "L’abonnement améliore-t-il ma position dans l’annuaire ?",
+          "a": "Non. Le classement de l’annuaire est déterminé par votre réputation, votre expérience, vos projets et vos avis. Seuls les profils sponsorisés sont affichés en tête, indépendamment de l’abonnement PRO."
+        },
+        {
+          "q": "Que se passe-t-il à la fin de la période ?",
+          "a": "Le badge PRO disparaît automatiquement de votre profil et de l’annuaire. Votre profil, vos projets et vos avis restent inchangés, et rien n’est perdu."
+        },
+        {
+          "q": "Puis-je prolonger avant la fin ?",
+          "a": "Oui. Chaque prolongation ajoute la durée complète à la date de fin déjà en cours : aucun jour restant n’est perdu."
+        },
+        {
+          "q": "Comment recharger mes Tokens ?",
+          "a": "Depuis la section Tokens de votre portefeuille. Le prix affiché sur cette page est converti à partir du cours unique d’un Token."
+        }
+      ]
     }
   }
 }
