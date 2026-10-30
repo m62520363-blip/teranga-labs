@@ -153,12 +153,12 @@ function CardShell({
         className
       )}
     >
-      <h2 className="flex items-center gap-2 text-base font-semibold tracking-tight">
-        <span className="inline-flex size-8 items-center justify-center rounded-lg bg-primary-soft text-primary">
+      <h4 className="flex items-center gap-2.5 text-base font-semibold tracking-tight">
+        <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary-soft text-primary">
           {icon}
         </span>
         {title}
-      </h2>
+      </h4>
       <div className="mt-4 flex flex-1 flex-col">{children}</div>
     </section>
   );
