@@ -824,6 +824,21 @@ function ProfessionalStep({
       setFormError("L’envoi a échoué. Réessayez dans un instant.");
       return;
     }
+
+    // Attribution du code de parrainage (?ref= ou sessionStorage) maintenant
+    // que le dossier développeur existe en base.
+    try {
+      const urlRef = new URLSearchParams(window.location.search).get("ref");
+      const storedRef = window.sessionStorage.getItem("tl-dev-referral-code");
+      const refCode = (urlRef || storedRef || "").trim().toUpperCase();
+      if (refCode) {
+        await supabase.rpc("attribute_referral", { p_code: refCode });
+        window.sessionStorage.removeItem("tl-dev-referral-code");
+      }
+    } catch {
+      /* échec non bloquant de l'attribution de parrainage */
+    }
+
     toast.success("Inscription envoyée !");
     onDone();
   };

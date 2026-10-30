@@ -876,6 +876,10 @@ export function RegisterFunnel() {
 
   React.useEffect(() => {
     try {
+      const refParam = new URLSearchParams(window.location.search).get("ref");
+      if (refParam && refParam.trim()) {
+        window.sessionStorage.setItem("tl-dev-referral-code", refParam.trim().toUpperCase());
+      }
       const raw = window.sessionStorage.getItem(STORAGE_KEY);
       if (raw) {
         const saved = JSON.parse(raw) as { step?: string; email?: string };

@@ -89,9 +89,23 @@ begin
     raise exception 'Authentification requise.' using errcode = 'TLAUT';
   end if;
 
+  -- Si le compte n'a pas encore de ligne dans public.developers, on renvoie
+  -- un résumé vide plutôt que de provoquer une erreur de clé étrangère.
+  if not exists (select 1 from public.developers where id = v_uid) then
+    return jsonb_build_object(
+      'code',                  null,
+      'total_signups',         0,
+      'converted',             0,
+      'points',                0,
+      'points_per_conversion', 50
+    );
+  end if;
+
   -- Le code est créé à la première consultation (idempotent).
+  -- On utilise gen_random_uuid() (pg_catalog natif) et non gen_random_bytes()
+  -- qui dépend du schéma extensions absent de search_path = public.
   insert into public.referral_codes (developer_id, code)
-  values (v_uid, upper(substr(encode(gen_random_bytes(9), 'hex'), 1, 10)))
+  values (v_uid, upper(substr(replace(gen_random_uuid()::text, '-', ''), 1, 10)))
   on conflict (developer_id) do nothing;
 
   select rc.code into v_code
@@ -135,6 +149,10 @@ declare
 begin
   if v_uid is null then
     raise exception 'Authentification requise.' using errcode = 'TLAUT';
+  end if;
+
+  if not exists (select 1 from public.developers where id = v_uid) then
+    return jsonb_build_object('ok', false, 'reason', 'no_developer_profile');
   end if;
 
   v_code := upper(btrim(coalesce(p_code, '')));
