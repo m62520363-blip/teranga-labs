@@ -70,6 +70,22 @@ function useCopy() {
   return { copied, failed, copy };
 }
 
+/**
+ * Origine de l'application, calculée APRÈS le montage.
+ *
+ * `window.location.origin` n'existe pas côté serveur : le calculer
+ * directement dans le rendu produisait une divergence serveur/client
+ * (erreur React #418, désynchronisation d'hydratation). On rend donc
+ * d'abord une chaîne vide, puis on remplit au montage.
+ */
+function useOrigin() {
+  const [origin, setOrigin] = React.useState("");
+  React.useEffect(() => {
+    setOrigin(window.location.origin);
+  }, []);
+  return origin;
+}
+
 function CopyButton({
   value,
   label,
@@ -129,7 +145,11 @@ function CardShell({
     <section
       aria-label={ariaLabel ?? title}
       className={cn(
-        "flex flex-col rounded-2xl border border-hairline bg-card p-5",
+        // min-w-0 est indispensable : ces cartes sont des items de CSS
+        // Grid, dont `min-width` vaut `auto` par défaut. Sans cela, un
+        // enfant en `truncate` (donc white-space: nowrap) impose sa
+        // largeur min-content et fait déborder toute la grille.
+        "flex min-w-0 flex-col rounded-2xl border border-hairline bg-card p-5",
         className
       )}
     >
@@ -148,14 +168,15 @@ function CardShell({
 /* Parrainage                                                          */
 /* ------------------------------------------------------------------ */
 
-export function ReferralCard({ summary }: { summary: ReferralSummary | null }) {
+export function ReferralCard({
+  summary,
+  username,
+}: {
+  summary: ReferralSummary | null;
+  username: string | null;
+}) {
   const t = useTranslations("DevHome");
-  const origin = typeof window === "undefined" ? "" : window.location.origin;
-  const username = React.useMemo(() => {
-    if (typeof window === "undefined") return "";
-    const m = window.location.pathname.match(/\/dev\/([^/?#]+)/);
-    return m ? decodeURIComponent(m[1]) : "";
-  }, []);
+  const origin = useOrigin();
   const link =
     origin && summary?.code
       ? `${origin}/inscription-developpeur?ref=${encodeURIComponent(summary.code)}`
@@ -227,7 +248,7 @@ export function ReferralCard({ summary }: { summary: ReferralSummary | null }) {
 
 export function ShareProfileCard({ username }: { username: string | null }) {
   const t = useTranslations("DevHome");
-  const origin = typeof window === "undefined" ? "" : window.location.origin;
+  const origin = useOrigin();
   const url = username ? `${origin}/dev/${encodeURIComponent(username)}` : "";
 
   if (!username) return null;

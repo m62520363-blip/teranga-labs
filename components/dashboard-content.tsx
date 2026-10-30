@@ -849,7 +849,7 @@ export function DashboardContent({
           className="mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-4"
           aria-label="Raccourcis et activité"
         >
-          <ReferralCard summary={referral} />
+          <ReferralCard summary={referral} username={p.username || null} />
           <RecentProjectsCard projects={recentProjects} />
           <ShareProfileCard username={p.username || null} />
           <RankCard
