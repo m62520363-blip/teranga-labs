@@ -107,7 +107,6 @@ export const APP_NAV_SECTIONS: AppNavSection[] = [
         label: "Mes avis",
         icon: Star,
       },
-      { href: "/dev", label: "Annuaire des développeurs", icon: UsersRound },
       { href: "/abonnement", label: "Abonnement PRO", icon: Crown },
     ],
   },

@@ -143,7 +143,8 @@ export function BriefFilters({
       }
       if (type !== "all" && brief.project_type !== type) return false;
       if (!budgetBand.matches(brief.budget)) return false;
-      if (inMySkills && normalizedSkills.length > 0) {
+      if (inMySkills) {
+        if (normalizedSkills.length === 0) return false;
         const skillHaystack = `${brief.project_type} ${label} ${brief.description ?? ""}`.toLowerCase();
         const matchesSkill = normalizedSkills.some((sk) => skillHaystack.includes(sk));
         if (!matchesSkill) return false;
@@ -173,7 +174,7 @@ export function BriefFilters({
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center gap-2" role="group" aria-label="Filtrer par catégorie">
-        {normalizedSkills.length > 0 ? (
+        {user ? (
           <button
             type="button"
             onClick={() => setInMySkills((v) => !v)}
@@ -186,8 +187,10 @@ export function BriefFilters({
             )}
           >
             <Sparkles className="size-3.5" aria-hidden="true" />
-            Dans mes compétences ({developerSkills.slice(0, 3).join(", ")}
-            {developerSkills.length > 3 ? ` +${developerSkills.length - 3}` : ""})
+            Dans mes compétences
+            {developerSkills.length > 0
+              ? ` (${developerSkills.slice(0, 3).join(", ")}${developerSkills.length > 3 ? ` +${developerSkills.length - 3}` : ""})`
+              : ""}
           </button>
         ) : null}
 
@@ -331,8 +334,16 @@ export function BriefFilters({
       {filtered.length === 0 && (
         <div className="mt-6">
           <EmptyState
-            title="Aucun projet ne correspond à ces critères"
-            description="Modifiez vos filtres ou revenez plus tard : de nouveaux projets sont publiés régulièrement."
+            title={
+              inMySkills && normalizedSkills.length === 0
+                ? "Aucune compétence renseignée sur votre profil"
+                : "Aucun projet ne correspond à ces critères"
+            }
+            description={
+              inMySkills && normalizedSkills.length === 0
+                ? "Renseignez vos compétences dans l’onglet « Mon profil & portfolio » de votre dashboard pour filtrer les projets qui correspondent à votre expertise."
+                : "Modifiez vos filtres ou revenez plus tard : de nouveaux projets sont publiés régulièrement."
+            }
           />
         </div>
       )}
