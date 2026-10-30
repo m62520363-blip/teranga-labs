@@ -1701,5 +1701,46 @@
         }
       ]
     }
+  },
+  "AppNav": {
+    "sections": {
+      "main": "ESPACE PRINCIPAL",
+      "profile": "MON PROFIL",
+      "visibility": "VISIBILITÉ",
+      "settings": "PARAMÈTRES",
+      "finances": "FINANCES"
+    },
+    "links": {
+      "home": "Accueil",
+      "messages": "Messages",
+      "openProjects": "Projets ouverts",
+      "missions": "Missions",
+      "agencies": "Agences",
+      "myProfile": "Mon profil & portfolio",
+      "verifications": "Mes vérifications",
+      "favorites": "Mes favoris",
+      "ranking": "Mon classement",
+      "unlockedContacts": "Contacts débloqués",
+      "reputation": "Réputation & commandes",
+      "reviews": "Mes avis",
+      "proSubscription": "Abonnement PRO",
+      "accountSettings": "Mon compte & mot de passe",
+      "notifications": "Notifications & alertes",
+      "myAgency": "Mon agence",
+      "creditBalance": "Solde de crédits",
+      "buyTokens": "Acheter des Tokens",
+      "withdraw": "Demander un retrait",
+      "sentQuotes": "Mes devis envoyés",
+      "completedMissions": "Missions réalisées"
+    },
+    "shell": {
+      "sidebarAria": "Navigation du dashboard",
+      "menuAria": "Menu du dashboard",
+      "mobileMenuAria": "Menu mobile du dashboard",
+      "drawerAria": "Menu de navigation",
+      "openMenu": "Ouvrir le menu",
+      "closeMenu": "Fermer le menu",
+      "myAccount": "Mon compte"
+    }
   }
 }

@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
-import { usePathname } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
+import { Link, usePathname } from "@/i18n/navigation";
 import { Menu, X } from "lucide-react";
 import { ImageLogoMark } from "@/components/logo";
 import { NotificationBell } from "@/components/notification-bell";
@@ -47,6 +47,7 @@ export function DashboardShell({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const t = useTranslations("AppNav");
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   /* Chaîne de requête courante ("?tab=profil", "" sinon) : elle permet de
      surligner une entrée « ?tab=… » du menu sans en allumer plusieurs. */
@@ -138,9 +139,22 @@ export function DashboardShell({
     [pathname, search]
   );
 
+  const translatedSections = React.useMemo(
+    () =>
+      APP_NAV_SECTIONS.map((s) => ({
+        ...s,
+        title: s.titleKey ? t(`sections.${s.titleKey}`) : s.title,
+        links: s.links.map((l) => ({
+          ...l,
+          label: l.labelKey ? t(`links.${l.labelKey}`) : l.label,
+        })),
+      })),
+    [t]
+  );
+
   const sections = (
     <NavSections
-      sections={APP_NAV_SECTIONS}
+      sections={translatedSections}
       isLinkActive={isLinkActive}
       onLinkClick={handleLinkClick}
     />
@@ -151,6 +165,7 @@ export function DashboardShell({
       href="/dashboard?tab=profil"
       name={displayName ?? user?.name ?? null}
       email={user?.email ?? null}
+      label={t("shell.myAccount")}
       onLinkClick={() => handleLinkClick("/dashboard?tab=profil")}
       extra={
         <>
@@ -169,7 +184,7 @@ export function DashboardShell({
       <SkipLink />
       {/* ---------------------------- SIDEBAR ORDINATEUR --------------------------- */}
       <aside
-        aria-label="Navigation du dashboard"
+        aria-label={t("shell.sidebarAria")}
         className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r border-border bg-surface md:flex"
       >
         <div className="flex h-16 shrink-0 items-center justify-between gap-2 border-b border-border px-4">
@@ -184,7 +199,7 @@ export function DashboardShell({
         </div>
 
         <nav
-          aria-label="Menu du dashboard"
+          aria-label={t("shell.menuAria")}
           className="min-h-0 flex-1 overflow-y-auto px-3 py-4"
         >
           {sections}
@@ -212,7 +227,7 @@ export function DashboardShell({
               onClick={() => setDrawerOpen(true)}
               aria-expanded={drawerOpen}
               aria-controls="app-nav-drawer"
-              aria-label="Ouvrir le menu"
+              aria-label={t("shell.openMenu")}
               className="inline-flex size-9 items-center justify-center rounded-control p-2 text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
             >
               <Menu className="size-5" aria-hidden="true" />
@@ -236,7 +251,7 @@ export function DashboardShell({
             id="app-nav-drawer"
             role="dialog"
             aria-modal="true"
-            aria-label="Menu de navigation"
+            aria-label={t("shell.drawerAria")}
             className="fixed inset-y-0 left-0 z-[46] flex w-72 max-w-[85vw] flex-col border-r border-border bg-surface shadow-2xl animate-in slide-in-from-left duration-200"
           >
             <div className="flex h-14 shrink-0 items-center justify-between gap-2 border-b border-border px-4">
@@ -251,7 +266,7 @@ export function DashboardShell({
               <button
                 type="button"
                 onClick={() => setDrawerOpen(false)}
-                aria-label="Fermer le menu"
+                aria-label={t("shell.closeMenu")}
                 className="inline-flex size-9 items-center justify-center rounded-control p-2 text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
               >
                 <X className="size-5" aria-hidden="true" />
@@ -259,7 +274,7 @@ export function DashboardShell({
             </div>
 
             <nav
-              aria-label="Menu mobile du dashboard"
+              aria-label={t("shell.mobileMenuAria")}
               className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-4"
             >
               {sections}

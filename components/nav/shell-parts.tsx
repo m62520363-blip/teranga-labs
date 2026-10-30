@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { cn } from "cn";
 import type { AppNavLink, AppNavSection, NavIcon } from "@/components/nav/app-nav";
 

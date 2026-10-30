@@ -1701,5 +1701,46 @@
         }
       ]
     }
+  },
+  "AppNav": {
+    "sections": {
+      "main": "MAIN SPACE",
+      "profile": "MY PROFILE",
+      "visibility": "VISIBILITY",
+      "settings": "SETTINGS",
+      "finances": "FINANCES"
+    },
+    "links": {
+      "home": "Home",
+      "messages": "Messages",
+      "openProjects": "Open projects",
+      "missions": "Missions",
+      "agencies": "Agencies",
+      "myProfile": "My profile & portfolio",
+      "verifications": "My verifications",
+      "favorites": "My favorites",
+      "ranking": "My ranking",
+      "unlockedContacts": "Unlocked contacts",
+      "reputation": "Reputation & orders",
+      "reviews": "My reviews",
+      "proSubscription": "PRO subscription",
+      "accountSettings": "Account & password",
+      "notifications": "Notifications & alerts",
+      "myAgency": "My agency",
+      "creditBalance": "Credit balance",
+      "buyTokens": "Buy Tokens",
+      "withdraw": "Request withdrawal",
+      "sentQuotes": "My sent quotes",
+      "completedMissions": "Completed missions"
+    },
+    "shell": {
+      "sidebarAria": "Dashboard navigation",
+      "menuAria": "Dashboard menu",
+      "mobileMenuAria": "Mobile dashboard menu",
+      "drawerAria": "Navigation menu",
+      "openMenu": "Open menu",
+      "closeMenu": "Close menu",
+      "myAccount": "My account"
+    }
   }
 }

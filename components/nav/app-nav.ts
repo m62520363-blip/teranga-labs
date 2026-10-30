@@ -31,6 +31,8 @@ export type NavIcon = ComponentType<{ className?: string }>;
 export type AppNavLink = {
   href: string;
   label: string;
+  /** Clé optionnelle dans AppNav.links pour la traduction FR/EN. */
+  labelKey?: string;
   icon: NavIcon;
   /**
    * "exact" → actif uniquement sur /dashboard, sans aucun paramètre.
@@ -47,6 +49,8 @@ export type AppNavLink = {
 
 export type AppNavSection = {
   title: string;
+  /** Clé optionnelle dans AppNav.sections pour la traduction FR/EN. */
+  titleKey?: string;
   links: AppNavLink[];
 };
 
@@ -64,81 +68,93 @@ export type AppNavSection = {
 export const APP_NAV_SECTIONS: AppNavSection[] = [
   {
     title: "ESPACE PRINCIPAL",
+    titleKey: "main",
     links: [
-      { href: "/dashboard", label: "Accueil", icon: Home, match: "exact" },
-      { href: "/conversations", label: "Messages", icon: MessageSquare },
-      { href: "/briefs", label: "Projets ouverts", icon: FileText },
-      { href: "/missions", label: "Missions", icon: ClipboardList },
-      { href: "/agences", label: "Agences", icon: Building2 },
+      { href: "/dashboard", label: "Accueil", labelKey: "home", icon: Home, match: "exact" },
+      { href: "/conversations", label: "Messages", labelKey: "messages", icon: MessageSquare },
+      { href: "/briefs", label: "Projets ouverts", labelKey: "openProjects", icon: FileText },
+      { href: "/missions", label: "Missions", labelKey: "missions", icon: ClipboardList },
+      { href: "/agences", label: "Agences", labelKey: "agencies", icon: Building2 },
     ],
   },
   {
     title: "MON PROFIL",
+    titleKey: "profile",
     links: [
       {
         href: "/dashboard?tab=profil",
         search: "?tab=profil",
         label: "Mon profil & portfolio",
+        labelKey: "myProfile",
         icon: UserRound,
       },
-      { href: "/verification", label: "Mes vérifications", icon: ShieldCheck },
-      { href: "/favoris", label: "Mes favoris", icon: Heart },
-      { href: "/classement", label: "Mon classement", icon: Trophy },
+      { href: "/verification", label: "Mes vérifications", labelKey: "verifications", icon: ShieldCheck },
+      { href: "/favoris", label: "Mes favoris", labelKey: "favorites", icon: Heart },
+      { href: "/classement", label: "Mon classement", labelKey: "ranking", icon: Trophy },
     ],
   },
   {
     title: "VISIBILITÉ",
+    titleKey: "visibility",
     links: [
       {
         href: "/dashboard?tab=crm",
         search: "?tab=crm",
         label: "Contacts débloqués",
+        labelKey: "unlockedContacts",
         icon: Contact,
       },
       {
         href: "/dashboard?tab=activite",
         search: "?tab=activite",
         label: "Réputation & commandes",
+        labelKey: "reputation",
         icon: Activity,
       },
       {
         href: "/dashboard?tab=avis",
         search: "?tab=avis",
         label: "Mes avis",
+        labelKey: "reviews",
         icon: Star,
       },
-      { href: "/abonnement", label: "Abonnement PRO", icon: Crown },
+      { href: "/abonnement", label: "Abonnement PRO", labelKey: "proSubscription", icon: Crown },
     ],
   },
   {
     title: "PARAMÈTRES",
+    titleKey: "settings",
     links: [
-      { href: "/parametres", label: "Mon compte & mot de passe", icon: Settings },
-      { href: "/notifications", label: "Notifications & alertes", icon: Bell },
+      { href: "/parametres", label: "Mon compte & mot de passe", labelKey: "accountSettings", icon: Settings },
+      { href: "/notifications", label: "Notifications & alertes", labelKey: "notifications", icon: Bell },
       {
         href: "/dashboard?tab=agence",
         search: "?tab=agence",
         label: "Mon agence",
+        labelKey: "myAgency",
         icon: Building2,
       },
     ],
   },
   {
     title: "FINANCES",
+    titleKey: "finances",
     links: [
-      { href: "/wallet", label: "Solde de crédits", icon: Coins },
-      { href: "/tokens", label: "Acheter des Tokens", icon: Wallet },
-      { href: "/wallet/retraits", label: "Demander un retrait", icon: Banknote },
+      { href: "/wallet", label: "Solde de crédits", labelKey: "creditBalance", icon: Coins },
+      { href: "/tokens", label: "Acheter des Tokens", labelKey: "buyTokens", icon: Wallet },
+      { href: "/wallet/retraits", label: "Demander un retrait", labelKey: "withdraw", icon: Banknote },
       {
         href: "/dashboard?tab=devis",
         search: "?tab=devis",
         label: "Mes devis envoyés",
+        labelKey: "sentQuotes",
         icon: Send,
       },
       {
         href: "/dashboard?tab=missions",
         search: "?tab=missions",
         label: "Missions réalisées",
+        labelKey: "completedMissions",
         icon: Briefcase,
       },
     ],
