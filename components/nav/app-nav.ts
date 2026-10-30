@@ -1,8 +1,14 @@
 import type { ComponentType } from "react";
 import {
+  Activity,
+  Banknote,
+  Bell,
+  Briefcase,
   Building2,
   ClipboardList,
   Coins,
+  Contact,
+  Crown,
   FileText,
   Heart,
   Home,
@@ -10,9 +16,14 @@ import {
   Megaphone,
   MessageSquare,
   Plus,
+  Send,
   Settings,
+  ShieldCheck,
+  Star,
+  Trophy,
   UserRound,
   UsersRound,
+  Wallet,
 } from "lucide-react";
 
 export type NavIcon = ComponentType<{ className?: string }>;
@@ -22,11 +33,16 @@ export type AppNavLink = {
   label: string;
   icon: NavIcon;
   /**
-   * "exact"  → actif uniquement sur /dashboard (sans ?tab=profil)
-   * "search" → actif uniquement sur /dashboard?tab=profil
-   * (défaut) → préfixe : /x et /x/…
+   * "exact" → actif uniquement sur /dashboard, sans aucun paramètre.
+   * (sans cela, un lien « Accueil » resterait actif sur /dashboard?tab=avis)
    */
-  match?: "exact" | "search";
+  match?: "exact";
+  /**
+   * Paramètre de requête attendu, par exemple "?tab=profil".
+   * Permet à plusieurs entrées du menu de viser des onglets distincts du
+   * tableau de bord tout en restant indépendamment surlignables.
+   */
+  search?: string;
 };
 
 export type AppNavSection = {
@@ -35,35 +51,97 @@ export type AppNavSection = {
 };
 
 /**
- * Menu unique de l'espace dashboard (ordinateur + mobile).
- * Sections identiques des deux côtés, comme demandé pour le V8.
+ * Menu de l'espace développeur (ordinateur + mobile, mêmes sections).
+ *
+ * Hiérarchie organisée en « Mon compte » : Espace principal, puis les
+ * quatre regroupements Mon profil / Visibilité / Paramètres / Finances.
+ *
+ * Toutes les destinations sont des routes RÉELLEMENT existantes — aucun
+ * lien décoratif. Les entrées pointant sur des onglets du tableau de bord
+ * portent `search: "?tab=…"`, dont la liste est déclarée dans
+ * components/dashboard-content.tsx.
  */
 export const APP_NAV_SECTIONS: AppNavSection[] = [
   {
     title: "ESPACE PRINCIPAL",
     links: [
       { href: "/dashboard", label: "Accueil", icon: Home, match: "exact" },
-      { href: "/agences", label: "Agences", icon: Building2 },
+      { href: "/conversations", label: "Messages", icon: MessageSquare },
+      { href: "/briefs", label: "Projets ouverts", icon: FileText },
       { href: "/missions", label: "Missions", icon: ClipboardList },
-      { href: "/briefs", label: "Projets", icon: FileText },
-      { href: "/favoris", label: "Mes favoris", icon: Heart },
+      { href: "/agences", label: "Agences", icon: Building2 },
     ],
   },
   {
-    title: "COMMUNICATION",
-    links: [{ href: "/conversations", label: "Messages", icon: MessageSquare }],
-  },
-  {
-    title: "MON ESPACE",
+    title: "MON PROFIL",
     links: [
       {
         href: "/dashboard?tab=profil",
-        label: "Mon profil",
+        search: "?tab=profil",
+        label: "Mon profil & portfolio",
         icon: UserRound,
-        match: "search",
       },
-      { href: "/wallet", label: "Mon wallet", icon: Coins },
-      { href: "/parametres", label: "Paramètres", icon: Settings },
+      { href: "/verification", label: "Mes vérifications", icon: ShieldCheck },
+      { href: "/favoris", label: "Mes favoris", icon: Heart },
+      { href: "/classement", label: "Mon classement", icon: Trophy },
+    ],
+  },
+  {
+    title: "VISIBILITÉ",
+    links: [
+      {
+        href: "/dashboard?tab=crm",
+        search: "?tab=crm",
+        label: "Contacts débloqués",
+        icon: Contact,
+      },
+      {
+        href: "/dashboard?tab=activite",
+        search: "?tab=activite",
+        label: "Réputation & commandes",
+        icon: Activity,
+      },
+      {
+        href: "/dashboard?tab=avis",
+        search: "?tab=avis",
+        label: "Mes avis",
+        icon: Star,
+      },
+      { href: "/dev", label: "Annuaire des développeurs", icon: UsersRound },
+      { href: "/abonnement", label: "Abonnement PRO", icon: Crown },
+    ],
+  },
+  {
+    title: "PARAMÈTRES",
+    links: [
+      { href: "/parametres", label: "Mon compte & mot de passe", icon: Settings },
+      { href: "/notifications", label: "Notifications & alertes", icon: Bell },
+      {
+        href: "/dashboard?tab=agence",
+        search: "?tab=agence",
+        label: "Mon agence",
+        icon: Building2,
+      },
+    ],
+  },
+  {
+    title: "FINANCES",
+    links: [
+      { href: "/wallet", label: "Solde de crédits", icon: Coins },
+      { href: "/tokens", label: "Acheter des Tokens", icon: Wallet },
+      { href: "/wallet/retraits", label: "Demander un retrait", icon: Banknote },
+      {
+        href: "/dashboard?tab=devis",
+        search: "?tab=devis",
+        label: "Mes devis envoyés",
+        icon: Send,
+      },
+      {
+        href: "/dashboard?tab=missions",
+        search: "?tab=missions",
+        label: "Missions réalisées",
+        icon: Briefcase,
+      },
     ],
   },
 ];
@@ -80,6 +158,9 @@ const SHELL_SEGMENTS = new Set([
   "tokens",
   "wallet",
   "parametres",
+  "notifications",
+  "classement",
+  "abonnement",
 ]);
 
 /**
@@ -129,14 +210,26 @@ export function isAppShellRoute(pathname: string): boolean {
   return SHELL_SEGMENTS.has(segment);
 }
 
-/** État actif d'un lien du menu (profileTab = URL porte ?tab=profil). */
+/**
+ * État actif d'un lien du menu.
+ *
+ * @param search  chaîne de requête courante, telle que "?tab=profil"
+ *                (chaîne vide s'il n'y a pas de paramètre).
+ */
 export function isAppNavLinkActive(
   pathname: string,
-  link: AppNavLink,
-  profileTab: boolean
+  search: string,
+  link: AppNavLink
 ): boolean {
-  if (link.match === "search") return pathname === "/dashboard" && profileTab;
-  if (link.match === "exact") return pathname === "/dashboard" && !profileTab;
   const clean = link.href.split("?")[0];
+  if (link.match === "exact") {
+    // « Accueil » ne doit pas rester surligné quand un onglet est ouvert.
+    return pathname === "/dashboard" && !search;
+  }
+  if (link.search) {
+    // Chaque entrée « ?tab=… » n'est active que pour SA valeur exacte :
+    // sinon plusieurs onglets s'allumeraient en même temps.
+    return pathname === clean && search === link.search;
+  }
   return pathname === clean || pathname.startsWith(clean + "/");
 }

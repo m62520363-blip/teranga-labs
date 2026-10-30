@@ -63,9 +63,9 @@ export default function ProPanel() {
             Abonnement PRO
           </h3>
           <p className="mt-2 max-w-xl text-sm text-muted-foreground">
-            Votre profil affiche le badge PRO et bénéficie d&apos;une visibilité
-            renforcée. {prices.duration_days} jours pour {prices.price_tokens}{" "}
-            Tokens, renouvelable à tout moment.
+            Votre profil affiche le badge PRO sur votre fiche publique et dans
+            l&apos;annuaire des développeurs. {prices.duration_days} jours pour{" "}
+            {prices.price_tokens} Tokens, renouvelable à tout moment.
           </p>
         </div>
 

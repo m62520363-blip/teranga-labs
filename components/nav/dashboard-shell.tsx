@@ -47,7 +47,9 @@ export function DashboardShell({
 }) {
   const pathname = usePathname();
   const [drawerOpen, setDrawerOpen] = React.useState(false);
-  const [profileTab, setProfileTab] = React.useState(false);
+  /* Chaîne de requête courante ("?tab=profil", "" sinon) : elle permet de
+     surligner une entrée « ?tab=… » du menu sans en allumer plusieurs. */
+  const [search, setSearch] = React.useState("");
   /* Nom réel : métadonnées d'authentification, puis developers.full_name. */
   const [displayName, setDisplayName] = React.useState<string | null>(
     user?.name ?? null
@@ -74,12 +76,16 @@ export function DashboardShell({
     };
   }, [userId, displayName]);
 
-  /* ?tab=profil : suivi de l'URL (init + retour arrière). */
+  /* Suivi de la chaîne de requête (init + retour arrière). */
   React.useEffect(() => {
-    const sync = () =>
-      setProfileTab(
-        new URLSearchParams(window.location.search).get("tab") === "profil"
-      );
+    const sync = () => {
+      const raw = window.location.search;
+      // "?tab=profil" et "?tab=profil&x=1" doivent tous deux activer
+      // l'entrée « ?tab=profil » : on ne garde que le paramètre attendu.
+      const params = new URLSearchParams(raw);
+      const tab = params.get("tab");
+      setSearch(tab ? `?tab=${tab}` : "");
+    };
     sync();
     window.addEventListener("popstate", sync);
     return () => window.removeEventListener("popstate", sync);
@@ -115,14 +121,20 @@ export function DashboardShell({
   }, [drawerOpen]);
 
   const handleLinkClick = React.useCallback((href: string) => {
-    if (href === "/dashboard?tab=profil") setProfileTab(true);
-    else if (href === "/dashboard") setProfileTab(false);
+    /* Mise à jour optimiste de la surlignure avant la navigation réelle. */
+    const q = href.split("?")[1];
+    if (q) {
+      const tab = new URLSearchParams(q).get("tab");
+      setSearch(tab ? `?tab=${tab}` : `?${q}`);
+    } else {
+      setSearch("");
+    }
     setDrawerOpen(false);
   }, []);
 
   const isLinkActive = React.useCallback(
-    (link: AppNavLink) => isAppNavLinkActive(pathname, link, profileTab),
-    [pathname, profileTab]
+    (link: AppNavLink) => isAppNavLinkActive(pathname, search, link),
+    [pathname, search]
   );
 
   const sections = (

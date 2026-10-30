@@ -79,7 +79,7 @@ export function NavSections({
           <ul className="flex flex-col gap-1">
             {section.links.map((link) => (
               <SideLink
-                key={link.href + (link.match ?? "")}
+                key={link.href + (link.search ?? "")}
                 link={link}
                 active={isLinkActive(link)}
                 onClick={onLinkClick ? () => onLinkClick(link.href) : undefined}
