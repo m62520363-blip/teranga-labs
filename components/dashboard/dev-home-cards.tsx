@@ -170,10 +170,8 @@ function CardShell({
 
 export function ReferralCard({
   summary,
-  username,
 }: {
   summary: ReferralSummary | null;
-  username: string | null;
 }) {
   const t = useTranslations("DevHome");
   const origin = useOrigin();
@@ -228,16 +226,6 @@ export function ReferralCard({
       ) : (
         <p className="mt-4 text-sm text-muted-foreground">{t("referral.unavailable")}</p>
       )}
-
-      {username ? (
-        <Link
-          href={`/dev/${username}`}
-          className="mt-4 inline-flex items-center gap-1.5 self-start text-sm font-medium text-primary underline-offset-4 hover:underline"
-        >
-          {t("referral.seeProfile")}
-          <ArrowRight className="size-3.5" aria-hidden="true" />
-        </Link>
-      ) : null}
     </CardShell>
   );
 }

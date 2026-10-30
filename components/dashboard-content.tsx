@@ -844,12 +844,14 @@ export function DashboardContent({
         {/* ------------------------- CARTES D'ACCUEIL -------------------------
             Reproduction des blocs de la référence : parrainage, derniers
             projets, partage du profil, classement. Toutes les valeurs
-            proviennent de données réelles chargées par la page serveur. */}
+            proviennent de données réelles chargées par la page serveur.
+            2 colonnes (et non 4) : avec des titres de carte à 16 px, quatre
+            colonnes au-delà de 1280 px forçaient les titres sur 2-3 lignes. */}
         <div
-          className="mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-4"
+          className="mt-10 grid gap-4 sm:grid-cols-2"
           aria-label="Raccourcis et activité"
         >
-          <ReferralCard summary={referral} username={p.username || null} />
+          <ReferralCard summary={referral} />
           <RecentProjectsCard projects={recentProjects} />
           <ShareProfileCard username={p.username || null} />
           <RankCard
