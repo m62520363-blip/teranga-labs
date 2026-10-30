@@ -207,11 +207,10 @@ export function ProSubscription({
               </span>
             </div>
 
+            {/* Le nombre n'est écrit qu'UNE fois : écrire `{priceTokens}`
+                puis le libellé « N Token » produisait « 3 3 Token ». */}
             <p className="relative mt-4 font-headings text-4xl font-bold">
-              {priceTokens}
-              <span className="ml-2 text-base font-medium text-muted-foreground">
-                {t("offer.pro.tokens", { count: priceTokens })}
-              </span>
+              {t("offer.pro.tokens", { count: priceTokens })}
             </p>
             {priceFcfa !== null ? (
               <p className="relative mt-1 text-sm text-muted-foreground">
