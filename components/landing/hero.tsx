@@ -3,7 +3,8 @@
 import * as React from "react";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
-import { ArrowRight, Search, ShieldCheck, Sparkles, UserRound } from "lucide-react";
+import { ArrowRight, Briefcase, Plus, Search, ShieldCheck, Sparkles } from "lucide-react";
+import { HeroLaptop } from "@/components/landing/hero-laptop";
 
 /**
  * Hero de la landing — structure de la référence Codeur.com : grand fond
@@ -52,31 +53,17 @@ export function Hero() {
 
       <div className="container-tl relative">
         <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
-          {/* Preuve sociale : avatars + indicateur. */}
-          <div className="animate-rise flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
-            <div className="flex -space-x-2" aria-hidden="true">
-              {[0, 1, 2, 3, 4].map((index) => (
-                <span
-                  key={index}
-                  className="flex size-8 items-center justify-center rounded-full border-2 border-[#0d1734] bg-gradient-to-br from-[#203260] to-[#14213f] text-primary/80 shadow-sm"
-                >
-                  <UserRound className="size-3.5" />
-                </span>
-              ))}
-            </div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1.5 text-xs font-medium text-white/85 backdrop-blur">
-              <span className="size-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(57,255,136,0.8)]" />
+          {/* Preuve factuelle vérifiable (sans avatars fictifs). */}
+          <div className="animate-rise flex flex-wrap items-center justify-center gap-2">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1.5 text-xs font-medium text-white/90 backdrop-blur">
+              <span className="size-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(57,255,136,0.8)]" aria-hidden="true" />
               {t("socialProof")}
             </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/25 bg-primary/[0.08] px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
+              <Sparkles className="size-3.5" aria-hidden="true" />
+              {t("badge")}
+            </span>
           </div>
-
-          <span
-            className="animate-rise mt-6 inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/[0.08] px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary"
-            style={{ "--rise-delay": "100ms" } as React.CSSProperties}
-          >
-            <Sparkles className="size-3.5" aria-hidden="true" />
-            {t("badge")}
-          </span>
 
           <h1
             className="animate-rise mt-6 text-balance font-headings text-4xl font-extrabold leading-[1.06] tracking-tight text-white sm:text-5xl lg:text-[3.9rem]"
@@ -158,32 +145,38 @@ export function Hero() {
             ))}
           </div>
 
+          {/* Deux CTA clairement différenciés : Client (/poster) vs Développeur (/briefs). */}
           <div
-            className="animate-rise mt-8 flex flex-col items-center gap-3 sm:flex-row"
+            className="animate-rise mt-8 flex w-full max-w-xl flex-col items-stretch justify-center gap-3 sm:w-auto sm:max-w-none sm:flex-row sm:items-center"
             style={{ "--rise-delay": "470ms" } as React.CSSProperties}
           >
             <Link
               href="/poster"
-              className="btn-shine inline-flex min-h-12 items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-ink transition-[filter] outline-none hover:brightness-110 active:brightness-95 focus-visible:ring-2 focus-visible:ring-primary/60"
+              className="btn-shine inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-ink transition-[filter] outline-none hover:brightness-110 active:brightness-95 focus-visible:ring-2 focus-visible:ring-primary/60"
             >
+              <Plus className="size-4 shrink-0" aria-hidden="true" />
               {t("ctaPrimary")}
-              <ArrowRight className="size-4" aria-hidden="true" />
+              <ArrowRight className="size-4 shrink-0" aria-hidden="true" />
             </Link>
             <Link
               href="/briefs"
-              className="inline-flex min-h-12 items-center gap-2 rounded-full border border-white/20 bg-white/[0.04] px-6 py-3 text-sm font-medium text-white transition-colors outline-none hover:border-white/40 hover:bg-white/[0.08] focus-visible:ring-2 focus-visible:ring-primary/60"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-primary/35 bg-primary-soft px-6 py-3 text-sm font-semibold text-primary transition-colors outline-none hover:border-primary/60 hover:bg-primary/15 focus-visible:ring-2 focus-visible:ring-primary/60"
             >
+              <Briefcase className="size-4 shrink-0" aria-hidden="true" />
               {t("ctaSecondary")}
             </Link>
           </div>
 
           <p
-            className="animate-rise mt-5 inline-flex items-center gap-2 text-xs text-white/50"
+            className="animate-rise mt-5 inline-flex items-center gap-2 text-xs text-white/60"
             style={{ "--rise-delay": "540ms" } as React.CSSProperties}
           >
             <ShieldCheck className="size-3.5 text-primary" aria-hidden="true" />
             {t("ctaNote")}
           </p>
+
+          {/* Aperçu produit 3D en perspective présentant l'écran réel /briefs. */}
+          <HeroLaptop />
         </div>
       </div>
     </section>

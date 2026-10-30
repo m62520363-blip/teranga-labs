@@ -65,6 +65,15 @@ export function Navbar({
     setOpen(false);
   }, [pathname]);
 
+  React.useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [open]);
+
   const displayName =
     user?.name?.trim() || (authed ? (isClient ? t("mySpace") : t("myAccount")) : null);
 
@@ -143,11 +152,11 @@ export function Navbar({
       >
         <nav
           aria-label={t("mainNav")}
-          className="container-tl relative flex h-16 items-center justify-between gap-4"
+          className="container-tl flex h-16 items-center justify-between gap-3 xl:gap-6"
         >
           <Link
             href={homeHref}
-            className="rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+            className="shrink-0 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
             aria-label={t("homeLink")}
           >
             <Logo />
@@ -156,68 +165,75 @@ export function Navbar({
           {authed ? (
             <DesktopNavLinks pathname={pathname} authed appLinks={appLinks} />
           ) : (
-            /* Nav visiteur façon Codeur : liens centrés, pills arrondies. */
-            <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-5 lg:flex xl:gap-8">
+            /* Nav visiteur en flux normal (jamais en absolute) : aucun chevauchement
+               possible avec le sélecteur de langue ou les boutons d'action. */
+            <div className="hidden min-w-0 items-center gap-1 lg:flex xl:gap-2">
+              <Link
+                href="/briefs"
+                aria-current={isActiveLink(pathname, "/briefs") ? "page" : undefined}
+                className={cn(
+                  "inline-flex h-9 items-center gap-1.5 rounded-full px-3 text-[13px] font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50 xl:px-3.5 xl:text-sm",
+                  isActiveLink(pathname, "/briefs")
+                    ? "bg-primary-soft text-primary font-semibold"
+                    : "text-foreground/90 hover:bg-white/[0.06] hover:text-foreground"
+                )}
+              >
+                <span className="size-1.5 rounded-full bg-primary" aria-hidden="true" />
+                {t("briefs")}
+              </Link>
               <Link
                 href="/dev"
+                aria-current={isActiveLink(pathname, "/dev") ? "page" : undefined}
                 className={cn(
-                  "inline-flex items-center py-1 text-[13px] font-medium rounded-md transition-colors outline-none focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50 xl:text-sm",
+                  "inline-flex h-9 items-center rounded-full px-3 text-[13px] font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50 xl:px-3.5 xl:text-sm",
                   isActiveLink(pathname, "/dev")
-                    ? "text-foreground"
-                    : "text-foreground/80 hover:text-foreground"
+                    ? "bg-primary-soft text-primary font-semibold"
+                    : "text-foreground/80 hover:bg-white/[0.06] hover:text-foreground"
                 )}
               >
                 {t("developers")}
               </Link>
               <Link
-                href="/briefs"
-                className={cn(
-                  "inline-flex items-center py-1 text-[13px] font-medium rounded-md transition-colors outline-none focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50 xl:text-sm",
-                  isActiveLink(pathname, "/briefs")
-                    ? "text-foreground"
-                    : "text-foreground/80 hover:text-foreground"
-                )}
-              >
-                {t("briefs")}
-              </Link>
-              <Link
                 href="/agences"
+                aria-current={isActiveLink(pathname, "/agences") ? "page" : undefined}
                 className={cn(
-                  "inline-flex items-center py-1 text-[13px] font-medium rounded-md transition-colors outline-none focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50 xl:text-sm",
+                  "inline-flex h-9 items-center rounded-full px-3 text-[13px] font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50 xl:px-3.5 xl:text-sm",
                   isActiveLink(pathname, "/agences")
-                    ? "text-foreground"
-                    : "text-foreground/80 hover:text-foreground"
+                    ? "bg-primary-soft text-primary font-semibold"
+                    : "text-foreground/80 hover:bg-white/[0.06] hover:text-foreground"
                 )}
               >
                 {t("agencies")}
               </Link>
               <Link
                 href="/#comment-ca-marche"
-                className="inline-flex items-center rounded-md py-1 text-[13px] font-medium text-foreground/80 transition-colors outline-none hover:text-foreground focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50 xl:text-sm"
+                className="inline-flex h-9 items-center rounded-full px-3 text-[13px] font-medium text-foreground/80 transition-colors outline-none hover:bg-white/[0.06] hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50 xl:px-3.5 xl:text-sm"
               >
                 {t("howItWorks")}
               </Link>
               <Link
                 href="/#tarifs"
-                className="inline-flex items-center rounded-md py-1 text-[13px] font-medium text-foreground/80 transition-colors outline-none hover:text-foreground focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50 xl:text-sm"
+                className="inline-flex h-9 items-center rounded-full px-3 text-[13px] font-medium text-foreground/80 transition-colors outline-none hover:bg-white/[0.06] hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50 xl:px-3.5 xl:text-sm"
               >
                 {t("pricing")}
               </Link>
               <Link
                 href="/#faq"
-                className="inline-flex items-center rounded-md py-1 text-[13px] font-medium text-foreground/80 transition-colors outline-none hover:text-foreground focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50 xl:text-sm"
+                className="inline-flex h-9 items-center rounded-full px-3 text-[13px] font-medium text-foreground/80 transition-colors outline-none hover:bg-white/[0.06] hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50 xl:px-3.5 xl:text-sm"
               >
                 {t("faq")}
               </Link>
             </div>
           )}
 
-          <div className="hidden items-center gap-2 lg:flex">
+          <div className="hidden shrink-0 items-center gap-2 lg:flex xl:gap-2.5">
+            <span aria-hidden="true" className="mr-0.5 h-5 w-px bg-white/15" />
             <LanguageSwitcher />
-{user ? (
-                <>
-                  {userId ? <NotificationBell userId={userId} /> : null}
-                  <TokenBalance />
+            <span aria-hidden="true" className="ml-0.5 h-5 w-px bg-white/15" />
+            {user ? (
+              <>
+                {userId ? <NotificationBell userId={userId} /> : null}
+                <TokenBalance />
                 <NavLink href={homeHref} active={isActiveLink(pathname, homeHref)}>
                   {displayName ?? t("mySpace")}
                 </NavLink>
@@ -227,80 +243,178 @@ export function Navbar({
               <>
                 <Link
                   href="/login"
-                  className="inline-flex items-center rounded-full px-3.5 py-1.5 text-sm font-medium text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
+                  aria-current={isActiveLink(pathname, "/login") ? "page" : undefined}
+                  className={cn(
+                    "inline-flex h-9 items-center rounded-full px-3.5 text-[13px] font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50 xl:text-sm",
+                    isActiveLink(pathname, "/login")
+                      ? "bg-white/10 text-foreground"
+                      : "text-foreground/90 hover:bg-white/[0.06] hover:text-foreground"
+                  )}
                 >
                   {t("signIn")}
                 </Link>
                 <Link
-                  href="/poster"
-                  className="btn-shine inline-flex items-center gap-1.5 rounded-full bg-primary px-3.5 py-1.5 text-sm font-medium text-primary-foreground transition-[filter] outline-none hover:brightness-110 active:brightness-95 focus-visible:ring-2 focus-visible:ring-primary/50"
+                  href="/signup"
+                  aria-current={isActiveLink(pathname, "/signup") ? "page" : undefined}
+                  className={cn(
+                    "hidden h-9 items-center rounded-full border border-white/15 bg-white/[0.04] px-3.5 text-[13px] font-medium text-foreground transition-colors outline-none hover:border-primary/40 hover:bg-white/[0.08] focus-visible:ring-2 focus-visible:ring-primary/50 xl:inline-flex xl:text-sm",
+                    isActiveLink(pathname, "/signup") && "border-primary/50 bg-primary-soft text-primary"
+                  )}
                 >
+                  {t("signUp")}
+                </Link>
+                <Link
+                  href="/poster"
+                  aria-current={isActiveLink(pathname, "/poster") ? "page" : undefined}
+                  className="btn-shine inline-flex h-9 items-center gap-1.5 rounded-full bg-primary px-4 text-[13px] font-semibold text-primary-foreground transition-[filter] outline-none hover:brightness-110 active:brightness-95 focus-visible:ring-2 focus-visible:ring-primary/50 xl:text-sm"
+                >
+                  <Plus className="size-3.5" aria-hidden="true" />
                   {t("publishRequest")}
                 </Link>
               </>
             )}
           </div>
 
-          <button
-            type="button"
-            onClick={() => setOpen((v) => !v)}
-            className="inline-flex size-9 items-center justify-center rounded-control p-2 text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50 lg:hidden"
-            aria-expanded={open}
-            aria-label={open ? t("closeMenu") : t("openMenu")}
-          >
-            {open ? <X className="size-5" /> : <Menu className="size-5" />}
-          </button>
+          <div className="flex shrink-0 items-center gap-2 lg:hidden">
+            <LanguageSwitcher />
+            <button
+              type="button"
+              onClick={() => setOpen((v) => !v)}
+              className="inline-flex size-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] p-2 text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
+              aria-expanded={open}
+              aria-controls="mobile-main-menu"
+              aria-label={open ? t("closeMenu") : t("openMenu")}
+            >
+              {open ? <X className="size-5" /> : <Menu className="size-5" />}
+            </button>
+          </div>
         </nav>
 
         {open && (
-          <div className="border-t border-white/10 bg-surface/95 px-5 pb-6 pt-3 backdrop-blur-md lg:hidden">
+          <div
+            id="mobile-main-menu"
+            className="max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-white/10 bg-surface/95 px-5 pb-6 pt-4 backdrop-blur-md lg:hidden"
+          >
             <div className="flex flex-col gap-1">
               {authed ? (
                 <>
                   {appLinks.map((l) => (
-                    <MobileNavLink key={l.href} href={l.href}>
+                    <MobileNavLink
+                      key={l.href}
+                      href={l.href}
+                      active={isActiveLink(pathname, l.href)}
+                      onClick={() => setOpen(false)}
+                    >
                       {l.label}
                     </MobileNavLink>
                   ))}
-                  <MobileNavLink href="/notifications">
+                  <MobileNavLink
+                    href="/notifications"
+                    active={isActiveLink(pathname, "/notifications")}
+                    onClick={() => setOpen(false)}
+                  >
                     {t("notifications")}
                   </MobileNavLink>
                   <div className="my-2 h-px bg-border-strong" />
-                  <MobileNavLink href={homeHref}>
+                  <MobileNavLink
+                    href={homeHref}
+                    active={isActiveLink(pathname, homeHref)}
+                    onClick={() => setOpen(false)}
+                  >
                     {displayName ?? t("mySpace")}
                   </MobileNavLink>
                   <div className="flex items-center justify-between px-3 py-2">
                     <span className="text-sm text-muted-foreground">{t("tokens")}</span>
                     <TokenBalance />
                   </div>
-                  <div className="px-3 pb-1">
-                    <LanguageSwitcher />
-                  </div>
                   <SignOutButton variant="mobile" />
                 </>
               ) : (
                 <>
-                  <MobileNavLink href="/">{t("home")}</MobileNavLink>
-                  <MobileNavLink href="/dev">{t("developers")}</MobileNavLink>
-                  <MobileNavLink href="/briefs">{t("briefs")}</MobileNavLink>
-                  <MobileNavLink href="/agences">{t("agencies")}</MobileNavLink>
-                  <MobileNavLink href="/#comment-ca-marche">
+                  {/* Deux parcours mis en évidence dès l'ouverture du menu mobile */}
+                  <div className="mb-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                    <Link
+                      href="/poster"
+                      onClick={() => setOpen(false)}
+                      className="btn-shine inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground outline-none hover:brightness-110 focus-visible:ring-2 focus-visible:ring-primary/50"
+                    >
+                      <Plus className="size-4" aria-hidden="true" />
+                      {t("publishRequest")}
+                    </Link>
+                    <Link
+                      href="/briefs"
+                      onClick={() => setOpen(false)}
+                      className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-primary/30 bg-primary-soft px-4 text-sm font-semibold text-primary outline-none hover:border-primary/60 focus-visible:ring-2 focus-visible:ring-primary/50"
+                    >
+                      <Briefcase className="size-4" aria-hidden="true" />
+                      {t("findProjects")}
+                    </Link>
+                  </div>
+
+                  <MobileNavLink
+                    href="/"
+                    active={pathname === "/"}
+                    onClick={() => setOpen(false)}
+                  >
+                    {t("home")}
+                  </MobileNavLink>
+                  <MobileNavLink
+                    href="/briefs"
+                    active={isActiveLink(pathname, "/briefs")}
+                    onClick={() => setOpen(false)}
+                  >
+                    {t("briefs")}
+                  </MobileNavLink>
+                  <MobileNavLink
+                    href="/dev"
+                    active={isActiveLink(pathname, "/dev")}
+                    onClick={() => setOpen(false)}
+                  >
+                    {t("developers")}
+                  </MobileNavLink>
+                  <MobileNavLink
+                    href="/agences"
+                    active={isActiveLink(pathname, "/agences")}
+                    onClick={() => setOpen(false)}
+                  >
+                    {t("agencies")}
+                  </MobileNavLink>
+                  <MobileNavLink
+                    href="/#comment-ca-marche"
+                    onClick={() => setOpen(false)}
+                  >
                     {t("howItWorks")}
                   </MobileNavLink>
-                  <MobileNavLink href="/#tarifs">{t("pricing")}</MobileNavLink>
-                  <MobileNavLink href="/#faq">{t("faq")}</MobileNavLink>
-                  <MobileNavLink href="/poster">{t("forClients")}</MobileNavLink>
-                  <div className="my-2 h-px bg-border-strong" />
-                  <MobileNavLink href="/login">{t("signIn")}</MobileNavLink>
-                  <Link
-                    href="/poster"
-                    className="btn-shine mt-2 inline-flex h-9 items-center justify-center gap-1.5 rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground outline-none hover:brightness-110 focus-visible:ring-2 focus-visible:ring-primary/50"
+                  <MobileNavLink
+                    href="/#tarifs"
+                    onClick={() => setOpen(false)}
                   >
-                    {t("publishRequest")}
-                    <ArrowRight className="size-4" aria-hidden="true" />
-                  </Link>
-                  <div className="px-3 pb-1 pt-2">
-                    <LanguageSwitcher />
+                    {t("pricing")}
+                  </MobileNavLink>
+                  <MobileNavLink
+                    href="/#faq"
+                    onClick={() => setOpen(false)}
+                  >
+                    {t("faq")}
+                  </MobileNavLink>
+
+                  <div className="my-2 h-px bg-border-strong" />
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <Link
+                      href="/login"
+                      onClick={() => setOpen(false)}
+                      className="inline-flex min-h-11 items-center justify-center rounded-xl border border-white/15 bg-white/[0.04] px-3 text-sm font-medium text-foreground outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
+                    >
+                      {t("signIn")}
+                    </Link>
+                    <Link
+                      href="/signup"
+                      onClick={() => setOpen(false)}
+                      className="inline-flex min-h-11 items-center justify-center rounded-xl border border-primary/30 bg-card px-3 text-sm font-medium text-foreground outline-none hover:border-primary/50 focus-visible:ring-2 focus-visible:ring-primary/50"
+                    >
+                      {t("signUp")}
+                    </Link>
                   </div>
                 </>
               )}
@@ -588,14 +702,25 @@ function NavLink({
 function MobileNavLink({
   href,
   children,
+  active,
+  onClick,
 }: {
   href: string;
   children: React.ReactNode;
+  active?: boolean;
+  onClick?: () => void;
 }) {
   return (
     <Link
       href={href}
-      className="rounded-lg px-3 py-2 font-display text-[15px] font-medium text-foreground outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
+      onClick={onClick}
+      aria-current={active ? "page" : undefined}
+      className={cn(
+        "flex min-h-11 items-center rounded-xl px-3.5 py-2.5 font-display text-[15px] font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
+        active
+          ? "bg-primary-soft font-semibold text-primary"
+          : "text-foreground hover:bg-muted"
+      )}
     >
       {children}
     </Link>

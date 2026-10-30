@@ -62,7 +62,9 @@
     "langGroup": "Choisir la langue",
     "langToEn": "English",
     "langToFr": "Français",
-    "skipToContent": "Aller au contenu principal"
+    "skipToContent": "Aller au contenu principal",
+    "signUp": "S’inscrire",
+    "findProjects": "Trouver des projets"
   },
   "Footer": {
     "slogan": "Find Developers. Build Your Vision",
@@ -165,7 +167,7 @@
         }
       ],
       "ctaPrimary": "Publier un projet gratuitement",
-      "ctaSecondary": "Recevoir des devis",
+      "ctaSecondary": "Trouver des projets",
       "ctaNote": "Gratuit pour publier · Sans commission · WhatsApp privé"
     },
     "howItWorks": {
@@ -975,7 +977,7 @@
           "text": "Échangez sans exposer votre numéro. Les conversations restent dans votre espace."
         },
         {
-          "title": "Wallet & Tokens",
+          "title": "Portefeuille & Tokens",
           "text": "Achetez des Tokens et suivez votre solde depuis votre espace développeur."
         },
         {

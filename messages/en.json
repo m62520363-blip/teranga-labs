@@ -62,7 +62,9 @@
     "langGroup": "Choose language",
     "langToEn": "English",
     "langToFr": "Français",
-    "skipToContent": "Skip to main content"
+    "skipToContent": "Skip to main content",
+    "signUp": "Sign up",
+    "findProjects": "Find projects"
   },
   "Footer": {
     "slogan": "Find Developers. Build Your Vision",
@@ -165,7 +167,7 @@
         }
       ],
       "ctaPrimary": "Post a project for free",
-      "ctaSecondary": "Get quotes",
+      "ctaSecondary": "Find projects",
       "ctaNote": "Free to post · No commission · Private WhatsApp"
     },
     "howItWorks": {

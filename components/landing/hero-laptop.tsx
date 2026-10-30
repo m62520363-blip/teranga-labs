@@ -190,10 +190,13 @@ export function HeroLaptop() {
   return (
     <div
       aria-hidden="true"
-      className="animate-rise -mb-24 origin-top scale-[0.62] sm:-mb-16 sm:scale-[0.78] md:-mb-10 md:scale-90 lg:mb-0 lg:scale-100"
-      style={{ "--rise-delay": "1700ms" } as React.CSSProperties}
+      className="mx-auto mt-10 flex w-full max-w-4xl justify-center overflow-hidden pt-2 sm:mt-14"
     >
-      <div className="relative flex flex-col items-center [perspective:800px]">
+      <div
+        className="animate-rise -mb-36 origin-top scale-[0.56] sm:-mb-20 sm:scale-[0.76] md:-mb-10 md:scale-90 lg:mb-0 lg:scale-100"
+        style={{ "--rise-delay": "420ms" } as React.CSSProperties}
+      >
+        <div className="scene3d relative flex flex-col items-center [perspective:800px]">
         {/* Capot (dessous de l'écran) */}
         <div
           className="relative h-[12rem] w-[32rem] rounded-2xl bg-[#010101] p-2"
@@ -280,6 +283,7 @@ export function HeroLaptop() {
           {/* Lèvre avant */}
           <div className="absolute inset-x-0 bottom-0 mx-auto h-2 w-20 rounded-tl-3xl rounded-tr-3xl bg-gradient-to-t from-[#272729] to-[#050505]" />
         </div>
+      </div>
       </div>
     </div>
   );

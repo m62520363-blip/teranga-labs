@@ -87,8 +87,12 @@ export function Footer() {
 
           <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-4">
             {columns.map((column) => (
-              <nav key={column.titleKey} aria-label={t(column.titleKey)}>
-                <h3 className="font-headings text-sm font-semibold text-foreground">
+              <nav
+                key={column.titleKey}
+                aria-label={t(column.titleKey)}
+                className="min-w-0"
+              >
+                <h3 className="font-headings text-sm font-semibold tracking-tight text-foreground">
                   {t(column.titleKey)}
                 </h3>
                 <ul className="mt-5 flex flex-col gap-3.5 text-sm">
