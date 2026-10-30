@@ -41,7 +41,7 @@
     "publishBrief": "Publier un projet",
     "myProfile": "Mon profil",
     "verifyProfile": "Vérifier mon profil",
-    "buyTokens": "Acheter des Tokens",
+    "buyTokens": "Nos abonnements",
     "settings": "Paramètres",
     "briefs": "Projets",
     "briefsView": "Voir les projets",
@@ -58,7 +58,7 @@
     "devs": "Dévs",
     "publish": "Publier",
     "profile": "Profil",
-    "tokens": "Tokens",
+    "tokens": "Abonnement",
     "langGroup": "Choisir la langue",
     "langToEn": "English",
     "langToFr": "Français",
@@ -103,7 +103,7 @@
       "ranking": "Classement",
       "publishBrief": "Publier un projet",
       "findDev": "Trouver un développeur",
-      "buyTokens": "Acheter des Tokens",
+      "buyTokens": "Nos abonnements",
       "faq": "Questions fréquentes",
       "contact": "Nous contacter",
       "becomeDev": "Inscription développeur",
@@ -118,7 +118,7 @@
       "terms": "CGU",
       "privacy": "Confidentialité",
       "legal": "Mentions légales",
-      "proSubscription": "Abonnement PRO"
+      "proSubscription": "Nos abonnements"
     },
     "copyright": "Tous droits réservés.",
     "publishedBy": "Édité par",
@@ -166,9 +166,9 @@
           "query": "intelligence artificielle"
         }
       ],
-      "ctaPrimary": "Publier un projet gratuitement",
+      "ctaPrimary": "Publier mon projet gratuitement",
       "ctaSecondary": "Trouver des projets",
-      "ctaNote": "Gratuit pour publier · Sans commission · WhatsApp privé"
+      "ctaNote": "Aucun frais de publication. Sans engagement."
     },
     "howItWorks": {
       "badge": "Simple, rapide, transparent",
@@ -311,20 +311,20 @@
       "bigText": "Le budget négocié avec le développeur lui revient intégralement. Devmarket ne prélève rien sur votre projet.",
       "stats": [
         {
-          "value": "9",
-          "label": "pays couverts"
+          "value": "9 pays",
+          "label": "Afrique de l’Ouest francophone couverte"
         },
         {
-          "value": "2 min",
-          "label": "pour publier un projet"
+          "value": "0 FCFA",
+          "label": "Publication de projet & assistant IA gratuits"
         },
         {
-          "value": "1 Token",
-          "label": "par contact côté développeur"
+          "value": "80 à 400",
+          "label": "Contacts de projets mensuels selon la formule"
         },
         {
-          "value": "24 h",
-          "label": "pour recevoir des propositions"
+          "value": "0 %",
+          "label": "Commission prélevée sur vos projets"
         }
       ],
       "testimonialsTitle": "Ce que disent nos utilisateurs",
@@ -901,8 +901,8 @@
             "text": "Parcourez les projets par pays, budget et compétence. Activez l'alerte email pour les nouveaux projets."
           },
           {
-            "title": "Contactez pour 1 Token",
-            "text": "Ouvrez la discussion avec le client pour 1 Token. Le contact reste accessible à vie."
+            "title": "Envoyez votre proposition et échangez en direct",
+            "text": "Utilisez votre quota mensuel de contacts (80 à 400 projets/mois selon votre formule Pro, Pro Max ou Agence). Aucune commission n’est prélevée sur vos missions."
           }
         ],
         "cta": "Voir les projets",
@@ -916,15 +916,15 @@
     "benefits": {
       "eyebrow": "Simple, rapide, transparent",
       "title": "Un service simple, rapide et transparent",
-      "lead": "Devmarket réunit tout ce qu'il faut pour lancer votre projet : des profils vérifiés, une messagerie privée et des règles claires.",
+      "lead": "Publier un projet est 100 % gratuit pour les clients. Les développeurs choisissent une formule d’abonnement mensuelle ou annuelle claire, sans aucune commission sur les projets réalisés.",
       "items": [
         {
           "title": "Des développeurs vérifiés",
           "text": "Consultez les portfolios, les compétences et les avis avant de choisir votre prestataire."
         },
         {
-          "title": "Publication gratuite, sans commission",
-          "text": "Publier un projet ne coûte rien au client. Le développeur paie 1 Token par contact, et vous réglez directement."
+          "title": "Abonnements développeurs clairs (Pro, Pro Max, Agence)",
+          "text": "Dès 2 500 FCFA/mois pour 80 contacts mensuels (Pro), 7 000 FCFA/mois pour 200 contacts (Pro Max) ou 15 000 FCFA/mois pour 400 contacts (Agence)."
         },
         {
           "title": "Des propositions en quelques heures",
@@ -932,7 +932,7 @@
         }
       ],
       "cta": "Publier un projet",
-      "note": "0 FCFA pour publier · 1 Token (2 500 FCFA) par contact côté développeur · 0 % de commission",
+      "note": "Aucun frais de publication côté client. Sans engagement. Paiement direct entre client et développeur.",
       "visual": {
         "value": "0 %",
         "label": "de commission sur les projets",
@@ -977,8 +977,8 @@
           "text": "Échangez sans exposer votre numéro. Les conversations restent dans votre espace."
         },
         {
-          "title": "Portefeuille & Tokens",
-          "text": "Achetez des Tokens et suivez votre solde depuis votre espace développeur."
+          "title": "Abonnements & Quotas mensuels",
+          "text": "Suivez votre quota mensuel de contacts (80, 200 ou 400 projets/mois), vos factures et vos revenus en FCFA."
         },
         {
           "title": "Profils vérifiés",
@@ -1070,28 +1070,20 @@
         "title": "Pour les développeurs",
         "items": [
           {
-            "q": "Comment recevoir des projets ?",
-            "a": "Créez votre profil, renseignez vos compétences et activez l'alerte email. Les nouveaux projets apparaissent aussi dans la page Projets."
-          },
-          {
-            "q": "Combien coûte un contact ?",
-            "a": "1 Token, soit 2 500 FCFA, pour ouvrir la discussion avec un client. Le contact reste accessible à vie."
-          },
-          {
-            "q": "Y a-t-il un abonnement Pro ?",
-            "a": "Oui. L'abonnement Pro permet de postuler sans limite. Les détails et les tarifs sont disponibles dans votre espace et sur la page Tokens."
+            "q": "Comment fonctionne le système d’abonnement développeur ?",
+            "a": "Vous choisissez la formule adaptée à votre activité : Pro (2 500 FCFA/mois · 80 contacts/mois), Pro Max (7 000 FCFA/mois · 200 contacts/mois) ou Agence (15 000 FCFA/mois · 400 contacts/mois), avec -20 % en facturation annuelle."
           },
           {
             "q": "Devmarket prend-il une commission sur mes missions ?",
-            "a": "Non. Vous êtes payé directement par le client. Devmarket ne prélève rien sur le montant de la mission."
+            "a": "Non, 0 % de commission. Vous négociez et facturez directement votre prestation avec le client."
           },
           {
-            "q": "Comment être mis en avant ?",
-            "a": "Complétez votre profil, ajoutez un portfolio et collectez des avis. Le classement mensuel met en avant les profils les plus actifs."
+            "q": "Que se passe-t-il si j’atteins mon quota mensuel de contacts ?",
+            "a": "Aucun hors-forfait n’est facturé automatiquement. Vous êtes alerté à 80 %, 90 % et 100 % de votre quota et pouvez passer à une formule supérieure à tout moment."
           },
           {
-            "q": "Puis-je exercer depuis n'importe quel pays ?",
-            "a": "Oui. L'inscription est ouverte partout dans le monde, avec un affichage des prix dans votre devise locale."
+            "q": "Puis-je résilier mon abonnement à tout moment ?",
+            "a": "Oui, toutes nos formules sont sans engagement et résiliables en un clic depuis votre espace."
           }
         ]
       }
@@ -1166,15 +1158,15 @@
         },
         {
           "q": "Comment fonctionne le modèle ?",
-          "a": "Le client publie son projet en 2 minutes : type de site, budget et région. Le projet apparaît dans la liste des projets. Le développeur intéressé paie 1 Token pour envoyer sa proposition et ouvrir une discussion privée avec le client, puis l'échange se fait en direct sur la plateforme."
+          "a": "Le client publie son projet en 2 minutes : type de site, budget et région. Le projet apparaît dans la liste des projets. Le développeur intéressé paie votre quota mensuel d’abonnement pour envoyer sa proposition et ouvrir une discussion privée avec le client, puis l'échange se fait en direct sur la plateforme."
         },
         {
-          "q": "Combien coûte un Token ?",
-          "a": "1 Token (2 500 FCFA). L'inscription et la publication d'un projet sont gratuites : seuls les développeurs achètent des Tokens pour répondre aux projets ou débloquer un contact."
+          "q": "Combien coûte un abonnements ?",
+          "a": "votre quota mensuel d’abonnement. L'inscription et la publication d'un projet sont gratuites : seuls les développeurs achètent des contacts mensuels pour répondre aux projets ou débloquer un contact."
         },
         {
-          "q": "Comment je paie mes Tokens ?",
-          "a": "Le paiement se fait en ligne depuis votre wallet : rechargez-le, puis dépensez vos Tokens partout sur le site. Dès la confirmation du paiement, vos Tokens sont crédités automatiquement sur votre compte."
+          "q": "Comment je paie mes abonnements ?",
+          "a": "Le paiement se fait en ligne depuis votre wallet : rechargez-le, puis dépensez vos contacts mensuels partout sur le site. Dès la confirmation du paiement, vos contacts mensuels sont crédités automatiquement sur votre compte."
         },
         {
           "q": "Mon numéro WhatsApp reste-t-il privé ?",
@@ -1186,7 +1178,7 @@
         },
         {
           "q": "Existe-t-il un classement des développeurs ?",
-          "a": "Oui : un classement mondial, récompensé chaque mois. Les 3 premiers reçoivent 10, 7 et 4 Tokens, il faut au moins 2 projets terminés et confirmés dans le mois pour y figurer, et chaque projet terminé vaut 50 points."
+          "a": "Oui : un classement mondial, récompensé chaque mois. Les 3 premiers reçoivent 10, 7 et 4 contacts mensuels, il faut au moins 2 projets terminés et confirmés dans le mois pour y figurer, et chaque projet terminé vaut 50 points."
         },
         {
           "q": "Y a-t-il une commission sur les projets ?",
@@ -1300,16 +1292,13 @@
               "label": "Comment ça marche"
             },
             {
-              "label": "Pour les clients"
+              "label": "Publier un projet gratuitement"
             },
             {
-              "label": "Pour les développeurs"
+              "label": "Projets pour les développeurs"
             },
             {
-              "label": "Acheter des Tokens"
-            },
-            {
-              "label": "Abonnement PRO"
+              "label": "Nos abonnements"
             }
           ]
         },
@@ -1725,12 +1714,12 @@
       "unlockedContacts": "Contacts débloqués",
       "reputation": "Réputation & commandes",
       "reviews": "Mes avis",
-      "proSubscription": "Abonnement PRO",
+      "proSubscription": "Nos abonnements",
       "accountSettings": "Mon compte & mot de passe",
       "notifications": "Notifications & alertes",
       "myAgency": "Mon agence",
-      "creditBalance": "Solde de crédits",
-      "buyTokens": "Acheter des Tokens",
+      "creditBalance": "Revenus & portefeuille",
+      "buyTokens": "Mon abonnement",
       "withdraw": "Demander un retrait",
       "sentQuotes": "Mes devis envoyés",
       "completedMissions": "Missions réalisées"

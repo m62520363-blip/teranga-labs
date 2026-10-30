@@ -132,8 +132,9 @@ export default async function BriefsPage({
                 développeur
               </h1>
               <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
-                Publication gratuite côté client, devis gratuits. 1 Token ouvre la
-                discussion privée avec le client — aucun commission sur le projet.
+                Publication 100 % gratuite côté client, devis directs et sans
+                commission. Envoyez votre proposition grâce à votre quota
+                mensuel d’abonnement.
               </p>
             </div>
 

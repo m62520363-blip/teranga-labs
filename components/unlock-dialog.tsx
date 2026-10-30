@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Check,
-  Coins,
+  Crown,
   Gift,
   Loader2,
   Lock,
@@ -30,7 +30,6 @@ import { createClient } from "@/lib/supabase/client";
 import { decodeUnlockError } from "@/lib/tokens";
 import { formatFCFA } from "@/lib/formatting";
 import { useBalance } from "@/components/balance-provider";
-import { cn } from "cn";
 
 export type BriefPayload = {
   id: string;
@@ -47,7 +46,7 @@ type Phase =
   | { kind: "closed" }
   | { kind: "confirm" }
   | { kind: "submitting" }
-  | { kind: "no-tokens" }
+  | { kind: "quota-reached" }
   | { kind: "error"; message: string; code?: string };
 
 export function UnlockDialog({
@@ -61,10 +60,6 @@ export function UnlockDialog({
   user: { id: string } | null;
   balance: number | null;
   conversationId: string | null;
-  /**
-   * Le compte n'a encore jamais débloqué de contact et n'a jamais consommé
-   * l'offre de bienvenue : ce déblocage ne coûtera aucun Token (migration 0033).
-   */
   welcomeFree?: boolean;
 }) {
   const [open, setOpen] = React.useState(false);
@@ -72,17 +67,19 @@ export function UnlockDialog({
   const [message, setMessage] = React.useState("");
   const [price, setPrice] = React.useState("");
   const [days, setDays] = React.useState("");
-  const { setBalance } = useBalance();
+  const { balance: ctxQuota, quotaLimit, planName, setBalance, refresh } = useBalance();
   const router = useRouter();
 
-  // Un brief de démonstration ou le 1er contact d'un compte éligible sont
-  // gratuits : dans ces deux cas, 0 Token ne bloque pas l'utilisateur.
+  const quotaRemaining = ctxQuota ?? balance;
   const isFree = brief.demo === true || (welcomeFree && !brief.demo);
 
   const start = () => {
     setOpen(true);
-    if (!isFree && (balance ?? 0) < 1) setPhase({ kind: "no-tokens" });
-    else setPhase({ kind: "confirm" });
+    if (!isFree && quotaRemaining !== null && quotaRemaining <= 0) {
+      setPhase({ kind: "quota-reached" });
+    } else {
+      setPhase({ kind: "confirm" });
+    }
   };
 
   const submit = async () => {
@@ -103,21 +100,27 @@ export function UnlockDialog({
         error.code,
         error.message || "Une erreur est survenue. Réessayez."
       );
-      if (error.code === "TLLOW") setPhase({ kind: "no-tokens" });
-      else setPhase({ kind: "error", message: messageErr, code: error.code ?? undefined });
+      if (error.code === "TLQUO" || error.code === "TLLOW") {
+        setPhase({ kind: "quota-reached" });
+      } else {
+        setPhase({ kind: "error", message: messageErr, code: error.code ?? undefined });
+      }
       return;
     }
 
     const result = data as {
       conversation_id?: string;
+      quota_remaining?: number;
       balance?: number;
-      gift?: boolean;
     } | null;
 
-    if (typeof result?.balance === "number") setBalance(result.balance);
+    if (typeof result?.quota_remaining === "number") {
+      setBalance(result.quota_remaining);
+    } else if (typeof result?.balance === "number") {
+      setBalance(result.balance);
+    }
+    void refresh();
 
-    // F3 : contact_unlocked remonté au serveur (track_event = service_role).
-    // Fire-and-forget : le tracking ne bloque jamais la navigation.
     void fetch("/api/analytics/track", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -139,8 +142,7 @@ export function UnlockDialog({
         className="h-8"
         render={
           <Link href="/login">
-            Démarrer la discussion ·{" "}
-            {brief.demo ? "Gratuit" : "1 Token"}
+            Envoyer une proposition
           </Link>
         }
       />
@@ -165,14 +167,17 @@ export function UnlockDialog({
 
   return (
     <Dialog open={open} onOpenChange={(o) => setOpen(o)}>
-      <UnlockTriggerButton onClick={start} balance={balance} isFree={isFree} />
+      <Button variant="default" size="sm" className="h-8" onClick={start}>
+        <MessageCircle className="size-3.5" aria-hidden="true" />
+        Envoyer une proposition
+      </Button>
       <DialogContent className="max-w-sm">
         {phase.kind === "confirm" || phase.kind === "submitting" ? (
           <React.Fragment>
             <DialogHeader>
               <DialogTitle>Votre proposition à {brief.client_name}</DialogTitle>
               <DialogDescription className="sr-only">
-                Première prise de contact avec le client du brief {brief.client_name}.
+                Première prise de contact avec le client du projet {brief.client_name}.
               </DialogDescription>
             </DialogHeader>
 
@@ -182,15 +187,10 @@ export function UnlockDialog({
                 {brief.client_city} · {formatFCFA(brief.budget)} ·{" "}
                 {brief.project_type}
               </p>
-              {brief.demo ? (
-                <p className="mt-2 inline-flex items-center gap-1 rounded-full border border-primary/40 bg-primary-soft px-2.5 py-0.5 text-[11px] font-semibold text-primary">
-                  <Sparkles className="size-3" aria-hidden="true" />
-                  Brief d’exemple · déblocage gratuit
-                </p>
-              ) : welcomeFree ? (
+              {welcomeFree ? (
                 <p className="mt-2 inline-flex items-center gap-1 rounded-full border border-success/30 bg-success-soft px-2.5 py-0.5 text-[11px] font-semibold text-success">
                   <Gift className="size-3" aria-hidden="true" />
-                  Votre 1er contact est offert
+                  1er contact d’essai inclus
                 </p>
               ) : null}
             </div>
@@ -205,7 +205,7 @@ export function UnlockDialog({
                   rows={4}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Bonjour, je suis développeur basé à… Décrivez en 2-3 lignes pourquoi vous êtes le bon profil."
+                  placeholder="Bonjour, je suis développeur basé à… Décrivez en 2-3 lignes votre approche et vos références pertinentes."
                   disabled={phase.kind === "submitting"}
                 />
               </div>
@@ -239,40 +239,26 @@ export function UnlockDialog({
                 </div>
               </div>
 
-              <div className="flex items-center justify-between rounded-xl border border-hairline px-4 py-2.5">
-                {isFree ? (
-                  <span className="flex items-center gap-1.5 text-sm font-semibold">
-                    <Sparkles className="size-4 text-primary" aria-hidden="true" />
-                    Déblocage gratuit
+              <div className="flex items-center justify-between rounded-xl border border-hairline px-4 py-2.5 text-xs">
+                <span className="flex items-center gap-1.5 font-semibold text-foreground">
+                  <Crown className="size-4 text-primary" aria-hidden="true" />
+                  {planName ? `Formule ${planName}` : "Quota mensuel"}
+                </span>
+                {quotaRemaining !== null ? (
+                  <span className="font-medium text-muted-foreground">
+                    {quotaRemaining}
+                    {quotaLimit !== null ? ` / ${quotaLimit}` : ""} contact
+                    {quotaRemaining > 1 ? "s" : ""} restant{quotaRemaining > 1 ? "s" : ""}
                   </span>
-                ) : (
-                  <span className="flex items-center gap-1.5 text-sm font-semibold">
-                    <Coins className="size-4 text-primary" aria-hidden="true" />
-                    {balance ?? 0} token{(balance ?? 0) > 1 ? "s" : ""}
-                  </span>
-                )}
+                ) : null}
               </div>
 
               <p className="flex items-start gap-2 text-xs leading-relaxed text-muted-foreground">
                 <Lock className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
-                {brief.demo ? (
-                  <>
-                    C’est un exemple de démonstration : aucun Token ne sera
-                    débité. Le client reçoit votre message dans sa messagerie
-                    interne, leur WhatsApp reste privé.
-                  </>
-                ) : welcomeFree ? (
-                  <>
-                    C’est votre premier contact : il est offert, aucun Token ne
-                    sera débité. Le client reçoit votre message dans sa
-                    messagerie interne, leur WhatsApp reste privé.
-                  </>
-                ) : (
-                  <>
-                    1 Token sera débité : le client reçoit votre message dans sa
-                    messagerie interne. Leur WhatsApp reste privé.
-                  </>
-                )}
+                <span>
+                  1 contact de projet sera décompté de votre quota mensuel (un
+                  même projet n’est jamais comptabilisé deux fois).
+                </span>
               </p>
             </div>
 
@@ -290,41 +276,42 @@ export function UnlockDialog({
                 )}
                 {phase.kind === "submitting"
                   ? "Envoi en cours…"
-                  : isFree
-                    ? "Envoyer gratuitement"
-                    : "Envoyer · 1 Token"}
+                  : "Envoyer ma proposition"}
               </Button>
             </DialogFooter>
           </React.Fragment>
         ) : null}
 
-        {phase.kind === "no-tokens" ? (
+        {phase.kind === "quota-reached" ? (
           <React.Fragment>
             <DialogHeader>
-              <DialogTitle>Plus de Tokens</DialogTitle>
+              <DialogTitle>Limite mensuelle atteinte</DialogTitle>
               <DialogDescription className="sr-only">
-                Commandez vos Tokens auprès de l’équipe pour démarrer une discussion.
+                Passez à une formule supérieure pour envoyer davantage de propositions ce mois-ci.
               </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col gap-4 py-2">
-              <div className="flex items-center gap-3 rounded-xl bg-primary-soft p-3.5">
-                <Coins className="size-5 shrink-0 text-primary" aria-hidden="true" />
-                <p className="text-sm text-foreground">
-                  <span className="font-medium">Vous n’avez plus de Tokens.</span>{" "}
-                  Démarrer une discussion coûte 1 Token.
-                </p>
+              <div className="flex items-start gap-3 rounded-xl border border-primary/30 bg-primary-soft p-3.5">
+                <Crown className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
+                <div className="text-sm text-foreground">
+                  <p className="font-semibold">
+                    Votre quota mensuel de propositions est atteint.
+                  </p>
+                  <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                    Passez à une formule supérieure pour contacter jusqu’à 80
+                    projets/mois (Pro), 200 projets/mois (Pro Max) ou 400
+                    projets/mois (Agence). Aucun supplément n’est facturé sans
+                    votre accord.
+                  </p>
+                </div>
               </div>
 
-              <p className="text-xs leading-relaxed text-muted-foreground">
-                Votre 1er contact a été offert, les suivants sont facturés 1
-                Token chacun. C’est une seule fois par compte.
-              </p>
               <Button
-                className="h-10 bg-primary hover:bg-primary-hover"
+                className="h-10 bg-primary text-ink hover:bg-primary-hover"
                 render={
-                  <Link href="/tokens">
-                    <Coins className="size-4" aria-hidden="true" />
-                    Recharger mes Tokens
+                  <Link href="/abonnement">
+                    <Crown className="size-4" aria-hidden="true" />
+                    Voir les formules d’abonnement
                   </Link>
                 }
               />
@@ -366,32 +353,6 @@ export function UnlockDialog({
         ) : null}
       </DialogContent>
     </Dialog>
-  );
-}
-
-function UnlockTriggerButton({
-  onClick,
-  balance,
-  isFree,
-}: {
-  onClick: () => void;
-  balance: number | null;
-  isFree: boolean;
-}) {
-  const insufficient = !isFree && (balance ?? 0) < 1;
-  return (
-    <Button
-      variant="default"
-      size="sm"
-      className={cn("h-8", insufficient && "opacity-70")}
-      onClick={onClick}
-    >
-      <MessageCircle
-        className={cn("size-3.5", insufficient && "opacity-70")}
-        aria-hidden="true"
-      />
-      Démarrer la discussion · {isFree ? "Gratuit" : "1 Token"}
-    </Button>
   );
 }
 

@@ -7,10 +7,12 @@ import { useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import {
+  AlertCircle,
   Check,
   CheckCircle2,
   Clipboard,
   Gift,
+  HelpCircle,
   Loader2,
   Plus,
   Send,
@@ -19,6 +21,7 @@ import {
   Wand2,
   Wallet,
 } from "lucide-react";
+import type { AssistMode, BriefAssistResult } from "@/lib/ai/brief-assistant";
 import { briefSchema, type BriefFormValues } from "@/lib/validations";
 import { ALL_REGION_ITEMS } from "@/lib/countries";
 import { useBalance } from "@/components/balance-provider";
@@ -55,14 +58,14 @@ const TYPE_OPTIONS: {
   {
     value: "vitrine",
     label: "Site vitrine",
-    hint: "Présenter votre boutique, saloon ou restaurant en ligne.",
+    hint: "Présenter votre boutique, salon, cabinet ou restaurant en ligne.",
     icon: "🏪",
     suggested: [80000, 150000, 300000],
   },
   {
     value: "e-commerce",
     label: "Boutique e-commerce",
-    hint: "Vendre en ligne avec paiement Wave ou Max It.",
+    hint: "Vendre en ligne avec paiement mobile ou carte.",
     icon: "🛒",
     suggested: [200000, 400000, 800000],
   },
@@ -106,11 +109,19 @@ const FEATURE_OPTIONS = [
 
 const BUDGET_HINTS: Record<string, string> = {
   vitrine: "L’ordre de prix pour un site vitrine se situe entre 80 000 et 300 000 FCFA.",
-  "e-commerce": "Une boutique payante démarre généralement autour de 200 000 FCFA.",
+  "e-commerce": "Une boutique e-commerce démarre généralement autour de 200 000 FCFA.",
   "landing page": "Une landing page se situe souvent entre 60 000 et 250 000 FCFA.",
   "app web": "Une application web sur mesure demande un budget plus conséquent (dès 300 000 FCFA).",
   refonte: "Une refonte repart souvent de 150 000 FCFA selon l’existant.",
 };
+
+const AI_ACTIONS: { mode: AssistMode; label: string }[] = [
+  { mode: "generate", label: "Générer le brief" },
+  { mode: "improve", label: "Améliorer" },
+  { mode: "rewrite", label: "Réécrire" },
+  { mode: "correct", label: "Corriger" },
+  { mode: "simplify", label: "Simplifier" },
+];
 
 export function PosterForm({ initialType }: { initialType?: string } = {}) {
   const router = useRouter();
@@ -123,12 +134,15 @@ export function PosterForm({ initialType }: { initialType?: string } = {}) {
   } | null>(null);
   const [copied, setCopied] = React.useState(false);
   const [customFeatures, setCustomFeatures] = React.useState("");
-  // Dernière étape : récapitulatif avant la publication gratuite.
   const [confirmOpen, setConfirmOpen] = React.useState(false);
   const [isPublishing, setIsPublishing] = React.useState(false);
   const [pending, setPending] = React.useState<BriefFormValues | null>(null);
+
+  // État de l'assistant IA conversationnel (Section E)
   const [aiLoading, setAiLoading] = React.useState(false);
-  const [aiSuggestions, setAiSuggestions] = React.useState<string[]>([]);
+  const [aiActiveMode, setAiActiveMode] = React.useState<AssistMode>("generate");
+  const [aiResult, setAiResult] = React.useState<BriefAssistResult | null>(null);
+  const [aiAnswers, setAiAnswers] = React.useState<Record<string, string>>({});
 
   const form = useForm<BriefFormValues>({
     resolver: zodResolver(briefSchema) as Resolver<BriefFormValues>,
@@ -162,37 +176,63 @@ export function PosterForm({ initialType }: { initialType?: string } = {}) {
     setValue("features", next, { shouldValidate: true });
   };
 
-  const improveDescription = async () => {
+  const runAiAssistant = async (mode: AssistMode = "generate") => {
     const raw = (watch("description") || "").trim();
     if (!raw) {
-      toast.error("Écrivez d'abord une petite description.");
+      toast.error("Expliquez d’abord votre projet avec quelques mots simples.");
       return;
     }
     setAiLoading(true);
-    setAiSuggestions([]);
+    setAiActiveMode(mode);
     try {
       const res = await fetch("/api/ai/brief-assist", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ description: raw }),
+        body: JSON.stringify({
+          description: raw,
+          mode,
+          answers: aiAnswers,
+        }),
       });
-      const data = (await res.json()) as {
-        description?: string;
-        suggestions?: string[];
-        message?: string;
-      };
+      const data = (await res.json()) as BriefAssistResult & { message?: string };
       if (!res.ok || typeof data.description !== "string") {
-        toast.error(data.message ?? "Impossible d'améliorer la description.");
+        toast.error(data.message ?? "Impossible d’analyser la description.");
         return;
       }
       setValue("description", data.description, { shouldValidate: true });
-      setAiSuggestions(data.suggestions ?? []);
-      toast.success("Description affinée.");
+      setAiResult(data);
+      toast.success("Assistant IA appliqué — vous gardez le contrôle sur chaque champ.");
     } catch {
-      toast.error("Service indisponible, réessayez plus tard.");
+      toast.error("Service indisponible, réessayez dans un instant.");
     } finally {
       setAiLoading(false);
     }
+  };
+
+  const applyAiSuggestionsToForm = () => {
+    if (!aiResult) return;
+    if (aiResult.projectType) {
+      setValue("project_type", aiResult.projectType, { shouldValidate: true });
+    }
+    if (aiResult.indicativeBudget?.suggested && !watch("budget")) {
+      setValue("budget", aiResult.indicativeBudget.suggested, {
+        shouldValidate: true,
+      });
+    }
+    if (Array.isArray(aiResult.features) && aiResult.features.length > 0) {
+      const merged = [
+        ...new Set([...features, ...aiResult.features]),
+      ].slice(0, 24);
+      setValue("features", merged, { shouldValidate: true });
+    }
+    if (aiResult.indicativeDeadline?.days && !watch("deadline")) {
+      const d = new Date();
+      d.setDate(d.getDate() + aiResult.indicativeDeadline.days);
+      setValue("deadline", d.toISOString().split("T")[0], {
+        shouldValidate: true,
+      });
+    }
+    toast.success("Catégorie, fonctionnalités, budget et délai indicatifs appliqués.");
   };
 
   const addCustomFeatures = () => {
@@ -210,9 +250,6 @@ export function PosterForm({ initialType }: { initialType?: string } = {}) {
   today.setDate(today.getDate() + 1);
   const minDate = today.toISOString().split("T")[0];
 
-  // L'utilisateur valide d'abord le formulaire, puis CONFIRME dans la
-  // modale. Aucun appel réseau et aucun débit avant cette confirmation :
-  // c'est le dernier écran avant la publication gratuite.
   const onSubmit = (values: BriefFormValues) => {
     setFormError(null);
     setPending(values);
@@ -245,13 +282,12 @@ export function PosterForm({ initialType }: { initialType?: string } = {}) {
       id?: string;
       management_key?: string;
       accepted?: boolean;
-      gift?: boolean;
       error?: string;
     } | null = null;
     try {
       payload = await res.json();
     } catch {
-      // corps illisible : on gère via le statut HTTP
+      // corps illisible
     }
 
     if (res.status === 503) {
@@ -284,9 +320,9 @@ export function PosterForm({ initialType }: { initialType?: string } = {}) {
 
     setConfirmOpen(false);
     setCreated({ id: payload.id, managementKey: payload.management_key });
-    toast.success("Projet publié !", {
+    toast.success("Projet publié gratuitement !", {
       description:
-        "Publication gratuite : aucun Token n’a été débité. Conservez votre lien de suivi pour gérer votre projet.",
+        "Aucun frais de publication. Conservez votre lien de suivi pour gérer votre projet.",
     });
     void refreshBalance();
   };
@@ -323,8 +359,9 @@ export function PosterForm({ initialType }: { initialType?: string } = {}) {
           <div>
             <p className="font-semibold tracking-tight">Projet publié avec succès</p>
             <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-              Votre projet est en ligne et visible par les développeurs. Les
-              premières propositions arrivent dans votre espace client.
+              Votre projet est en ligne gratuitement et visible par les
+              développeurs. Les propositions arrivent directement dans votre
+              espace client.
             </p>
           </div>
         </div>
@@ -341,7 +378,12 @@ export function PosterForm({ initialType }: { initialType?: string } = {}) {
               onFocus={(e) => e.currentTarget.select()}
               className="h-10 rounded-xl font-mono text-xs"
             />
-            <Button type="button" variant="outline" className="h-10 shrink-0 rounded-xl" onClick={copy}>
+            <Button
+              type="button"
+              variant="outline"
+              className="h-10 shrink-0 rounded-xl"
+              onClick={copy}
+            >
               {copied ? (
                 <CheckCircle2 className="size-4 text-success" aria-hidden="true" />
               ) : (
@@ -352,9 +394,8 @@ export function PosterForm({ initialType }: { initialType?: string } = {}) {
           </div>
           <p className="flex items-start gap-2 text-xs leading-relaxed text-muted-foreground">
             <ShieldCheck className="mt-0.5 size-3.5 shrink-0 text-primary" aria-hidden="true" />
-            Ce lien vous permet de suivre les développeurs qui ont débloqué votre
-            contact, de changer le statut du projet et de laisser un avis. Ne le
-            partagez pas.
+            Ce lien vous permet de suivre les propositions reçues, de modifier le
+            statut du projet et de laisser un avis.
           </p>
         </div>
 
@@ -389,11 +430,216 @@ export function PosterForm({ initialType }: { initialType?: string } = {}) {
         <p className="flex items-start gap-3 text-sm leading-relaxed text-foreground/90">
           <Sparkles className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
           <span>
-            Publier un projet est <strong>gratuit</strong>. Un assistant calcule
-            avec vous les besoins et le budget réaliste de votre projet.
+            <strong>Publication 100 % gratuite — Aucun frais de publication. Sans engagement.</strong>{" "}
+            Expliquez votre besoin avec des mots simples : notre assistant IA vous aide à structurer votre brief si vous le souhaitez.
           </span>
         </p>
       </div>
+
+      {/* ---------------- ASSISTANT IA DE RÉDACTION DE BRIEF (SECTION E) ---------------- */}
+      <FieldGroup
+        label="Décrivez votre besoin (avec vos propres mots)"
+        htmlFor="description"
+        hint="Vous pouvez publier directement ou utiliser l’assistant IA gratuit."
+      >
+        <Textarea
+          id="description"
+          {...register("description")}
+          className="min-h-32 rounded-xl"
+          placeholder="Ex : Je vends des chaussures à Dakar, je veux un site pour présenter mes modèles, recevoir des commandes et être payé par Wave…"
+          aria-invalid={Boolean(errors.description)}
+        />
+        {errors.description ? (
+          <FieldError>{errors.description.message}</FieldError>
+        ) : null}
+
+        {/* Barre d'actions IA : Générer, Améliorer, Réécrire, Corriger, Simplifier */}
+        <div
+          className="mt-2 flex flex-wrap items-center gap-1.5"
+          role="group"
+          aria-label="Actions de l’assistant IA de rédaction"
+        >
+          {AI_ACTIONS.map((action) => {
+            const busy = aiLoading && aiActiveMode === action.mode;
+            return (
+              <button
+                key={action.mode}
+                type="button"
+                onClick={() => void runAiAssistant(action.mode)}
+                disabled={aiLoading || isSubmitting}
+                className={cn(
+                  "inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50 disabled:opacity-60",
+                  action.mode === "generate"
+                    ? "border-primary/40 bg-primary-soft text-primary hover:border-primary"
+                    : "border-hairline bg-card text-foreground hover:border-primary/40"
+                )}
+              >
+                {busy ? (
+                  <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
+                ) : (
+                  <Wand2 className="size-3.5 text-primary" aria-hidden="true" />
+                )}
+                {action.label}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Panneau conversationnel de résultats de l'assistant IA */}
+        {aiResult ? (
+          <div className="mt-3 space-y-4 rounded-2xl border border-primary/30 bg-card p-4 sm:p-5">
+            {/* Indicateur de progression */}
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <Sparkles className="size-4 text-primary" aria-hidden="true" />
+                <span className="text-xs font-semibold uppercase tracking-wider text-primary">
+                  Analyse IA du brief
+                </span>
+              </div>
+              <span className="text-xs font-semibold text-foreground tabular-nums">
+                Complétude : {aiResult.completenessScore ?? 75} %
+              </span>
+            </div>
+            <div className="h-1.5 overflow-hidden rounded-full bg-border-strong">
+              <div
+                className="h-full rounded-full bg-primary transition-all duration-300"
+                style={{ width: `${aiResult.completenessScore ?? 75}%` }}
+              />
+            </div>
+
+            {aiResult.title ? (
+              <div className="rounded-xl border border-hairline bg-surface p-3">
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  Titre professionnel suggéré
+                </p>
+                <p className="mt-1 text-sm font-semibold text-foreground">
+                  {aiResult.title}
+                </p>
+                {aiResult.understanding ? (
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {aiResult.understanding}
+                  </p>
+                ) : null}
+              </div>
+            ) : null}
+
+            {/* Budget indicatif, Délai indicatif, Compétences & Livrables */}
+            <div className="grid gap-3 sm:grid-cols-2">
+              {aiResult.indicativeBudget ? (
+                <div className="rounded-xl border border-hairline bg-surface p-3">
+                  <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                    Budget indicatif proposé
+                  </p>
+                  <p className="mt-1 text-sm font-bold text-primary">
+                    {aiResult.indicativeBudget.suggested.toLocaleString("fr-FR")} FCFA
+                  </p>
+                  <p className="mt-0.5 text-[11px] text-muted-foreground">
+                    {aiResult.indicativeBudget.label}
+                  </p>
+                </div>
+              ) : null}
+
+              {aiResult.indicativeDeadline ? (
+                <div className="rounded-xl border border-hairline bg-surface p-3">
+                  <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                    Délai indicatif proposé
+                  </p>
+                  <p className="mt-1 text-sm font-bold text-foreground">
+                    {aiResult.indicativeDeadline.label}
+                  </p>
+                </div>
+              ) : null}
+            </div>
+
+            {aiResult.skills && aiResult.skills.length > 0 ? (
+              <div>
+                <p className="text-xs font-semibold text-muted-foreground">
+                  Compétences techniques recommandées :
+                </p>
+                <div className="mt-1.5 flex flex-wrap gap-1.5">
+                  {aiResult.skills.map((sk) => (
+                    <span
+                      key={sk}
+                      className="rounded-full border border-primary/30 bg-primary-soft px-2.5 py-0.5 text-xs font-medium text-primary"
+                    >
+                      {sk}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
+            {aiResult.deliverables && aiResult.deliverables.length > 0 ? (
+              <div>
+                <p className="text-xs font-semibold text-muted-foreground">
+                  Livrables attendus générés :
+                </p>
+                <ul className="mt-1.5 list-disc space-y-1 pl-4 text-xs text-muted-foreground">
+                  {aiResult.deliverables.map((deliv) => (
+                    <li key={deliv}>{deliv}</li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+
+            {aiResult.missingInfo && aiResult.missingInfo.length > 0 ? (
+              <div className="rounded-xl border border-hairline bg-surface p-3">
+                <p className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
+                  <AlertCircle className="size-3.5 text-primary" aria-hidden="true" />
+                  Informations à préciser (non inventées par l’IA)
+                </p>
+                <ul className="mt-1.5 list-disc space-y-1 pl-4 text-xs text-muted-foreground">
+                  {aiResult.missingInfo.map((info) => (
+                    <li key={info}>{info}</li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+
+            {/* Questions intelligentes interactives */}
+            {aiResult.questions && aiResult.questions.length > 0 ? (
+              <div className="space-y-2.5 rounded-xl border border-hairline bg-surface p-3.5">
+                <p className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
+                  <HelpCircle className="size-3.5 text-primary" aria-hidden="true" />
+                  Questions pour affiner votre brief (optionnel)
+                </p>
+                {aiResult.questions.map((q) => (
+                  <div key={q} className="space-y-1">
+                    <label className="block text-xs text-muted-foreground">
+                      {q}
+                    </label>
+                    <Input
+                      value={aiAnswers[q] ?? ""}
+                      onChange={(e) =>
+                        setAiAnswers((prev) => ({ ...prev, [q]: e.target.value }))
+                      }
+                      placeholder="Votre réponse…"
+                      className="h-8 rounded-lg text-xs"
+                    />
+                  </div>
+                ))}
+                <div className="flex flex-wrap gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => void runAiAssistant("generate")}
+                    disabled={aiLoading}
+                    className="inline-flex h-8 items-center gap-1.5 rounded-lg bg-primary px-3 text-xs font-semibold text-ink hover:bg-primary-hover"
+                  >
+                    Intégrer mes réponses au brief
+                  </button>
+                  <button
+                    type="button"
+                    onClick={applyAiSuggestionsToForm}
+                    className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-primary/40 bg-primary-soft px-3 text-xs font-semibold text-primary hover:bg-primary/15"
+                  >
+                    Appliquer le type, les fonctionnalités et le budget indicatif
+                  </button>
+                </div>
+              </div>
+            ) : null}
+          </div>
+        ) : null}
+      </FieldGroup>
 
       <div className="flex flex-col gap-2">
         <Label className="text-sm font-medium">Quel type de projet ?</Label>
@@ -405,7 +651,9 @@ export function PosterForm({ initialType }: { initialType?: string } = {}) {
                 key={opt.value}
                 type="button"
                 onClick={() =>
-                  setValue("project_type", opt.value as BriefFormValues["project_type"], { shouldValidate: true })
+                  setValue("project_type", opt.value as BriefFormValues["project_type"], {
+                    shouldValidate: true,
+                  })
                 }
                 aria-pressed={selected}
                 className={cn(
@@ -424,12 +672,16 @@ export function PosterForm({ initialType }: { initialType?: string } = {}) {
                   {opt.icon}
                 </span>
                 <span className="text-sm font-semibold">{opt.label}</span>
-                <span className="text-xs leading-relaxed text-muted-foreground">{opt.hint}</span>
+                <span className="text-xs leading-relaxed text-muted-foreground">
+                  {opt.hint}
+                </span>
               </button>
             );
           })}
         </div>
-        {errors.project_type ? <FieldError>{errors.project_type.message}</FieldError> : null}
+        {errors.project_type ? (
+          <FieldError>{errors.project_type.message}</FieldError>
+        ) : null}
       </div>
 
       <div className="flex flex-col gap-2">
@@ -483,7 +735,9 @@ export function PosterForm({ initialType }: { initialType?: string } = {}) {
                 key={feat}
                 className={cn(
                   "flex cursor-pointer items-start gap-3 rounded-xl border px-4 py-3 transition-colors",
-                  checked ? "border-success/40 bg-success-soft" : "border-hairline bg-card hover:bg-muted"
+                  checked
+                    ? "border-success/40 bg-success-soft"
+                    : "border-hairline bg-card hover:bg-muted"
                 )}
               >
                 <input
@@ -548,7 +802,12 @@ export function PosterForm({ initialType }: { initialType?: string } = {}) {
         <FieldGroup label="Région" htmlFor="client_city">
           <Select
             value={watch("client_city")}
-            onValueChange={(v) => v && setValue("client_city", v as BriefFormValues["client_city"], { shouldValidate: true })}
+            onValueChange={(v) =>
+              v &&
+              setValue("client_city", v as BriefFormValues["client_city"], {
+                shouldValidate: true,
+              })
+            }
             items={cityItems}
           >
             <SelectTrigger className="h-10 w-full rounded-xl" aria-label="Région">
@@ -556,7 +815,9 @@ export function PosterForm({ initialType }: { initialType?: string } = {}) {
             </SelectTrigger>
             <RegionSelectContent />
           </Select>
-          {errors.client_city ? <FieldError>{errors.client_city.message}</FieldError> : null}
+          {errors.client_city ? (
+            <FieldError>{errors.client_city.message}</FieldError>
+          ) : null}
         </FieldGroup>
 
         <FieldGroup
@@ -570,12 +831,18 @@ export function PosterForm({ initialType }: { initialType?: string } = {}) {
             min={minDate}
             {...register("deadline")}
             className="h-10 rounded-xl"
-            onChange={(e) => setValue("deadline", e.target.value, { shouldValidate: true })}
+            onChange={(e) =>
+              setValue("deadline", e.target.value, { shouldValidate: true })
+            }
           />
         </FieldGroup>
       </div>
 
-      <FieldGroup label="Votre nom / structure" htmlFor="client_name" hint="Affiché aux développeurs pour identifier le projet.">
+      <FieldGroup
+        label="Votre nom / structure"
+        htmlFor="client_name"
+        hint="Affiché aux développeurs pour identifier le projet."
+      >
         <Input
           id="client_name"
           {...register("client_name")}
@@ -583,57 +850,30 @@ export function PosterForm({ initialType }: { initialType?: string } = {}) {
           placeholder="Boutique Bazin HLM"
           aria-invalid={Boolean(errors.client_name)}
         />
-        {errors.client_name ? <FieldError>{errors.client_name.message}</FieldError> : null}
+        {errors.client_name ? (
+          <FieldError>{errors.client_name.message}</FieldError>
+        ) : null}
       </FieldGroup>
 
-      <FieldGroup label="Votre WhatsApp" htmlFor="client_whatsapp" hint="Reste privé tant que vous n’acceptez pas une proposition : les développeurs vous écrivent d’abord dans la messagerie interne.">
+      <FieldGroup
+        label="Votre WhatsApp"
+        htmlFor="client_whatsapp"
+        hint="Reste privé : les développeurs vous écrivent d’abord dans la messagerie interne."
+      >
         <PhoneInput
           id="client_whatsapp"
           value={(watch("client_whatsapp") as string) ?? ""}
           onChange={(v) =>
-            setValue("client_whatsapp", v, { shouldValidate: true, shouldDirty: true })
+            setValue("client_whatsapp", v, {
+              shouldValidate: true,
+              shouldDirty: true,
+            })
           }
           className="h-10 rounded-xl"
           aria-invalid={Boolean(errors.client_whatsapp)}
         />
-        {errors.client_whatsapp ? <FieldError>{errors.client_whatsapp.message}</FieldError> : null}
-      </FieldGroup>
-
-      <FieldGroup label="Décrivez votre besoin" htmlFor="description" hint="Ce que vous vendez, vos objectifs, ce qu’il faut absolument que le projet fasse.">
-        <div className="mb-2 flex items-center justify-end">
-          <button
-            type="button"
-            onClick={() => void improveDescription()}
-            disabled={aiLoading || isSubmitting}
-            className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-primary/30 bg-primary-soft px-3 text-xs font-medium text-primary transition-colors hover:border-primary disabled:opacity-60"
-          >
-            {aiLoading ? (
-              <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
-            ) : (
-              <Wand2 className="size-3.5" aria-hidden="true" />
-            )}
-            {aiLoading ? "Amélioration…" : "Améliorer avec l’IA"}
-          </button>
-        </div>
-        <Textarea
-          id="description"
-          {...register("description")}
-          className="min-h-32 rounded-xl"
-          placeholder="Ex : Je vends des chaussures à HLM, je veux un site pour présenter mes articles, recevoir des commandes et payer par Wave…"
-          aria-invalid={Boolean(errors.description)}
-        />
-        {errors.description ? <FieldError>{errors.description.message}</FieldError> : null}
-        {aiSuggestions.length > 0 ? (
-          <div className="mt-2 rounded-xl border border-hairline bg-muted p-3">
-            <p className="text-xs font-semibold text-muted-foreground">
-              Suggestions de notre assistant
-            </p>
-            <ul className="mt-1.5 list-disc space-y-1 pl-4 text-xs leading-relaxed text-muted-foreground">
-              {aiSuggestions.map((s) => (
-                <li key={s}>{s}</li>
-              ))}
-            </ul>
-          </div>
+        {errors.client_whatsapp ? (
+          <FieldError>{errors.client_whatsapp.message}</FieldError>
         ) : null}
       </FieldGroup>
 
@@ -642,17 +882,12 @@ export function PosterForm({ initialType }: { initialType?: string } = {}) {
           <p role="alert" className="text-destructive">
             {formError}
           </p>
-          {formError.includes("Tokens insuffisants") && (
-            <Link href="/tokens" className="mt-2 inline-flex font-medium text-primary underline underline-offset-4 hover:text-primary-light">
-              Recharger mes Tokens
-            </Link>
-          )}
         </div>
       )}
 
       <p className="flex items-center gap-2 rounded-xl border border-primary/20 bg-primary-soft px-4 py-3 text-sm text-foreground/90">
         <ShieldCheck className="size-4 shrink-0 text-primary" aria-hidden="true" />
-        Publication <strong>gratuite</strong> — aucun Token débité.
+        Publication <strong>100 % gratuite</strong> — Aucun frais de publication. Sans engagement.
       </p>
 
       <Button type="submit" disabled={isSubmitting} className="h-11 rounded-xl">
@@ -664,27 +899,43 @@ export function PosterForm({ initialType }: { initialType?: string } = {}) {
         Vérifier mon projet
       </Button>
 
-      <Dialog open={confirmOpen} onOpenChange={(open) => (open ? setConfirmOpen(true) : onCancel())}>
+      <Dialog
+        open={confirmOpen}
+        onOpenChange={(open) => (open ? setConfirmOpen(true) : onCancel())}
+      >
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Confirmer la publication</DialogTitle>
             <DialogDescription>
-              Vérifiez les informations ci-dessous. Elles seront visibles par les
-              développeurs une fois le projet publié.
+              Vérifiez les informations ci-dessous avant la mise en ligne gratuite
+              de votre projet.
             </DialogDescription>
           </DialogHeader>
 
           {pending ? (
             <dl className="flex flex-col gap-3 rounded-xl border border-border bg-muted/40 p-4 text-sm">
               <ReviewRow label="Type de projet" value={pending.project_type} />
-              <ReviewRow label="Budget" value={`${pending.budget?.toLocaleString("fr-FR")} FCFA`} />
+              <ReviewRow
+                label="Budget"
+                value={`${pending.budget?.toLocaleString("fr-FR")} FCFA`}
+              />
               <ReviewRow label="Région" value={pending.client_city} />
-              <ReviewRow label="Deadline" value={pending.deadline || "Non précisée"} />
+              <ReviewRow
+                label="Deadline"
+                value={pending.deadline || "Non précisée"}
+              />
               <ReviewRow label="Description" value={pending.description} multiline />
               {pending.features.length > 0 ? (
-                <ReviewRow label="Fonctionnalités" value={pending.features.join(", ")} multiline />
+                <ReviewRow
+                  label="Fonctionnalités"
+                  value={pending.features.join(", ")}
+                  multiline
+                />
               ) : null}
-              <ReviewRow label="Contact" value={`${pending.client_name} · ${pending.client_whatsapp}`} />
+              <ReviewRow
+                label="Contact"
+                value={`${pending.client_name} · ${pending.client_whatsapp}`}
+              />
             </dl>
           ) : null}
 
@@ -695,7 +946,7 @@ export function PosterForm({ initialType }: { initialType?: string } = {}) {
                 {formError}
               </span>
             ) : (
-              "Publication gratuite : aucun Token ne sera débité."
+              "Aucun frais de publication. Sans engagement."
             )}
           </p>
 
@@ -720,7 +971,7 @@ export function PosterForm({ initialType }: { initialType?: string } = {}) {
               ) : (
                 <Send className="size-4" aria-hidden="true" />
               )}
-              Publier mon projet
+              Publier mon projet gratuitement
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -741,7 +992,12 @@ function ReviewRow({
   return (
     <div className="flex flex-col gap-0.5">
       <dt className="text-xs font-medium text-muted-foreground">{label}</dt>
-      <dd className={cn("text-foreground", multiline ? "whitespace-pre-wrap" : "truncate")}>
+      <dd
+        className={cn(
+          "text-foreground",
+          multiline ? "whitespace-pre-wrap" : "truncate"
+        )}
+      >
         {value}
       </dd>
     </div>

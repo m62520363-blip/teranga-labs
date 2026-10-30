@@ -30,7 +30,6 @@ const columns = [
       { linkKey: "becomeDev", href: "/inscription-developpeur" },
       { linkKey: "browseProjects", href: "/briefs" },
       { linkKey: "devSpace", href: "/dashboard" },
-      { linkKey: "buyTokens", href: "/tokens" },
       { linkKey: "proSubscription", href: "/abonnement" },
     ],
   },

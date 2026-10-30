@@ -143,7 +143,7 @@ export function CustomOffers() {
                   </p>
                   <span className="ml-auto inline-flex items-center gap-1 rounded-full border border-primary/25 bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary">
                     <Check className="size-3" aria-hidden="true" />
-                    1 Token
+                    0 % commission
                   </span>
                 </div>
                 <ul className="mt-3 flex flex-col gap-1.5 text-xs text-muted-foreground">

@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import { ImageLogoMark } from "@/components/logo";
 import { NotificationBell } from "@/components/notification-bell";
-import { TokenBalance } from "@/components/token-balance";
 import { SignOutButton } from "@/components/sign-out-button";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import {
@@ -124,9 +123,6 @@ export function ClientShell({
       onLinkClick={handleLinkClick}
       extra={
         <>
-          {/* Solde réel (les briefs coûtent des Tokens au client). */}
-          <TokenBalance />
-          {/* Bascule FR/EN déplacée de la navbar noire supprimée. */}
           <LanguageSwitcher />
           <SignOutButton variant="menu" />
         </>

@@ -140,8 +140,8 @@ export const APP_NAV_SECTIONS: AppNavSection[] = [
     title: "FINANCES",
     titleKey: "finances",
     links: [
-      { href: "/wallet", label: "Solde de crédits", labelKey: "creditBalance", icon: Coins },
-      { href: "/tokens", label: "Acheter des Tokens", labelKey: "buyTokens", icon: Wallet },
+      { href: "/wallet", label: "Revenus & portefeuille", labelKey: "creditBalance", icon: Coins },
+      { href: "/abonnement", label: "Mon abonnement", labelKey: "buyTokens", icon: Wallet },
       { href: "/wallet/retraits", label: "Demander un retrait", labelKey: "withdraw", icon: Banknote },
       {
         href: "/dashboard?tab=devis",

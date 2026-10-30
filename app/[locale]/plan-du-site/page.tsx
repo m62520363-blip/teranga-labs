@@ -30,7 +30,6 @@ const GROUP_LINKS = [
     { href: "/#comment-ca-marche", icon: HelpCircle },
     { href: "/poster", icon: ShoppingBag },
     { href: "/briefs", icon: UserPlus },
-    { href: "/tokens", icon: ShoppingBag },
     { href: "/abonnement", icon: Crown },
   ],
   [

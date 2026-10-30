@@ -115,13 +115,14 @@ export function decodeUnlockError(
     case "TLCLO":
       return "Ce projet n'est plus disponible.";
     case "TLDUP":
-      return "Vous avez déjà débloqué ce contact.";
+      return "Vous avez déjà envoyé une proposition sur ce projet.";
     case "TLLOW":
-      return "Tokens insuffisants. Commandez vos Tokens auprès de l’équipe.";
+    case "TLQUO":
+      return "Crédits de contacts mensuels insuffisants sur votre formule actuelle. Passez à une formule supérieure.";
     case "TLAAC":
       return "Accès non autorisé.";
     case "TLNOP":
-      return "Pack de Tokens introuvable.";
+      return "Formule d’abonnement introuvable.";
     case "TLNOK":
       return "Lien de gestion invalide.";
     case "TLSPM":

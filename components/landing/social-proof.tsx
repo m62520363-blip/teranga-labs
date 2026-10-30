@@ -58,7 +58,7 @@ export async function SocialProof() {
         {
           icon: MessageSquare,
           title: "3. Direct contact & 0% commission",
-          text: "Clients publish for free and can contact a developer from the directory. Developers unlock a project contact for 1 Token (first contact free) and get paid directly.",
+          text: "Clients publish for free and can contact a developer from the directory. Developers send proposals within their monthly subscription quota and get paid directly.",
         },
       ]
     : [
@@ -75,7 +75,7 @@ export async function SocialProof() {
         {
           icon: MessageSquare,
           title: "3. Contact direct & 0 % de commission",
-          text: "Le client publie gratuitement et échange en direct. Le développeur débloque un contact pour 1 Token (1er contact offert) et facture directement sans commission.",
+          text: "Le client publie gratuitement et échange en direct. Le développeur répond aux projets grâce à son quota mensuel d’abonnement et facture directement sans commission.",
         },
       ];
 

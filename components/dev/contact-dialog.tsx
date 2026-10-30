@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Coins, Loader2, Lock, MessageCircle, Send } from "lucide-react";
+import { Loader2, Lock, MessageCircle, Send } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -30,7 +30,7 @@ export type ContactableDeveloper = {
 
 type Props = {
   developer: ContactableDeveloper;
-  contactCost: number;
+  contactCost?: number;
   role: string | null;
   authed: boolean;
   label?: string;
@@ -39,14 +39,16 @@ type Props = {
 
 type Screen =
   | { kind: "gated" }
-  | { kind: "loading" }
   | { kind: "ready" }
-  | { kind: "insufficient" }
   | { kind: "already-open"; conversationId: string };
 
+/**
+ * Bouton et modale de prise de contact directe d'un client vers un développeur.
+ * Conformément à la Section D, l'échange avec les développeurs est 100 % gratuit
+ * pour les clients (aucun abonnement ni monnaie virtuelle requis).
+ */
 export function ContactButton({
   developer,
-  contactCost,
   role,
   authed,
   label,
@@ -55,24 +57,9 @@ export function ContactButton({
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
   const [screen, setScreen] = React.useState<Screen>({ kind: "gated" });
-  const [balance, setBalance] = React.useState<number | null>(null);
-  const [cost, setCost] = React.useState(contactCost);
   const [message, setMessage] = React.useState("");
   const [busy, setBusy] = React.useState(false);
   const trackedClick = React.useRef(false);
-
-  const refresh = async () => {
-    const supabase = createClient();
-    const [bal, cst] = await Promise.all([
-      supabase.rpc("get_token_balance"),
-      supabase.rpc("get_contact_cost"),
-    ]);
-    const nextCost = typeof cst.data === "number" ? cst.data : contactCost;
-    const nextBalance = typeof bal.data === "number" ? bal.data : 0;
-    setCost(nextCost);
-    setBalance(nextBalance);
-    setScreen(nextBalance >= nextCost ? { kind: "ready" } : { kind: "insufficient" });
-  };
 
   const handleOpenChange = (next: boolean) => {
     setOpen(next);
@@ -87,22 +74,15 @@ export function ContactButton({
             developer_id: developer.id,
           }),
           keepalive: true,
-        }).catch(() => {
-          // Suivi best-effort uniquement.
-        });
+        }).catch(() => undefined);
       }
       setMessage("");
       setBusy(false);
-      if (!authed) {
+      if (!authed || role !== "client") {
         setScreen({ kind: "gated" });
         return;
       }
-      if (role !== "client") {
-        setScreen({ kind: "gated" });
-        return;
-      }
-      setScreen({ kind: "loading" });
-      void refresh();
+      setScreen({ kind: "ready" });
     }
   };
 
@@ -117,20 +97,8 @@ export function ContactButton({
     setBusy(false);
     if (error) {
       const code = (error as { code?: string }).code;
-      if (code === "TLLOW") {
-        setScreen({ kind: "insufficient" });
-        toast.error("Votre solde ne permet pas d’ouvrir ce contact.");
-        return;
-      }
-      if (code === "TLRJC") {
+      if (code === "TLRJC" || code === "TLNAU") {
         setScreen({ kind: "gated" });
-        toast.error(error.message || "Ce profil n’est pas disponible au contact.");
-        return;
-      }
-      if (code === "TLNAU") {
-        setScreen({ kind: "gated" });
-        toast.error("Connectez-vous pour contacter un développeur.");
-        return;
       }
       toast.error(error.message || "Contact impossible, réessayez.");
       return;
@@ -138,8 +106,6 @@ export function ContactButton({
     const result = (data ?? {}) as {
       conversation_id?: string;
       first_contact?: boolean;
-      cost?: number;
-      balance?: number;
     };
     if (!result.conversation_id) {
       toast.error("Contact impossible, réessayez.");
@@ -147,170 +113,132 @@ export function ContactButton({
     }
     if (result.first_contact === false) {
       setScreen({ kind: "already-open", conversationId: result.conversation_id });
-      toast.success("Vous avez déjà un contact ouvert avec ce développeur.");
+      toast.success("Vous avez déjà une discussion ouverte avec ce développeur.");
       return;
     }
-    toast.success(
-      `Contact ouvert pour ${result.cost ?? cost} Token${(result.cost ?? cost) > 1 ? "s" : ""} — discutez en toute sécurité.`
-    );
+    toast.success("Discussion ouverte gratuitement — échangez en direct.");
     router.push(`/conversations/${result.conversation_id}`);
   };
 
-  const ctaLabel = label ?? `Contacter — ${contactCost} Token${contactCost > 1 ? "s" : ""}`;
+  const ctaLabel = label ?? "Contacter gratuitement";
+  const name = developer.full_name ?? developer.username ?? "ce développeur";
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger
         render={
-          <Button className={cn(className)} aria-label={`Contacter ${developer.full_name ?? "ce développeur"}`}>
+          <Button
+            type="button"
+            variant="default"
+            size="sm"
+            className={cn("h-10 gap-2 rounded-xl", className)}
+          >
             <MessageCircle className="size-4" aria-hidden="true" />
             {ctaLabel}
           </Button>
         }
       />
+
       <DialogContent className="max-w-md">
-        {screen.kind === "gated" && !authed ? (
-          <NotAllowed
-            icon={<Lock className="size-5" aria-hidden="true" />}
-            title="Connexion requise"
-            body="Créez un compte client gratuit pour contacter les développeurs de l’annuaire."
-            action={
-              <Link href="/login">
-                <Button className="w-full">Se connecter</Button>
-              </Link>
-            }
-          />
-        ) : screen.kind === "gated" && role !== "client" ? (
-          <NotAllowed
-            icon={<Lock className="size-5" aria-hidden="true" />}
-            title="Réservé aux clients"
-            body="Le contact direct est proposé aux comptes clients. Les développeurs rejoignent l’annuaire via la messagerie des projets."
-            action={
-              <Link href="/poster">
-                <Button variant="outline" className="w-full">
-                  Publier un projet
+        <DialogHeader>
+          <DialogTitle>Contacter {name}</DialogTitle>
+        </DialogHeader>
+
+        {screen.kind === "gated" ? (
+          <div className="space-y-4">
+            <div className="flex items-start gap-3 rounded-xl border border-hairline bg-muted p-4">
+              <Lock className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
+              <div className="text-sm leading-relaxed text-muted-foreground">
+                {!authed ? (
+                  <>
+                    Connectez-vous à votre compte client (gratuit et sans
+                    engagement) pour échanger directement avec {name}.
+                  </>
+                ) : (
+                  <>
+                    Le contact direct depuis l’annuaire est réservé aux comptes
+                    clients.
+                  </>
+                )}
+              </div>
+            </div>
+            <DialogFooter>
+              {!authed ? (
+                <div className="flex w-full flex-wrap justify-end gap-2">
+                  <Button
+                    variant="outline"
+                    render={<Link href="/signup">Créer un compte client gratuit</Link>}
+                  />
+                  <Button render={<Link href="/login">Se connecter</Link>} />
+                </div>
+              ) : (
+                <Button variant="outline" onClick={() => setOpen(false)}>
+                  Fermer
                 </Button>
-              </Link>
-            }
-          />
-        ) : screen.kind === "loading" ? (
-          <div className="flex flex-col items-center justify-center gap-3 py-10 text-center">
-            <Loader2 className="size-6 animate-spin text-primary" aria-hidden="true" />
-            <p className="text-sm text-muted-foreground">Vérification de votre solde…</p>
+              )}
+            </DialogFooter>
           </div>
-        ) : screen.kind === "insufficient" ? (
-          <NotAllowed
-            icon={<Coins className="size-5" aria-hidden="true" />}
-            title="Solde de Tokens insuffisant"
-            body={`Contacter ${developer.full_name ?? "ce développeur"} coûte ${cost} Token${cost > 1 ? "s" : ""} et votre solde est de ${balance ?? 0}. Rechargez votre wallet pour ouvrir le contact.`}
-            action={
-              <Link href="/wallet#acheter-tokens">
-                <Button className="w-full">Obtenir des Tokens</Button>
-              </Link>
-            }
-          />
-        ) : screen.kind === "already-open" ? (
-          <NotAllowed
-            icon={<MessageCircle className="size-5" aria-hidden="true" />}
-            title="Conversation déjà ouverte"
-            body={`Vous n’êtes pas débité à nouveau : continuez simplement la discussion avec ${developer.full_name ?? "ce développeur"}.`}
-            action={
-              <Button
-                className="w-full"
-                onClick={() => router.push(`/conversations/${screen.conversationId}`)}
-              >
-                Ouvrir la conversation
-              </Button>
-            }
-          />
-        ) : (
-          <>
-            <DialogHeader>
-              <DialogTitle>Contacter {developer.full_name ?? "ce développeur"}</DialogTitle>
-              <p className="text-sm text-muted-foreground">
-                {developer.professional_title || developer.main_specialty || "Développeur indépendant"}
-                {developer.city ? ` · ${developer.city}` : ""}
-              </p>
-            </DialogHeader>
+        ) : null}
 
-            <div className="flex flex-col gap-3">
-              <div className="rounded-xl border border-hairline bg-muted p-4">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">Coût du contact</span>
-                  <span className="font-semibold">
-                    {cost} Token{cost > 1 ? "s" : ""}
-                  </span>
-                </div>
-                <div className="mt-2 flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">Votre solde</span>
-                  <span className="font-medium">{balance ?? 0} Token{(balance ?? 0) > 1 ? "s" : ""}</span>
-                </div>
-                <div className="mt-2 flex items-center justify-between border-t border-hairline pt-2 text-sm">
-                  <span className="text-muted-foreground">Solde après</span>
-                  <span className="font-semibold text-primary">
-                    {(balance ?? 0) - cost} Token{(balance ?? 0) - cost > 1 ? "s" : ""}
-                  </span>
-                </div>
-              </div>
+        {screen.kind === "ready" ? (
+          <div className="space-y-4">
+            <div className="rounded-xl border border-primary/25 bg-primary-soft p-3.5 text-xs text-foreground">
+              Contact direct <strong>100 % gratuit</strong> et sans commission.
+              Décrivez votre besoin pour démarrer la discussion privée avec {name}.
+            </div>
 
-              <div className="flex flex-col gap-1.5">
-                <Label htmlFor="contact-message">Un mot pour le développeur (optionnel)</Label>
-                <Textarea
-                  id="contact-message"
-                  rows={3}
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Bonjour, j’aimerais discuter d’un projet…"
-                  maxLength={1000}
-                  disabled={busy}
-                />
-              </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="direct-contact-message">
+                Premier message (optionnel mais recommandé)
+              </Label>
+              <Textarea
+                id="direct-contact-message"
+                rows={4}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Bonjour, je souhaite créer un site / une application pour… Voici mon besoin et mon délai souhaité."
+                disabled={busy}
+              />
             </div>
 
             <DialogFooter className="gap-2">
               <Button
-                variant="outline"
                 type="button"
+                variant="outline"
                 onClick={() => setOpen(false)}
                 disabled={busy}
               >
                 Annuler
               </Button>
-              <Button onClick={confirm} disabled={busy}>
+              <Button type="button" onClick={confirm} disabled={busy}>
                 {busy ? (
                   <Loader2 className="size-4 animate-spin" aria-hidden="true" />
                 ) : (
                   <Send className="size-4" aria-hidden="true" />
                 )}
-                Confirmer — {cost} Token{cost > 1 ? "s" : ""}
+                Démarrer la discussion
               </Button>
             </DialogFooter>
-          </>
-        )}
+          </div>
+        ) : null}
+
+        {screen.kind === "already-open" ? (
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Une conversation est déjà ouverte avec {name}.
+            </p>
+            <DialogFooter>
+              <Button
+                render={
+                  <Link href={`/conversations/${screen.conversationId}`}>
+                    Ouvrir la conversation
+                  </Link>
+                }
+              />
+            </DialogFooter>
+          </div>
+        ) : null}
       </DialogContent>
     </Dialog>
-  );
-}
-
-function NotAllowed({
-  icon,
-  title,
-  body,
-  action,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  body: string;
-  action: React.ReactNode;
-}) {
-  return (
-    <div className="flex flex-col items-center gap-3 py-6 text-center">
-      <span className="flex size-12 items-center justify-center rounded-2xl bg-primary-soft text-primary">
-        {icon}
-      </span>
-      <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
-      <p className="text-sm leading-relaxed text-muted-foreground">{body}</p>
-      <div className="mt-2 w-full max-w-[240px]">{action}</div>
-    </div>
   );
 }

@@ -58,7 +58,7 @@ export type PaymentSale = {
 
 export type PaymentReference = {
   reference: string | null;
-  kind: "token" | "verification" | "mission";
+  kind: "token" | "verification" | "mission" | "subscription";
 };
 
 export interface PaymentProvider {

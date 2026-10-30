@@ -116,6 +116,43 @@ export async function POST(request: Request) {
     );
   }
 
+  if (kind === "subscription") {
+    const { data: subPay, error: subErr } = await admin
+      .from("subscription_payments")
+      .select("id, developer_id, amount_fcfa, status")
+      .eq("id", reference)
+      .maybeSingle();
+
+    if (subErr || !subPay) {
+      return NextResponse.json({ error: "subscription_payment_not_found" }, { status: 404 });
+    }
+    if (subPay.status === "confirmed") {
+      return NextResponse.json({ ok: true, confirmed: false, alreadyPaid: true });
+    }
+    if (!provider.amountMatches(confirmed, subPay.amount_fcfa)) {
+      return NextResponse.json({ error: "amount_mismatch" }, { status: 400 });
+    }
+
+    const { data: subConfirm, error: subConfirmErr } = await admin.rpc(
+      "confirm_subscription_payment",
+      {
+        p_payment_id: subPay.id,
+        p_provider_sale_id: confirmed.id,
+      }
+    );
+
+    if (subConfirmErr) {
+      log.error({
+        action: "pulse.subscription.confirm.failed",
+        provider: provider.id,
+        message: subConfirmErr.message,
+      });
+      return NextResponse.json({ error: "confirm_failed" }, { status: 500 });
+    }
+
+    return NextResponse.json({ ok: true, confirmed: true, result: subConfirm });
+  }
+
   if (kind === "verification") {
     const { data: verification, error } = await admin
       .from("verification_requests")

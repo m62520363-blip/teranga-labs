@@ -1,21 +1,30 @@
 "use client";
 
-import Link from "next/link";
-import { Coins } from "lucide-react";
+import { Link } from "@/i18n/navigation";
+import { Crown } from "lucide-react";
 import { useBalance } from "@/components/balance-provider";
 
+/**
+ * Badge d'abonnement et de quota mensuel de contacts de projets restants
+ * pour l'espace développeur (remplace l'ancien indicateur de monnaie virtuelle).
+ */
 export function TokenBalance() {
-  const { balance } = useBalance();
+  const { balance, quotaLimit, planName } = useBalance();
+
+  const label =
+    balance !== null && quotaLimit !== null
+      ? `${planName ?? "Formule"} · ${balance}/${quotaLimit} contacts`
+      : planName ?? "Mon abonnement";
 
   return (
     <Link
-      href="/tokens"
-      title={balance === null ? "Tokens" : `${balance} token${balance > 1 ? "s" : ""} disponibles`}
-      className="inline-flex h-8 items-center gap-1.5 rounded-full border border-border bg-card px-3 text-sm font-medium text-foreground transition-colors hover:border-primary/40 hover:bg-primary-soft"
-      aria-label={balance === null ? "Solde de tokens" : `Solde : ${balance} tokens`}
+      href="/abonnement"
+      title="Gérer mon abonnement et mon quota mensuel de propositions"
+      className="inline-flex h-8 items-center gap-1.5 rounded-full border border-border bg-card px-3 text-xs font-medium text-foreground transition-colors outline-none hover:border-primary/40 hover:bg-primary-soft focus-visible:ring-2 focus-visible:ring-primary/50"
+      aria-label={label}
     >
-      <Coins className="size-4 text-primary" aria-hidden="true" />
-      <span>{balance === null ? "—" : balance}</span>
+      <Crown className="size-3.5 text-primary" aria-hidden="true" />
+      <span className="truncate">{label}</span>
     </Link>
   );
 }

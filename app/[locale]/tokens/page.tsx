@@ -3,19 +3,19 @@ import { getLocale } from "next-intl/server";
 import { redirect } from "@/i18n/navigation";
 
 export const metadata: Metadata = {
-  title: "Tokens",
+  title: "Nos abonnements",
   description:
-    "Rechargez vos Tokens depuis votre wallet pour publier un brief ou débloquer un contact.",
+    "Découvrez les formules d’abonnement développeur Devmarket : Pro, Pro Max et Agence.",
   robots: { index: false, follow: false },
 };
 
 export const dynamic = "force-dynamic";
 
 /**
- * L'achat de Tokens est forcé par le wallet (point de recharge unique) :
- * /tokens ne fait que rediriger vers la section packs de /wallet.
+ * L'ancienne route /tokens redirige désormais vers /abonnement
+ * (refonte du modèle économique : abonnements développeurs avec quotas mensuels).
  */
-export default async function TokensPage() {
+export default async function TokensRedirectPage() {
   const locale = await getLocale();
-  redirect({ href: "/wallet#acheter-tokens", locale });
+  redirect({ href: "/abonnement", locale });
 }

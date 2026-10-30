@@ -97,6 +97,44 @@ export interface Database {
         Update: Partial<Database["public"]["Tables"]["newsletter_subscribers"]["Insert"]>;
         Relationships: [];
       };
+      subscription_payments: {
+        Row: {
+          id: string;
+          developer_id: string;
+          plan_id: string;
+          billing_cycle: string;
+          amount_fcfa: number;
+          status: string;
+          provider: string;
+          provider_sale_id: string | null;
+          invoice_number: string;
+          period_start: string | null;
+          period_end: string | null;
+          confirmed_at: string | null;
+          refunded_at: string | null;
+          metadata: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          developer_id: string;
+          plan_id: string;
+          billing_cycle?: string;
+          amount_fcfa: number;
+          status?: string;
+          provider?: string;
+          provider_sale_id?: string | null;
+          invoice_number: string;
+          period_start?: string | null;
+          period_end?: string | null;
+          confirmed_at?: string | null;
+          refunded_at?: string | null;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["subscription_payments"]["Insert"]>;
+        Relationships: [];
+      };
       notification_preferences: {
         Row: {
           user_id: string;
@@ -1153,6 +1191,61 @@ export interface Database {
           p_referred: string;
         };
         Returns: undefined;
+      };
+      list_subscription_plans: {
+        Args: {
+          p_include_inactive?: boolean;
+        };
+        Returns: Json;
+      };
+      get_my_subscription: {
+        Args: Record<string, never>;
+        Returns: Json;
+      };
+      create_subscription_checkout: {
+        Args: {
+          p_plan_id: string;
+          p_billing_cycle?: string;
+        };
+        Returns: Json;
+      };
+      confirm_subscription_payment: {
+        Args: {
+          p_payment_id: string;
+          p_provider_sale_id?: string | null;
+        };
+        Returns: Json;
+      };
+      cancel_my_subscription: {
+        Args: {
+          p_immediate?: boolean;
+        };
+        Returns: Json;
+      };
+      admin_upsert_subscription_plan: {
+        Args: {
+          p_payload: Json;
+        };
+        Returns: Json;
+      };
+      admin_grant_subscription: {
+        Args: {
+          p_developer_id: string;
+          p_plan_id: string;
+          p_billing_cycle?: string;
+          p_duration_days?: number;
+        };
+        Returns: Json;
+      };
+      admin_refund_subscription_payment: {
+        Args: {
+          p_payment_id: string;
+        };
+        Returns: Json;
+      };
+      admin_get_subscription_analytics: {
+        Args: Record<string, never>;
+        Returns: Json;
       };
       admin_set_pro_prices: {
         Args: {

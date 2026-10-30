@@ -41,7 +41,7 @@
     "publishBrief": "Post a project",
     "myProfile": "My profile",
     "verifyProfile": "Verify my profile",
-    "buyTokens": "Buy Tokens",
+    "buyTokens": "Subscriptions",
     "settings": "Settings",
     "briefs": "Projects",
     "briefsView": "View projects",
@@ -58,7 +58,7 @@
     "devs": "Devs",
     "publish": "Post",
     "profile": "Profile",
-    "tokens": "Tokens",
+    "tokens": "Subscription",
     "langGroup": "Choose language",
     "langToEn": "English",
     "langToFr": "Français",
@@ -103,7 +103,7 @@
       "ranking": "Ranking",
       "publishBrief": "Post a project",
       "findDev": "Find a developer",
-      "buyTokens": "Buy Tokens",
+      "buyTokens": "Our subscriptions",
       "faq": "Frequently asked questions",
       "contact": "Contact us",
       "becomeDev": "Developer sign-up",
@@ -118,7 +118,7 @@
       "terms": "Terms",
       "privacy": "Privacy",
       "legal": "Legal notice",
-      "proSubscription": "PRO subscription"
+      "proSubscription": "Our subscriptions"
     },
     "copyright": "All rights reserved.",
     "publishedBy": "Published by",
@@ -166,9 +166,9 @@
           "query": "artificial intelligence"
         }
       ],
-      "ctaPrimary": "Post a project for free",
+      "ctaPrimary": "Publish my project for free",
       "ctaSecondary": "Find projects",
-      "ctaNote": "Free to post · No commission · Private WhatsApp"
+      "ctaNote": "No posting fee. No commitment."
     },
     "howItWorks": {
       "badge": "Simple, fast, transparent",
@@ -311,20 +311,20 @@
       "bigText": "The budget you agree with the developer goes to them in full. Devmarket takes nothing from your project.",
       "stats": [
         {
-          "value": "9",
-          "label": "countries covered"
+          "value": "9 countries",
+          "label": "Francophone West Africa covered"
         },
         {
-          "value": "2 min",
-          "label": "to post a project"
+          "value": "0 FCFA",
+          "label": "Free project posting & AI brief assistant"
         },
         {
-          "value": "1 Token",
-          "label": "per contact for developers"
+          "value": "80 to 400",
+          "label": "Monthly project contacts per plan"
         },
         {
-          "value": "24 h",
-          "label": "to receive proposals"
+          "value": "0%",
+          "label": "Commission taken on your projects"
         }
       ],
       "testimonialsTitle": "What our users say",
@@ -901,8 +901,8 @@
             "text": "Browse projects by country, budget and skill. Turn on email alerts for new projects."
           },
           {
-            "title": "Contact for 1 Token",
-            "text": "Open the conversation with a client for 1 Token. The contact stays available for life."
+            "title": "Send your proposal and chat directly",
+            "text": "Use your monthly contact quota (80 to 400 projects/month with Pro, Pro Max or Agency). Zero commission is taken on your projects."
           }
         ],
         "cta": "View projects",
@@ -916,15 +916,15 @@
     "benefits": {
       "eyebrow": "Simple, fast, transparent",
       "title": "A simple, fast and transparent service",
-      "lead": "Devmarket brings together everything you need to launch your project: verified profiles, a private inbox and clear rules.",
+      "lead": "Posting a project is 100% free for clients. Developers choose a clear monthly or annual subscription plan, with zero commission on completed projects.",
       "items": [
         {
           "title": "Verified developers",
           "text": "Check portfolios, skills and reviews before choosing your provider."
         },
         {
-          "title": "Free to post, no commission",
-          "text": "Posting a project costs the client nothing. Developers pay 1 Token per contact, and you pay them directly."
+          "title": "Clear developer subscriptions (Pro, Pro Max, Agency)",
+          "text": "From 2,500 FCFA/month for 80 monthly contacts (Pro), 7,000 FCFA/month for 200 contacts (Pro Max) or 15,000 FCFA/month for 400 contacts (Agency)."
         },
         {
           "title": "Proposals within hours",
@@ -932,7 +932,7 @@
         }
       ],
       "cta": "Post a project",
-      "note": "0 FCFA to post · 1 Token (2,500 FCFA) per contact for developers · 0% commission",
+      "note": "No posting fee for clients. No commitment. Direct payment between client and developer.",
       "visual": {
         "value": "0%",
         "label": "commission on projects",
@@ -977,8 +977,8 @@
           "text": "Chat without exposing your number. Conversations stay in your account."
         },
         {
-          "title": "Wallet & Tokens",
-          "text": "Buy Tokens and track your balance from your developer space."
+          "title": "Subscriptions & Monthly quotas",
+          "text": "Track your monthly project contact quota (80, 200 or 400 projects/month), invoices and earnings in FCFA."
         },
         {
           "title": "Verified profiles",
@@ -1070,28 +1070,20 @@
         "title": "For developers",
         "items": [
           {
-            "q": "How do I receive projects?",
-            "a": "Create your profile, list your skills and turn on email alerts. New projects also appear on the Projects page."
+            "q": "How does the developer subscription system work?",
+            "a": "Choose the plan that fits your activity: Pro (2,500 FCFA/month · 80 contacts/month), Pro Max (7,000 FCFA/month · 200 contacts/month) or Agency (15,000 FCFA/month · 400 contacts/month), with 20% off on annual billing."
           },
           {
-            "q": "How much does a contact cost?",
-            "a": "1 Token, or 2,500 FCFA, to open the conversation with a client. The contact stays available for life."
+            "q": "Does Devmarket take a commission on my projects?",
+            "a": "No, 0% commission. You negotiate and invoice your client directly."
           },
           {
-            "q": "Is there a Pro subscription?",
-            "a": "Yes. Pro lets you apply without limit. Details and pricing are available in your space and on the Tokens page."
+            "q": "What happens if I reach my monthly contact quota?",
+            "a": "You are never charged automatic overage fees. You are notified at 80%, 90% and 100% of your quota and can upgrade to a higher plan anytime."
           },
           {
-            "q": "Does Devmarket take a commission on my missions?",
-            "a": "No. You are paid directly by the client. Devmarket takes nothing from the mission amount."
-          },
-          {
-            "q": "How can I get featured?",
-            "a": "Complete your profile, add a portfolio and collect reviews. The monthly ranking highlights the most active profiles."
-          },
-          {
-            "q": "Can I work from any country?",
-            "a": "Yes. Registration is open worldwide, with prices displayed in your local currency."
+            "q": "Can I cancel my subscription anytime?",
+            "a": "Yes, all plans are no-commitment and can be cancelled in one click from your account."
           }
         ]
       }
@@ -1166,15 +1158,15 @@
         },
         {
           "q": "How does the model work?",
-          "a": "The client posts their project in 2 minutes: type of site, budget and region. The project appears in the project list. The interested developer spends 1 Token to send a proposal and open a private conversation with the client, then the exchange continues directly on the platform."
+          "a": "The client posts their project in 2 minutes: type of site, budget and region. The project appears in the project list. The interested developer spends your monthly subscription quota to send a proposal and open a private conversation with the client, then the exchange continues directly on the platform."
         },
         {
-          "q": "How much does a Token cost?",
-          "a": "1 Token (2,500 FCFA / ~$3.80). Registration and project posting are free: only developers buy Tokens to answer projects or unlock a contact."
+          "q": "How much does a subscriptions cost?",
+          "a": "your monthly subscription quota. Registration and project posting are free: only developers buy monthly contacts to answer projects or unlock a contact."
         },
         {
-          "q": "How do I pay for my Tokens?",
-          "a": "Payment is made online from your wallet: top it up, then spend your Tokens anywhere on the site. As soon as the payment is confirmed, your Tokens are credited to your account automatically."
+          "q": "How do I pay for my subscriptions?",
+          "a": "Payment is made online from your wallet: top it up, then spend your monthly contacts anywhere on the site. As soon as the payment is confirmed, your monthly contacts are credited to your account automatically."
         },
         {
           "q": "Does my WhatsApp number stay private?",
@@ -1186,7 +1178,7 @@
         },
         {
           "q": "Is there a developer ranking?",
-          "a": "Yes: a worldwide ranking, rewarded every month. The top 3 receive 10, 7 and 4 Tokens, you need at least 2 projects completed and confirmed in the month to appear in it, and each completed project is worth 50 points."
+          "a": "Yes: a worldwide ranking, rewarded every month. The top 3 receive 10, 7 and 4 monthly contacts, you need at least 2 projects completed and confirmed in the month to appear in it, and each completed project is worth 50 points."
         },
         {
           "q": "Is there a commission on projects?",
@@ -1300,16 +1292,13 @@
               "label": "How it works"
             },
             {
-              "label": "For clients"
+              "label": "Publish a project for free"
             },
             {
-              "label": "For developers"
+              "label": "Projects for developers"
             },
             {
-              "label": "Buy Tokens"
-            },
-            {
-              "label": "PRO subscription"
+              "label": "Our subscriptions"
             }
           ]
         },
@@ -1725,12 +1714,12 @@
       "unlockedContacts": "Unlocked contacts",
       "reputation": "Reputation & orders",
       "reviews": "My reviews",
-      "proSubscription": "PRO subscription",
+      "proSubscription": "Our subscriptions",
       "accountSettings": "Account & password",
       "notifications": "Notifications & alerts",
       "myAgency": "My agency",
-      "creditBalance": "Credit balance",
-      "buyTokens": "Buy Tokens",
+      "creditBalance": "Earnings & wallet",
+      "buyTokens": "My subscription",
       "withdraw": "Request withdrawal",
       "sentQuotes": "My sent quotes",
       "completedMissions": "Completed missions"

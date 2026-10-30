@@ -10,47 +10,40 @@ import {
   Zap,
   type LucideIcon,
 } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
-import { formatFCFA, TOKEN_PRICE_FCFA } from "@/lib/formatting";
 
 type Benefit = { title: string; text: string };
-type Row = { label: string; value: string };
 
 const ICONS: LucideIcon[] = [BadgeCheck, Wallet, Zap];
 
 /**
  * Section « Un service simple, rapide et transparent » — porte l'ancre `#tarifs`.
  *
- * Tous les montants proviennent de la configuration réelle de l'application :
- *   - Publication d'un projet client : 0 FCFA
- *   - Commission sur les missions : 0 % (paiement direct entre client et développeur)
- *   - Ouverture d'un contact : 1 Token = TOKEN_PRICE_FCFA (2 500 FCFA)
- *   - Abonnement PRO optionnel : lu depuis la RPC publique `get_pro_prices`
+ * Présente la gratuité intégrale côté client (0 FCFA de publication, 0 % de
+ * commission, paiement direct entre les parties) et les formules d'abonnement
+ * côté développeur (Pro : 2 500 FCFA/mois · 80 contacts, Pro Max : 7 000 FCFA/mois
+ * · 200 contacts, Agence : 15 000 FCFA/mois · 400 contacts).
  */
 export async function Benefits() {
   const t = await getTranslations("Landing.benefits");
   const locale = await getLocale();
   const isEn = locale === "en";
   const items = t.raw("items") as Benefit[];
-  const rows = t.raw("visual.rows") as Row[];
 
-  const supabase = await createClient();
-  let proPriceTokens: number | null = null;
-  let proDurationDays: number | null = null;
-
-  if (supabase) {
-    const { data, error } = await supabase.rpc("get_pro_prices");
-    if (!error && data && typeof data === "object") {
-      const p = data as { price_tokens?: unknown; duration_days?: unknown };
-      if (
-        typeof p.price_tokens === "number" &&
-        typeof p.duration_days === "number"
-      ) {
-        proPriceTokens = p.price_tokens;
-        proDurationDays = p.duration_days;
-      }
-    }
-  }
+  const pricingRows = isEn
+    ? [
+        { label: "Client project posting & AI assistant", value: "0 FCFA (Free)" },
+        { label: "Commission on completed projects", value: "0%" },
+        { label: "Developer Pro plan (80 contacts/mo)", value: "2,500 FCFA/mo" },
+        { label: "Developer Pro Max plan (200 contacts/mo)", value: "7,000 FCFA/mo" },
+        { label: "Agency plan (400 contacts/mo)", value: "15,000 FCFA/mo" },
+      ]
+    : [
+        { label: "Publication de projet & assistant IA (Client)", value: "0 FCFA (Gratuit)" },
+        { label: "Commission sur les missions réalisées", value: "0 %" },
+        { label: "Formule Développeur Pro (80 contacts/mois)", value: "2 500 FCFA/mois" },
+        { label: "Formule Pro Max (200 contacts/mois)", value: "7 000 FCFA/mois" },
+        { label: "Formule Agence (400 contacts/mois)", value: "15 000 FCFA/mois" },
+      ];
 
   return (
     <section
@@ -103,7 +96,7 @@ export async function Benefits() {
               href="/poster"
               className="btn-shine inline-flex min-h-12 items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-ink transition-[filter] outline-none hover:brightness-110 active:brightness-95 focus-visible:ring-2 focus-visible:ring-primary/60"
             >
-              {t("cta")}
+              {isEn ? "Publish my project for free" : "Publier mon projet gratuitement"}
               <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
             <Link
@@ -111,11 +104,13 @@ export async function Benefits() {
               className="inline-flex min-h-12 items-center gap-2 rounded-full border border-primary/30 bg-primary-soft px-5 py-3 text-sm font-semibold text-primary transition-colors outline-none hover:border-primary/60 hover:bg-primary/15 focus-visible:ring-2 focus-visible:ring-primary/60"
             >
               <Crown className="size-4" aria-hidden="true" />
-              {isEn ? "Compare Free & PRO" : "Comparer Gratuit & PRO"}
+              {isEn ? "View developer subscriptions" : "Voir nos abonnements"}
             </Link>
           </div>
           <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
-            {t("note")}
+            {isEn
+              ? "No posting fee. No commitment. Direct payment between client and developer."
+              : "Aucun frais de publication. Sans engagement. Paiement direct entre client et développeur."}
           </p>
         </div>
 
@@ -140,7 +135,7 @@ export async function Benefits() {
             </div>
 
             <dl className="mt-7 divide-y divide-hairline border-y border-hairline">
-              {rows.map((row) => (
+              {pricingRows.map((row) => (
                 <div
                   key={row.label}
                   className="flex items-center justify-between gap-4 py-3.5"
@@ -157,36 +152,6 @@ export async function Benefits() {
                   </dd>
                 </div>
               ))}
-
-              <div className="flex items-center justify-between gap-4 py-3.5">
-                <dt className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Check
-                    className="size-4 shrink-0 text-primary"
-                    aria-hidden="true"
-                  />
-                  {isEn ? "1 Token rate (contact unlock)" : "Cours d’un Token (contact direct)"}
-                </dt>
-                <dd className="text-right font-headings text-sm font-bold text-foreground">
-                  {formatFCFA(TOKEN_PRICE_FCFA)}
-                </dd>
-              </div>
-
-              {proPriceTokens !== null && proDurationDays !== null ? (
-                <div className="flex items-center justify-between gap-4 py-3.5">
-                  <dt className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Crown
-                      className="size-4 shrink-0 text-primary"
-                      aria-hidden="true"
-                    />
-                    {isEn
-                      ? `Optional PRO badge (${proDurationDays} days)`
-                      : `Badge PRO optionnel (${proDurationDays} jours)`}
-                  </dt>
-                  <dd className="text-right font-headings text-sm font-bold text-primary">
-                    {proPriceTokens} Tokens ({formatFCFA(proPriceTokens * TOKEN_PRICE_FCFA)})
-                  </dd>
-                </div>
-              ) : null}
             </dl>
 
             <p className="mt-5 flex items-start gap-2 text-xs leading-relaxed text-muted-foreground">
@@ -195,8 +160,8 @@ export async function Benefits() {
                 aria-hidden="true"
               />
               {isEn
-                ? "Direct payment between client and developer: Devmarket takes 0% commission on your projects."
-                : "Paiement direct entre le client et le développeur : Devmarket ne prélève aucune commission sur vos missions."}
+                ? "Direct payment between client and developer: Devmarket takes 0% commission on your projects. Annual billing saves 20%."
+                : "Paiement direct entre le client et le développeur : Devmarket ne prélève aucune commission sur vos missions. -20 % en abonnement annuel."}
             </p>
           </div>
         </div>
