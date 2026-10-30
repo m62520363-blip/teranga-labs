@@ -1541,5 +1541,40 @@
       "rating": "Meilleures notes",
       "availability": "Disponibilité"
     }
+  },
+  "DevHome": {
+    "copied": "Copié",
+    "copyFailed": "Copie impossible. Sélectionnez le lien manuellement.",
+    "referral": {
+      "title": "Programme de parrainage",
+      "subtitle": "Invitez d’autres développeurs à rejoindre Devmarket. Vous gagnez des points dès que l’un d’eux devient actif.",
+      "signups": "Filleuls inscrits",
+      "converted": "Filleuls actifs",
+      "points": "Points gagnés",
+      "copy": "Copier mon lien",
+      "unavailable": "Votre lien de parrainage sera généré automatiquement.",
+      "seeProfile": "Voir mon profil public"
+    },
+    "share": {
+      "title": "Partagez votre profil",
+      "subtitle": "Générez des visites en partageant votre profil public sur vos réseaux.",
+      "copy": "Copier le lien",
+      "preview": "Prévisualiser"
+    },
+    "recent": {
+      "title": "Derniers projets",
+      "empty": "Aucun projet ouvert pour le moment.",
+      "viewAll": "Voir tous les projets",
+      "justNow": "à l’instant",
+      "hours": "il y a {count} h",
+      "days": "il y a {count} j"
+    },
+    "rank": {
+      "title": "Votre classement",
+      "subtitle": "Votre position dépend de votre activité, de votre chiffre d’affaires et de la complétion de votre profil.",
+      "score": "Score",
+      "see": "Voir le classement",
+      "level": "Niveau"
+    }
   }
 }

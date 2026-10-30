@@ -49,7 +49,7 @@ export default async function DashboardPage({
   const roleRes = await supabase.rpc("get_my_role");
   if (roleRes.data === "client") redirect("/client");
 
-  const [devRes, balanceRes, unlocksRes, transactionsRes, ordersRes, reviewsRes, myReviewsRes, missionsRes, conversations, openProjectsRes, statsRes, prefsRes] =
+  const [devRes, balanceRes, unlocksRes, transactionsRes, ordersRes, reviewsRes, myReviewsRes, missionsRes, conversations, openProjectsRes, statsRes, prefsRes, referralRes, recentRes] =
     await Promise.all([
       supabase
         .from("developers")
@@ -80,6 +80,18 @@ export default async function DashboardPage({
         .select("email_new_projects")
         .eq("user_id", user.id)
         .maybeSingle(),
+      // Parrainage : la RPC n'existe que si la migration 0072 est
+      // appliquée. En cas d'absence, referralRes.data reste null et la
+      // carte affiche son état « lien à venir » sans casser la page.
+      supabase.rpc("get_my_referral_summary"),
+      // Derniers projets ouverts : données réelles de public.requests.
+      supabase
+        .from("requests")
+        .select("id, description, budget, project_type, created_at")
+        .eq("status", "ouvert")
+        .eq("hidden", false)
+        .order("created_at", { ascending: false })
+        .limit(4),
     ]);
 
   const profile = devRes.data ?? null;
@@ -120,6 +132,26 @@ export default async function DashboardPage({
   const emailNewProjects =
     prefsRes.data?.email_new_projects !== false;
 
+  // Parrainage : on ignore silencieusement l'erreur (RPC absente tant
+  // que 0072 n'est pas appliquée) plutôt que de faire échouer la page.
+  const referral = referralRes.error
+    ? null
+    : ((referralRes.data ?? null) as {
+        code: string | null;
+        total_signups: number;
+        converted: number;
+        points: number;
+        points_per_conversion: number;
+      } | null);
+
+  const recentProjects = (recentRes.data ?? []) as {
+    id: string;
+    description: string;
+    budget: number | null;
+    project_type: string | null;
+    created_at: string;
+  }[];
+
   return (
     <DashboardContent
       userId={user.id}
@@ -137,6 +169,8 @@ export default async function DashboardPage({
       openProjects={openProjectsRes.count ?? 0}
       stats={stats}
       emailNewProjects={emailNewProjects}
+      referral={referral}
+      recentProjects={recentProjects}
       initialTab={(tab ?? "") as never}
     />
   );

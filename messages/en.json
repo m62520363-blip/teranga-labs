@@ -1541,5 +1541,40 @@
       "rating": "Top rated",
       "availability": "Availability"
     }
+  },
+  "DevHome": {
+    "copied": "Copied",
+    "copyFailed": "Copy failed. Select the link manually.",
+    "referral": {
+      "title": "Referral program",
+      "subtitle": "Invite other developers to join Devmarket. You earn points as soon as one of them becomes active.",
+      "signups": "Signed up",
+      "converted": "Active referrals",
+      "points": "Points earned",
+      "copy": "Copy my link",
+      "unavailable": "Your referral link will be generated automatically.",
+      "seeProfile": "View my public profile"
+    },
+    "share": {
+      "title": "Share your profile",
+      "subtitle": "Drive visits by sharing your public profile on your networks.",
+      "copy": "Copy link",
+      "preview": "Preview"
+    },
+    "recent": {
+      "title": "Latest projects",
+      "empty": "No open project right now.",
+      "viewAll": "View all projects",
+      "justNow": "just now",
+      "hours": "{count} h ago",
+      "days": "{count} d ago"
+    },
+    "rank": {
+      "title": "Your ranking",
+      "subtitle": "Your position depends on your activity, revenue and profile completion.",
+      "score": "Score",
+      "see": "View leaderboard",
+      "level": "Level"
+    }
   }
 }

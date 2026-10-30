@@ -5,6 +5,14 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import {
+  RankCard,
+  RecentProjectsCard,
+  ReferralCard,
+  ShareProfileCard,
+  type RecentProject,
+  type ReferralSummary,
+} from "@/components/dashboard/dev-home-cards";
+import {
   AlertTriangle,
   ArrowRight,
   BadgeCheck,
@@ -325,6 +333,8 @@ export function DashboardContent({
   openProjects = 0,
   stats = null,
   emailNewProjects = true,
+  referral = null,
+  recentProjects = [],
   initialTab,
 }: {
   userId: string;
@@ -342,6 +352,10 @@ export function DashboardContent({
   openProjects?: number;
   stats?: DeveloperStats | null;
   emailNewProjects?: boolean;
+  /** Résumé de parrainage (null tant que la migration 0072 n'est pas appliquée). */
+  referral?: ReferralSummary | null;
+  /** Derniers projets ouverts, réels, déjà tronqués côté serveur. */
+  recentProjects?: RecentProject[];
   initialTab?: string;
 }) {
   const t = useTranslations("DevStats");
@@ -824,6 +838,23 @@ export function DashboardContent({
             balance={balance}
             tokensUsed={tokensUsed}
             unlocksCount={unlocks.length}
+          />
+        </div>
+
+        {/* ------------------------- CARTES D'ACCUEIL -------------------------
+            Reproduction des blocs de la référence : parrainage, derniers
+            projets, partage du profil, classement. Toutes les valeurs
+            proviennent de données réelles chargées par la page serveur. */}
+        <div
+          className="mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-4"
+          aria-label="Raccourcis et activité"
+        >
+          <ReferralCard summary={referral} />
+          <RecentProjectsCard projects={recentProjects} />
+          <ShareProfileCard username={p.username || null} />
+          <RankCard
+            reputationScore={profile?.reputation_score ?? null}
+            reputationLevel={profile?.reputation_level ?? null}
           />
         </div>
 

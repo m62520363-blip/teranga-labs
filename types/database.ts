@@ -1138,6 +1138,22 @@ export interface Database {
         };
         Returns: Json;
       };
+      get_my_referral_summary: {
+        Args: Record<string, never>;
+        Returns: Json;
+      };
+      attribute_referral: {
+        Args: {
+          p_code: string;
+        };
+        Returns: Json;
+      };
+      mark_referral_converted: {
+        Args: {
+          p_referred: string;
+        };
+        Returns: undefined;
+      };
       admin_set_pro_prices: {
         Args: {
           p_price_tokens: number;
