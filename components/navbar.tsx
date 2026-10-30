@@ -152,7 +152,7 @@ export function Navbar({
       >
         <nav
           aria-label={t("mainNav")}
-          className="container-tl flex h-16 items-center justify-between gap-3 xl:gap-6"
+          className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-2 px-4 sm:px-6 lg:px-8"
         >
           <Link
             href={homeHref}
@@ -165,27 +165,27 @@ export function Navbar({
           {authed ? (
             <DesktopNavLinks pathname={pathname} authed appLinks={appLinks} />
           ) : (
-            /* Nav visiteur en flux normal (jamais en absolute) : aucun chevauchement
-               possible avec le sélecteur de langue ou les boutons d'action. */
-            <div className="hidden min-w-0 items-center gap-1 lg:flex xl:gap-2">
+            /* Nav visiteur en flux normal avec whitespace-nowrap shrink-0 :
+               aucun retour à la ligne ni chevauchement avec le sélecteur de langue. */
+            <div className="hidden shrink-0 items-center gap-0.5 lg:flex xl:gap-1.5">
               <Link
                 href="/briefs"
                 aria-current={isActiveLink(pathname, "/briefs") ? "page" : undefined}
                 className={cn(
-                  "inline-flex h-9 items-center gap-1.5 rounded-full px-3 text-[13px] font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50 xl:px-3.5 xl:text-sm",
+                  "inline-flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 text-[13px] font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50 xl:px-3",
                   isActiveLink(pathname, "/briefs")
                     ? "bg-primary-soft text-primary font-semibold"
                     : "text-foreground/90 hover:bg-white/[0.06] hover:text-foreground"
                 )}
               >
-                <span className="size-1.5 rounded-full bg-primary" aria-hidden="true" />
+                <span className="size-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
                 {t("briefs")}
               </Link>
               <Link
                 href="/dev"
                 aria-current={isActiveLink(pathname, "/dev") ? "page" : undefined}
                 className={cn(
-                  "inline-flex h-9 items-center rounded-full px-3 text-[13px] font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50 xl:px-3.5 xl:text-sm",
+                  "inline-flex h-9 shrink-0 items-center whitespace-nowrap rounded-full px-2.5 text-[13px] font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50 xl:px-3",
                   isActiveLink(pathname, "/dev")
                     ? "bg-primary-soft text-primary font-semibold"
                     : "text-foreground/80 hover:bg-white/[0.06] hover:text-foreground"
@@ -197,7 +197,7 @@ export function Navbar({
                 href="/agences"
                 aria-current={isActiveLink(pathname, "/agences") ? "page" : undefined}
                 className={cn(
-                  "inline-flex h-9 items-center rounded-full px-3 text-[13px] font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50 xl:px-3.5 xl:text-sm",
+                  "inline-flex h-9 shrink-0 items-center whitespace-nowrap rounded-full px-2.5 text-[13px] font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50 xl:px-3",
                   isActiveLink(pathname, "/agences")
                     ? "bg-primary-soft text-primary font-semibold"
                     : "text-foreground/80 hover:bg-white/[0.06] hover:text-foreground"
@@ -207,19 +207,19 @@ export function Navbar({
               </Link>
               <Link
                 href="/#comment-ca-marche"
-                className="inline-flex h-9 items-center rounded-full px-3 text-[13px] font-medium text-foreground/80 transition-colors outline-none hover:bg-white/[0.06] hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50 xl:px-3.5 xl:text-sm"
+                className="inline-flex h-9 shrink-0 items-center whitespace-nowrap rounded-full px-2.5 text-[13px] font-medium text-foreground/80 transition-colors outline-none hover:bg-white/[0.06] hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50 xl:px-3"
               >
                 {t("howItWorks")}
               </Link>
               <Link
                 href="/#tarifs"
-                className="inline-flex h-9 items-center rounded-full px-3 text-[13px] font-medium text-foreground/80 transition-colors outline-none hover:bg-white/[0.06] hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50 xl:px-3.5 xl:text-sm"
+                className="inline-flex h-9 shrink-0 items-center whitespace-nowrap rounded-full px-2.5 text-[13px] font-medium text-foreground/80 transition-colors outline-none hover:bg-white/[0.06] hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50 xl:px-3"
               >
                 {t("pricing")}
               </Link>
               <Link
                 href="/#faq"
-                className="inline-flex h-9 items-center rounded-full px-3 text-[13px] font-medium text-foreground/80 transition-colors outline-none hover:bg-white/[0.06] hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50 xl:px-3.5 xl:text-sm"
+                className="inline-flex h-9 shrink-0 items-center whitespace-nowrap rounded-full px-2.5 text-[13px] font-medium text-foreground/80 transition-colors outline-none hover:bg-white/[0.06] hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50 xl:px-3"
               >
                 {t("faq")}
               </Link>
@@ -227,9 +227,9 @@ export function Navbar({
           )}
 
           <div className="hidden shrink-0 items-center gap-2 lg:flex xl:gap-2.5">
-            <span aria-hidden="true" className="mr-0.5 h-5 w-px bg-white/15" />
+            <span aria-hidden="true" className="mr-0.5 h-5 w-px shrink-0 bg-white/15" />
             <LanguageSwitcher />
-            <span aria-hidden="true" className="ml-0.5 h-5 w-px bg-white/15" />
+            <span aria-hidden="true" className="ml-0.5 h-5 w-px shrink-0 bg-white/15" />
             {user ? (
               <>
                 {userId ? <NotificationBell userId={userId} /> : null}
@@ -245,7 +245,7 @@ export function Navbar({
                   href="/login"
                   aria-current={isActiveLink(pathname, "/login") ? "page" : undefined}
                   className={cn(
-                    "inline-flex h-9 items-center rounded-full px-3.5 text-[13px] font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50 xl:text-sm",
+                    "inline-flex h-9 shrink-0 items-center whitespace-nowrap rounded-full px-3 text-[13px] font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
                     isActiveLink(pathname, "/login")
                       ? "bg-white/10 text-foreground"
                       : "text-foreground/90 hover:bg-white/[0.06] hover:text-foreground"
@@ -257,7 +257,7 @@ export function Navbar({
                   href="/signup"
                   aria-current={isActiveLink(pathname, "/signup") ? "page" : undefined}
                   className={cn(
-                    "hidden h-9 items-center rounded-full border border-white/15 bg-white/[0.04] px-3.5 text-[13px] font-medium text-foreground transition-colors outline-none hover:border-primary/40 hover:bg-white/[0.08] focus-visible:ring-2 focus-visible:ring-primary/50 xl:inline-flex xl:text-sm",
+                    "hidden h-9 shrink-0 items-center whitespace-nowrap rounded-full border border-white/15 bg-white/[0.04] px-3.5 text-[13px] font-medium text-foreground transition-colors outline-none hover:border-primary/40 hover:bg-white/[0.08] focus-visible:ring-2 focus-visible:ring-primary/50 xl:inline-flex",
                     isActiveLink(pathname, "/signup") && "border-primary/50 bg-primary-soft text-primary"
                   )}
                 >
@@ -266,9 +266,9 @@ export function Navbar({
                 <Link
                   href="/poster"
                   aria-current={isActiveLink(pathname, "/poster") ? "page" : undefined}
-                  className="btn-shine inline-flex h-9 items-center gap-1.5 rounded-full bg-primary px-4 text-[13px] font-semibold text-primary-foreground transition-[filter] outline-none hover:brightness-110 active:brightness-95 focus-visible:ring-2 focus-visible:ring-primary/50 xl:text-sm"
+                  className="btn-shine inline-flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-primary px-4 text-[13px] font-semibold text-primary-foreground transition-[filter] outline-none hover:brightness-110 active:brightness-95 focus-visible:ring-2 focus-visible:ring-primary/50"
                 >
-                  <Plus className="size-3.5" aria-hidden="true" />
+                  <Plus className="size-3.5 shrink-0" aria-hidden="true" />
                   {t("publishRequest")}
                 </Link>
               </>
