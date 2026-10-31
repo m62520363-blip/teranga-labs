@@ -68,7 +68,7 @@ export function RoleCards() {
                     alt=""
                     fill
                     sizes="(max-width: 1024px) 100vw, 50vw"
-                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                    className="object-cover motion-safe:transition-transform motion-safe:duration-700 motion-safe:ease-out motion-safe:group-hover:scale-110"
                     aria-hidden="true"
                   />
                   <div

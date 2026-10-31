@@ -19,7 +19,7 @@ export function BigCta() {
             alt=""
             fill
             sizes="100vw"
-            className="object-cover opacity-25 mix-blend-luminosity transition-transform duration-1000 ease-out group-hover:scale-105"
+            className="object-cover opacity-25 mix-blend-luminosity motion-safe:transition-transform motion-safe:duration-1000 motion-safe:ease-out motion-safe:group-hover:scale-105"
             aria-hidden="true"
             priority={false}
           />
