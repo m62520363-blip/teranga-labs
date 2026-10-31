@@ -936,6 +936,28 @@ export function DashboardContent({
             <nav
               className="flex flex-col gap-3 rounded-2xl border border-hairline bg-card p-3"
               aria-label="Sections du dashboard"
+              onKeyDown={(e) => {
+                const items = Array.from(
+                  (e.currentTarget as HTMLElement).querySelectorAll<HTMLElement>(
+                    "button, a"
+                  )
+                );
+                const idx = items.indexOf(document.activeElement as HTMLElement);
+                if (idx < 0) return;
+                if (e.key === "ArrowDown") {
+                  e.preventDefault();
+                  items[(idx + 1) % items.length]?.focus();
+                } else if (e.key === "ArrowUp") {
+                  e.preventDefault();
+                  items[(idx - 1 + items.length) % items.length]?.focus();
+                } else if (e.key === "Home") {
+                  e.preventDefault();
+                  items[0]?.focus();
+                } else if (e.key === "End") {
+                  e.preventDefault();
+                  items[items.length - 1]?.focus();
+                }
+              }}
             >
               <div>
                 <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
