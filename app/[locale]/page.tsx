@@ -16,6 +16,8 @@ import { SocialProof } from "@/components/landing/social-proof";
 import { Faq } from "@/components/landing/faq";
 import { RoleCards } from "@/components/landing/role-cards";
 import { META } from "@/components/landing/content";
+import { createClient } from "@/lib/supabase/server";
+import type { ApprovedDeveloper } from "@/types/database";
 import { absoluteUrl } from "@/lib/utils";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -64,6 +66,26 @@ export default async function HomePage() {
   };
   const faqs = [...faq.clients.items, ...faq.developers.items];
 
+  // Avatars réels des développeurs approuvés (preuve sociale comme Codeur.com).
+  // Aucune photo fictive : on ne prend que les profils qui possèdent un avatar_url.
+  const supabase = await createClient();
+  let developerAvatars: { id: string; name: string; username: string | null; avatar_url: string }[] = [];
+  if (supabase) {
+    const { data } = await supabase.rpc("list_approved_developers", {
+      p_limit: 12,
+      p_offset: 0,
+    });
+    developerAvatars = ((Array.isArray(data) ? data : []) as ApprovedDeveloper[])
+      .filter((d) => Boolean(d?.id) && Boolean(d?.avatar_url))
+      .slice(0, 8)
+      .map((d) => ({
+        id: d.id,
+        name: d.full_name ?? d.username ?? (locale === "en" ? "Developer" : "Développeur"),
+        username: d.username,
+        avatar_url: d.avatar_url as string,
+      }));
+  }
+
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -94,7 +116,7 @@ export default async function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
       <div className="bg-background">
-        <Hero />
+        <Hero developerAvatars={developerAvatars} />
         <LatestProjects />
         <CountryFlags />
         <CustomOffers />

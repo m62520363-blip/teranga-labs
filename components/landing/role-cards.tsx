@@ -1,11 +1,12 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { ArrowRight, Check, Code2, UserRound } from "lucide-react";
+import Image from "next/image";
 import { cn } from "cn";
 
 const CARDS = [
-  { key: "client", href: "/poster", highlighted: false, icon: UserRound },
-  { key: "developer", href: "/briefs", highlighted: true, icon: Code2 },
+  { key: "client", href: "/poster", highlighted: false, icon: UserRound, photo: "/landing/role-card-client.jpg" },
+  { key: "developer", href: "/briefs", highlighted: true, icon: Code2, photo: "/landing/role-card-developer.jpg" },
 ] as const;
 
 /**
@@ -61,6 +62,25 @@ export function RoleCards() {
                       : "bg-[radial-gradient(closest-side,rgba(255,255,255,0.05),transparent)]"
                   )}
                 />
+                <div className="relative mb-6 aspect-[16/9] w-full overflow-hidden rounded-2xl border border-white/10">
+                  <Image
+                    src={card.photo}
+                    alt=""
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-cover"
+                    aria-hidden="true"
+                  />
+                  <div
+                    aria-hidden="true"
+                    className={cn(
+                      "pointer-events-none absolute inset-0",
+                      card.highlighted
+                        ? "bg-gradient-to-t from-[#0b132b]/60 via-transparent to-transparent"
+                        : "bg-gradient-to-t from-card/70 via-transparent to-transparent"
+                    )}
+                  />
+                </div>
                 <div className="flex items-center gap-3">
                   <span
                     className={cn(

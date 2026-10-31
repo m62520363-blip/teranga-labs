@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import Image from "next/image";
 import {
   ArrowRight,
   BadgeCheck,
@@ -50,6 +51,20 @@ export function HowItWorks() {
 
         <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-7">
           <article className="flex flex-col rounded-[1.75rem] border border-hairline bg-card p-6 sm:p-8">
+            <div className="relative mb-6 aspect-[16/9] w-full overflow-hidden rounded-2xl border border-hairline">
+              <Image
+                src="/landing/how-it-works-client.jpg"
+                alt=""
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover"
+                aria-hidden="true"
+              />
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 bg-gradient-to-t from-card/70 via-transparent to-transparent"
+              />
+            </div>
             <div className="flex items-center gap-3">
               <span className="flex size-11 items-center justify-center rounded-2xl border border-hairline bg-background text-primary">
                 <Briefcase className="size-5" aria-hidden="true" />
@@ -99,6 +114,20 @@ export function HowItWorks() {
               aria-hidden="true"
               className="pointer-events-none absolute -right-24 -top-24 size-64 rounded-full bg-[radial-gradient(closest-side,rgba(57,255,136,0.16),transparent)]"
             />
+            <div className="relative mb-6 aspect-[16/9] w-full overflow-hidden rounded-2xl border border-primary/20">
+              <Image
+                src="/landing/how-it-works-developer.jpg"
+                alt=""
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover"
+                aria-hidden="true"
+              />
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0b132b]/70 via-transparent to-transparent"
+              />
+            </div>
             <div className="relative flex items-center gap-3">
               <span className="flex size-11 items-center justify-center rounded-2xl border border-primary/25 bg-primary-soft text-primary">
                 <UserRound className="size-5" aria-hidden="true" />

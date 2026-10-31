@@ -10,6 +10,7 @@ import {
   ShieldCheck,
   Star,
 } from "lucide-react";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import type { ApprovedDeveloper } from "@/types/database";
 
@@ -212,12 +213,24 @@ export async function SocialProof() {
                     className="flex flex-col rounded-2xl border border-hairline bg-card p-5 transition-colors hover:border-primary/40"
                   >
                     <div className="flex items-center gap-3">
-                      <span
-                        aria-hidden="true"
-                        className="flex size-10 shrink-0 items-center justify-center rounded-full border border-primary/25 bg-primary-soft font-headings text-xs font-bold text-primary"
-                      >
-                        {initials(name)}
-                      </span>
+                      {dev.avatar_url ? (
+                        <span className="relative flex size-10 shrink-0 overflow-hidden rounded-full border border-primary/25 bg-primary-soft">
+                          <Image
+                            src={dev.avatar_url}
+                            alt={name}
+                            width={40}
+                            height={40}
+                            className="size-full object-cover"
+                          />
+                        </span>
+                      ) : (
+                        <span
+                          aria-hidden="true"
+                          className="flex size-10 shrink-0 items-center justify-center rounded-full border border-primary/25 bg-primary-soft font-headings text-xs font-bold text-primary"
+                        >
+                          {initials(name)}
+                        </span>
+                      )}
                       <div className="min-w-0">
                         <p className="flex items-center gap-1.5 truncate text-sm font-semibold">
                           {name}

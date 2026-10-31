@@ -4,17 +4,17 @@ import * as React from "react";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
 import { ArrowRight, Briefcase, Plus, Search, ShieldCheck, Sparkles } from "lucide-react";
+import Image from "next/image";
 import { HeroLaptop } from "@/components/landing/hero-laptop";
 
-/**
- * Hero de la landing — structure de la référence Codeur.com : grand fond
- * bleu, cercles concentriques, preuve sociale, titre avec mot souligné,
- * barre de recherche centrale et raccourcis de catégories.
- *
- * Le champ de recherche utilise la vraie recherche de l'annuaire
- * (`/dev?q=`) : aucune requête factice.
- */
-export function Hero() {
+type DeveloperAvatar = {
+  id: string;
+  name: string;
+  username: string | null;
+  avatar_url: string;
+};
+
+export function Hero({ developerAvatars = [] }: { developerAvatars?: DeveloperAvatar[] }) {
   const t = useTranslations("Landing.hero");
   const router = useRouter();
   const [query, setQuery] = React.useState("");
@@ -53,12 +53,41 @@ export function Hero() {
 
       <div className="container-tl relative">
         <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
-          {/* Preuve factuelle vérifiable (sans avatars fictifs). */}
-          <div className="animate-rise flex flex-wrap items-center justify-center gap-2">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1.5 text-xs font-medium text-white/90 backdrop-blur">
+          {/* Avatars réels des développeurs approuvés (comme Codeur.com) + preuve factuelle. */}
+          {developerAvatars.length > 0 ? (
+            <Link
+              href="/dev"
+              className="animate-rise group mb-4 inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/[0.06] px-3 py-1.5 text-xs font-medium text-white/90 backdrop-blur transition-colors hover:border-primary/40 hover:bg-white/[0.1]"
+            >
+              <span className="flex -space-x-2" aria-hidden="true">
+                {developerAvatars.map((dev) => (
+                  <span
+                    key={dev.id}
+                    className="relative inline-block size-7 overflow-hidden rounded-full ring-2 ring-[#0b132b] sm:size-8"
+                  >
+                    <Image
+                      src={dev.avatar_url}
+                      alt={dev.name}
+                      width={32}
+                      height={32}
+                      className="size-full object-cover"
+                    />
+                  </span>
+                ))}
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="size-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(57,255,136,0.8)]" />
+                {t("socialProof")}
+                <ArrowRight className="size-3.5 opacity-60 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+              </span>
+            </Link>
+          ) : (
+            <span className="animate-rise inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1.5 text-xs font-medium text-white/90 backdrop-blur">
               <span className="size-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(57,255,136,0.8)]" aria-hidden="true" />
               {t("socialProof")}
             </span>
+          )}
+          <div className="animate-rise flex flex-wrap items-center justify-center gap-2">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/25 bg-primary/[0.08] px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
               <Sparkles className="size-3.5" aria-hidden="true" />
               {t("badge")}
