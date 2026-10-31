@@ -128,7 +128,31 @@ export default async function BriefDetailPage({
   const demo = Boolean(brief.demo);
 
   return (
-    <div className="bg-surface py-14 md:py-20">
+    <>
+      {brief ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Service",
+              name: PROJECT_TYPE_LABELS[brief.project_type] ?? brief.project_type,
+              description: brief.description?.slice(0, 200) ?? "",
+              areaServed: brief.client_city,
+              offers: {
+                "@type": "Offer",
+                price: brief.budget,
+                priceCurrency: "XOF",
+              },
+              provider: {
+                "@type": "Organization",
+                name: "Devmarket",
+              },
+            }),
+          }}
+        />
+      ) : null}
+      <div className="bg-surface py-14 md:py-20">
       <div className="container-tl">
         <div className="mx-auto max-w-3xl">
           <Link
@@ -285,6 +309,7 @@ export default async function BriefDetailPage({
         </div>
       </div>
     </div>
+    </>
   );
 }
 
