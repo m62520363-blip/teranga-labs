@@ -870,31 +870,35 @@ export function DashboardContent({
           />
         </div>
 
-        <nav
-          className="mt-10 flex flex-wrap gap-2 border-b border-hairline pb-px"
-          aria-label="Sections du dashboard"
-        >
-          {tabs.map((t) => (
-            <button
-              key={t.key}
-              type="button"
-              onClick={() => setTab(t.key)}
-              className={cn(
-                "inline-flex h-10 items-center gap-2 rounded-t-xl px-4 text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
-                tab === t.key
-                  ? "border border-hairline border-b-transparent bg-card text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
+        <div className="mt-10 grid gap-6 lg:grid-cols-[240px_1fr]">
+          <aside className="lg:sticky lg:top-6 lg:self-start">
+            <nav
+              className="flex flex-col gap-1 rounded-2xl border border-hairline bg-card p-2"
+              aria-label="Sections du dashboard"
             >
-              {t.label}
-              {typeof t.count === "number" ? (
-                <span className="rounded-full bg-hairline px-2 py-0.5 text-xs text-muted-foreground">
-                  {t.count}
-                </span>
-              ) : null}
-            </button>
-          ))}
-        </nav>
+              {tabs.map((t) => (
+                <button
+                  key={t.key}
+                  type="button"
+                  onClick={() => setTab(t.key)}
+                  className={cn(
+                    "flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
+                    tab === t.key
+                      ? "bg-primary-soft text-primary"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  )}
+                >
+                  <span>{t.label}</span>
+                  {typeof t.count === "number" ? (
+                    <span className="rounded-full bg-hairline px-2 py-0.5 text-xs text-muted-foreground">
+                      {t.count}
+                    </span>
+                  ) : null}
+                </button>
+              ))}
+            </nav>
+          </aside>
+          <div className="min-w-0">
 
         {tab === "crm" ? (
           <section className="mt-8" aria-label="CRM contacts débloqués">
@@ -2020,5 +2024,7 @@ export function DashboardContent({
         </Dialog>
       </div>
     </div>
+  </div>
+</div>
   );
 }
