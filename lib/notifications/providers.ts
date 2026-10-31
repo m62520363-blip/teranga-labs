@@ -12,6 +12,10 @@ export type DeliveryMeta = {
   recipientLabel: string;
   /** false = ne pas utiliser l'email (préférence « nouveaux projets »). */
   allowEmail?: boolean;
+  /** HTML optionnel pour l'email (Resend). Si absent, seul le texte est envoyé. */
+  html?: string;
+  /** Sujet optionnel pour l'email (Resend). */
+  subject?: string;
 };
 
 /**
@@ -68,7 +72,14 @@ export async function deliverMessage(
     cfg.resendFromEmail &&
     meta.allowEmail !== false
   ) {
-    await sendResend(cfg.resendApiKey, cfg.resendFromEmail, recipient.email, message);
+    await sendResend(
+      cfg.resendApiKey,
+      cfg.resendFromEmail,
+      recipient.email,
+      message,
+      meta.html,
+      meta.subject
+    );
     return;
   }
 
@@ -134,7 +145,14 @@ async function sendTwilio(
   }
 }
 
-async function sendResend(apiKey: string, from: string, to: string, message: string): Promise<void> {
+async function sendResend(
+  apiKey: string,
+  from: string,
+  to: string,
+  message: string,
+  html?: string,
+  subject?: string
+): Promise<void> {
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
@@ -144,8 +162,9 @@ async function sendResend(apiKey: string, from: string, to: string, message: str
     body: JSON.stringify({
       from,
       to: [to],
-      subject: "Devmarket · Nouveau projet",
+      subject: subject ?? "Devmarket · Nouveau projet",
       text: message,
+      ...(html ? { html } : {}),
     }),
     signal: AbortSignal.timeout(10000),
   });

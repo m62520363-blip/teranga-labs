@@ -185,8 +185,13 @@ function LoginForm({ next = null }: { next?: string | null }) {
   const [notice, setNotice] = React.useState<string | null>(null);
   const [resetMode, setResetMode] = React.useState(false);
   const [resetEmail, setResetEmail] = React.useState("");
+  const [resetCode, setResetCode] = React.useState("");
+  const [resetPassword, setResetPassword] = React.useState("");
+  const [resetConfirm, setResetConfirm] = React.useState("");
   const [sendingReset, setSendingReset] = React.useState(false);
   const [resetSent, setResetSent] = React.useState(false);
+  const [resetError, setResetError] = React.useState<string | null>(null);
+  const [resetSuccess, setResetSuccess] = React.useState(false);
   const [showPw, setShowPw] = React.useState(false);
   // Le SMS est une option COMPLEMENTAIRE : l'email reste le chemin par défaut.
   const [usePhone, setUsePhone] = React.useState(false);
@@ -224,21 +229,66 @@ function LoginForm({ next = null }: { next?: string | null }) {
     router.refresh();
   };
 
-  const sendResetLink = async () => {
-    if (!isSupabaseConfigured()) return;
+  const sendResetCode = async () => {
+    if (!resetEmail.trim()) return;
     setSendingReset(true);
-    setResetSent(false);
-    const supabase = createClient();
-    const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
-      redirectTo: `${window.location.origin}/auth/update-password`,
-    });
-    setSendingReset(false);
-    if (error) {
-      setFormError(translateAuthError(error.message));
+    setResetError(null);
+    setResetCode("");
+    try {
+      const res = await fetch("/api/auth/request-reset-code", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: resetEmail.trim() }),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setResetError(json?.message ?? "Envoi impossible. Réessayez.");
+        return;
+      }
+      setResetSent(true);
+    } catch {
+      setResetError("Erreur réseau. Réessayez.");
+    } finally {
+      setSendingReset(false);
+    }
+  };
+
+  const submitReset = async () => {
+    setResetError(null);
+    if (resetCode.length !== 6) {
+      setResetError("Le code doit contenir 6 chiffres.");
       return;
     }
-    setResetSent(true);
-    setFormError(null);
+    if (resetPassword.length < 8) {
+      setResetError("Le mot de passe doit contenir au moins 8 caractères.");
+      return;
+    }
+    if (resetPassword !== resetConfirm) {
+      setResetError("Les mots de passe ne correspondent pas.");
+      return;
+    }
+    setSendingReset(true);
+    try {
+      const res = await fetch("/api/auth/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: resetEmail.trim(),
+          code: resetCode.trim(),
+          password: resetPassword,
+        }),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setResetError(json?.message ?? "Réinitialisation impossible.");
+        return;
+      }
+      setResetSuccess(true);
+    } catch {
+      setResetError("Erreur réseau. Réessayez.");
+    } finally {
+      setSendingReset(false);
+    }
   };
 
   if (resetMode) {
@@ -246,13 +296,23 @@ function LoginForm({ next = null }: { next?: string | null }) {
       <ResetForm
         resetEmail={resetEmail}
         onEmailChange={setResetEmail}
+        resetCode={resetCode}
+        onCodeChange={setResetCode}
+        resetPassword={resetPassword}
+        onPasswordChange={setResetPassword}
+        resetConfirm={resetConfirm}
+        onConfirmChange={setResetConfirm}
         sending={sendingReset}
         sent={resetSent}
-        error={formError}
-        onSend={sendResetLink}
+        success={resetSuccess}
+        error={resetError}
+        onSend={sendResetCode}
+        onSubmit={submitReset}
         onBack={() => {
           setResetMode(false);
-          setFormError(null);
+          setResetError(null);
+          setResetSent(false);
+          setResetSuccess(false);
         }}
       />
     );
@@ -787,41 +847,72 @@ function SignupForm({ initialRole }: { initialRole: AuthRole }) {
 function ResetForm({
   resetEmail,
   onEmailChange,
+  resetCode,
+  onCodeChange,
+  resetPassword,
+  onPasswordChange,
+  resetConfirm,
+  onConfirmChange,
   sending,
   sent,
+  success,
   error,
   onSend,
+  onSubmit,
   onBack,
 }: {
   resetEmail: string;
   onEmailChange: (v: string) => void;
+  resetCode: string;
+  onCodeChange: (v: string) => void;
+  resetPassword: string;
+  onPasswordChange: (v: string) => void;
+  resetConfirm: string;
+  onConfirmChange: (v: string) => void;
   sending: boolean;
   sent: boolean;
+  success: boolean;
   error: string | null;
   onSend: () => void;
+  onSubmit: () => void;
   onBack: () => void;
 }) {
-  return (
-    <div>
-      <div>
-        <h2 className="font-headings text-xl! font-bold tracking-tight">Mot de passe oublié</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Saisissez votre email, nous vous envoyons un lien de réinitialisation.
-        </p>
-      </div>
-
-      {sent ? (
-        <div className="mt-6 flex items-start gap-3 rounded-xl border border-border bg-surface p-4">
+  if (success) {
+    return (
+      <div className="flex flex-col gap-4">
+        <div className="flex items-start gap-3 rounded-xl border border-border bg-surface p-4">
           <CheckCircle2
             className="mt-0.5 size-4 shrink-0 text-[var(--success)]"
             aria-hidden="true"
           />
           <div className="text-sm leading-relaxed text-foreground">
-            Si un compte existe pour cette adresse, un lien de réinitialisation
-            vient d&apos;être envoyé.
+            Votre mot de passe a été mis à jour. Vous pouvez maintenant vous
+            connecter.
           </div>
         </div>
-      ) : (
+        <button
+          type="button"
+          onClick={onBack}
+          className="inline-flex h-10 items-center justify-center rounded-xl bg-foreground px-5 text-sm font-medium text-ink"
+        >
+          Retour à la connexion
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div>
+        <h2 className="font-headings text-xl! font-bold tracking-tight">Mot de passe oublié</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          {sent
+            ? "Saisissez le code reçu par email et votre nouveau mot de passe."
+            : "Saisissez votre email, nous vous envoyons un code à 6 chiffres."}
+        </p>
+      </div>
+
+      {!sent ? (
         <form
           className="mt-6 flex flex-col gap-4"
           onSubmit={(e) => {
@@ -845,7 +936,75 @@ function ResetForm({
 
           <button type="submit" disabled={sending} className={submitClass}>
             {sending ? <Loader2 className="size-4 animate-spin" aria-hidden="true" /> : null}
-            Envoyer le lien
+            Envoyer le code
+          </button>
+
+          <button
+            type="button"
+            onClick={onBack}
+            className="inline-flex items-center justify-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
+          >
+            <ArrowLeft className="size-4" aria-hidden="true" />
+            Retour à la connexion
+          </button>
+        </form>
+      ) : (
+        <form
+          className="mt-6 flex flex-col gap-4"
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSubmit();
+          }}
+        >
+          <Field label="Code à 6 chiffres" htmlFor="reset-code" required>
+            <Input
+              id="reset-code"
+              type="text"
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              maxLength={6}
+              required
+              value={resetCode}
+              onChange={(e) => onCodeChange(e.target.value.replace(/\D/g, ""))}
+              className={inputClass}
+            />
+          </Field>
+          <Field label="Nouveau mot de passe" htmlFor="reset-password" required>
+            <Input
+              id="reset-password"
+              type="password"
+              autoComplete="new-password"
+              required
+              value={resetPassword}
+              onChange={(e) => onPasswordChange(e.target.value)}
+              className={inputClass}
+            />
+          </Field>
+          <Field label="Confirmez le mot de passe" htmlFor="reset-confirm" required>
+            <Input
+              id="reset-confirm"
+              type="password"
+              autoComplete="new-password"
+              required
+              value={resetConfirm}
+              onChange={(e) => onConfirmChange(e.target.value)}
+              className={inputClass}
+            />
+          </Field>
+
+          <AuthAlert kind="error" message={error} />
+
+          <button type="submit" disabled={sending} className={submitClass}>
+            {sending ? <Loader2 className="size-4 animate-spin" aria-hidden="true" /> : null}
+            Réinitialiser le mot de passe
+          </button>
+
+          <button
+            type="button"
+            onClick={onSend}
+            className="inline-flex items-center justify-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
+          >
+            Renvoyer le code
           </button>
 
           <button
