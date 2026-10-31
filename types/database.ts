@@ -165,6 +165,26 @@ export interface Database {
         Update: Partial<Database["public"]["Tables"]["brief_boost_payments"]["Insert"]>;
         Relationships: [];
       };
+      contact_bonuses: {
+        Row: {
+          id: string;
+          developer_id: string;
+          year: number;
+          month: number;
+          contacts: number;
+          credited_at: string;
+        };
+        Insert: {
+          id?: string;
+          developer_id: string;
+          year: number;
+          month: number;
+          contacts: number;
+          credited_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["contact_bonuses"]["Insert"]>;
+        Relationships: [];
+      };
       notification_preferences: {
         Row: {
           user_id: string;
