@@ -53,13 +53,12 @@ import {
   Wallet,
 } from "lucide-react";
 import { DashboardStats } from "@/components/dashboard-stats";
-import AvailabilityCard from "@/components/availability-card";
-import { MissionsManager, type TlMissionOption } from "@/components/dev/missions-manager";
-import { PerformancePanel, type DeveloperStats } from "@/components/dev/performance-panel";
-import AgencyManager from "@/components/agency/agency-manager";
-import ProPanel from "@/components/sponsoring/pro-panel";
-import { ShareProfileButton } from "@/components/dev/share-profile-button";
-import { DevReviewsPanel } from "@/components/dev/reviews-panel";
+const AvailabilityCard = dynamic(() => import("@/components/availability-card").then((m) => m.default), { ssr: false });
+const MissionsManager = dynamic(() => import("@/components/dev/missions-manager").then((m) => ({ default: m.MissionsManager })), { ssr: false });
+const PerformancePanel = dynamic(() => import("@/components/dev/performance-panel").then((m) => ({ default: m.PerformancePanel })), { ssr: false });
+const AgencyManager = dynamic(() => import("@/components/agency/agency-manager").then((m) => ({ default: m.default })), { ssr: false });
+const ProPanel = dynamic(() => import("@/components/sponsoring/pro-panel").then((m) => ({ default: m.default })), { ssr: false });
+const DevReviewsPanel = dynamic(() => import("@/components/dev/reviews-panel").then((m) => ({ default: m.DevReviewsPanel })), { ssr: false });
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -97,6 +96,10 @@ import type {
   MyDeveloperReviews,
 } from "@/types/database";
 import { cn } from "cn";
+import dynamic from "next/dynamic";
+import { ShareProfileButton } from "@/components/dev/share-profile-button";
+import type { TlMissionOption } from "@/components/dev/missions-manager";
+import type { DeveloperStats } from "@/components/dev/performance-panel";
 
 export type UnlockHistoryItem = {
   unlock_id: string;
