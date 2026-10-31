@@ -16,13 +16,17 @@ import {
   AlertTriangle,
   ArrowRight,
   BadgeCheck,
+  Bell,
   Briefcase,
+  Building2,
   CalendarClock,
   Check,
+  CheckCircle2,
   ChevronLeft,
   ChevronRight,
   Clock,
   Coins,
+  CreditCard,
   Crown,
   Download,
   ExternalLink,
@@ -30,16 +34,23 @@ import {
   LayoutGrid,
   List,
   Loader2,
+  LogOut,
   MessageCircle,
   MessagesSquare,
+  Phone,
   Plus,
+  Receipt,
   Save,
   Search,
   Send,
+  Settings,
   Share2,
   Star,
   Target,
   Trash2,
+  TrendingUp,
+  User,
+  Wallet,
 } from "lucide-react";
 import { DashboardStats } from "@/components/dashboard-stats";
 import AvailabilityCard from "@/components/availability-card";
@@ -702,21 +713,6 @@ export function DashboardContent({
     URL.revokeObjectURL(url);
   };
 
-  const tabs: { key: TabKey; label: string; count?: number }[] = [
-    {
-      key: "crm",
-      label: "Contacts débloqués",
-      count: unlocks.length,
-    },
-    { key: "profil", label: "Mon profil & portfolio" },
-    { key: "activite", label: "Réputation & commandes" },
-    { key: "devis", label: "Devis & missions", count: missions.length + devisEnAttente.length },
-    { key: "missions", label: "Missions réalisées", count: myMissions.length },
-    { key: "avis", label: "Mes avis", count: myReviews?.total },
-    { key: "agence", label: "Mon agence" },
-    { key: "pro", label: "Abonnement PRO" },
-  ];
-
   return (
     <div className="bg-surface py-6 md:py-10">
       <div className="container-tl">
@@ -780,6 +776,68 @@ export function DashboardContent({
               </Link>
             </div>
           </div>
+        </section>
+
+        {/* Barre de statistiques type Codeur.com */}
+        <section
+          className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4"
+          aria-label="Indicateurs de performance"
+        >
+          <div className="rounded-2xl border border-hairline bg-card p-4">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+              Classement
+            </p>
+            <p className="mt-1 font-headings text-lg font-bold text-primary">
+              {profile?.reputation_level ?? "—"}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {profile?.reputation_score != null
+                ? `${profile.reputation_score} pts`
+                : "Score à venir"}
+            </p>
+          </div>
+          <div className="rounded-2xl border border-hairline bg-card p-4">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+              Missions terminées
+            </p>
+            <p className="mt-1 font-headings text-lg font-bold text-primary">
+              {profile?.completed_projects_count ?? 0}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Projets complétés sur la plateforme
+            </p>
+          </div>
+          <div className="rounded-2xl border border-hairline bg-card p-4">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+              Vérification
+            </p>
+            <p className="mt-1 font-headings text-lg font-bold text-primary">
+              {profile?.is_verified ? "Vérifié" : "1/2"}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {profile?.is_verified
+                ? "Profil certifié"
+                : "Complétez vos vérifications"}
+            </p>
+          </div>
+          <Link
+            href="/abonnement"
+            className="rounded-2xl border border-primary/30 bg-primary-soft p-4 transition-colors hover:border-primary/60"
+          >
+            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
+              Abonnement
+            </p>
+            <p className="mt-1 font-headings text-lg font-bold text-primary">
+              {quota?.quota_limit != null
+                ? `${quota.plan_name_fr ?? "Formule"}`
+                : "Passer PRO"}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {quota?.quota_limit != null
+                ? `${quota.quota_used ?? 0}/${quota.quota_limit} contacts`
+                : "Débloquez plus de projets"}
+            </p>
+          </Link>
         </section>
 
         {profile ? <DevStatusBanner profile={profile} /> : null}
@@ -873,29 +931,268 @@ export function DashboardContent({
         <div className="mt-10 grid gap-6 lg:grid-cols-[240px_1fr]">
           <aside className="lg:sticky lg:top-6 lg:self-start">
             <nav
-              className="flex flex-col gap-1 rounded-2xl border border-hairline bg-card p-2"
+              className="flex flex-col gap-3 rounded-2xl border border-hairline bg-card p-3"
               aria-label="Sections du dashboard"
             >
-              {tabs.map((t) => (
+              <div>
+                <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                  Dashboard
+                </p>
                 <button
-                  key={t.key}
                   type="button"
-                  onClick={() => setTab(t.key)}
+                  onClick={() => setTab("crm")}
                   className={cn(
                     "flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
-                    tab === t.key
+                    tab === "crm"
                       ? "bg-primary-soft text-primary"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground"
                   )}
                 >
-                  <span>{t.label}</span>
-                  {typeof t.count === "number" ? (
+                  <span className="flex items-center gap-2">
+                    <LayoutGrid className="size-4" aria-hidden="true" />
+                    Contacts débloqués
+                  </span>
+                  <span className="rounded-full bg-hairline px-2 py-0.5 text-xs text-muted-foreground">
+                    {unlocks.length}
+                  </span>
+                </button>
+                <Link
+                  href="/briefs"
+                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  <Briefcase className="size-4" aria-hidden="true" />
+                  Projets ouverts
+                </Link>
+                <Link
+                  href="/conversations"
+                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  <MessageCircle className="size-4" aria-hidden="true" />
+                  Messagerie
+                </Link>
+              </div>
+
+              <div>
+                <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                  Mon profil
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setTab("profil")}
+                  className={cn(
+                    "flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
+                    tab === "profil"
+                      ? "bg-primary-soft text-primary"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  )}
+                >
+                  <User className="size-4" aria-hidden="true" />
+                  Mon profil & portfolio
+                </button>
+                {p.username ? (
+                  <Link
+                    href={`/dev/${p.username}`}
+                    className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  >
+                    <ExternalLink className="size-4" aria-hidden="true" />
+                    Voir mon profil
+                  </Link>
+                ) : null}
+                <Link
+                  href="/verification"
+                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  <BadgeCheck className="size-4" aria-hidden="true" />
+                  Mes vérifications
+                </Link>
+                <Link
+                  href="/favoris"
+                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  <Star className="size-4" aria-hidden="true" />
+                  Mes favoris
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => setTab("avis")}
+                  className={cn(
+                    "flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
+                    tab === "avis"
+                      ? "bg-primary-soft text-primary"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  )}
+                >
+                  <span className="flex items-center gap-2">
+                    <Star className="size-4" aria-hidden="true" />
+                    Mes avis
+                  </span>
+                  {typeof myReviews?.total === "number" ? (
                     <span className="rounded-full bg-hairline px-2 py-0.5 text-xs text-muted-foreground">
-                      {t.count}
+                      {myReviews.total}
                     </span>
                   ) : null}
                 </button>
-              ))}
+              </div>
+
+              <div>
+                <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                  Visibilité
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setTab("pro")}
+                  className={cn(
+                    "flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
+                    tab === "pro"
+                      ? "bg-primary-soft text-primary"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  )}
+                >
+                  <Crown className="size-4" aria-hidden="true" />
+                  Abonnement PRO
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTab("agence")}
+                  className={cn(
+                    "flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
+                    tab === "agence"
+                      ? "bg-primary-soft text-primary"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  )}
+                >
+                  <Building2 className="size-4" aria-hidden="true" />
+                  Mon agence
+                </button>
+                <Link
+                  href="/abonnement"
+                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  <TrendingUp className="size-4" aria-hidden="true" />
+                  Promouvoir mon profil
+                </Link>
+              </div>
+
+              <div>
+                <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                  Paramètres
+                </p>
+                <Link
+                  href="/parametres"
+                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  <Settings className="size-4" aria-hidden="true" />
+                  Mes infos de connexion
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => setTab("profil")}
+                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  <Phone className="size-4" aria-hidden="true" />
+                  Mes coordonnées
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTab("activite")}
+                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  <Bell className="size-4" aria-hidden="true" />
+                  Mes alertes email
+                </button>
+              </div>
+
+              <div>
+                <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                  Finances
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setTab("activite")}
+                  className={cn(
+                    "flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
+                    tab === "activite"
+                      ? "bg-primary-soft text-primary"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  )}
+                >
+                  <Receipt className="size-4" aria-hidden="true" />
+                  Mes factures & commandes
+                </button>
+                <Link
+                  href="/wallet"
+                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  <Wallet className="size-4" aria-hidden="true" />
+                  Balance de crédits
+                </Link>
+                <Link
+                  href="/wallet/retraits"
+                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  <CreditCard className="size-4" aria-hidden="true" />
+                  Retraits
+                </Link>
+              </div>
+
+              <div>
+                <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                  Missions
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setTab("devis")}
+                  className={cn(
+                    "flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
+                    tab === "devis"
+                      ? "bg-primary-soft text-primary"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  )}
+                >
+                  <span className="flex items-center gap-2">
+                    <Send className="size-4" aria-hidden="true" />
+                    Devis & missions
+                  </span>
+                  <span className="rounded-full bg-hairline px-2 py-0.5 text-xs text-muted-foreground">
+                    {missions.length + devisEnAttente.length}
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTab("missions")}
+                  className={cn(
+                    "flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
+                    tab === "missions"
+                      ? "bg-primary-soft text-primary"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  )}
+                >
+                  <span className="flex items-center gap-2">
+                    <CheckCircle2 className="size-4" aria-hidden="true" />
+                    Missions réalisées
+                  </span>
+                  <span className="rounded-full bg-hairline px-2 py-0.5 text-xs text-muted-foreground">
+                    {myMissions.length}
+                  </span>
+                </button>
+              </div>
+
+              <div className="border-t border-hairline pt-2">
+                <Link
+                  href="/parametres"
+                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  <Settings className="size-4" aria-hidden="true" />
+                  Paramètres
+                </Link>
+                <Link
+                  href="/api/auth/signout"
+                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-[var(--error)] transition-colors hover:bg-[var(--error-soft)]"
+                >
+                  <LogOut className="size-4" aria-hidden="true" />
+                  Se déconnecter
+                </Link>
+              </div>
             </nav>
           </aside>
           <div className="min-w-0">
