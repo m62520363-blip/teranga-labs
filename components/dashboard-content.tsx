@@ -31,6 +31,7 @@ import {
   Download,
   ExternalLink,
   Globe,
+  History as HistoryIcon,
   LayoutGrid,
   List,
   Loader2,
@@ -961,7 +962,7 @@ export function DashboardContent({
             >
               <div>
                 <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                  Dashboard
+                  Espace principal
                 </p>
                 <button
                   type="button"
@@ -999,7 +1000,71 @@ export function DashboardContent({
 
               <div>
                 <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                  Mon profil
+                  Activité
+                </p>
+                <Link
+                  href="/conversations"
+                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  <MessageCircle className="size-4" aria-hidden="true" />
+                  Mes échanges
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => setTab("crm")}
+                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  <HistoryIcon className="size-4" aria-hidden="true" />
+                  Historique des déblocages
+                </button>
+                <Link
+                  href="/notifications"
+                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  <Bell className="size-4" aria-hidden="true" />
+                  Notifications
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => setTab("devis")}
+                  className={cn(
+                    "flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
+                    tab === "devis"
+                      ? "bg-primary-soft text-primary"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  )}
+                >
+                  <span className="flex items-center gap-2">
+                    <Send className="size-4" aria-hidden="true" />
+                    Devis & missions
+                  </span>
+                  <span className="rounded-full bg-hairline px-2 py-0.5 text-xs text-muted-foreground">
+                    {missions.length + devisEnAttente.length}
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTab("missions")}
+                  className={cn(
+                    "flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
+                    tab === "missions"
+                      ? "bg-primary-soft text-primary"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  )}
+                >
+                  <span className="flex items-center gap-2">
+                    <CheckCircle2 className="size-4" aria-hidden="true" />
+                    Missions réalisées
+                  </span>
+                  <span className="rounded-full bg-hairline px-2 py-0.5 text-xs text-muted-foreground">
+                    {myMissions.length}
+                  </span>
+                </button>
+              </div>
+
+              <div>
+                <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                  Mon espace
                 </p>
                 <button
                   type="button"
@@ -1057,25 +1122,6 @@ export function DashboardContent({
                     </span>
                   ) : null}
                 </button>
-              </div>
-
-              <div>
-                <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                  Visibilité
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setTab("pro")}
-                  className={cn(
-                    "flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
-                    tab === "pro"
-                      ? "bg-primary-soft text-primary"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  )}
-                >
-                  <Crown className="size-4" aria-hidden="true" />
-                  Abonnement PRO
-                </button>
                 <button
                   type="button"
                   onClick={() => setTab("agence")}
@@ -1089,18 +1135,30 @@ export function DashboardContent({
                   <Building2 className="size-4" aria-hidden="true" />
                   Mon agence
                 </button>
-                <Link
-                  href="/abonnement"
-                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  <TrendingUp className="size-4" aria-hidden="true" />
-                  Promouvoir mon profil
-                </Link>
               </div>
 
               <div>
                 <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                  Paramètres
+                  Analyses
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setTab("activite")}
+                  className={cn(
+                    "flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
+                    tab === "activite"
+                      ? "bg-primary-soft text-primary"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  )}
+                >
+                  <TrendingUp className="size-4" aria-hidden="true" />
+                  Performances
+                </button>
+              </div>
+
+              <div>
+                <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                  Configuration
                 </p>
                 <Link
                   href="/parametres"
@@ -1133,6 +1191,41 @@ export function DashboardContent({
                 </p>
                 <button
                   type="button"
+                  onClick={() => setTab("pro")}
+                  className={cn(
+                    "flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
+                    tab === "pro"
+                      ? "bg-primary-soft text-primary"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  )}
+                >
+                  <Crown className="size-4" aria-hidden="true" />
+                  Mes Tokens / contacts
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTab("pro")}
+                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  <Crown className="size-4" aria-hidden="true" />
+                  Abonnement PRO
+                </button>
+                <Link
+                  href="/abonnement"
+                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  <TrendingUp className="size-4" aria-hidden="true" />
+                  Promouvoir mon profil
+                </Link>
+                <Link
+                  href="/abonnement"
+                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  <Wallet className="size-4" aria-hidden="true" />
+                  Abonnement
+                </Link>
+                <button
+                  type="button"
                   onClick={() => setTab("activite")}
                   className={cn(
                     "flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
@@ -1158,48 +1251,6 @@ export function DashboardContent({
                   <CreditCard className="size-4" aria-hidden="true" />
                   Retraits
                 </Link>
-              </div>
-
-              <div>
-                <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                  Missions
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setTab("devis")}
-                  className={cn(
-                    "flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
-                    tab === "devis"
-                      ? "bg-primary-soft text-primary"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  )}
-                >
-                  <span className="flex items-center gap-2">
-                    <Send className="size-4" aria-hidden="true" />
-                    Devis & missions
-                  </span>
-                  <span className="rounded-full bg-hairline px-2 py-0.5 text-xs text-muted-foreground">
-                    {missions.length + devisEnAttente.length}
-                  </span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setTab("missions")}
-                  className={cn(
-                    "flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
-                    tab === "missions"
-                      ? "bg-primary-soft text-primary"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  )}
-                >
-                  <span className="flex items-center gap-2">
-                    <CheckCircle2 className="size-4" aria-hidden="true" />
-                    Missions réalisées
-                  </span>
-                  <span className="rounded-full bg-hairline px-2 py-0.5 text-xs text-muted-foreground">
-                    {myMissions.length}
-                  </span>
-                </button>
               </div>
 
               <div className="border-t border-hairline pt-2">
