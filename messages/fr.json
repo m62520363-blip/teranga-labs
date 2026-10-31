@@ -2,7 +2,7 @@
   "Meta": {
     "title": "Le marketplace des projets web d'Afrique de l'Ouest | Devmarket",
     "description": "Publiez votre projet web gratuitement. Recevez des devis de développeurs vérifiés, comparez et choisissez. 0 % commission, paiement direct.",
-    "keywords": "marketplace Afrique de l'Ouest francophone, développeurs Sénégal, développeurs Côte d'Ivoire, freelance Dakar, Abidjan, Bamako, projet web, trouver des clients web, acheter des tokens, classement développeurs, site e-commerce Dakar, Devmarket",
+    "keywords": "marketplace Afrique de l'Ouest francophone, développeurs Sénégal, développeurs Côte d'Ivoire, freelance Dakar, Abidjan, Bamako, projet web, trouver des clients web, abonnement développeur, classement développeurs, site e-commerce Dakar, Devmarket",
     "ogTitle": "Devmarket — Publiez votre projet, recevez des devis",
     "ogDescription": "Publication gratuite, devis gratuits, 0 % commission. Trouvez le développeur qu'il vous faut en Afrique de l'Ouest francophone.",
     "ogAlt": "Devmarket — Le marketplace des projets web de l'Afrique de l'Ouest francophone."
@@ -208,59 +208,10 @@
         }
       ]
     },
-    "pricing": {
-      "titleA": "Des tarifs",
-      "titleB": "sans surprise.",
-      "lead": "Publiez gratuitement. Les développeurs paient pour contacter un client ou pour l'abonnement Pro. Devmarket ne prend aucune commission sur vos projets.",
-      "cards": [
-        {
-          "eyebrow": "Client",
-          "price": "0 FCFA",
-          "text": "Publier votre projet est gratuit. Recevez des devis, comparez et choisissez — sans commission et sans abonnement.",
-          "highlighted": false
-        },
-        {
-          "eyebrow": "Développeur",
-          "price": "1 Token",
-          "text": "1 Token (2 500 FCFA) pour envoyer une proposition et ouvrir la discussion, ou l'abonnement Pro pour postuler sans limite. 0 % de commission.",
-          "highlighted": true
-        }
-      ]
-    },
     "faqHeading": {
       "a": "Questions",
       "b": "fréquentes."
     },
-    "faqs": [
-      {
-        "q": "Qu'est-ce que Devmarket ?",
-        "a": "Devmarket est le marketplace des projets web d'Afrique de l'Ouest francophone. Publiez votre projet gratuitement, recevez des devis de développeurs vérifiés, comparez-les puis choisissez. Vous traitez ensuite directement, sans commission."
-      },
-      {
-        "q": "Publier un projet est-il vraiment gratuit ?",
-        "a": "Oui. La publication d'un projet est gratuite et sans abonnement. Seuls les développeurs paient pour contacter un client (1 Token) ou pour l'abonnement Pro."
-      },
-      {
-        "q": "Combien coûte un Token ?",
-        "a": "1 Token coûte 2 500 FCFA. Le développeur l'utilise pour envoyer une proposition et ouvrir la discussion privée avec un client. Le contact reste accessible à vie."
-      },
-      {
-        "q": "Y a-t-il une commission sur les projets ?",
-        "a": "Non. Devmarket ne prélève aucune commission sur les projets : le développeur et le client traitent ensemble, sans intermédiaire. Contre 15 à 20 % prélevés ailleurs, ici vous gardez 100 % du budget."
-      },
-      {
-        "q": "Comment choisir le bon développeur ?",
-        "a": "Chaque profil affiche un portfolio, des avis vérifiés, une note et un tarif de départ. Comparez les devis reçus, posez vos questions dans la messagerie, puis choisissez librement."
-      },
-      {
-        "q": "Mon WhatsApp reste-t-il privé ?",
-        "a": "Oui. Votre numéro n'apparaît jamais sur les projets ni dans les résultats de recherche : les échanges passent par la messagerie interne, et vous décidez seul de quand donner votre contact."
-      },
-      {
-        "q": "Dans quels pays le service est-il disponible ?",
-        "a": "Partout dans le monde : chaque pays et chaque région sont disponibles à l'inscription, et les prix s'affichent dans la devise locale (FCFA, USD, EUR, …)."
-      }
-    ],
     "roleCards": {
       "eyebrow": "Prêt à commencer ?",
       "title": "Un espace pour chaque rôle",
@@ -284,7 +235,7 @@
         "bullets": [
           "Profil public avec portfolio",
           "Nouveaux projets par pays et spécialité",
-          "1 Token par contact, 0 commission",
+          "Quota de contacts mensuel inclus, 0 commission",
           "Paiement direct + abonnement Pro"
         ],
         "cta": "Voir les projets"
@@ -337,7 +288,7 @@
           "location": "Dakar, Sénégal"
         },
         {
-          "quote": "Avant Devmarket, je perdais mon temps en candidatures sauvages. Ici, les clients me trouvent selon ma compétence, et je ne paie qu'un Token pour les contacter.",
+          "quote": "Avant Devmarket, je perdais mon temps en candidatures sauvages. Ici, les clients me trouvent selon ma compétence, et mon abonnement ne prend aucune commission.",
           "name": "Kwame O.",
           "role": "Développeur full-stack",
           "location": "Abidjan, Côte d'Ivoire"
@@ -369,31 +320,6 @@
       ],
       "demoNote": "Témoignages de démonstration — ils illustrent le parcours, pas des avis vérifiés.",
       "demoBadge": "Démo"
-    },
-    "token": {
-      "badge": "Le Token, simple et transparent",
-      "titleA": "Un seul Token,",
-      "titleB": "un prix clair.",
-      "lead": "Pas de frais cachés : le Token sert aux développeurs pour répondre aux projets et ouvrir la discussion avec un client.",
-      "price": "2 500 FCFA",
-      "priceUnit": "par Token",
-      "uses": [
-        {
-          "title": "Répondre à un projet",
-          "text": "Le développeur paie 1 Token pour envoyer sa proposition et ouvrir la discussion privée avec le client."
-        },
-        {
-          "title": "Un contact à vie",
-          "text": "Une fois la discussion ouverte, vous pouvez la poursuivre sans repayer. Le client reste joignable dans la messagerie."
-        },
-        {
-          "title": "Aucune commission",
-          "text": "Le prix du projet se négocie en direct. Devmarket ne prélève rien sur ce que vous vous payez."
-        }
-      ],
-      "note": "Les prix s'affichent dans votre devise locale (FCFA, USD, EUR, …).",
-      "cta": "Acheter des Tokens",
-      "ctaHref": "/tokens"
     },
     "comparison": {
       "badge": "Comparatif",
@@ -445,119 +371,6 @@
         }
       ],
       "note": "Devmarket ne remplace pas votre contrat : il vous met en relation, sans prendre votre argent."
-    },
-    "testimonials": {
-      "badge": "Ils nous font confiance",
-      "titleA": "Des projets livrés,",
-      "titleB": "des matchs réussis.",
-      "lead": "Ce que disent les clients et développeurs qui utilisent Devmarket au quotidien.",
-      "items": [
-        {
-          "quote": "J'ai publié mon projet un dimanche soir, gratuitement. Le lundi matin, trois développeurs sérieux m'avaient envoyé un devis. Le site était en ligne en deux semaines.",
-          "name": "Aïssatou D.",
-          "role": "Cliente",
-          "location": "Dakar, Sénégal"
-        },
-        {
-          "quote": "Avant Devmarket, je perdais mon temps en candidatures sauvages. Ici, les clients me trouvent selon ma compétence, et je ne paie qu'un Token pour les contacter.",
-          "name": "Kwame O.",
-          "role": "Développeur Full-stack",
-          "location": "Abidjan, Côte d'Ivoire"
-        },
-        {
-          "quote": "Le paiement en FCFA depuis mon wallet change tout. Pas de conversion, pas de mauvaise surprise. Et le classement mensuel motive toute l'équipe.",
-          "name": "Fatou N.",
-          "role": "Cliente",
-          "location": "Bamako, Mali"
-        }
-      ],
-      "note": "Témoignages de démonstration — remplacez-les par de vrais retours clients."
-    },
-    "forWho": {
-      "badge": "Pour qui ?",
-      "titleA": "Une plateforme,",
-      "titleB": "trois façons de l'utiliser.",
-      "lead": "Que vous ayez un projet à faire réaliser ou une expertise à monétiser, Devmarket est fait pour vous.",
-      "tabs": [
-        {
-          "key": "client",
-          "label": "Client"
-        },
-        {
-          "key": "developer",
-          "label": "Développeur"
-        },
-        {
-          "key": "agency",
-          "label": "Agence"
-        }
-      ],
-      "client": {
-        "title": "Trouvez le bon développeur, sans y passer des heures.",
-        "text": "Décrivez votre projet en 2 minutes, fixez votre budget et laissez les développeurs sérieux venir à vous. Votre WhatsApp reste privé jusqu'à votre accord.",
-        "bullets": [
-          "Publication gratuite",
-          "Devis de développeurs vérifiés",
-          "Aucune commission sur votre projet",
-          "Paiement direct, en votre devise"
-        ],
-        "cta": {
-          "label": "Publier mon projet",
-          "href": "/poster"
-        }
-      },
-      "developer": {
-        "title": "Faites venir les clients vers votre expertise.",
-        "text": "Créez un profil avec votre portfolio, recevez des projets ciblés par pays et par niche, et répondez pour 1 Token. Vous êtes payé directement.",
-        "bullets": [
-          "Profil public avec portfolio",
-          "Projets par pays et par compétence",
-          "1 Token = 1 contact client",
-          "0 % de commission"
-        ],
-        "cta": {
-          "label": "Voir les projets",
-          "href": "/projets"
-        }
-      },
-      "agency": {
-        "title": "Trouvez les meilleurs talents de la région.",
-        "text": "Accédez à un vivier de développeurs vérifiés en Afrique de l'Ouest francophone. Filtrez par compétence, note et disponibilité, et collaborez en toute transparence.",
-        "bullets": [
-          "Accès à des profils vérifiés",
-          "Filtres par compétence et note",
-          "Classement mensuel des meilleurs",
-          "Collaboration sans commission"
-        ],
-        "cta": {
-          "label": "Explorer les profils",
-          "href": "/dev"
-        }
-      }
-    },
-    "statsBand": {
-      "items": [
-        {
-          "value": "9",
-          "label": "pays couverts",
-          "hint": "Afrique de l'Ouest francophone"
-        },
-        {
-          "value": "0 %",
-          "label": "de commission",
-          "hint": "100 % du budget au développeur"
-        },
-        {
-          "value": "24 h",
-          "label": "pour recevoir des devis",
-          "hint": "Publication en 2 minutes"
-        },
-        {
-          "value": "100 %",
-          "label": "paiement direct",
-          "hint": "WhatsApp privé, sans intermédiaire"
-        }
-      ]
     },
     "categories": {
       "eyebrow": "Tous les métiers du digital",
@@ -935,21 +748,7 @@
       "note": "Aucun frais de publication côté client. Sans engagement. Paiement direct entre client et développeur.",
       "visual": {
         "value": "0 %",
-        "label": "de commission sur les projets",
-        "rows": [
-          {
-            "label": "Publier un projet",
-            "value": "0 FCFA"
-          },
-          {
-            "label": "Contacter un client",
-            "value": "1 Token"
-          },
-          {
-            "label": "Payer le développeur",
-            "value": "En direct"
-          }
-        ]
+        "label": "de commission sur les projets"
       }
     },
     "platform": {
@@ -1042,7 +841,7 @@
         "items": [
           {
             "q": "Publier un projet est-il vraiment gratuit ?",
-            "a": "Oui. La publication est gratuite et sans abonnement. Seuls les développeurs paient pour contacter un client (1 Token) ou pour l'abonnement Pro."
+            "a": "Oui. La publication est gratuite et sans abonnement. Les développeurs choisissent une formule avec un quota de contacts mensuel."
           },
           {
             "q": "Combien de temps pour recevoir des propositions ?",
@@ -1108,13 +907,12 @@
       "Dakar",
       "Abidjan",
       "marketplace",
-      "freelance",
-      "Tokens"
+      "freelance"
     ],
     "ogTitle": "Devmarket — Des clients qui veulent un site",
-    "ogDescription": "Le client publie son besoin pour 1 Token. Le développeur utilise 1 Token pour débloquer le contact. Zéro commission.",
+    "ogDescription": "Le client publie son besoin gratuitement. Le développeur débloque les contacts avec son abonnement. Zéro commission.",
     "ogAlt": "Devmarket — Le marketplace des projets web de l'Afrique de l'Ouest francophone.",
-    "twitterDescription": "Marketplace des projets web de l'Afrique de l'Ouest francophone : projets, Tokens, zéro commission.",
+    "twitterDescription": "Marketplace des projets web de l'Afrique de l'Ouest francophone : projets, abonnements développeurs, zéro commission.",
     "orgDescription": "Marketplace qui met en relation les entreprises d'Afrique de l'Ouest francophone et des développeurs web, sur un modèle inversé où les clients publient leurs besoins.",
     "countries": [
       "Sénégal",
@@ -1131,7 +929,7 @@
   "Pages": {
     "faq": {
       "metaTitle": "FAQ",
-      "metaDesc": "Toutes les réponses sur Devmarket : publication gratuite d’un projet, prix des Tokens côté développeur, devis et fonctionnement du marketplace.",
+      "metaDesc": "Toutes les réponses sur Devmarket : publication gratuite d’un projet, abonnements développeurs, devis et fonctionnement du marketplace.",
       "h1": "Questions fréquentes",
       "intro": "Tout ce qu’il faut savoir avant de publier votre premier projet, ou de répondre à votre premier projet en tant que développeur.",
       "groups": [
@@ -1142,7 +940,7 @@
         },
         {
           "title": "Pour les développeurs",
-          "text": "Chaque projet affiche son budget et sa région. Vous investissez 1 Token pour envoyer votre proposition et ouvrir la discussion privée. Zéro commission sur le projet.",
+          "text": "Chaque projet affiche son budget et sa région. Vous envoyez votre proposition avec votre quota de contacts mensuel. Zéro commission sur le projet.",
           "cta": "Voir les projets"
         },
         {
@@ -1194,7 +992,7 @@
     },
     "about": {
       "metaTitle": "À propos",
-      "metaDesc": "Devmarket est le marketplace des projets web d'Afrique de l'Ouest : les clients publient leur projet gratuitement, les développeurs répondent avec 1 Token.",
+      "metaDesc": "Devmarket est le marketplace des projets web d'Afrique de l'Ouest : les clients publient leur projet gratuitement, les développeurs répondent avec leur abonnement.",
       "h1": "À propos de Devmarket",
       "leadBold": "On ne vend pas des sites. On connecte les clients qui en veulent aux développeurs qui les construisent.",
       "leadRest": "Devmarket est le marketplace des projets web d'Afrique de l'Ouest : une boutique à Thiès, un resto à Dakar, une école à Abidjan publient leur projet gratuitement, et les développeurs vérifiés envoient leurs devis.",
@@ -1205,7 +1003,7 @@
         },
         {
           "title": "Le développeur paie juste",
-          "text": "1 Token = 2 500 F = 1 contact. Vous ne payez que pour les projets qui vous intéressent vraiment, sans commission sur le projet."
+          "text": "Un abonnement mensuel inclut vos contacts : vous ne payez que pour les projets qui vous intéressent vraiment, sans commission sur le projet."
         },
         {
           "title": "Un échange direct",
@@ -1219,13 +1017,13 @@
     },
     "contact": {
       "metaTitle": "Contact",
-      "metaDesc": "Contactez l’équipe Devmarket : question, signalement d’abus ou besoin d’acheter des Tokens.",
+      "metaDesc": "Contactez l’équipe Devmarket : question, signalement d’abus ou besoin d’aide sur votre abonnement.",
       "h1": "Contact",
-      "intro": "Une question, un signalement d’abus, ou besoin d’acheter des Tokens ? Écrivez-nous, on répond vite.",
+      "intro": "Une question, un signalement d’abus, ou besoin d’aide sur votre abonnement ? Écrivez-nous, on répond vite.",
       "topicsTitle": "À quoi sert le contact ?",
       "topics": [
         {
-          "title": "Acheter des Tokens",
+          "title": "Abonnement développeur",
           "text": "Sur commande, transaction par l’équipe. Paiement en ligne bientôt."
         },
         {
@@ -1237,12 +1035,12 @@
           "text": "Connexion, messagerie, compte : décrivez le problème, on corrige."
         }
       ],
-      "purchase": "L’achat de Tokens se fait auprès de l’équipe par écrit. Le paiement en ligne arrive bientôt.",
+      "purchase": "Les abonnements se gèrent en ligne depuis la page Abonnement. Pour toute demande de l’équipe, écrivez-nous.",
       "faqHint": "Consultez d’abord la <faq>FAQ</faq>, votre réponse s’y trouve peut-être déjà.",
       "hours": "Lundi – samedi, 9 h – 19 h GMT",
       "form": {
         "subjects": {
-          "tokens": "Acheter des Tokens",
+          "tokens": "Abonnement développeur",
           "report": "Signaler un abus",
           "technical": "Problème technique",
           "other": "Autre demande"
@@ -1261,7 +1059,7 @@
         "message": "Votre message",
         "phName": "Ex. Awa Diop",
         "phEmail": "vous@exemple.sn",
-        "phMessage": "Décrivez votre demande : achat de Tokens, signalement d’abus, problème technique…",
+        "phMessage": "Décrivez votre demande : abonnement, signalement d’abus, problème technique…",
         "direct": "Vous préférez un email direct ? <mail>contact@devmarket.com</mail>",
         "submit": "Envoyer"
       }
@@ -1270,7 +1068,7 @@
       "metaTitle": "Mes favoris",
       "metaDesc": "Retrouvez les projets que vous avez sauvegardés sur Devmarket.",
       "h1": "Vos projets favoris",
-      "lead": "Touchez le cœur d’un projet pour le retrouver ici. 1 Token ouvre une discussion privée avec le client.",
+      "lead": "Touchez le cœur d’un projet pour le retrouver ici. Un développeur débloque la discussion avec son quota de contacts.",
       "count": "{count, plural, =0 {Aucun projet sauvegardé} one {# projet sauvegardé} other {# projets sauvegardés}}",
       "emptyTitle": "Aucun favori pour l’instant",
       "emptyDesc": "Parcourez les projets disponibles et touchez le cœur pour les garder à portée de main.",
@@ -1371,7 +1169,7 @@
         },
         "s6": {
           "h": "Responsabilités",
-          "b": "<p>Les échanges entre clients et développeurs sont effectués sous leur propre responsabilité. Devmarket fournit la mise en relation (Tokens, projets, messagerie) et n’intervient pas dans la conclusion des contrats ni dans les transactions financières entre les parties. Des efforts raisonnables sont faits pour prévenir les abus et la fraude, sans garantie de résultat.</p>"
+          "b": "<p>Les échanges entre clients et développeurs sont effectués sous leur propre responsabilité. Devmarket fournit la mise en relation (abonnements, projets, messagerie) et n’intervient pas dans la conclusion des contrats ni dans les transactions financières entre les parties. Des efforts raisonnables sont faits pour prévenir les abus et la fraude, sans garantie de résultat.</p>"
         },
         "s7": {
           "h": "Droit applicable",
@@ -1388,25 +1186,25 @@
       },
       "terms": {
         "metaTitle": "Conditions d’utilisation",
-        "metaDesc": "Les règles d’utilisation du service Devmarket : projets, Tokens et mise en relation.",
+        "metaDesc": "Les règles d’utilisation du service Devmarket : projets, abonnements et mise en relation.",
         "title": "Conditions d’utilisation",
         "lead": "En utilisant Devmarket, vous acceptez les règles suivantes.",
         "updated": "Dernière mise à jour : 24 septembre 2026",
         "s1": {
           "h": "Objet du service",
-          "b": "<p>Devmarket est un service de mise en relation entre des clients qui publient gratuitement leur projet de site web et des développeurs qui débloquent le contact avec un Token.</p>"
+          "b": "<p>Devmarket est un service de mise en relation entre des clients qui publient gratuitement leur projet de site web et des développeurs qui débloquent le contact avec leur abonnement.</p>"
         },
         "s2": {
           "h": "Publication d’un projet",
           "b": "<p>La publication d’un projet est gratuite et réservée aux personnes capables d’assumer les engagements décrits.</p><ul><li>les informations fournies doivent être exactes ;</li><li>le projet doit être réel et sérieux ;</li><li>tout usage abusif ou frauduleux est sanctionné par la suppression du compte.</li></ul>"
         },
         "s3": {
-          "h": "Tokens",
-          "b": "<p>Un Token permet de débloquer le contact d’un projet. Tarif habituel : <strong>1 Token = 2 500 FCFA</strong>.</p><ul><li>un Token est consommé lors du déblocage du contact ;</li><li>l’achat se fait actuellement auprès de l’équipe ; le paiement en ligne arrive bientôt ;</li><li>les transactions sont définitives une fois le contact débloqué, sauf litige avéré.</li></ul>"
+          "h": "Abonnements",
+          "b": "<p>Les développeurs disposent d’un quota mensuel de contacts inclus dans leur formule (Gratuit, Pro, Pro Max ou Agence).</p><ul><li>chaque proposition sur un projet consomme un contact de votre quota ;</li><li>le quota se réinitialise chaque mois ;</li><li>les formules payantes sont facturées mensuellement, sans engagement.</li></ul>"
         },
         "s4": {
           "h": "Contact direct",
-          "b": "<p>Le contact direct avec le client est l’objet même du service : le développeur qui débloque un projet avec 1 Token obtient le contact et poursuit l’échange dans la messagerie interne, puis en direct (WhatsApp) après accord. Les développeurs et les clients sont responsables de leurs échanges et de la conclusion de leur propre contrat. Devmarket n’intervient pas dans les transactions financières entre les parties et ne prélève aucune commission.</p>"
+          "b": "<p>Le contact direct avec le client est l’objet même du service : le développeur qui débloque un projet avec son quota de contacts obtient le contact et poursuit l’échange dans la messagerie interne, puis en direct (WhatsApp) après accord. Les développeurs et les clients sont responsables de leurs échanges et de la conclusion de leur propre contrat. Devmarket n’intervient pas dans les transactions financières entre les parties et ne prélève aucune commission.</p>"
         },
         "s5": {
           "h": "Comportement attendu",
@@ -1418,11 +1216,11 @@
         },
         "s7": {
           "h": "Remboursements et litiges",
-          "b": "<p>Un Token consommé sur un contact ne peut pas être remboursé. En cas de contact frauduleux ou de projet fictif, le signalement doit être émis dans les <strong>48 heures</strong> suivant le déblocage du contact.</p><p>Le signalement se fait depuis la conversation via le bouton « Signaler ». L’équipe vérifie les échanges et rembourse en Tokens si le litige est confirmé.</p>"
+          "b": "<p>Un contact consommé sur un projet ne peut pas être remboursé. En cas de contact frauduleux ou de projet fictif, le signalement doit être émis dans les <strong>48 heures</strong> suivant le déblocage du contact.</p><p>Le signalement se fait depuis la conversation via le bouton « Signaler ». L’équipe vérifie les échanges et rembourse le contact si le litige est confirmé.</p>"
         },
         "s8": {
           "h": "Responsabilité",
-          "b": "<p>Devmarket fournit une mise en relation. La qualité du travail livré, le respect des délais et le contenu des projets relèvent de la responsabilité exclusive du développeur, et l’exactitude du projet de celle du client. Notre responsabilité est limitée au montant des Tokens concernés.</p>"
+          "b": "<p>Devmarket fournit une mise en relation. La qualité du travail livré, le respect des délais et le contenu des projets relèvent de la responsabilité exclusive du développeur, et l’exactitude du projet de celle du client. Notre responsabilité est limitée au montant des sommes versées à Devmarket.</p>"
         },
         "s9": {
           "h": "Évolution du service",
@@ -1453,11 +1251,11 @@
         },
         "s2": {
           "h": "Pourquoi collectons-nous ces données ?",
-          "b": "<p>Ces données servent uniquement à :</p><ul><li>mettre en relation clients et développeurs ;</li><li>vous permettre de débloquer un contact avec un Token ;</li><li>assurer la modération et prévenir les abus.</li></ul><p>Nous ne vendons pas vos données, et nous ne les partageons jamais à des fins publicitaires.</p>"
+          "b": "<p>Ces données servent uniquement à :</p><ul><li>mettre en relation clients et développeurs ;</li><li>vous permettre de débloquer un contact sur un projet ;</li><li>assurer la modération et prévenir les abus.</li></p><p>Nous ne vendons pas vos données, et nous ne les partageons jamais à des fins publicitaires.</p>"
         },
         "s3": {
           "h": "Partage et affichage",
-          "b": "<p>Le contact d’un projet (numéro WhatsApp) n’est visible que par les développeurs qui débloquent le contact via un Token. Aucune autre divulgation n’est faite sans votre accord.</p>"
+          "b": "<p>Le contact d’un projet (numéro WhatsApp) n’est visible que par les développeurs qui débloquent le contact sur le projet. Aucune autre divulgation n’est faite sans votre accord.</p>"
         },
         "s4": {
           "h": "Durée de conservation",
@@ -1572,125 +1370,6 @@
       "score": "Score",
       "see": "Voir le classement",
       "level": "Niveau"
-    }
-  },
-  "Subscription": {
-    "eyebrow": "Espace développeur",
-    "titleA": "Abonnement",
-    "titleB": "PRO",
-    "lead": "Une seule offre, claire et sans reconduction forcée : payez en Tokens, activez votre badge PRO, et prolongez quand vous voulez.",
-    "notConfigured": "Les tarifs ne peuvent pas être affichés : la configuration est incomplète.",
-    "pricesUnavailable": "Le tarif est momentanément indisponible. Réessayez dans un instant.",
-    "honestyNote": "L’abonnement PRO donne accès au badge PRO sur votre profil public et dans l’annuaire. Il ne modifie pas votre position dans l’annuaire : la mise en avant en tête est réservée aux profils sponsorisés.",
-    "status": {
-      "active": "Votre abonnement PRO est actif jusqu’au {date}.",
-      "balance": "Solde de Tokens : {count}",
-      "justSubscribed": "Votre abonnement PRO est maintenant actif."
-    },
-    "offer": {
-      "aria": "Comparaison des offres Gratuit et PRO",
-      "free": {
-        "title": "Gratuit",
-        "price": "0 F",
-        "note": "Pour créer votre profil et recevoir des projets.",
-        "features": [
-          {
-            "label": "Profil public complet",
-            "ok": true
-          },
-          {
-            "label": "Présence dans l’annuaire",
-            "ok": true
-          },
-          {
-            "label": "Réception des projets et des contacts",
-            "ok": true
-          },
-          {
-            "label": "Badge PRO sur le profil public",
-            "ok": false
-          },
-          {
-            "label": "Badge PRO dans l’annuaire",
-            "ok": false
-          }
-        ]
-      },
-      "pro": {
-        "title": "PRO",
-        "tag": "Badge PRO",
-        "tokens": "{count} Token",
-        "fcfa": "soit {price}",
-        "duration": "Valable {days} jours, prolongeable à tout moment",
-        "durationUnknown": "Durée consultable dans votre espace.",
-        "features": [
-          {
-            "label": "Tout le plan Gratuit",
-            "ok": true
-          },
-          {
-            "label": "Badge PRO sur le profil public",
-            "ok": true
-          },
-          {
-            "label": "Badge PRO dans l’annuaire",
-            "ok": true
-          },
-          {
-            "label": "Notification à l’activation et au renouvellement",
-            "ok": true
-          },
-          {
-            "label": "Paiement en Tokens, sans carte bancaire",
-            "ok": true
-          },
-          {
-            "label": "Mise en avant en tête de l’annuaire",
-            "ok": false
-          }
-        ]
-      }
-    },
-    "cta": {
-      "signIn": "Se connecter pour activer",
-      "register": "Créer mon profil développeur",
-      "activate": "Activer PRO ({count} Tokens)",
-      "extend": "Prolonger PRO ({count} Tokens)",
-      "paidFromBalance": "Débité de votre solde de Tokens. Aucun prélèvement automatique.",
-      "yourBalance": "Votre solde : {count} Token"
-    },
-    "errors": {
-      "generic": "Une erreur est survenue. Réessayez."
-    },
-    "faq": {
-      "aria": "Questions fréquentes sur l’abonnement PRO",
-      "title": "Questions fréquentes",
-      "items": [
-        {
-          "q": "Que comprend exactement l’abonnement PRO ?",
-          "a": "Deux choses, et rien de plus : un badge PRO apparaît sur votre profil public, et le même badge s’affiche sur votre carte dans l’annuaire des développeurs. Aucune autre fonctionnalité n’est débloquée."
-        },
-        {
-          "q": "Comment le paiement est-il effectué ?",
-          "a": "Le prix est débité de votre solde de Tokens, comme pour tout autre achat de la plateforme. Aucune carte bancaire n’est enregistrée et aucun prélèvement automatique n’est programmé."
-        },
-        {
-          "q": "L’abonnement améliore-t-il ma position dans l’annuaire ?",
-          "a": "Non. Le classement de l’annuaire est déterminé par votre réputation, votre expérience, vos projets et vos avis. Seuls les profils sponsorisés sont affichés en tête, indépendamment de l’abonnement PRO."
-        },
-        {
-          "q": "Que se passe-t-il à la fin de la période ?",
-          "a": "Le badge PRO disparaît automatiquement de votre profil et de l’annuaire. Votre profil, vos projets et vos avis restent inchangés, et rien n’est perdu."
-        },
-        {
-          "q": "Puis-je prolonger avant la fin ?",
-          "a": "Oui. Chaque prolongation ajoute la durée complète à la date de fin déjà en cours : aucun jour restant n’est perdu."
-        },
-        {
-          "q": "Comment recharger mes Tokens ?",
-          "a": "Depuis la section Tokens de votre portefeuille. Le prix affiché sur cette page est converti à partir du cours unique d’un Token."
-        }
-      ]
     }
   },
   "AppNav": {

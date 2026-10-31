@@ -350,7 +350,7 @@ export function verifyPulseSignature(
 /** Métadonnées de référence d'une vente (lien vers notre intention). */
 export function getPulseReference(
   sale: Pick<ChariowSale, "custom_metadata"> | null | undefined
-): { reference: string | null; kind: "token" | "verification" | "mission" | "subscription" } {
+): { reference: string | null; kind: "token" | "verification" | "mission" | "subscription" | "brief_boost" } {
   const meta = sale?.custom_metadata ?? {};
   const reference = typeof meta.reference === "string" ? meta.reference : null;
   const kind =
@@ -360,6 +360,8 @@ export function getPulseReference(
         ? "mission"
         : meta.kind === "subscription"
           ? "subscription"
-          : "token";
+          : meta.kind === "brief_boost"
+            ? "brief_boost"
+            : "token";
   return { reference, kind };
 }

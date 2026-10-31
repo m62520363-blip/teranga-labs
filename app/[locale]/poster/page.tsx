@@ -54,7 +54,7 @@ export default async function PosterPage({
                 <Link href="/login?mode=signup" className="underline decoration-primary/60 underline-offset-4 hover:text-foreground">
                   Inscrivez-vous gratuitement
                 </Link>{" "}
-                — aucun Token n’est nécessaire pour publier votre projet.
+                — la publication de votre projet est 100 % gratuite.
               </p>
 
               {/* SVG local de marque : next/image n'apporterait rien sur du vectoriel. */}

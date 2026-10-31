@@ -20,7 +20,7 @@ import { createClient } from "@/lib/supabase/client";
    submit_contact_message reçoit le libellé, quelle que soit la langue
    affichée — l'UI traduit séparément via Pages.contact.form.subjects. */
 const DB_SUBJECTS = {
-  tokens: "Acheter des Tokens",
+  tokens: "Abonnement développeur",
   report: "Signaler un abus",
   technical: "Problème technique",
   other: "Autre demande",

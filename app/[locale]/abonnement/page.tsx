@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import { createClient, getCurrentUser } from "@/lib/supabase/server";
+import { getLocale } from "next-intl/server";
+import { redirect } from "@/i18n/navigation";
+import { createClient, getCurrentRole, getCurrentUser } from "@/lib/supabase/server";
 import {
   ProSubscription,
   type DeveloperSubscriptionSummary,
@@ -21,7 +23,13 @@ type Props = {
 export default async function AbonnementPage({ searchParams }: Props) {
   const sp = await searchParams;
   const supabase = await createClient();
-  const user = await getCurrentUser();
+  const [user, role] = await Promise.all([getCurrentUser(), getCurrentRole()]);
+
+  // Les abonnements concernent uniquement l'espace développeur : l'espace
+  // client n'a pas d'abonnement (publication gratuite + option de mise en avant par brief).
+  if (role === "client") {
+    redirect({ href: "/client", locale: await getLocale() });
+  }
 
   let plans: SubscriptionPlanRow[] = [];
   let subscription: DeveloperSubscriptionSummary | null = null;

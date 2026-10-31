@@ -178,7 +178,7 @@ export default async function CountryPage({
             <ShieldCheck className="mt-0.5 size-3.5 shrink-0 text-primary" aria-hidden="true" />
             Les compteurs proviennent des briefs réellement publiés sur la
             plateforme. Les contacts clients restent privés : un développeur
-            utilise un Token pour débloquer une mise en relation.
+            débloque une mise en relation avec son quota de contacts.
           </p>
         </div>
       </div>

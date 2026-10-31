@@ -101,10 +101,6 @@ export default async function DeveloperProfilePage({
 
   const supabase = await createClient();
 
-  const costRes = supabase
-    ? await supabase.rpc("get_contact_cost")
-    : { data: null };
-
   const statsRes = supabase
     ? await supabase.rpc("get_developer_reviews", { p_developer: profile.id })
     : { data: null };
@@ -121,9 +117,6 @@ export default async function DeveloperProfilePage({
     : { data: null };
   const proStatus = proRes?.data as { active?: boolean; ends_at?: string } | null;
   const isPro = Boolean(proStatus?.active);
-
-  const contactCost =
-    typeof costRes?.data === "number" && costRes.data > 0 ? costRes.data : 1;
 
   const name = profile.full_name ?? "Développeur Devmarket";
   const roundAverage = Math.round(profile.review_average);
@@ -291,7 +284,6 @@ export default async function DeveloperProfilePage({
                   main_specialty: profile.main_specialty,
                   city: profile.city,
                 }}
-                contactCost={contactCost}
                 role={role}
                 authed={Boolean(currentUser)}
                 className="h-10 px-5"
@@ -311,9 +303,9 @@ export default async function DeveloperProfilePage({
               <div className="max-w-md rounded-2xl border border-hairline bg-card p-4 text-sm">
                 <p className="text-muted-foreground">
                   Coordonnées masquées — elles ne sont révélées qu’après attribution
-                  d’un projet. Ouvrez un contact direct (
-                  <span className="font-semibold text-primary">{contactCost} Token</span>
-                  ) pour discuter en sécurité.
+                  d’un projet. Le contact direct est{" "}
+                  <span className="font-semibold text-primary">100 % gratuit</span>
+                  {" "}pour les clients.
                 </p>
                 {profile.phone_masked || profile.email_masked ? (
                   <ul className="mt-3 flex flex-col gap-1.5 text-xs text-muted-foreground">

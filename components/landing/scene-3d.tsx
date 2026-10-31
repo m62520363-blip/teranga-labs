@@ -58,7 +58,7 @@ export function Scene3D({
         style={{ transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)` }}
       >
         {variant === "marketplace" ? <MarketplaceScene /> : null}
-        {variant === "tokens" ? <TokensScene /> : null}
+        {variant === "tokens" ? <SubscriptionScene /> : null}
         {variant === "brief" ? <BriefScene /> : null}
         {variant === "team" ? <TeamScene /> : null}
         {variant === "ranking" ? <RankingScene /> : null}
@@ -101,7 +101,7 @@ function Layer({
   );
 }
 
-/** Pièce 3D du Token, réutilisable hors des scènes (hero, CTA…). */
+/** Pièce 3D décorative, réutilisable hors des scènes (hero, CTA…). */
 export function Coin({ className }: { className?: string }) {
   return (
     <span
@@ -209,14 +209,14 @@ function MarketplaceScene() {
       </Layer>
       <Layer z={140} x="82%" y="76%" delay={0.8}>
         <span className="rounded-full bg-foreground px-3.5 py-2 text-[11px] font-semibold text-ink shadow-xl shadow-black/40">
-          1 Token · contact débloqué
+          Contact débloqué
         </span>
       </Layer>
     </>
   );
 }
 
-function TokensScene() {
+function SubscriptionScene() {
   return (
     <>
       <div
@@ -238,12 +238,12 @@ function TokensScene() {
       </Layer>
       <Layer z={150} x="72%" y="70%" delay={1.8}>
         <span className="rounded-full border border-hairline bg-card px-3.5 py-2 text-[11px] font-semibold shadow-lg shadow-black/40">
-          Solde : 24 Tokens
+          Quota mensuel inclus
         </span>
       </Layer>
       <Layer z={100} x="26%" y="74%" delay={0.2}>
         <span className="rounded-full bg-foreground px-3.5 py-2 text-[11px] font-semibold text-ink shadow-xl shadow-black/40">
-          1 Token = 1 contact
+          0 % de commission
         </span>
       </Layer>
     </>

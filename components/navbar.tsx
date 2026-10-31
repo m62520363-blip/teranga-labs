@@ -92,6 +92,7 @@ export function Navbar({
     } else if (isDev) {
       appLinks.push({ href: "/briefs", label: t("briefsView") });
       appLinks.push({ href: "/dashboard?tab=profil", label: t("myProfile") });
+      appLinks.push({ href: "/abonnement", label: t("buyTokens") });
     } else {
       appLinks.push({ href: "/briefs", label: t("briefsView") });
     }
@@ -102,7 +103,6 @@ export function Navbar({
         adminOnly: true,
       });
     }
-    appLinks.push({ href: "/wallet", label: t("buyTokens") });
     appLinks.push({ href: "/parametres", label: t("settings") });
   }
 

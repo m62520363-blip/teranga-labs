@@ -13,7 +13,7 @@ import { cn } from "cn";
 export const metadata: Metadata = {
   title: "Classement des développeurs",
   description:
-    "Classement mensuel mondial des développeurs : missions terminées par mois, 50 points par projet. Les 3 premiers reçoivent 10, 7 et 4 Tokens, et chaque pays possède son propre tableau.",
+    "Classement mensuel mondial des développeurs : missions terminées par mois, 50 points par projet. Les 3 premiers reçoivent 10, 7 et 4 contacts bonus, et chaque pays possède son propre tableau.",
 };
 
 export const dynamic = "force-dynamic";
@@ -44,7 +44,7 @@ type LeaderboardPayload = {
   countries: { key: string; rows: LeaderboardRow[] }[];
 };
 
-const HEADERS = ["Rang", "Développeur", "Missions terminées", "Points", "Tokens attribués", "Badges"];
+const HEADERS = ["Rang", "Développeur", "Missions terminées", "Points", "Contacts bonus", "Badges"];
 const POINTS_PER_PROJECT = 50;
 
 function pointsOf(row: LeaderboardRow): number {
@@ -76,7 +76,7 @@ function RewardsLegend({
   if (!rewards) {
     return (
       <p className="mt-3 text-xs text-muted-foreground">
-        Classement affiché — les Tokens sont attribués au classement mondial.
+        Classement affiché — les contacts bonus sont attribués au classement mondial.
       </p>
     );
   }
@@ -86,15 +86,15 @@ function RewardsLegend({
   return (
     <p className="mt-3 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
       <span className="badge badge-success">
-        1<sup>er</sup> {first} Token{first > 1 ? "s" : ""}
+        1<sup>er</sup> {first} contact{first > 1 ? "s" : ""} bonus
       </span>
       <span className="badge badge-muted">
-        2<sup>e</sup> {second} Token{second > 1 ? "s" : ""}
+        2<sup>e</sup> {second} contact{second > 1 ? "s" : ""} bonus
       </span>
       <span className="badge badge-muted">
-        3<sup>e</sup> {third} Token{third > 1 ? "s" : ""}
+        3<sup>e</sup> {third} contact{third > 1 ? "s" : ""} bonus
       </span>
-      <span className="text-xs">Autres rangs : 0 Token — {scope}</span>
+      <span className="text-xs">Autres rangs : 0 contact bonus — {scope}</span>
     </p>
   );
 }
@@ -237,7 +237,7 @@ function LeaderboardTable({
                     <span className="text-muted-foreground">à la clôture</span>
                   ) : (
                     <span className="font-semibold text-success">
-                      +{row.tokens_awarded} Token{row.tokens_awarded > 1 ? "s" : ""}
+                      +{row.tokens_awarded} contact{row.tokens_awarded > 1 ? "s" : ""} bonus
                     </span>
                   )}
                 </td>
@@ -313,7 +313,7 @@ export default async function ClassementPage() {
             align="left"
             eyebrow="Classement mensuel"
             title="Le classement des développeurs"
-            lead="Chaque mois, le classement mondial et le classement de chaque pays récompensent les développeurs les plus actifs, calculés sur les missions réellement terminées — 50 points par projet, 10/7/4 Tokens pour le podium mondial."
+            lead="Chaque mois, le classement mondial et le classement de chaque pays récompensent les développeurs les plus actifs, calculés sur les missions réellement terminées — 50 points par projet, 10/7/4 contacts bonus pour le podium mondial."
           />
           <Scene3D variant="ranking" className="hidden lg:block" />
         </div>
@@ -548,7 +548,7 @@ export default async function ClassementPage() {
         <p className="mt-12 border-t border-hairline pt-6 text-xs leading-relaxed text-muted-foreground">
           Critère d&apos;apparition : au moins {config?.min_projects ?? 2} missions terminées et confirmées
           par mois. Chaque projet terminé vaut {config?.points_per_project ?? POINTS_PER_PROJECT} points. Au
-          classement mondial, les 3 premiers reçoivent 10, 7 et 4 Tokens ; les classements par pays servent de
+          classement mondial, les 3 premiers reçoivent 10, 7 et 4 contacts bonus ; les classements par pays servent de
           référence et les badges restent conservés.
         </p>
       </Section>

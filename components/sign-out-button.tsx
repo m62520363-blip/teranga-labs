@@ -118,8 +118,8 @@ function ConfirmSignOutDialog({
           <DialogTitle>Se déconnecter ?</DialogTitle>
           <DialogDescription>
             Vous serez redirigé vers la page d’accueil. Votre compte, vos
-            Tokens et vos données restent enregistrés jusqu’à votre prochaine
-            connexion.
+            données et votre abonnement restent enregistrés jusqu’à votre
+            prochaine connexion.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>

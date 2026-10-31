@@ -50,20 +50,17 @@ export default async function DirectoryPageRoute({
   // « Trouver un développeur » : réservé aux clients (et aux visiteurs).
   if (role === "developer") redirect({ href: "/dashboard", locale: await getLocale() });
 
-  const [listRes, costRes, filtersRes] = await Promise.all([
+  const [listRes, filtersRes] = await Promise.all([
     supabase.rpc("list_approved_developers", {
       p_query: queryParam || undefined,
       p_city: cityParam || undefined,
       p_limit: PAGE_SIZE,
       p_offset: 0,
     }),
-    supabase.rpc("get_contact_cost"),
     supabase.rpc("get_directory_filters"),
   ]);
 
   const developers = ((listRes.data ?? []) as ApprovedDeveloper[]).filter((d) => Boolean(d?.id));
-  const contactCost =
-    typeof costRes.data === "number" && costRes.data > 0 ? costRes.data : 1;
   const filters = (filtersRes.data ?? {}) as Partial<DirectoryFilters>;
 
   return (
@@ -85,7 +82,6 @@ export default async function DirectoryPageRoute({
             services: filters.services ?? [],
             project_types: filters.project_types ?? [],
           }}
-          contactCost={contactCost}
           role={role}
           authed={Boolean(user)}
         />

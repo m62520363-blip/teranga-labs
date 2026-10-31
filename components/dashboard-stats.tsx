@@ -6,26 +6,29 @@ import { useBalance } from "@/components/balance-provider";
 import { cn } from "cn";
 
 export function DashboardStats({
-  balance,
-  tokensUsed,
+  quota,
   unlocksCount,
 }: {
-  balance: number;
-  tokensUsed: number;
+  /** Quota serveur (get_my_subscription) — filet de sécurité du contexte live. */
+  quota?: {
+    plan_name_fr?: string;
+    quota_used?: number;
+    quota_limit?: number;
+  } | null;
   unlocksCount: number;
 }) {
   const { balance: ctxRemaining, quotaLimit, quotaUsed, planName, isSubscribed } =
     useBalance();
 
-  const remaining = ctxRemaining ?? balance;
-  const used = quotaUsed ?? tokensUsed;
-  const limit = quotaLimit ?? (isSubscribed ? 80 : 1);
+  const limit = quotaLimit ?? quota?.quota_limit ?? (isSubscribed ? 80 : 1);
+  const used = quotaUsed ?? quota?.quota_used ?? 0;
+  const remaining = ctxRemaining ?? Math.max(0, limit - used);
 
   const stats = [
     {
       icon: Crown,
       label: "Formule d’abonnement",
-      value: planName ?? (isSubscribed ? "Pro" : "Découverte"),
+      value: planName ?? quota?.plan_name_fr ?? (isSubscribed ? "Pro" : "Découverte"),
       sub: isSubscribed
         ? "Abonnement actif · gérer sur Nos abonnements"
         : "Passez à Pro, Pro Max ou Agence",

@@ -30,7 +30,6 @@ export type ContactableDeveloper = {
 
 type Props = {
   developer: ContactableDeveloper;
-  contactCost?: number;
   role: string | null;
   authed: boolean;
   label?: string;

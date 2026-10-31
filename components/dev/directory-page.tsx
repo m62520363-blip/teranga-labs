@@ -38,7 +38,6 @@ export function DirectoryPage({
   initialCity,
   initialQuery,
   filters,
-  contactCost,
   role,
   authed,
 }: {
@@ -46,7 +45,6 @@ export function DirectoryPage({
   initialCity?: string;
   initialQuery?: string;
   filters: DirectoryFilters;
-  contactCost: number;
   role: string | null;
   authed: boolean;
 }) {
@@ -354,7 +352,6 @@ export function DirectoryPage({
             <li key={dev.id} className="h-full">
               <DirectoryCard
                 developer={dev}
-                contactCost={contactCost}
                 role={role}
                 authed={authed}
               />

@@ -135,6 +135,36 @@ export interface Database {
         Update: Partial<Database["public"]["Tables"]["subscription_payments"]["Insert"]>;
         Relationships: [];
       };
+      brief_boost_payments: {
+        Row: {
+          id: string;
+          request_id: string;
+          payer_id: string | null;
+          days: number;
+          amount_fcfa: number;
+          status: string;
+          provider: string;
+          provider_sale_id: string | null;
+          invoice_number: string;
+          confirmed_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          request_id: string;
+          payer_id?: string | null;
+          days: number;
+          amount_fcfa: number;
+          status?: string;
+          provider?: string;
+          provider_sale_id?: string | null;
+          invoice_number: string;
+          confirmed_at?: string | null;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["brief_boost_payments"]["Insert"]>;
+        Relationships: [];
+      };
       notification_preferences: {
         Row: {
           user_id: string;
@@ -1245,6 +1275,25 @@ export interface Database {
       };
       admin_get_subscription_analytics: {
         Args: Record<string, never>;
+        Returns: Json;
+      };
+      get_brief_boost_prices: {
+        Args: Record<string, never>;
+        Returns: Json;
+      };
+      create_brief_boost_checkout: {
+        Args: {
+          p_request_id: string;
+          p_days?: number;
+          p_management_key?: string | null;
+        };
+        Returns: Json;
+      };
+      confirm_brief_boost_payment: {
+        Args: {
+          p_payment_id: string;
+          p_provider_sale_id?: string | null;
+        };
         Returns: Json;
       };
       admin_set_pro_prices: {

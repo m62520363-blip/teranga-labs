@@ -144,6 +144,11 @@ export function PosterForm({ initialType }: { initialType?: string } = {}) {
   const [aiResult, setAiResult] = React.useState<BriefAssistResult | null>(null);
   const [aiAnswers, setAiAnswers] = React.useState<Record<string, string>>({});
 
+  // Option payante de mise en avant du brief en tête de liste (0 = publication gratuite standard)
+  const [boostDays, setBoostDays] = React.useState<0 | 7 | 14 | 30>(0);
+  const [boosting, setBoosting] = React.useState(false);
+  const [boostNotice, setBoostNotice] = React.useState<string | null>(null);
+
   const form = useForm<BriefFormValues>({
     resolver: zodResolver(briefSchema) as Resolver<BriefFormValues>,
     defaultValues: {
@@ -325,6 +330,51 @@ export function PosterForm({ initialType }: { initialType?: string } = {}) {
         "Aucun frais de publication. Conservez votre lien de suivi pour gérer votre projet.",
     });
     void refreshBalance();
+
+    if (boostDays > 0) {
+      void startBoostCheckout(
+        payload.id,
+        payload.management_key,
+        boostDays as 7 | 14 | 30
+      );
+    }
+  };
+
+  const startBoostCheckout = async (
+    requestId: string,
+    managementKey: string,
+    days: 7 | 14 | 30
+  ) => {
+    setBoosting(true);
+    setBoostNotice(null);
+    try {
+      const res = await fetch("/api/payments/brief-boost-checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ requestId, days, managementKey }),
+      });
+      const data = (await res.json()) as {
+        mode?: "redirect" | "invoice_pending";
+        launchUrl?: string;
+        message?: string;
+      };
+      if (!res.ok) {
+        toast.error(data.message || "Impossible d’initialiser la mise en avant.");
+        return;
+      }
+      if (data.mode === "redirect" && data.launchUrl) {
+        window.location.assign(data.launchUrl);
+        return;
+      }
+      setBoostNotice(
+        data.message ||
+          "Demande de mise en avant enregistrée. Votre projet passera en tête de liste dès confirmation serveur du règlement."
+      );
+    } catch {
+      toast.error("Erreur réseau lors de la demande de mise en avant.");
+    } finally {
+      setBoosting(false);
+    }
   };
 
   const onConfirm = handleSubmit(async (values) => {
@@ -397,6 +447,46 @@ export function PosterForm({ initialType }: { initialType?: string } = {}) {
             Ce lien vous permet de suivre les propositions reçues, de modifier le
             statut du projet et de laisser un avis.
           </p>
+        </div>
+
+        <div className="rounded-2xl border border-primary/30 bg-primary-soft/60 p-4 sm:p-5">
+          <p className="flex items-center gap-2 text-sm font-semibold">
+            <Sparkles className="size-4 text-primary" aria-hidden="true" />
+            Mettre mon brief en avant en tête du marketplace (Optionnel)
+          </p>
+          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+            Votre brief est déjà publié gratuitement. Vous pouvez payer une
+            somme ponctuelle pour l’afficher en tête de liste avec le badge
+            « Mis en avant » :
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {(
+              [
+                { days: 7 as const, price: 2500 },
+                { days: 14 as const, price: 4500 },
+                { days: 30 as const, price: 8000 },
+              ]
+            ).map((opt) => (
+              <button
+                key={opt.days}
+                type="button"
+                disabled={boosting}
+                onClick={() =>
+                  void startBoostCheckout(created.id, created.managementKey, opt.days)
+                }
+                className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-primary/40 bg-card px-3.5 text-xs font-semibold text-primary transition-colors hover:bg-primary hover:text-ink disabled:opacity-60"
+              >
+                {boosting ? (
+                  <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
+                ) : null}
+                Mettre en avant {opt.days} jours ·{" "}
+                {opt.price.toLocaleString("fr-FR")} FCFA
+              </button>
+            ))}
+          </div>
+          {boostNotice ? (
+            <p className="mt-3 text-xs font-medium text-primary">{boostNotice}</p>
+          ) : null}
         </div>
 
         <div className="flex flex-wrap gap-3">
@@ -884,6 +974,77 @@ export function PosterForm({ initialType }: { initialType?: string } = {}) {
           </p>
         </div>
       )}
+
+      {/* Option de mise en avant payante lors de la publication (sans abonnement client) */}
+      <div className="rounded-2xl border border-hairline bg-card p-4 sm:p-5">
+        <div className="flex items-center justify-between gap-2">
+          <Label className="text-sm font-semibold">
+            Visibilité de votre brief (Optionnel)
+          </Label>
+          <span className="rounded-full border border-primary/30 bg-primary-soft px-2.5 py-0.5 text-[11px] font-semibold text-primary">
+            Sans abonnement
+          </span>
+        </div>
+        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+          La publication standard est 100 % gratuite. Vous pouvez optionnellement
+          mettre votre brief en avant en tête de liste pour recevoir davantage de
+          propositions rapidement :
+        </p>
+        <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            {
+              days: 0 as const,
+              title: "Publication standard",
+              price: "0 FCFA (Gratuit)",
+              note: "Visible dans l’annuaire des projets",
+            },
+            {
+              days: 7 as const,
+              title: "En avant · 7 jours",
+              price: "2 500 FCFA",
+              note: "Tête de liste + badge Mis en avant",
+            },
+            {
+              days: 14 as const,
+              title: "En avant · 14 jours",
+              price: "4 500 FCFA",
+              note: "Visibilité prioritaire 2 semaines",
+            },
+            {
+              days: 30 as const,
+              title: "En avant · 30 jours",
+              price: "8 000 FCFA",
+              note: "Visibilité maximale pendant 1 mois",
+            },
+          ].map((opt) => {
+            const active = boostDays === opt.days;
+            return (
+              <button
+                key={opt.days}
+                type="button"
+                onClick={() => setBoostDays(opt.days)}
+                aria-pressed={active}
+                className={cn(
+                  "flex flex-col items-start rounded-xl border p-3 text-left transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
+                  active
+                    ? "border-primary bg-primary-soft"
+                    : "border-hairline bg-surface hover:border-primary/40"
+                )}
+              >
+                <span className="text-xs font-semibold text-foreground">
+                  {opt.title}
+                </span>
+                <span className="mt-1 text-sm font-bold text-primary">
+                  {opt.price}
+                </span>
+                <span className="mt-0.5 text-[11px] text-muted-foreground">
+                  {opt.note}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
       <p className="flex items-center gap-2 rounded-xl border border-primary/20 bg-primary-soft px-4 py-3 text-sm text-foreground/90">
         <ShieldCheck className="size-4 shrink-0 text-primary" aria-hidden="true" />

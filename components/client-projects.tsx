@@ -53,9 +53,39 @@ const PHASES: Record<
 export function ClientProjects({ items }: { items: ClientProjectItem[] }) {
   const [filter, setFilter] = React.useState<"all" | "archived">("all");
   const [archiving, setArchiving] = React.useState<string | null>(null);
+  const [boostingId, setBoostingId] = React.useState<string | null>(null);
+  const [boostMsg, setBoostMsg] = React.useState<Record<string, string>>({});
   const [archivedIds, setArchivedIds] = React.useState<Set<string>>(
     () => new Set(items.filter((i) => i.archived).map((i) => i.id))
   );
+
+  const boostBrief = async (requestId: string, days: 7 | 14 | 30) => {
+    setBoostingId(requestId);
+    try {
+      const res = await fetch("/api/payments/brief-boost-checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ requestId, days }),
+      });
+      const data = (await res.json()) as {
+        mode?: "redirect" | "invoice_pending";
+        launchUrl?: string;
+        message?: string;
+      };
+      if (res.ok && data.mode === "redirect" && data.launchUrl) {
+        window.location.assign(data.launchUrl);
+        return;
+      }
+      setBoostMsg((prev) => ({
+        ...prev,
+        [requestId]:
+          data.message ||
+          "Demande de mise en avant enregistrée.",
+      }));
+    } finally {
+      setBoostingId(null);
+    }
+  };
 
   const active = items.filter((i) => !archivedIds.has(i.id));
   const archivedList = items.filter((i) => archivedIds.has(i.id));
@@ -247,6 +277,39 @@ export function ClientProjects({ items }: { items: ClientProjectItem[] }) {
                     >
                       {r.review ? "Modifier l’avis" : "Évaluer la mission"}
                     </Link>
+                  </div>
+                ) : null}
+
+                {r.status === "ouvert" && filter === "all" ? (
+                  <div className="rounded-xl border border-primary/25 bg-primary-soft/50 p-3">
+                    <p className="flex items-center gap-1.5 text-xs font-semibold text-primary">
+                      <Star className="size-3.5" aria-hidden="true" />
+                      Mettre ce brief en avant en tête de liste (Optionnel)
+                    </p>
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {(
+                        [
+                          { days: 7 as const, price: 2500 },
+                          { days: 14 as const, price: 4500 },
+                          { days: 30 as const, price: 8000 },
+                        ]
+                      ).map((opt) => (
+                        <button
+                          key={opt.days}
+                          type="button"
+                          disabled={boostingId === r.id}
+                          onClick={() => void boostBrief(r.id, opt.days)}
+                          className="inline-flex h-7 items-center gap-1 rounded-lg border border-primary/35 bg-card px-2.5 text-[11px] font-medium text-foreground transition-colors hover:border-primary hover:text-primary disabled:opacity-50"
+                        >
+                          {opt.days} j · {formatFCFA(opt.price)}
+                        </button>
+                      ))}
+                    </div>
+                    {boostMsg[r.id] ? (
+                      <p className="mt-1.5 text-[11px] font-medium text-primary">
+                        {boostMsg[r.id]}
+                      </p>
+                    ) : null}
                   </div>
                 ) : null}
 

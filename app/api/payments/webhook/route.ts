@@ -116,6 +116,43 @@ export async function POST(request: Request) {
     );
   }
 
+  if (kind === "brief_boost") {
+    const { data: boostPay, error: boostErr } = await admin
+      .from("brief_boost_payments")
+      .select("id, request_id, amount_fcfa, status")
+      .eq("id", reference)
+      .maybeSingle();
+
+    if (boostErr || !boostPay) {
+      return NextResponse.json({ error: "brief_boost_payment_not_found" }, { status: 404 });
+    }
+    if (boostPay.status === "confirmed") {
+      return NextResponse.json({ ok: true, confirmed: false, alreadyPaid: true });
+    }
+    if (!provider.amountMatches(confirmed, boostPay.amount_fcfa)) {
+      return NextResponse.json({ error: "amount_mismatch" }, { status: 400 });
+    }
+
+    const { data: boostConfirm, error: boostConfirmErr } = await admin.rpc(
+      "confirm_brief_boost_payment",
+      {
+        p_payment_id: boostPay.id,
+        p_provider_sale_id: confirmed.id,
+      }
+    );
+
+    if (boostConfirmErr) {
+      log.error({
+        action: "pulse.brief_boost.confirm.failed",
+        provider: provider.id,
+        message: boostConfirmErr.message,
+      });
+      return NextResponse.json({ error: "confirm_failed" }, { status: 500 });
+    }
+
+    return NextResponse.json({ ok: true, confirmed: true, result: boostConfirm });
+  }
+
   if (kind === "subscription") {
     const { data: subPay, error: subErr } = await admin
       .from("subscription_payments")

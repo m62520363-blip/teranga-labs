@@ -23,6 +23,7 @@ import {
   ChevronRight,
   Clock,
   Coins,
+  Crown,
   Download,
   ExternalLink,
   Globe,
@@ -108,6 +109,13 @@ export type OrderItem = {
   price_fcfa: number;
   status: TokenOrderStatus;
   created_at: string;
+};
+
+/** État d'abonnement renvoyé par la RPC get_my_subscription (migration 0073). */
+export type SubscriptionQuota = {
+  plan_name_fr?: string;
+  quota_used?: number;
+  quota_limit?: number;
 };
 
 export type ReviewsSummary = {
@@ -320,7 +328,7 @@ function DevStatusBannerShell({
 export function DashboardContent({
   userId,
   profile,
-  balance,
+  quota,
   unlocks,
   transactions,
   orders,
@@ -339,7 +347,8 @@ export function DashboardContent({
 }: {
   userId: string;
   profile: DeveloperProfile | null;
-  balance: number;
+  /** État d'abonnement et de quota (null tant que la migration 0073 n'est pas appliquée). */
+  quota?: SubscriptionQuota | null;
   unlocks: UnlockHistoryItem[];
   transactions: TransactionRow[];
   orders: OrderItem[];
@@ -417,10 +426,6 @@ export function DashboardContent({
   const [crmQuery, setCrmQuery] = React.useState("");
   const [crmStatusFilter, setCrmStatusFilter] = React.useState<CrmStatus | "all">("all");
 
-  const tokensUsed = transactions
-    .filter((t) => t.type === "unlock")
-    .reduce((sum, t) => sum + Math.abs(t.amount), 0);
-
   /* Progression du profil : photo et portfolio sont des recommandations
      (optionnelles), les autres critères structurent la complétion. */
   const profileChecks: { label: string; done: boolean }[] = [
@@ -438,13 +443,17 @@ export function DashboardContent({
     (profileChecks.filter((c) => c.done).length / profileChecks.length) * 100
   );
   const heroParts = [
-    `${balance} Token${balance > 1 ? "s" : ""} disponible${balance > 1 ? "s" : ""}`,
     `${unlocks.length} contact${unlocks.length > 1 ? "s" : ""} débloqué${unlocks.length > 1 ? "s" : ""}`,
     `${myMissions.length} mission${myMissions.length > 1 ? "s" : ""} en cours`,
   ];
+  if (quota?.quota_limit != null) {
+    heroParts.unshift(
+      `${quota.plan_name_fr ?? "Formule"} · ${quota.quota_used ?? 0}/${quota.quota_limit} contacts`
+    );
+  }
   const heroSubtitle =
     unlocks.length === 0 && myMissions.length === 0 && transactions.length === 0
-      ? "Suivez vos Tokens, pilotez vos contacts et soignez votre profil."
+      ? "Pilotez vos contacts, vos devis et soignez votre profil."
       : heroParts.join(" · ");
 
   const saveProfile = async (e: React.FormEvent) => {
@@ -730,8 +739,10 @@ export function DashboardContent({
 
               <div className="mt-4 flex flex-wrap gap-2">
                 <span className="inline-flex h-8 items-center gap-1.5 rounded-full border border-primary/30 bg-primary-soft px-3 text-xs font-medium text-primary">
-                  <Coins className="size-3.5" aria-hidden="true" />
-                  {balance} Token{balance > 1 ? "s" : ""}
+                  <Crown className="size-3.5" aria-hidden="true" />
+                  {quota?.quota_limit != null
+                    ? `${quota.plan_name_fr ?? "Formule"} · ${quota.quota_used ?? 0}/${quota.quota_limit} contacts`
+                    : "Mon abonnement"}
                 </span>
                 <span className="inline-flex h-8 items-center gap-1.5 rounded-full border border-hairline bg-background/60 px-3 text-xs text-muted-foreground">
                   {unlocks.length} contact{unlocks.length > 1 ? "s" : ""} débloqué{unlocks.length > 1 ? "s" : ""}
@@ -835,8 +846,7 @@ export function DashboardContent({
 
         <div className="mt-10">
           <DashboardStats
-            balance={balance}
-            tokensUsed={tokensUsed}
+            quota={quota}
             unlocksCount={unlocks.length}
           />
         </div>
@@ -1075,7 +1085,7 @@ export function DashboardContent({
               <div className="mt-6">
                 <EmptyState
                   title="Aucun contact débloqué pour le moment"
-                  description="Débloquez un projet avec 1 Token pour démarrer une discussion avec le client et suivre vos candidatures ici."
+                  description="Envoyez une proposition sur un projet pour démarrer une discussion avec le client et suivre vos candidatures ici."
                   action={
                     <Link
                       href="/briefs"
@@ -1771,25 +1781,25 @@ export function DashboardContent({
 
             <section
               className="rounded-2xl border border-hairline bg-card p-6 shadow-sm sm:p-8"
-              aria-label="Commandes de Tokens"
+              aria-label="Historique des commandes"
             >
               <h2 className="text-lg font-semibold tracking-tight">Commandes</h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Historique de vos achats de Tokens. Une commande confirmée
-                crédite votre solde automatiquement.
+                Vos anciennes commandes restent consultables pour votre
+                historique.
               </p>
 
               {orders.length === 0 ? (
                 <div className="mt-6">
                   <EmptyState
                     title="Aucune commande"
-                    description="Commandez un pack de Tokens pour débloquer plus de contacts."
+                    description="Gérez votre quota mensuel de contacts depuis la page Abonnement."
                     action={
                       <Link
-                        href="/wallet"
+                        href="/abonnement"
                         className="inline-flex h-10 items-center gap-2 rounded-xl bg-foreground px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-foreground"
                       >
-                        Voir les packs
+                        Voir les abonnements
                         <ArrowRight className="size-4" aria-hidden="true" />
                       </Link>
                     }
@@ -1972,8 +1982,8 @@ export function DashboardContent({
               <DialogTitle>Contester ce déblocage</DialogTitle>
               <DialogDescription>
                 Si le numéro WhatsApp de {refundFor?.client_name ?? "ce client"} est
-                faux ou injoignable, votre Token (2 500 FCFA) vous sera
-                remboursé après vérification par notre équipe.
+                faux ou injoignable, ce contact vous sera remboursé après
+                vérification par notre équipe.
               </DialogDescription>
             </DialogHeader>
             <form onSubmit={submitRefund} className="mt-2 flex flex-col gap-4">

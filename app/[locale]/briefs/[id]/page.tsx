@@ -213,8 +213,8 @@ export default async function BriefDetailPage({
                   <div>
                     <p className="text-sm font-semibold">Projet d’exemple</p>
                     <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
-                      Déblocage gratuit : testez la messagerie sans dépenser de
-                      Token.
+                      Déblocage gratuit : testez la messagerie sans consommer
+                      de quota.
                     </p>
                     <DeveloperPreview
                       clientName={brief.client_name}
@@ -289,11 +289,12 @@ export default async function BriefDetailPage({
 }
 
 /**
- * Ce que le développeur voit AVANT de payer son Token.
+ * Ce que le développeur voit AVANT de débloquer le contact.
  *
- * Objectif : qu'il puisse décider en 5 secondes si le projet vaut 1 Token. On
- * donne le prénom, la région, le budget et l'engagement de réponse — mais
- * jamais le WhatsApp, qui est précisément ce que le Token achète.
+ * Objectif : qu'il puisse décider en 5 secondes si le projet vaut un contact
+ * de son quota. On donne le prénom, la région, le budget et l'engagement de
+ * réponse — mais jamais le WhatsApp, qui est précisément ce que le déblocage
+ * ouvre.
  */
 function DeveloperPreview({
   clientName,
@@ -342,7 +343,7 @@ function DeveloperPreview({
         <Lock className="mt-0.5 size-3 shrink-0" aria-hidden="true" />
         {demo
           ? "Le WhatsApp du client s’ouvre dans la messagerie interne, jamais ici."
-          : "Le WhatsApp et le nom complet s’ouvrent après paiement : c’est ce que le Token débloque."}
+          : "Le WhatsApp et le nom complet s’ouvrent après déblocage du contact par le développeur."}
       </p>
     </div>
   );

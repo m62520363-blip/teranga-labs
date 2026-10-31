@@ -13,7 +13,7 @@ import type { PublicRequest } from "@/types/database";
 export const metadata: Metadata = {
   title: "Projets",
   description:
-    "Consultez les projets web disponibles en Afrique de l'Ouest francophone et démarrez une discussion privée avec le client pour 1 Token.",
+    "Consultez les projets web disponibles en Afrique de l'Ouest francophone et démarrez une discussion privée avec le client depuis votre espace développeur.",
 };
 
 export const dynamic = "force-dynamic";

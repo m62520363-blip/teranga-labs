@@ -37,11 +37,7 @@ function friendlyRpcError(error: unknown): string {
     typeof (error as { message?: unknown }).message === "string"
       ? (error as { message: string }).message
       : "";
-  const base = message || "Une erreur est survenue, réessayez.";
-  if (/TLLOW|tokens insuffisants/i.test(base)) {
-    return "Solde insuffisant : la création d'une agence coûte 4 Tokens. Rechargez depuis Mon wallet, puis réessayez.";
-  }
-  return base;
+  return message || "Une erreur est survenue, réessayez.";
 }
 
 export default function AgencyManager() {
@@ -299,8 +295,8 @@ export default function AgencyManager() {
 
           <p className="text-sm text-muted-foreground">
             Création d&apos;agence :{" "}
-            <span className="font-semibold text-foreground">4 Tokens</span>{" "}
-            débités de votre solde au moment de la création.
+            <span className="font-semibold text-foreground">gratuite</span> —
+            aucun paiement n&apos;est requis.
           </p>
 
           <button

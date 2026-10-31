@@ -17,12 +17,10 @@ import { ContactButton } from "@/components/dev/contact-dialog";
 
 export function DirectoryCard({
   developer,
-  contactCost,
   role,
   authed,
 }: {
   developer: ApprovedDeveloper;
-  contactCost: number;
   role: string | null;
   authed: boolean;
 }) {
@@ -198,7 +196,6 @@ export function DirectoryCard({
             main_specialty: developer.main_specialty,
             city: developer.city,
           }}
-          contactCost={contactCost}
           role={role}
           authed={authed}
         />

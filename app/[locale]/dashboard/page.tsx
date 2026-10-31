@@ -11,7 +11,7 @@ import type { MyDeveloperMission, MyDeveloperReviews } from "@/types/database";
 export const metadata: Metadata = {
   title: "Dashboard développeur",
   description:
-    "Votre solde de Tokens, vos déblocages, vos devis envoyés et vos missions.",
+    "Votre quota de contacts, vos déblocages, vos devis envoyés et vos missions.",
   robots: { index: false, follow: false },
 };
 
@@ -49,14 +49,17 @@ export default async function DashboardPage({
   const roleRes = await supabase.rpc("get_my_role");
   if (roleRes.data === "client") redirect("/client");
 
-  const [devRes, balanceRes, unlocksRes, transactionsRes, ordersRes, reviewsRes, myReviewsRes, missionsRes, conversations, openProjectsRes, statsRes, prefsRes, referralRes, recentRes] =
+  const [devRes, subRes, unlocksRes, transactionsRes, ordersRes, reviewsRes, myReviewsRes, missionsRes, conversations, openProjectsRes, statsRes, prefsRes, referralRes, recentRes] =
     await Promise.all([
       supabase
         .from("developers")
         .select("id, full_name, whatsapp, skills, city, notifications_enabled, status, created_at, username, bio, avatar_url, portfolio_links, is_verified, experience_years, rating_avg, reviews_count, completed_projects_count, reputation_score, reputation_level, penalty, monthly_goal")
         .eq("id", user.id)
         .maybeSingle(),
-      supabase.rpc("get_token_balance"),
+      // Abonnement & quota : la RPC n'existe que si la migration 0073 est
+      // appliquée. Sinon subRes.error est posé et le badge affiche son état
+      // neutre « Mon abonnement » sans casser la page.
+      supabase.rpc("get_my_subscription"),
       supabase.rpc("get_my_unlocks"),
       supabase
         .from("token_transactions")
@@ -95,7 +98,13 @@ export default async function DashboardPage({
     ]);
 
   const profile = devRes.data ?? null;
-  const balance = typeof balanceRes.data === "number" ? balanceRes.data : 0;
+  const quota = subRes.error
+    ? null
+    : ((subRes.data ?? null) as {
+        plan_name_fr?: string;
+        quota_used?: number;
+        quota_limit?: number;
+      } | null);
   const unlocks = (
     Array.isArray(unlocksRes.data) ? unlocksRes.data : []
   ) as UnlockHistoryItem[];
@@ -156,7 +165,7 @@ export default async function DashboardPage({
     <DashboardContent
       userId={user.id}
       profile={profile}
-      balance={balance}
+      quota={quota}
       unlocks={unlocks}
       transactions={transactions}
       orders={orders}

@@ -216,6 +216,36 @@ create policy subscription_quota_usage_select_own
 revoke insert, update, delete on public.subscription_quota_usage from anon, authenticated;
 
 -- ------------------------------------------------------------
+-- 4b. Contacts bonus (récompenses de classement, ex-Tokens)
+--     Le règlement mensuel du classement crédite désormais des
+--     contacts bonus applicables au quota du mois en cours, au lieu
+--     de Tokens (monnaie virtuelle retirée de l'interface).
+--     Idempotence : unique (developer_id, year, month) — une même
+--     période ne crédite jamais deux fois le même développeur.
+-- ------------------------------------------------------------
+create table if not exists public.contact_bonuses (
+  id           uuid primary key default gen_random_uuid(),
+  developer_id uuid not null references public.developers(id) on delete cascade,
+  year         integer not null check (year between 2000 and 2100),
+  month        integer not null check (month between 1 and 12),
+  contacts     integer not null check (contacts > 0),
+  credited_at  timestamptz not null default now(),
+  unique (developer_id, year, month)
+);
+
+create index if not exists contact_bonuses_dev_idx
+  on public.contact_bonuses (developer_id, credited_at desc);
+
+alter table public.contact_bonuses enable row level security;
+
+drop policy if exists contact_bonuses_select_own on public.contact_bonuses;
+create policy contact_bonuses_select_own
+  on public.contact_bonuses for select
+  using (developer_id = (select auth.uid()) or public.is_admin());
+
+revoke insert, update, delete on public.contact_bonuses from anon, authenticated;
+
+-- ------------------------------------------------------------
 -- 5. RPC publiques & développeurs — Catalogue et statut
 -- ------------------------------------------------------------
 create or replace function public.list_subscription_plans(
@@ -368,6 +398,7 @@ declare
   v_active boolean := false;
   v_limit integer := 1;
   v_used integer := 0;
+  v_bonus integer := 0;
   v_GraceDays integer := 3;
 begin
   if v_uid is null then
@@ -432,6 +463,15 @@ begin
      where u.developer_id = v_uid;
   end if;
 
+  -- Contacts bonus attribués par le classement (section 4b), valables
+  -- pendant le mois de leur crédit.
+  select coalesce(sum(contacts), 0)::integer into v_bonus
+    from public.contact_bonuses
+   where developer_id = v_uid
+     and credited_at >= date_trunc('month', now());
+
+  v_limit := v_limit + v_bonus;
+
   return jsonb_build_object(
     'active',                v_active,
     'status',                coalesce(v_sub.status, 'free'),
@@ -448,6 +488,7 @@ begin
     'quota_limit',           v_limit,
     'quota_used',            least(v_used, v_limit),
     'quota_remaining',       greatest(0, v_limit - v_used),
+    'bonus_contacts',        v_bonus,
     'quota_pct',             case when v_limit > 0 then least(100, round((v_used::numeric / v_limit::numeric) * 100)::integer) else 100 end,
     'quota_reset_at',        v_sub.quota_reset_at,
     'invoices',              coalesce((
@@ -763,6 +804,7 @@ declare
   v_sub_active boolean := false;
   v_limit integer := 1;
   v_used integer := 0;
+  v_bonus integer := 0;
   v_pct integer := 0;
   v_threshold integer := 0;
 begin
@@ -836,6 +878,15 @@ begin
           select count(*)::integer into v_used
             from public.unlocks where developer_id = v_user_id;
         end if;
+
+        -- Contacts bonus attribués par le classement ce mois-ci
+        -- (section 4b) : ils s'ajoutent à la limite mensuelle.
+        select coalesce(sum(contacts), 0)::integer into v_bonus
+          from public.contact_bonuses
+         where developer_id = v_user_id
+           and credited_at >= date_trunc('month', now());
+
+        v_limit := v_limit + v_bonus;
 
         if v_used >= v_limit then
           raise exception 'Vous avez atteint votre limite mensuelle de propositions (% / %). Passez à une formule supérieure (Pro, Pro Max ou Agence) pour contacter davantage de clients.', v_used, v_limit
@@ -1298,3 +1349,291 @@ end;
 $$;
 
 grant execute on function public.admin_get_subscription_analytics() to authenticated;
+
+-- ------------------------------------------------------------
+-- 11. ESPACE CLIENT : MISE EN AVANT PAYANTE D'UN BRIEF (FCFA)
+--     La publication d'un brief est 100 % gratuite (0 FCFA) et
+--     l'espace client n'a aucun abonnement. Le client peut
+--     optionnellement payer une somme fixe en FCFA pour placer
+--     son brief en tête du marketplace (public.sponsored_briefs).
+-- ------------------------------------------------------------
+create table if not exists public.brief_boost_payments (
+  id                uuid primary key default gen_random_uuid(),
+  request_id        uuid not null references public.requests(id) on delete cascade,
+  payer_id          uuid references auth.users(id) on delete set null,
+  days              integer not null check (days in (7, 14, 30)),
+  amount_fcfa       integer not null check (amount_fcfa > 0),
+  status            text not null default 'pending'
+                      check (status in ('pending', 'confirmed', 'failed', 'refunded')),
+  provider          text not null default 'chariow',
+  provider_sale_id  text,
+  invoice_number    text not null unique,
+  confirmed_at      timestamptz,
+  created_at        timestamptz not null default now()
+);
+
+create index if not exists brief_boost_payments_req_idx
+  on public.brief_boost_payments (request_id, created_at desc);
+
+alter table public.brief_boost_payments enable row level security;
+
+drop policy if exists brief_boost_payments_select_own on public.brief_boost_payments;
+create policy brief_boost_payments_select_own
+  on public.brief_boost_payments for select
+  using (payer_id = (select auth.uid()) or public.is_admin());
+
+revoke insert, update, delete on public.brief_boost_payments from anon, authenticated;
+
+create or replace function public.get_brief_boost_prices()
+returns jsonb
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select jsonb_build_array(
+    jsonb_build_object('days', 7,  'price_fcfa', 2500, 'label_fr', '7 jours en tête de liste',  'label_en', '7 days featured at the top'),
+    jsonb_build_object('days', 14, 'price_fcfa', 4500, 'label_fr', '14 jours en tête de liste', 'label_en', '14 days featured at the top', 'popular', true),
+    jsonb_build_object('days', 30, 'price_fcfa', 8000, 'label_fr', '30 jours en tête de liste', 'label_en', '30 days featured at the top')
+  );
+$$;
+
+grant execute on function public.get_brief_boost_prices() to anon, authenticated;
+
+create or replace function public.create_brief_boost_checkout(
+  p_request_id uuid,
+  p_days integer default 7,
+  p_management_key uuid default null
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_uid uuid := (select auth.uid());
+  v_req public.requests%rowtype;
+  v_days integer := case when p_days in (7, 14, 30) then p_days else 7 end;
+  v_amount integer;
+  v_invoice text;
+  v_payment_id uuid;
+begin
+  select * into v_req from public.requests where id = p_request_id;
+  if v_req.id is null then
+    raise exception 'Ce projet n’existe pas.' using errcode = 'TLNOR';
+  end if;
+
+  if (v_uid is null or v_req.client_id is distinct from v_uid)
+     and (p_management_key is null or v_req.management_key is distinct from p_management_key)
+     and not public.is_admin() then
+    raise exception 'Vous n’êtes pas autorisé à modifier ce projet.' using errcode = 'TLAUT';
+  end if;
+
+  v_amount := case
+    when v_days = 30 then 8000
+    when v_days = 14 then 4500
+    else 2500
+  end;
+
+  v_invoice := 'BOOST-' || to_char(now(), 'YYYYMM') || '-' || upper(substr(replace(gen_random_uuid()::text, '-', ''), 1, 6));
+
+  insert into public.brief_boost_payments (
+    request_id, payer_id, days, amount_fcfa, status, invoice_number
+  ) values (
+    v_req.id, coalesce(v_uid, v_req.client_id), v_days, v_amount, 'pending', v_invoice
+  )
+  returning id into v_payment_id;
+
+  return jsonb_build_object(
+    'payment_id',     v_payment_id,
+    'invoice_number', v_invoice,
+    'request_id',     v_req.id,
+    'days',           v_days,
+    'amount_fcfa',    v_amount
+  );
+end;
+$$;
+
+grant execute on function public.create_brief_boost_checkout(uuid, integer, uuid) to anon, authenticated;
+
+create or replace function public.confirm_brief_boost_payment(
+  p_payment_id uuid,
+  p_provider_sale_id text default null
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_pay public.brief_boost_payments%rowtype;
+  v_base timestamptz;
+  v_new_end timestamptz;
+begin
+  if current_setting('request.jwt.claim.role', true) is distinct from 'service_role'
+     and not public.is_admin() then
+    raise exception 'Confirmation réservée au serveur de paiement ou à un administrateur.' using errcode = 'TLAUT';
+  end if;
+
+  select * into v_pay from public.brief_boost_payments where id = p_payment_id for update;
+  if v_pay.id is null then
+    raise exception 'Paiement de mise en avant introuvable.' using errcode = 'TLNOR';
+  end if;
+
+  if v_pay.status = 'confirmed' then
+    return jsonb_build_object('ok', true, 'already_confirmed', true, 'payment_id', v_pay.id);
+  end if;
+
+  select greatest(coalesce(max(ends_at), now()), now())
+    into v_base
+    from public.sponsored_briefs
+   where request_id = v_pay.request_id;
+
+  v_new_end := v_base + make_interval(days => v_pay.days);
+
+  insert into public.sponsored_briefs (request_id, started_at, ends_at)
+  values (v_pay.request_id, now(), v_new_end)
+  on conflict (request_id) do update
+    set ends_at = excluded.ends_at;
+
+  update public.brief_boost_payments
+     set status           = 'confirmed',
+         provider_sale_id = coalesce(p_provider_sale_id, provider_sale_id),
+         confirmed_at     = now()
+   where id = v_pay.id;
+
+  if v_pay.payer_id is not null then
+    insert into public.notifications (user_id, type, title, body, link)
+    values (
+      v_pay.payer_id,
+      'brief_boosted',
+      'Votre projet est mis en avant',
+      'Votre projet apparaît en tête du marketplace jusqu’au ' || to_char(v_new_end, 'DD/MM/YYYY') || '.',
+      '/client/briefs'
+    );
+  end if;
+
+  return jsonb_build_object(
+    'ok',         true,
+    'payment_id', v_pay.id,
+    'request_id', v_pay.request_id,
+    'ends_at',    v_new_end
+  );
+end;
+$$;
+
+grant execute on function public.confirm_brief_boost_payment(uuid, text) to authenticated, service_role;
+
+-- ------------------------------------------------------------
+-- 12. RÉCOMPENSES DE CLASSEMENT : CONTACTS BONUS (ET NON TOKENS)
+--     Reprend la définition de 0056 sans détruire l'historique :
+--     le podium régional (10 / 7 / 4) est crédité en contacts
+--     bonus sur public.contact_bonuses (section 4b) au lieu de
+--     token_transactions. Les contacts bonus s'ajoutent au quota
+--     mensuel dans get_my_subscription et unlock_and_start_chat.
+--     La colonne historique leaderboard_monthly.tokens_awarded est
+--     conservée : elle porte désormais le nombre de contacts bonus.
+--     Les badges top 1/2/3 régional restent attribués à l'identique.
+-- ------------------------------------------------------------
+create or replace function public._leaderboard_settle(p_year int, p_month int)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_standings jsonb;
+  v_row jsonb;
+  v_scope_key text;
+  v_rows jsonb;
+  v_rank int;
+  v_developer uuid;
+  v_cnt int;
+  v_bonus int;
+  v_credited int := 0;
+  v_r1 int := 10;
+  v_r2 int := 7;
+  v_r3 int := 4;
+begin
+  perform pg_advisory_xact_lock(hashtext('leaderboard_settle'), p_year * 100 + p_month);
+
+  v_standings := public._leaderboard_standings(p_year, p_month);
+
+  for v_row in select * from jsonb_array_elements(v_standings->'regional') loop
+    v_rank := (v_row->>'rank')::int;
+    v_developer := (v_row->>'developer_id')::uuid;
+    v_cnt := (v_row->>'completed_projects')::int;
+    v_bonus := case v_rank when 1 then v_r1 when 2 then v_r2 when 3 then v_r3 else 0 end;
+
+    insert into public.leaderboard_monthly
+      (year, month, scope, scope_key, rank, developer_id, completed_projects, tokens_awarded)
+    values
+      (p_year, p_month, 'regional', 'aof', v_rank, v_developer, v_cnt, 0)
+    on conflict (year, month, scope, scope_key, developer_id)
+      do update set rank = excluded.rank,
+                    completed_projects = excluded.completed_projects,
+                    snapshot_at = now();
+
+    -- Un crédit par (développeur, période) : contact_bonuses porte la
+    -- contrainte unique qui rend le règlement idempotent.
+    if v_bonus > 0 and not exists (
+      select 1 from public.contact_bonuses cb
+       where cb.developer_id = v_developer
+         and cb.year = p_year
+         and cb.month = p_month
+    ) then
+      insert into public.contact_bonuses (developer_id, year, month, contacts)
+      values (v_developer, p_year, p_month, v_bonus);
+      v_credited := v_credited + v_bonus;
+      update public.leaderboard_monthly
+         set tokens_awarded = v_bonus
+       where year = p_year and month = p_month and scope = 'regional'
+         and scope_key = 'aof' and developer_id = v_developer;
+    end if;
+
+    if v_bonus > 0 then
+      insert into public.developer_badges (developer_id, badge_type, year, month, scope, scope_key, awarded_at)
+      values (
+        v_developer,
+        case v_rank when 1 then 'top1_regional' when 2 then 'top2_regional' else 'top3_regional' end,
+        p_year, p_month, 'regional', 'aof', now()
+      )
+      on conflict do nothing;
+    end if;
+  end loop;
+
+  -- Pays : classement affiché uniquement, sans double récompense.
+  for v_row in select * from jsonb_array_elements(v_standings->'countries') loop
+    v_scope_key := v_row->>'key';
+    v_rows := v_row->'rows';
+    for v_row in select * from jsonb_array_elements(v_rows) loop
+      v_rank := (v_row->>'rank')::int;
+      v_developer := (v_row->>'developer_id')::uuid;
+      v_cnt := (v_row->>'completed_projects')::int;
+
+      insert into public.leaderboard_monthly
+        (year, month, scope, scope_key, rank, developer_id, completed_projects, tokens_awarded)
+      values
+        (p_year, p_month, 'country', v_scope_key, v_rank, v_developer, v_cnt, 0)
+      on conflict (year, month, scope, scope_key, developer_id)
+        do update set rank = excluded.rank,
+                      completed_projects = excluded.completed_projects,
+                      snapshot_at = now();
+    end loop;
+  end loop;
+
+  insert into public.leaderboard_monthly_history
+    (year, month, scope, scope_key, rank, developer_id, completed_projects, tokens_awarded, snapshot_at)
+  select year, month, scope, scope_key, rank, developer_id, completed_projects, tokens_awarded, snapshot_at
+    from public.leaderboard_monthly
+   where year = p_year and month = p_month
+  on conflict (year, month, scope, scope_key, rank) do nothing;
+
+  return jsonb_build_object(
+    'ok', true,
+    'period', jsonb_build_object('year', p_year, 'month', p_month),
+    'credited', v_credited,
+    'unit', 'contact_bonus'
+  );
+end;
+$$;

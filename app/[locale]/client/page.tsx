@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import {
   Check,
   ClipboardPen,
-  Coins,
   FileSearch,
   Inbox,
   Megaphone,
@@ -16,8 +15,7 @@ import {
 import { createClient } from "@/lib/supabase/server";
 import { getConversations } from "@/lib/conversations";
 import { requireUser } from "@/lib/auth/guards";
-import { formatFCFA, formatRelativeTime } from "@/lib/formatting";
-import type { TokenHistoryItem } from "@/types/database";
+import { formatFCFA } from "@/lib/formatting";
 import { NotificationBell } from "@/components/notification-bell";
 import {
   ClientProjects,
@@ -70,19 +68,11 @@ export default async function ClientPage() {
   const roleRes = await supabase.rpc("get_my_role");
   if (roleRes.data !== "client") redirect("/dashboard");
 
-  const [requestsRes, conversations, tokenBalanceRes, tokenHistoryRes, reviewMapRes] =
-    await Promise.all([
-      supabase.rpc("get_my_requests" as never),
-      getConversations(supabase, user.id),
-      supabase.rpc("get_token_balance"),
-      supabase.rpc("get_my_token_history", { p_limit: 5 }),
-      supabase.rpc("get_my_request_reviews"),
-    ]);
-
-  const tokenBalance = typeof tokenBalanceRes.data === "number" ? tokenBalanceRes.data : 0;
-  const tokenHistory = ((tokenHistoryRes.data ?? []) as TokenHistoryItem[]).filter(
-    (t) => Boolean(t?.id)
-  );
+  const [requestsRes, conversations, reviewMapRes] = await Promise.all([
+    supabase.rpc("get_my_requests" as never),
+    getConversations(supabase, user.id),
+    supabase.rpc("get_my_request_reviews"),
+  ]);
 
   const requests = (
     (requestsRes.data ?? []) as MyRequest[]
@@ -373,31 +363,32 @@ export default async function ClientPage() {
           </section>
         ) : null}
 
-        <section className="mt-8 rounded-2xl border border-hairline bg-card p-5 sm:p-6" aria-label="Mes Tokens">
+        <section
+          className="mt-8 rounded-2xl border border-hairline bg-card p-5 sm:p-6"
+          aria-label="Publication gratuite"
+        >
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-start gap-4">
               <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary-soft text-primary">
-                <Coins className="size-5" aria-hidden="true" />
+                <Megaphone className="size-5" aria-hidden="true" />
               </span>
               <div>
-                <p className="text-sm text-muted-foreground">Mes Tokens</p>
-                <p className="text-2xl font-semibold tracking-tight">
-                  {tokenBalance}{" "}
-                  <span className="text-sm font-medium text-muted-foreground">
-                    Token{tokenBalance > 1 ? "s" : ""}
-                  </span>
+                <p className="text-sm text-muted-foreground">
+                  Publication 100 % gratuite
                 </p>
+                <p className="text-2xl font-semibold tracking-tight">0 FCFA</p>
                 <p className="mt-0.5 text-xs text-muted-foreground">
-                  Publication gratuite. 1 Token = 1 contact débloqué par un développeur.
+                  Publier un brief ne coûte rien. Vous pouvez mettre un projet
+                  en avant pour gagner en visibilité.
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-2">
               <Link
-                href="/tokens"
+                href="/client/briefs"
                 className="inline-flex h-10 items-center justify-center rounded-xl border border-hairline px-5 text-sm font-medium transition-colors outline-none hover:border-primary/40 hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
               >
-                Recharger
+                Mes publications
               </Link>
               <Link
                 href="/dev"
@@ -407,38 +398,6 @@ export default async function ClientPage() {
               </Link>
             </div>
           </div>
-
-          {tokenHistory.length > 0 ? (
-            <ul className="mt-5 flex flex-col">
-              {tokenHistory.map((t) => (
-                <li
-                  key={t.id}
-                  className="flex items-center justify-between gap-3 border-t border-hairline py-2.5 first:border-t-0"
-                >
-                  <div className="min-w-0">
-                    <p className="truncate text-sm">{t.label}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {formatRelativeTime(t.created_at)} · solde {t.balance_before} →{" "}
-                      {t.balance_after} Token
-                    </p>
-                  </div>
-                  <span
-                    className={cn(
-                      "shrink-0 text-sm font-semibold",
-                      (t.amount ?? 0) > 0 ? "text-success" : "text-error"
-                    )}
-                  >
-                    {(t.amount ?? 0) > 0 ? "+" : ""}
-                    {t.amount}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="mt-5 border-t border-hairline pt-4 text-sm text-muted-foreground">
-              Aucun mouvement pour le moment.
-            </p>
-          )}
         </section>
 
         <section className="mt-10">

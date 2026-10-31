@@ -53,7 +53,7 @@ export function ConversationsList({
         <div className="mt-6">
           <EmptyState
             title="Aucune discussion pour le moment"
-            description="Débloquez un projet avec 1 Token pour ouvrir une discussion et recevoir vos premières propositions ici."
+            description="Envoyez une proposition sur un projet pour ouvrir une discussion et recevoir vos premières propositions ici."
             action={
               <Link
                 href="/briefs"

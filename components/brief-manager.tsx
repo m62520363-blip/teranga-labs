@@ -83,24 +83,39 @@ export function BriefManager({
   const promote = async () => {
     setPromoting(true);
     setPromoteMsg("");
-    const supabase = createClient();
-    const { data, error } = await supabase.rpc("sponsor_brief", {
-      p_request_id: brief.id,
-      p_management_key: managementKey,
-      p_days: promoteDays,
-    });
-    setPromoting(false);
-    if (error) {
-      toast.error(error.message || "Impossible de mettre en avant ce projet.");
-      return;
+    try {
+      const res = await fetch("/api/payments/brief-boost-checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          requestId: brief.id,
+          days: promoteDays,
+          managementKey,
+        }),
+      });
+      const payload = (await res.json()) as {
+        mode?: "redirect" | "invoice_pending";
+        launchUrl?: string;
+        message?: string;
+      };
+      if (!res.ok) {
+        toast.error(payload.message || "Impossible d’initialiser la mise en avant.");
+        return;
+      }
+      if (payload.mode === "redirect" && payload.launchUrl) {
+        window.location.assign(payload.launchUrl);
+        return;
+      }
+      const msg =
+        payload.message ||
+        "Demande de mise en avant enregistrée. Votre projet apparaîtra en tête dès confirmation serveur du paiement.";
+      setPromoteMsg(msg);
+      toast.success("Demande de mise en avant enregistrée");
+    } catch {
+      toast.error("Erreur réseau. Réessayez dans un instant.");
+    } finally {
+      setPromoting(false);
     }
-    const ends = (data as { ends_at?: string } | null)?.ends_at;
-    toast.success(
-      ends
-        ? `Projet mis en avant jusqu'au ${new Date(ends).toLocaleDateString("fr-FR")}`
-        : "Projet mis en avant."
-    );
-    setPromoteMsg("Ce projet apparaît désormais en tête du marketplace.");
   };
 
   return (
@@ -129,12 +144,13 @@ export function BriefManager({
         <div className="mt-6 rounded-xl bg-muted p-4">
           <p className="flex items-center gap-2 text-sm font-medium">
             <Lock className="size-4 text-primary" aria-hidden="true" />
-            {statusHint} développeur{statusHint > 1 ? "s" : ""} a ouvert une
-            discussion
+            {statusHint} développeur{statusHint > 1 ? "s" : ""} a envoyé une
+            proposition
           </p>
           <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-            Chaque développeur a payé 1 Token pour vous écrire : ce sont des
-            profils sérieux. Répondez-leur dans la messagerie interne du site.
+            Les développeurs abonnés vous répondent via leur quota mensuel : ce
+            sont des profils vérifiés et engagés. Échangez directement avec eux
+            dans la messagerie interne.
           </p>
         </div>
 
@@ -142,44 +158,53 @@ export function BriefManager({
           <div className="mt-4 rounded-xl border border-primary/30 bg-primary-soft/60 p-4">
             <p className="flex items-center gap-2 text-sm font-medium">
               <Star className="size-4 text-primary" aria-hidden="true" />
-              Mettre ce brief en avant sur le marketplace
+              Mettre ce brief en avant en tête du marketplace (Optionnel)
             </p>
             <p className="mt-1 text-sm text-muted-foreground">
-              Votre brief apparaît en tête de l&apos;annuaire des projets pour
-              attirer plus de développeurs (1 Token par jour).
+              La publication de votre brief est 100 % gratuite. Vous pouvez
+              optionnellement le placer en tête de liste avec le badge « Mis en
+              avant » pour recevoir davantage de propositions rapidement :
             </p>
             <div className="mt-3 flex flex-wrap items-center gap-2">
-              {[7, 14, 30].map((days) => (
+              {[
+                { days: 7, price: 2500 },
+                { days: 14, price: 4500 },
+                { days: 30, price: 8000 },
+              ].map((opt) => (
                 <button
-                  key={days}
+                  key={opt.days}
                   type="button"
-                  onClick={() => setPromoteDays(days)}
+                  onClick={() => setPromoteDays(opt.days)}
                   className={cn(
-                    "inline-flex h-9 items-center rounded-lg border px-3 text-sm font-medium transition-colors",
-                    promoteDays === days
-                      ? "border-primary bg-primary-soft text-primary"
+                    "inline-flex h-9 items-center rounded-lg border px-3 text-xs font-medium transition-colors sm:text-sm",
+                    promoteDays === opt.days
+                      ? "border-primary bg-primary-soft text-primary font-semibold"
                       : "border-hairline bg-background text-muted-foreground hover:text-foreground"
                   )}
                 >
-                  {days} jours
+                  {opt.days} jours · {formatFCFA(opt.price)}
                 </button>
               ))}
               <button
                 type="button"
                 onClick={() => void promote()}
                 disabled={promoting}
-                className="ml-auto inline-flex h-9 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-medium text-ink transition-colors hover:bg-primary-hover disabled:opacity-60"
+                className="ml-auto inline-flex h-9 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-ink transition-colors hover:bg-primary-hover disabled:opacity-60"
               >
                 {promoting ? (
                   <Loader2 className="size-4 animate-spin" aria-hidden="true" />
                 ) : (
                   <Star className="size-4" aria-hidden="true" />
                 )}
-                Mettre en avant
+                Mettre en avant (
+                {formatFCFA(
+                  promoteDays === 30 ? 8000 : promoteDays === 14 ? 4500 : 2500
+                )}
+                )
               </button>
             </div>
             {promoteMsg ? (
-              <p className="mt-3 text-sm font-medium text-emerald-700">
+              <p className="mt-3 text-xs font-medium text-primary">
                 {promoteMsg}
               </p>
             ) : null}
