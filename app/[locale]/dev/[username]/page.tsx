@@ -33,6 +33,7 @@ import type { DeveloperReviewStats, PublicDeveloperProfile } from "@/types/datab
 import { asAgencyBadge } from "@/types/agency";
 import Link from "next/link";
 import { cn } from "cn";
+import { absoluteUrl } from "@/lib/utils";
 import { ReportReviewButton } from "@/components/review/report-review-button";
 
 export const dynamic = "force-dynamic";
@@ -130,7 +131,32 @@ export default async function DeveloperProfilePage({
         : null;
 
   return (
-    <div className="bg-background py-14 md:py-20">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Person",
+            name: profile.full_name ?? profile.username,
+            jobTitle: profile.professional_title ?? profile.main_specialty ?? "Développeur",
+            url: absoluteUrl(`/dev/${profile.username ?? profile.id}`),
+            address: profile.city
+              ? { "@type": "PostalAddress", addressLocality: profile.city, addressCountry: profile.country }
+              : undefined,
+            image: profile.avatar_url ?? undefined,
+            aggregateRating:
+              profile.review_average && profile.review_count
+                ? {
+                    "@type": "AggregateRating",
+                    ratingValue: profile.review_average,
+                    reviewCount: profile.review_count,
+                  }
+                : undefined,
+          }),
+        }}
+      />
+      <div className="bg-background py-14 md:py-20">
       <div className="container-tl">
         <ProfileViewTracker developerId={profile.id} />
         <div className="rounded-3xl border border-hairline bg-gradient-to-b from-card via-surface to-surface-secondary p-6 md:p-10">
@@ -726,5 +752,6 @@ export default async function DeveloperProfilePage({
         </p>
       </div>
     </div>
+    </>
   );
 }
