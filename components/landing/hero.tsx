@@ -162,7 +162,7 @@ export function Hero({ developerAvatars = [] }: { developerAvatars?: DeveloperAv
             className="animate-rise mt-5 flex max-w-3xl flex-wrap items-center justify-center gap-2"
             style={{ "--rise-delay": "400ms" } as React.CSSProperties}
           >
-            <span className="text-xs font-medium text-white/50">{t("searchLabel")}</span>
+            <span className="text-xs font-medium text-white/60">{t("searchLabel")}</span>
             {chips.map((chip) => (
               <Link
                 key={chip.label}
@@ -197,7 +197,7 @@ export function Hero({ developerAvatars = [] }: { developerAvatars?: DeveloperAv
           </div>
 
           <p
-            className="animate-rise mt-5 inline-flex items-center gap-2 text-xs text-white/60"
+            className="animate-rise mt-5 inline-flex items-center gap-2 text-xs text-white/70"
             style={{ "--rise-delay": "540ms" } as React.CSSProperties}
           >
             <ShieldCheck className="size-3.5 text-primary" aria-hidden="true" />
