@@ -47,7 +47,7 @@ export function RoleCards() {
               <article
                 key={card.key}
                 className={cn(
-                  "relative flex flex-col overflow-hidden rounded-[1.75rem] border p-6 sm:p-8",
+                  "group relative flex flex-col overflow-hidden rounded-[1.75rem] border p-6 sm:p-8",
                   card.highlighted
                     ? "border-primary/30 bg-[linear-gradient(155deg,rgba(57,255,136,0.12),rgba(17,26,54,0.4)_45%,rgba(17,26,54,1))]"
                     : "border-hairline bg-card"
@@ -62,13 +62,13 @@ export function RoleCards() {
                       : "bg-[radial-gradient(closest-side,rgba(255,255,255,0.05),transparent)]"
                   )}
                 />
-                <div className="relative mb-6 aspect-[16/9] w-full overflow-hidden rounded-2xl border border-white/10">
+                <div className="relative mb-6 aspect-[16/9] w-full overflow-hidden rounded-2xl border border-white/10 animate-rise">
                   <Image
                     src={card.photo}
                     alt=""
                     fill
                     sizes="(max-width: 1024px) 100vw, 50vw"
-                    className="object-cover"
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                     aria-hidden="true"
                   />
                   <div

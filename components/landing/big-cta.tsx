@@ -13,13 +13,13 @@ export function BigCta() {
   return (
     <section className="border-t border-hairline py-16 sm:py-20">
       <div className="container-tl">
-        <div className="relative isolate overflow-hidden rounded-[2rem] border border-primary/20 bg-[radial-gradient(120%_120%_at_15%_0%,rgba(57,255,136,0.18),transparent_55%),linear-gradient(145deg,#111a36_0%,#0b132b_65%,#080e20_100%)] px-6 py-12 text-center shadow-[0_50px_120px_-60px_rgba(57,255,136,0.4)] sm:px-10 sm:py-16">
+        <div className="group relative isolate overflow-hidden rounded-[2rem] border border-primary/20 bg-[radial-gradient(120%_120%_at_15%_0%,rgba(57,255,136,0.18),transparent_55%),linear-gradient(145deg,#111a36_0%,#0b132b_65%,#080e20_100%)] px-6 py-12 text-center shadow-[0_50px_120px_-60px_rgba(57,255,136,0.4)] sm:px-10 sm:py-16">
           <Image
             src="/landing/big-cta.jpg"
             alt=""
             fill
             sizes="100vw"
-            className="object-cover opacity-25 mix-blend-luminosity"
+            className="object-cover opacity-25 mix-blend-luminosity transition-transform duration-1000 ease-out group-hover:scale-105"
             aria-hidden="true"
             priority={false}
           />

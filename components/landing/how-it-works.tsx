@@ -50,14 +50,14 @@ export function HowItWorks() {
         </div>
 
         <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-7">
-          <article className="flex flex-col rounded-[1.75rem] border border-hairline bg-card p-6 sm:p-8">
-            <div className="relative mb-6 aspect-[16/9] w-full overflow-hidden rounded-2xl border border-hairline">
+          <article className="group flex flex-col rounded-[1.75rem] border border-hairline bg-card p-6 sm:p-8">
+            <div className="relative mb-6 aspect-[16/9] w-full overflow-hidden rounded-2xl border border-hairline animate-rise">
               <Image
                 src="/landing/how-it-works-client.jpg"
                 alt=""
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover"
+                className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                 aria-hidden="true"
               />
               <div
@@ -109,18 +109,18 @@ export function HowItWorks() {
             </div>
           </article>
 
-          <article className="relative flex flex-col overflow-hidden rounded-[1.75rem] border border-primary/25 bg-primary/[0.035] p-6 sm:p-8">
+          <article className="group relative flex flex-col overflow-hidden rounded-[1.75rem] border border-primary/25 bg-primary/[0.035] p-6 sm:p-8">
             <div
               aria-hidden="true"
               className="pointer-events-none absolute -right-24 -top-24 size-64 rounded-full bg-[radial-gradient(closest-side,rgba(57,255,136,0.16),transparent)]"
             />
-            <div className="relative mb-6 aspect-[16/9] w-full overflow-hidden rounded-2xl border border-primary/20">
+            <div className="relative mb-6 aspect-[16/9] w-full overflow-hidden rounded-2xl border border-primary/20 animate-rise">
               <Image
                 src="/landing/how-it-works-developer.jpg"
                 alt=""
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover"
+                className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                 aria-hidden="true"
               />
               <div
