@@ -193,7 +193,7 @@ export function DashboardShell({
             aria-label="Devmarket — accueil"
             className="flex min-w-0 items-center gap-2 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
           >
-            <ImageLogoMark priority className="h-7 w-auto" alt="" />
+            <ImageLogoMark priority className="h-16 w-auto" alt="" />
           </Link>
           {userId ? <NotificationBell userId={userId} /> : null}
         </div>
@@ -217,7 +217,7 @@ export function DashboardShell({
             aria-label="Devmarket — accueil"
             className="flex min-w-0 items-center gap-2 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
           >
-            <ImageLogoMark className="h-7 w-auto" alt="" />
+            <ImageLogoMark className="h-16 w-auto" alt="" />
           </Link>
           <div className="flex shrink-0 items-center gap-1.5">
             {userId ? <NotificationBell userId={userId} /> : null}
@@ -261,7 +261,7 @@ export function DashboardShell({
                 aria-label="Devmarket — accueil"
                 className="flex min-w-0 items-center gap-2 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
               >
-                <ImageLogoMark className="h-7 w-auto" alt="" />
+                <ImageLogoMark className="h-16 w-auto" alt="" />
               </Link>
               <button
                 type="button"

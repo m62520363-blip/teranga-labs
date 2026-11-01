@@ -39,7 +39,7 @@ export function AuthShell({
             aria-label="Devmarket — accueil"
             className="inline-flex items-center rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
           >
-            <ImageLogoMark priority className="h-12 w-auto" alt="" />
+            <ImageLogoMark priority className="h-16 w-auto" alt="" />
           </Link>
           {isLogin && (
             <div>

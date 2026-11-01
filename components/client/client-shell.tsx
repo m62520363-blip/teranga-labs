@@ -143,7 +143,7 @@ export function ClientShell({
             aria-label="Devmarket — tableau de bord"
             className="flex min-w-0 items-center gap-2 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
           >
-            <ImageLogoMark priority className="h-7 w-auto" alt="" />
+            <ImageLogoMark priority className="h-16 w-auto" alt="" />
           </Link>
           {userId ? <NotificationBell userId={userId} /> : null}
         </div>

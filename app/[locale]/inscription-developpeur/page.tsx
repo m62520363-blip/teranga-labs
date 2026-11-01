@@ -55,6 +55,34 @@ function AlreadyValidated() {
           </Link>
         </div>
       </div>
+      <div className="mt-6 rounded-2xl border border-hairline bg-card p-6 sm:p-8">
+        <h2 className="text-lg font-semibold tracking-tight mb-4">
+          📋 Guide d&apos;inscription rapide
+        </h2>
+        <ol className="space-y-3 text-sm text-muted-foreground">
+          <li>
+            <span className="font-medium text-foreground">1. Créer votre compte</span>
+            <span className="ml-2 text-xs bg-primary/10 bg-opacity-50 rounded px-2 py-0.5">
+              ⚡ 1 min
+            </span>
+            • Inscription par email + rôle développeur
+          </li>
+          <li>
+            <span className="font-medium text-foreground">2. Compléter votre profil</span>
+            <span className="ml-2 text-xs bg-primary/10 bg-opacity-50 rounded px-2 py-0.5">
+              ⏱️ 5-10 min
+            </span>
+            • Photo de profil, bio, compétences, villes proposées
+          </li>
+          <li>
+            <span className="font-medium text-foreground">3. Validation équipe</span>
+            <span className="ml-2 text-xs bg-primary/10 bg-opacity-50 rounded px-2 py-0.5">
+              📅 24-48 h
+            </span>
+            • Revue manuelle — pas de spam pour les clients
+          </li>
+        </ol>
+      </div>
     </div>
   );
 }

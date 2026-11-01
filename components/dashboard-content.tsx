@@ -443,33 +443,48 @@ export function DashboardContent({
 
   /* Progression du profil : photo et portfolio sont des recommandations
      (optionnelles), les autres critères structurent la complétion. */
-  const profileChecks: { label: string; done: boolean }[] = [
-    { label: "Photo de profil (recommandée)", done: Boolean(profile?.avatar_url) },
-    { label: "Bio présentée", done: Boolean(p.bio.trim()) },
-    { label: "Identifiant public", done: Boolean(p.username.trim()) },
-    { label: "Ville", done: Boolean(p.city.trim()) },
-    { label: "Compétences", done: Boolean(p.skills.trim()) },
-    {
-      label: "Portfolio (optionnel, recommandé)",
-      done: portfolio.some((l) => l.title.trim() && l.url.trim()),
-    },
-  ];
-  const profileScore = Math.round(
-    (profileChecks.filter((c) => c.done).length / profileChecks.length) * 100
-  );
-  const heroParts = [
-    `${unlocks.length} contact${unlocks.length > 1 ? "s" : ""} débloqué${unlocks.length > 1 ? "s" : ""}`,
-    `${myMissions.length} mission${myMissions.length > 1 ? "s" : ""} en cours`,
-  ];
-  if (quota?.quota_limit != null) {
-    heroParts.unshift(
-      `${quota.plan_name_fr ?? "Formule"} · ${quota.quota_used ?? 0}/${quota.quota_limit} contacts`
+  const profileChecksMemo = React.useMemo(() => {
+    return [
+      { label: "Photo de profil (recommandée)", done: Boolean(profile?.avatar_url) },
+      { label: "Bio présentée", done: Boolean(p.bio.trim()) },
+      { label: "Identifiant public", done: Boolean(p.username.trim()) },
+      { label: "Ville", done: Boolean(p.city.trim()) },
+      { label: "Compétences", done: Boolean(p.skills.trim()) },
+      {
+        label: "Portfolio (optionnel, recommandé)",
+        done: portfolio.some((l) => l.title.trim() && l.url.trim()),
+      },
+    ];
+  }, [profile, portfolio, p.bio, p.username, p.city, p.skills]);
+  const profileScore = React.useMemo(() => {
+    if (profileChecksMemo.length === 0) return 0;
+    return Math.round(
+      (profileChecksMemo.filter((c: { done: boolean; label: string }) => c.done).length / profileChecksMemo.length) * 100
     );
-  }
-  const heroSubtitle =
-    unlocks.length === 0 && myMissions.length === 0 && transactions.length === 0
-      ? "Pilotez vos contacts, vos devis et soignez votre profil."
-      : heroParts.join(" · ");
+  }, [profileChecksMemo]);
+  const heroPartsMemo = React.useMemo(() => {
+    const contactMsg = `${unlocks.length} contact${unlocks.length > 1 ? "s" : ""} débloqué${unlocks.length > 1 ? "s" : ""}`;
+    const missionMsg = `${myMissions.length} mission${myMissions.length > 1 ? "s" : ""} en cours`;
+    const parts: string[] = [];
+    if (unlocks.length > 0 || myMissions.length > 0 || transactions.length > 0) {
+      parts.push(contactMsg);
+      parts.push(missionMsg);
+    }
+    if (quota?.quota_limit != null) {
+      parts.unshift(
+        `${quota.plan_name_fr ?? "Formule"} · ${quota.quota_used ?? 0}/${quota.quota_limit} contacts`
+      );
+    }
+    const subtitle =
+      unlocks.length === 0 && myMissions.length === 0 && transactions.length === 0
+        ? "Pilotez vos contacts, vos devis et soignez votre profil."
+        : parts.join(" · ");
+    return subtitle;
+  }, [unlocks, myMissions, transactions, quota]),
+  heroSubtitle =
+    unlocks.length > 0 || myMissions.length > 0 || transactions.length > 0 || quota?.quota_limit != null
+      ? heroPartsMemo
+      : "Pilotez vos contacts, vos devis et soignez votre profil.";
 
   const saveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -644,37 +659,47 @@ export function DashboardContent({
   };
 
   const publicUrl = p.username ? `/dev/${p.username.trim().toLowerCase()}` : null;
-  const statusCounts = unlocks.reduce<Record<string, number>>(
-    (acc, u) => {
-      const status = crm[u.unlock_id] ?? u.crm_status;
-      acc[status] = (acc[status] ?? 0) + 1;
-      return acc;
-    },
-    {}
+
+  const statusCounts = React.useMemo<Record<string, number>>(
+    () => unlocks.reduce<Record<string, number>>(
+      (acc, u) => {
+        const status = crm[u.unlock_id] ?? u.crm_status;
+        acc[status] = (acc[status] ?? 0) + 1;
+        return acc;
+      },
+      {}
+    ),
+    [unlocks, crm]
   );
 
-  const filteredUnlocks = unlocks.filter((item) => {
-    const status = crm[item.unlock_id] ?? item.crm_status;
-    if (crmStatusFilter !== "all" && status !== crmStatusFilter) return false;
-    const q = crmQuery.trim().toLowerCase();
-    if (!q) return true;
-    const haystack = `${item.client_name} ${item.client_city} ${item.project_type} ${item.client_whatsapp}`.toLowerCase();
-    return haystack.includes(q);
-  });
+  const filteredUnlocks = React.useMemo(
+    () => unlocks.filter((item) => {
+      const status = crm[item.unlock_id] ?? item.crm_status;
+      if (crmStatusFilter !== "all" && status !== crmStatusFilter) return false;
+      const q = crmQuery.trim().toLowerCase();
+      if (!q) return true;
+      const haystack = `${item.client_name} ${item.client_city} ${item.project_type} ${item.client_whatsapp}`.toLowerCase();
+      return haystack.includes(q);
+    }),
+    [unlocks, crm, crmStatusFilter, crmQuery]
+  );
 
   const wonCount = statusCounts.gagne ?? 0;
-  const conversionPct =
-    unlocks.length > 0 ? Math.round((wonCount / unlocks.length) * 100) : 0;
+  const conversionPct = React.useMemo(
+    () => unlocks.length > 0 ? Math.round((wonCount / unlocks.length) * 100) : 0,
+    [wonCount, unlocks.length]
+  );
 
-  const wonThisMonth = unlocks.filter((u) => {
-    const s = crm[u.unlock_id] ?? u.crm_status;
-    if (s !== "gagne") return false;
-    const d = new Date(u.unlocked_at);
-    const now = new Date();
-    return (
-      d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth()
-    );
-  }).length;
+  const wonThisMonth = React.useMemo(
+    () => unlocks.filter((u) => {
+      const s = crm[u.unlock_id] ?? u.crm_status;
+      if (s !== "gagne") return false;
+      const d = new Date(u.unlocked_at);
+      const now = new Date();
+      return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+    }).length,
+    [unlocks, crm]
+  );
   const monthlyGoal = Math.max(0, p.monthly_goal || 0);
 
   const toLocalInput = (iso: string) => (iso ? new Date(iso).toISOString().slice(0, 16) : "");
@@ -884,7 +909,7 @@ export function DashboardContent({
               />
             </div>
             <ul className="mt-3 flex flex-wrap gap-2">
-              {profileChecks.map((c) => (
+              {profileChecksMemo.map((c) => (
                 <li
                   key={c.label}
                   className={cn(
@@ -1124,16 +1149,14 @@ export function DashboardContent({
                 </button>
                 <button
                   type="button"
-                  onClick={() => setTab("agence")}
+                  onClick={() => setTab("avis")}
                   className={cn(
                     "flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
-                    tab === "agence"
+                    tab === "avis"
                       ? "bg-primary-soft text-primary"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground"
                   )}
                 >
-                  <Building2 className="size-4" aria-hidden="true" />
-                  Mon agence
                 </button>
               </div>
 
@@ -1216,13 +1239,6 @@ export function DashboardContent({
                 >
                   <TrendingUp className="size-4" aria-hidden="true" />
                   Promouvoir mon profil
-                </Link>
-                <Link
-                  href="/abonnement"
-                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  <Wallet className="size-4" aria-hidden="true" />
-                  Abonnement
                 </Link>
                 <button
                   type="button"

@@ -62,7 +62,7 @@ export function Footer() {
               aria-label={BRAND}
             >
               <span className="sr-only">{BRAND}</span>
-              <ImageLogoMark className="h-10 w-auto" alt="" />
+              <ImageLogoMark className="h-16 w-auto" alt="" />
             </Link>
             <p className="mt-4 max-w-xs font-headings text-base font-bold tracking-tight text-primary">
               {t("slogan")}

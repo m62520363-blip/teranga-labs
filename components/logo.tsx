@@ -23,7 +23,7 @@ export function ImageLogoMark({
       height={787}
       sizes="140px"
       priority={priority}
-      className={cn("h-8 w-auto", className)}
+      className={cn("h-16 w-auto", className)}
     />
   );
 }
