@@ -25,7 +25,6 @@ export default async function ClientProfilePage() {
         <div className="mx-auto max-w-3xl space-y-6">
           <div className="rounded-2xl border border-hairline bg-card p-6 shadow-sm">
             <ProfileForm
-              userId={user.id}
               initialName={name}
               initialAvatar={avatarUrl}
               email={user.email ?? null}

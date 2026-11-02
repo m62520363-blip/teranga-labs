@@ -7,8 +7,8 @@ export const dynamic = "force-dynamic";
 
 /**
  * POST /api/agencies/activate
- * Vérifie côté serveur l'abonnement PRO actif du développeur et active
- * immédiatement son agence nouvellement créée pour qu'elle apparaisse sur /agences.
+ * Vérifie côté serveur l'abonnement PRO actif du développeur via la RPC
+ * get_my_subscription (pas de table agencies typée dans le schéma).
  */
 export async function POST() {
   const guard = await apiRequireUser();
@@ -24,19 +24,14 @@ export async function POST() {
     return NextResponse.json({ ok: true });
   }
 
-  const { data: sub } = await admin
-    .from("subscriptions")
-    .select("plan, status, ends_at, grace_until")
-    .eq("developer_id", user.id)
-    .maybeSingle();
+  const { data: sub } = await admin.rpc("get_my_subscription");
+  const subData = (sub ?? null) as {
+    active?: boolean;
+    plan_id?: string;
+  } | null;
 
-  const now = new Date();
   const isProActive = Boolean(
-    sub &&
-      sub.plan !== "free" &&
-      ["active", "grace_period", "cancelled"].includes(sub.status) &&
-      ((sub.ends_at && new Date(sub.ends_at) > now) ||
-        (sub.grace_until && new Date(sub.grace_until) > now))
+    subData?.active && subData?.plan_id && subData.plan_id !== "free"
   );
 
   if (!isProActive) {
@@ -49,11 +44,34 @@ export async function POST() {
     );
   }
 
-  await admin
-    .from("agencies")
-    .update({ status: "active" })
+  const { data: agencyRows } = await (admin as unknown as {
+    from: (table: string) => {
+      select: (cols: string) => {
+        eq: (col: string, val: string) => {
+          maybeSingle: () => Promise<{ data: { id: string } | null; error: unknown }>;
+        };
+      };
+      update: (vals: Record<string, string>) => {
+        eq: (col: string, val: string) => Promise<{ error: unknown }>;
+      };
+    };
+  }).from("agencies")
+    .select("id")
     .eq("owner_id", user.id)
-    .eq("status", "pending");
+    .maybeSingle();
+
+  const agency = agencyRows as { id: string } | null;
+  if (agency?.id) {
+    await (admin as unknown as {
+      from: (table: string) => {
+        update: (vals: Record<string, string>) => {
+          eq: (col: string, val: string) => Promise<{ error: unknown }>;
+        };
+      };
+    }).from("agencies")
+      .update({ status: "active" })
+      .eq("id", agency.id);
+  }
 
   return NextResponse.json({ ok: true });
 }

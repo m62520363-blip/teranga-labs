@@ -183,7 +183,6 @@ export function OnboardingForm({
         ) : (
           <ProfessionalStep
             initial={initial}
-            userId={userId}
             onBack={() => setStep(1)}
             onDone={() => setSubmitted(true)}
           />
@@ -625,12 +624,10 @@ function IdentityStep({
 
 function ProfessionalStep({
   initial,
-  userId,
   onBack,
   onDone,
 }: {
   initial: OnboardingData | null;
-  userId: string;
   onBack: () => void;
   onDone: () => void;
 }) {

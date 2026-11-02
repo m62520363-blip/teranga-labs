@@ -21,12 +21,10 @@ function initialsOf(name: string, email: string | null): string {
 }
 
 export function ProfileForm({
-  userId,
   initialName,
   initialAvatar,
   email,
 }: {
-  userId?: string;
   initialName: string | null;
   initialAvatar?: string | null;
   email: string | null;
