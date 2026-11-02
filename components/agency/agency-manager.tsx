@@ -42,6 +42,7 @@ function friendlyRpcError(error: unknown): string {
 
 export default function AgencyManager() {
   const [agency, setAgency] = React.useState<MyAgency | null>(null);
+  const [hasPro, setHasPro] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
   const [busy, setBusy] = React.useState(false);
   const [error, setError] = React.useState("");
@@ -63,12 +64,20 @@ export default function AgencyManager() {
   const supabase = createClient();
 
   const refresh = React.useCallback(async () => {
-    const { data, error: err } = await supabase.rpc("my_agency");
-    if (err) {
+    const [agencyRes, subRes] = await Promise.all([
+      supabase.rpc("my_agency"),
+      supabase.rpc("get_my_subscription"),
+    ]);
+    if (agencyRes.error) {
       setAgency(null);
-      return;
+    } else {
+      setAgency(asMyAgency(agencyRes.data));
     }
-    setAgency(asMyAgency(data));
+    const subData = (subRes.data ?? null) as {
+      active?: boolean;
+      plan_id?: string;
+    } | null;
+    setHasPro(Boolean(subData?.active && subData?.plan_id && subData.plan_id !== "free"));
   }, [supabase]);
 
   React.useEffect(() => {
@@ -198,171 +207,192 @@ export default function AgencyManager() {
     return (
       <div className="space-y-6">
         <div>
-          <h2 className="text-xl font-semibold">Mon agence</h2>
+          <h2 className="text-xl font-semibold">Créer ou rejoindre une agence</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             Regroupez vos développeurs sous une même enseigne et gagnez en
-            visibilité. Un agence n&apos;est visible qu&apos;après validation.
+            visibilité. La création d&apos;une agence nécessite un abonnement PRO actif.
           </p>
         </div>
 
-        <form
-          onSubmit={createAgency}
-          className="max-w-xl space-y-4 rounded-2xl border border-hairline bg-card p-5"
-        >
-          <div className="space-y-1">
-            <label htmlFor="agency-name" className="text-sm font-medium">
-              Nom de l&apos;agence *
-            </label>
-            <input
-              id="agency-name"
-              required
-              minLength={2}
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="h-11 w-full rounded-xl border border-hairline bg-background px-3 text-sm outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/50"
-              placeholder="Ex. Atelier Devmarket"
-            />
-          </div>
-
-          <div className="space-y-1">
-            <label htmlFor="agency-slug" className="text-sm font-medium">
-              Adresse de la page (URL) *
-            </label>
-            <div className="flex h-11 w-full items-center rounded-xl border border-hairline bg-background px-3 text-sm">
-              <span className="text-muted-foreground">/agences/</span>
-              <input
-                id="agency-slug"
-                required
-                pattern="[a-z0-9][a-z0-9-]{1,39}"
-                title="Lettres minuscules, chiffres et tirets uniquement."
-                value={form.slug}
-                onChange={(e) =>
-                  setForm({
-                    ...form,
-                    slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""),
-                  })
-                }
-                className="w-full flex-1 bg-transparent outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
-                placeholder="atelier-devmarket"
-              />
-            </div>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-1">
-              <label htmlFor="agency-city" className="text-sm font-medium">
-                Ville
-              </label>
-              <input
-                id="agency-city"
-                value={form.city}
-                onChange={(e) => setForm({ ...form, city: e.target.value })}
-                className="h-11 w-full rounded-xl border border-hairline bg-background px-3 text-sm outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/50"
-                placeholder="Dakar"
-              />
-            </div>
-            <div className="space-y-1">
-              <label htmlFor="agency-country" className="text-sm font-medium">
-                Pays
-              </label>
-              <input
-                id="agency-country"
-                value={form.country}
-                onChange={(e) => setForm({ ...form, country: e.target.value })}
-                className="h-11 w-full rounded-xl border border-hairline bg-background px-3 text-sm outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/50"
-                placeholder="Ex. Côte d'Ivoire"
-              />
-            </div>
-          </div>
-
-          <div className="space-y-1">
-            <label htmlFor="agency-website" className="text-sm font-medium">
-              Site web
-            </label>
-            <input
-              id="agency-website"
-              type="url"
-              value={form.website}
-              onChange={(e) => setForm({ ...form, website: e.target.value })}
-              className="h-11 w-full rounded-xl border border-hairline bg-background px-3 text-sm outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/50"
-              placeholder="https://…"
-            />
-          </div>
-
-          {error ? (
-            <p role="alert" className="text-sm font-medium text-destructive">{error}</p>
-          ) : null}
-
-          <p className="text-sm text-muted-foreground">
-            Création d&apos;agence :{" "}
-            <span className="font-semibold text-foreground">gratuite</span> —
-            aucun paiement n&apos;est requis.
-          </p>
-
-          <button
-            type="submit"
-            disabled={busy}
-            className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50 disabled:opacity-60"
-          >
-            {busy ? (
-              <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-            ) : (
-              <Building2 className="size-4" aria-hidden="true" />
-            )}
-            Créer mon agence
-          </button>
-        </form>
-
-        <div className="max-w-xl space-y-4 rounded-2xl border border-hairline bg-card p-5">
-          <div>
-            <h3 className="text-sm font-semibold">Rejoindre une agence</h3>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Vous avez reçu un code d&apos;invitation ? Saisissez-le.
-            </p>
-          </div>
-          <div className="flex flex-wrap items-end gap-2">
-            <div className="flex-1 space-y-1">
-              <label htmlFor="agency-invite" className="text-sm font-medium">
-                Code d&apos;invitation
-              </label>
-              <input
-                id="agency-invite"
-                value={joinCode}
-                onChange={(e) => setJoinCode(e.target.value.trim())}
-                className="h-11 w-full rounded-xl border border-hairline bg-background px-3 font-mono text-sm outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/50"
-                placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-              />
-            </div>
-            <button
-              type="button"
-              onClick={() => void lookupInvite()}
-              disabled={busy}
-              className="inline-flex h-11 items-center gap-2 rounded-xl border border-hairline bg-background px-4 text-sm font-medium transition-colors hover:border-primary/50 hover:text-primary disabled:opacity-60"
+        <div className="grid gap-6 lg:grid-cols-2">
+          {hasPro ? (
+            <form
+              onSubmit={createAgency}
+              className="space-y-4 rounded-2xl border border-hairline bg-card p-5"
             >
-              <Search className="size-4" aria-hidden="true" />
-              Vérifier
-            </button>
-          </div>
-
-          {joinInfo ? (
-            <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-primary/40 bg-primary-soft px-4 py-3">
-              <div className="flex items-center gap-2 text-sm font-medium">
-                <Building2 className="size-4 text-primary" aria-hidden="true" />
-                {joinInfo.name}
+              <div className="space-y-1">
+                <label htmlFor="agency-name" className="text-sm font-medium">
+                  Nom de l&apos;agence *
+                </label>
+                <input
+                  id="agency-name"
+                  required
+                  minLength={2}
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  className="h-11 w-full rounded-xl border border-hairline bg-background px-3 text-sm outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/50"
+                  placeholder="Ex. Atelier Devmarket"
+                />
               </div>
+
+              <div className="space-y-1">
+                <label htmlFor="agency-slug" className="text-sm font-medium">
+                  Adresse de la page (URL) *
+                </label>
+                <div className="flex h-11 w-full items-center rounded-xl border border-hairline bg-background px-3 text-sm">
+                  <span className="text-muted-foreground">/agences/</span>
+                  <input
+                    id="agency-slug"
+                    required
+                    pattern="[a-z0-9][a-z0-9-]{1,39}"
+                    title="Lettres minuscules, chiffres et tirets uniquement."
+                    value={form.slug}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""),
+                      })
+                    }
+                    className="w-full flex-1 bg-transparent outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+                    placeholder="atelier-devmarket"
+                  />
+                </div>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-1">
+                  <label htmlFor="agency-city" className="text-sm font-medium">
+                    Ville
+                  </label>
+                  <input
+                    id="agency-city"
+                    value={form.city}
+                    onChange={(e) => setForm({ ...form, city: e.target.value })}
+                    className="h-11 w-full rounded-xl border border-hairline bg-background px-3 text-sm outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/50"
+                    placeholder="Dakar"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label htmlFor="agency-country" className="text-sm font-medium">
+                    Pays
+                  </label>
+                  <input
+                    id="agency-country"
+                    value={form.country}
+                    onChange={(e) => setForm({ ...form, country: e.target.value })}
+                    className="h-11 w-full rounded-xl border border-hairline bg-background px-3 text-sm outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/50"
+                    placeholder="Ex. Côte d'Ivoire"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label htmlFor="agency-website" className="text-sm font-medium">
+                  Site web
+                </label>
+                <input
+                  id="agency-website"
+                  type="url"
+                  value={form.website}
+                  onChange={(e) => setForm({ ...form, website: e.target.value })}
+                  className="h-11 w-full rounded-xl border border-hairline bg-background px-3 text-sm outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/50"
+                  placeholder="https://…"
+                />
+              </div>
+
+              {error ? (
+                <p role="alert" className="text-sm font-medium text-destructive">{error}</p>
+              ) : null}
+
               <button
-                type="button"
-                onClick={() => void confirmJoin()}
+                type="submit"
                 disabled={busy}
-                className="inline-flex h-9 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-medium text-ink transition-colors hover:bg-primary-hover disabled:opacity-60"
+                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-ink transition-colors outline-none hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50 disabled:opacity-60"
               >
                 {busy ? (
                   <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-                ) : null}
-                Rejoindre
+                ) : (
+                  <Building2 className="size-4" aria-hidden="true" />
+                )}
+                Créer mon agence
+              </button>
+            </form>
+          ) : (
+            <div className="flex flex-col justify-between gap-4 rounded-2xl border border-primary/30 bg-primary-soft p-6">
+              <div className="space-y-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-background/60 px-3 py-1 text-xs font-semibold text-primary">
+                  <Building2 className="size-3.5" aria-hidden="true" />
+                  Abonnement PRO requis
+                </span>
+                <h3 className="text-lg font-semibold tracking-tight">
+                  Créez votre agence avec un abonnement PRO
+                </h3>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  Pour créer une agence et regrouper des développeurs sous votre
+                  propre enseigne, vous devez d&apos;abord souscrire à un
+                  abonnement PRO.
+                </p>
+              </div>
+              <Link
+                href="/abonnement"
+                className="inline-flex h-11 w-fit items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-semibold text-ink transition-colors outline-none hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50"
+              >
+                Passer à l&apos;abonnement PRO
+              </Link>
+            </div>
+          )}
+
+          <div className="space-y-4 rounded-2xl border border-hairline bg-card p-5">
+            <div>
+              <h3 className="text-sm font-semibold">Rejoindre une agence</h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Vous avez reçu un code d&apos;invitation ? Saisissez-le.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-end gap-2">
+              <div className="flex-1 space-y-1">
+                <label htmlFor="agency-invite" className="text-sm font-medium">
+                  Code d&apos;invitation
+                </label>
+                <input
+                  id="agency-invite"
+                  value={joinCode}
+                  onChange={(e) => setJoinCode(e.target.value.trim())}
+                  className="h-11 w-full rounded-xl border border-hairline bg-background px-3 font-mono text-sm outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/50"
+                  placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => void lookupInvite()}
+                disabled={busy}
+                className="inline-flex h-11 items-center gap-2 rounded-xl border border-hairline bg-background px-4 text-sm font-medium transition-colors hover:border-primary/50 hover:text-primary disabled:opacity-60"
+              >
+                <Search className="size-4" aria-hidden="true" />
+                Vérifier
               </button>
             </div>
-          ) : null}
+
+            {joinInfo ? (
+              <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-primary/40 bg-primary-soft px-4 py-3">
+                <div className="flex items-center gap-2 text-sm font-medium">
+                  <Building2 className="size-4 text-primary" aria-hidden="true" />
+                  {joinInfo.name}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => void confirmJoin()}
+                  disabled={busy}
+                  className="inline-flex h-9 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-medium text-ink transition-colors hover:bg-primary-hover disabled:opacity-60"
+                >
+                  {busy ? (
+                    <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+                  ) : null}
+                  Rejoindre
+                </button>
+              </div>
+            ) : null}
+          </div>
         </div>
       </div>
     );

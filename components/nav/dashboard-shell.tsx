@@ -7,8 +7,6 @@ import { Menu, X } from "lucide-react";
 import { ImageLogoMark } from "@/components/logo";
 import { NotificationBell } from "@/components/notification-bell";
 import { TokenBalance } from "@/components/token-balance";
-import { SignOutButton } from "@/components/sign-out-button";
-import { LanguageSwitcher } from "@/components/language-switcher";
 import { SkipLink } from "@/components/skip-link";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import {
@@ -167,15 +165,6 @@ export function DashboardShell({
       email={user?.email ?? null}
       label={t("shell.myAccount")}
       onLinkClick={() => handleLinkClick("/dashboard?tab=profil")}
-      extra={
-        <>
-          {/* Solde réel (RPC get_token_balance via BalanceProvider). */}
-          <TokenBalance />
-          {/* Bascule FR/EN déplacée de la navbar noire supprimée. */}
-          <LanguageSwitcher />
-          <SignOutButton variant="menu" />
-        </>
-      }
     />
   );
 

@@ -1,46 +1,33 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
-import {
-  RankCard,
-  RecentProjectsCard,
-  ReferralCard,
-  ShareProfileCard,
-  type RecentProject,
-  type ReferralSummary,
+import type {
+  RecentProject,
+  ReferralSummary,
 } from "@/components/dashboard/dev-home-cards";
 import {
   AlertTriangle,
   ArrowRight,
   BadgeCheck,
-  Bell,
   Briefcase,
-  Building2,
   CalendarClock,
   Check,
-  CheckCircle2,
   ChevronLeft,
   ChevronRight,
   Clock,
-  Coins,
-  CreditCard,
-  Crown,
   Download,
   ExternalLink,
   Globe,
-  History as HistoryIcon,
   LayoutGrid,
   List,
   Loader2,
-  LogOut,
   MessageCircle,
   MessagesSquare,
-  Phone,
   Plus,
-  Receipt,
   Save,
   Search,
   Send,
@@ -49,11 +36,9 @@ import {
   Star,
   Target,
   Trash2,
-  TrendingUp,
-  User,
-  Wallet,
+  Upload,
 } from "lucide-react";
-import { DashboardStats } from "@/components/dashboard-stats";
+import { BriefFilters } from "@/components/brief-filters";
 const AvailabilityCard = dynamic(() => import("@/components/availability-card").then((m) => m.default), { ssr: false });
 const MissionsManager = dynamic(() => import("@/components/dev/missions-manager").then((m) => ({ default: m.MissionsManager })), { ssr: false });
 const PerformancePanel = dynamic(() => import("@/components/dev/performance-panel").then((m) => ({ default: m.PerformancePanel })), { ssr: false });
@@ -95,6 +80,7 @@ import type {
   PortfolioLink,
   MyDeveloperMission,
   MyDeveloperReviews,
+  PublicRequest,
 } from "@/types/database";
 import { cn } from "cn";
 import dynamic from "next/dynamic";
@@ -184,9 +170,17 @@ function FilterChip({
   );
 }
 
-type TabKey = "crm" | "profil" | "activite" | "devis" | "missions" | "avis" | "agence" | "pro";
+type TabKey = "accueil" | "crm" | "profil" | "activite" | "devis" | "missions" | "avis" | "agence" | "pro";
 
-function DevStatusBanner({ profile }: { profile: DeveloperProfile }) {
+function DevStatusBanner({
+  profile,
+  isComplete,
+  onCompleteProfile,
+}: {
+  profile: DeveloperProfile;
+  isComplete: boolean;
+  onCompleteProfile: () => void;
+}) {
   const status = profile.status;
   const verified = Boolean(profile.is_verified) || status === "verified";
 
@@ -204,42 +198,6 @@ function DevStatusBanner({ profile }: { profile: DeveloperProfile }) {
     );
   }
 
-  if (status === "verification_pending") {
-    return (
-      <div className="mt-6 flex items-start gap-3 rounded-2xl border border-primary/30 bg-primary-soft p-4 sm:p-5">
-        <Clock className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
-        <div className="min-w-0 flex-1">
-          <p className="text-sm font-semibold tracking-tight">Vérification en cours</p>
-          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-            Le paiement est confirmé et notre équipe examine votre dossier.
-            Une notification sera envoyée dès la fin de l’examen.
-          </p>
-        </div>
-        <Link
-          href="/verification"
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-primary/40 bg-surface px-3 py-2 text-xs font-medium text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
-        >
-          Suivre l’état
-          <ArrowRight className="size-3.5" aria-hidden="true" />
-        </Link>
-      </div>
-    );
-  }
-
-  if (status === "active") {
-    return (
-      <div className="mt-6 flex items-start gap-3 rounded-2xl border border-hairline bg-primary-soft p-4 sm:p-5">
-        <BadgeCheck className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
-        <div className="min-w-0 flex-1">
-          <p className="text-sm font-semibold tracking-tight">Profil actif</p>
-          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-            Votre profil est visible dans le catalogue. Complétez-le pour maximiser vos chances.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   if (status === "suspended") {
     return (
       <DevStatusBannerShell
@@ -250,44 +208,38 @@ function DevStatusBanner({ profile }: { profile: DeveloperProfile }) {
     );
   }
 
-  if (status === "rejected") {
+  if (isComplete || status === "active") {
     return (
-      <DevStatusBannerShell
-        tone="error"
-        title="Inscription refusée"
-        message={
-          profile.rejection_reason
-            ? `Motif : ${profile.rejection_reason}`
-            : "Votre dossier n’a pas été retenu pour le moment. Vous pouvez soumettre une nouvelle demande."
-        }
-        cta={{ href: "/inscription-developpeur", label: "Relancer mon inscription" }}
-      />
-    );
-  }
-
-  if (status === "changes_requested") {
-    return (
-      <DevStatusBannerShell
-        tone="warn"
-        title="Modifications demandées"
-        message={
-          profile.rejection_reason
-            ? `Motif : ${profile.rejection_reason}`
-            : "Notre équipe a demandé des corrections sur votre dossier."
-        }
-        cta={{ href: "/inscription-developpeur", label: "Compléter mon dossier" }}
-        hint="Toute nouvelle soumission repasse en attente d’approbation."
-      />
+      <div className="mt-6 flex items-start gap-3 rounded-2xl border border-hairline bg-primary-soft p-4 sm:p-5">
+        <BadgeCheck className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-semibold tracking-tight">Profil développeur actif</p>
+          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+            Votre profil est complet et actif. Vous êtes développeur sur Devmarket et pouvez prendre en charge tous les projets.
+          </p>
+        </div>
+      </div>
     );
   }
 
   return (
-    <DevStatusBannerShell
-      tone="warn"
-      title="En attente de validation"
-      message="Votre profil développeur sera examiné par notre équipe. Tant que le compte n’est pas validé, le déblocage des projets est suspendu."
-      cta={{ href: "/inscription-developpeur", label: "Voir mon dossier" }}
-    />
+    <div className="mt-6 flex items-start gap-3 rounded-2xl border border-primary/30 bg-primary-soft p-4 sm:p-5">
+      <AlertTriangle className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
+      <div className="min-w-0 flex-1">
+        <p className="text-sm font-semibold tracking-tight">Complétez votre profil à 100 %</p>
+        <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+          Dès que votre profil obligatoire est complété à 100 %, votre compte développeur est automatiquement activé.
+        </p>
+      </div>
+      <Link
+        href="/dashboard?tab=profil"
+        onClick={onCompleteProfile}
+        className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-ink transition-colors outline-none hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50"
+      >
+        Compléter mon profil
+        <ArrowRight className="size-3.5" aria-hidden="true" />
+      </Link>
+    </div>
   );
 }
 
@@ -353,11 +305,14 @@ export function DashboardContent({
   myMissions,
   tlMissions,
   devisEnAttente,
-  openProjects = 0,
   stats = null,
   emailNewProjects = true,
-  referral = null,
-  recentProjects = [],
+  publishedBriefs = [],
+  publishedBriefsTotal = 0,
+  unlocksMap = {},
+  favoriteIds = [],
+  balance = null,
+  welcomeContactFree = false,
   initialTab,
 }: {
   userId: string;
@@ -380,6 +335,12 @@ export function DashboardContent({
   referral?: ReferralSummary | null;
   /** Derniers projets ouverts, réels, déjà tronqués côté serveur. */
   recentProjects?: RecentProject[];
+  publishedBriefs?: PublicRequest[];
+  publishedBriefsTotal?: number;
+  unlocksMap?: Record<string, { conversation_id?: string; whatsapp?: string }>;
+  favoriteIds?: string[];
+  balance?: number | null;
+  welcomeContactFree?: boolean;
   initialTab?: string;
 }) {
   const t = useTranslations("DevStats");
@@ -390,10 +351,12 @@ export function DashboardContent({
     city: profile?.city ?? "",
     username: profile?.username ?? "",
     bio: profile?.bio ?? "",
+    avatar_url: profile?.avatar_url ?? "",
     experience_years: profile?.experience_years ?? 1,
     notifications_enabled: profile?.notifications_enabled ?? true,
     monthly_goal: profile?.monthly_goal ?? 0,
   });
+  const [uploadingAvatar, setUploadingAvatar] = React.useState(false);
   const [portfolio, setPortfolio] = React.useState<PortfolioLink[]>(
     profile?.portfolio_links ?? []
   );
@@ -414,17 +377,21 @@ export function DashboardContent({
   const [saving, setSaving] = React.useState(false);
   const [emailAlerts, setEmailAlerts] = React.useState(emailNewProjects);
   const [savingEmailAlerts, setSavingEmailAlerts] = React.useState(false);
-  const defaultTab: TabKey = (
-    ["crm", "profil", "activite", "devis", "missions", "avis", "agence", "pro"] as TabKey[]
-  ).includes(initialTab as TabKey)
+  const validTabs: TabKey[] = [
+    "crm",
+    "profil",
+    "activite",
+    "devis",
+    "missions",
+    "avis",
+    "agence",
+    "pro",
+  ];
+  const defaultTab: TabKey = validTabs.includes(initialTab as TabKey)
     ? (initialTab as TabKey)
-    : unlocks.length > 0
-      ? "crm"
-      : "profil";
+    : "accueil";
   const [tab, setTab] = React.useState<TabKey>(defaultTab);
-  /* ?tab=profil vient du menu latéral : suivre l'URL même après le montage
-     (navigation depuis /dashboard lui-même, retour arrière, lien depuis
-     /parametres…). L'onglet initial seul ne suffisait pas. */
+
   React.useEffect(() => {
     if (
       (
@@ -432,6 +399,8 @@ export function DashboardContent({
       ).includes(initialTab as TabKey)
     ) {
       setTab(initialTab as TabKey);
+    } else {
+      setTab("accueil");
     }
   }, [initialTab]);
   const [refundFor, setRefundFor] = React.useState<UnlockHistoryItem | null>(null);
@@ -441,21 +410,17 @@ export function DashboardContent({
   const [crmQuery, setCrmQuery] = React.useState("");
   const [crmStatusFilter, setCrmStatusFilter] = React.useState<CrmStatus | "all">("all");
 
-  /* Progression du profil : photo et portfolio sont des recommandations
-     (optionnelles), les autres critères structurent la complétion. */
+  /* Progression du profil : uniquement les champs obligatoires (ni portfolio
+     ni photo optionnelle ne bloquent le 100 %). */
   const profileChecksMemo = React.useMemo(() => {
     return [
-      { label: "Photo de profil (recommandée)", done: Boolean(profile?.avatar_url) },
+      { label: "Nom complet", done: Boolean(p.full_name.trim()) },
       { label: "Bio présentée", done: Boolean(p.bio.trim()) },
       { label: "Identifiant public", done: Boolean(p.username.trim()) },
-      { label: "Ville", done: Boolean(p.city.trim()) },
+      { label: "Ville / Région", done: Boolean(p.city.trim()) },
       { label: "Compétences", done: Boolean(p.skills.trim()) },
-      {
-        label: "Portfolio (optionnel, recommandé)",
-        done: portfolio.some((l) => l.title.trim() && l.url.trim()),
-      },
     ];
-  }, [profile, portfolio, p.bio, p.username, p.city, p.skills]);
+  }, [p.full_name, p.bio, p.username, p.city, p.skills]);
   const profileScore = React.useMemo(() => {
     if (profileChecksMemo.length === 0) return 0;
     return Math.round(
@@ -477,14 +442,49 @@ export function DashboardContent({
     }
     const subtitle =
       unlocks.length === 0 && myMissions.length === 0 && transactions.length === 0
-        ? "Pilotez vos contacts, vos devis et soignez votre profil."
+        ? "Consultez les projets publiés par les clients et gérez votre profil."
         : parts.join(" · ");
     return subtitle;
   }, [unlocks, myMissions, transactions, quota]),
   heroSubtitle =
     unlocks.length > 0 || myMissions.length > 0 || transactions.length > 0 || quota?.quota_limit != null
       ? heroPartsMemo
-      : "Pilotez vos contacts, vos devis et soignez votre profil.";
+      : "Consultez les projets publiés par les clients et gérez votre profil.";
+
+  const uploadAvatar = async (file: File) => {
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      toast.error("Format accepté : JPG, PNG ou WebP.");
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Image trop lourde (2 Mo max).");
+      return;
+    }
+    setUploadingAvatar(true);
+    const supabase = createClient();
+    const ext =
+      file.type === "image/png"
+        ? "png"
+        : file.type === "image/webp"
+          ? "webp"
+          : "jpg";
+    const path = `${userId}/avatar-${Date.now()}.${ext}`;
+    const { error: uploadErr } = await supabase.storage
+      .from("developer-assets")
+      .upload(path, file, { cacheControl: "3600", upsert: true });
+    setUploadingAvatar(false);
+    if (uploadErr) {
+      toast.error("Téléversement indisponible — renseignez une URL de photo.");
+      return;
+    }
+    const { data } = supabase.storage
+      .from("developer-assets")
+      .getPublicUrl(path);
+    if (data?.publicUrl) {
+      setP((prev) => ({ ...prev, avatar_url: data.publicUrl }));
+      toast.success("Photo prête — cliquez sur Enregistrer le profil.");
+    }
+  };
 
   const saveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -510,6 +510,7 @@ export function DashboardContent({
         city: p.city.trim() || null,
         username,
         bio: p.bio.trim() || null,
+        avatar_url: p.avatar_url.trim() || null,
         experience_years: Number(p.experience_years) || 1,
         portfolio_links: validLinks,
         notifications_enabled: p.notifications_enabled,
@@ -527,6 +528,11 @@ export function DashboardContent({
         toast.error("Impossible de mettre à jour le profil.");
       }
       return;
+    }
+    try {
+      await fetch("/api/dev/activate", { method: "POST" });
+    } catch {
+      /* activation non bloquante */
     }
     toast.success("Profil mis à jour");
   };
@@ -750,7 +756,7 @@ export function DashboardContent({
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_140%_at_0%_0%,color-mix(in_srgb,var(--primary)_14%,transparent),transparent_55%)]"
           />
-          <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div className="relative flex flex-col gap-4">
             <div className="min-w-0">
               <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
                 Espace développeur
@@ -761,58 +767,19 @@ export function DashboardContent({
               <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
                 {heroSubtitle}
               </p>
-
-              <div className="mt-4 flex flex-wrap gap-2">
-                <span className="inline-flex h-8 items-center gap-1.5 rounded-full border border-primary/30 bg-primary-soft px-3 text-xs font-medium text-primary">
-                  <Crown className="size-3.5" aria-hidden="true" />
-                  {quota?.quota_limit != null
-                    ? `${quota.plan_name_fr ?? "Formule"} · ${quota.quota_used ?? 0}/${quota.quota_limit} contacts`
-                    : "Mon abonnement"}
-                </span>
-                <span className="inline-flex h-8 items-center gap-1.5 rounded-full border border-hairline bg-background/60 px-3 text-xs text-muted-foreground">
-                  {unlocks.length} contact{unlocks.length > 1 ? "s" : ""} débloqué{unlocks.length > 1 ? "s" : ""}
-                </span>
-                <span className="inline-flex h-8 items-center gap-1.5 rounded-full border border-hairline bg-background/60 px-3 text-xs text-muted-foreground">
-                  {devisEnAttente.length} devis en attente
-                </span>
-                <span className="inline-flex h-8 items-center gap-1.5 rounded-full border border-hairline bg-background/60 px-3 text-xs text-muted-foreground">
-                  {myMissions.length} mission{myMissions.length > 1 ? "s" : ""}
-                </span>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              <Link
-                href="/briefs"
-                className="inline-flex h-10 items-center gap-2 rounded-full bg-primary px-5 text-sm font-semibold text-ink transition-colors outline-none hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-primary/50"
-              >
-                <ArrowRight className="size-4" aria-hidden="true" />
-                Voir les {openProjects > 0 ? `${openProjects} ` : ""}projets
-              </Link>
-              <Link
-                href="/conversations"
-                className="inline-flex h-10 items-center gap-2 rounded-full border border-hairline bg-background/60 px-5 text-sm font-medium text-foreground transition-colors outline-none hover:border-primary/40 focus-visible:ring-2 focus-visible:ring-primary/50"
-              >
-                <MessageCircle className="size-4" aria-hidden="true" />
-                Mes discussions
-              </Link>
-              <Link
-                href="/wallet"
-                className="inline-flex h-10 items-center gap-2 rounded-full border border-hairline bg-background/60 px-5 text-sm font-medium text-foreground transition-colors outline-none hover:border-primary/40 focus-visible:ring-2 focus-visible:ring-primary/50"
-              >
-                <Coins className="size-4" aria-hidden="true" />
-                Mon wallet
-              </Link>
             </div>
           </div>
         </section>
 
-        {/* Barre de statistiques type Codeur.com */}
+        {/* Barre de statistiques : Classement, Missions terminées, Vérification, Abonnement */}
         <section
           className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4"
           aria-label="Indicateurs de performance"
         >
-          <div className="rounded-2xl border border-hairline bg-card p-4">
+          <Link
+            href="/classement"
+            className="rounded-2xl border border-hairline bg-card p-4 transition-colors hover:border-primary/40"
+          >
             <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
               Classement
             </p>
@@ -822,9 +789,9 @@ export function DashboardContent({
             <p className="text-xs text-muted-foreground">
               {profile?.reputation_score != null
                 ? `${profile.reputation_score} pts`
-                : "Score à venir"}
+                : "Voir le classement mondial"}
             </p>
-          </div>
+          </Link>
           <div className="rounded-2xl border border-hairline bg-card p-4">
             <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
               Missions terminées
@@ -841,12 +808,18 @@ export function DashboardContent({
               Vérification
             </p>
             <p className="mt-1 font-headings text-lg font-bold text-primary">
-              {profile?.is_verified ? "Vérifié" : "1/2"}
+              {profile?.is_verified
+                ? "Vérifié"
+                : profileScore === 100 || profile?.status === "active"
+                  ? "Développeur actif"
+                  : `${profileScore} %`}
             </p>
             <p className="text-xs text-muted-foreground">
               {profile?.is_verified
                 ? "Profil certifié"
-                : "Complétez vos vérifications"}
+                : profileScore === 100 || profile?.status === "active"
+                  ? "Compte activé automatiquement"
+                  : "Complétez votre profil à 100 %"}
             </p>
           </div>
           <Link
@@ -869,7 +842,13 @@ export function DashboardContent({
           </Link>
         </section>
 
-        {profile ? <DevStatusBanner profile={profile} /> : null}
+        {profile ? (
+          <DevStatusBanner
+            profile={profile}
+            isComplete={profileScore === 100}
+            onCompleteProfile={() => setTab("profil")}
+          />
+        ) : null}
 
         {profileScore < 100 ? (
           <section
@@ -882,18 +861,17 @@ export function DashboardContent({
                   Profil {profileScore} % complet
                 </h2>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Un profil soigné rassure les clients et débloque plus de
-                  contacts. Photo et portfolio restent facultatifs.
+                  Complétez vos informations obligatoires à 100 % pour activer automatiquement votre profil développeur. Le portfolio reste optionnel mais recommandé.
                 </p>
               </div>
-              <Button
-                type="button"
+              <Link
+                href="/dashboard?tab=profil"
                 onClick={() => setTab("profil")}
-                className="h-10 w-full shrink-0 rounded-xl bg-primary px-5 text-sm font-medium text-ink transition-colors hover:bg-primary-hover sm:w-auto"
+                className="inline-flex h-10 w-full shrink-0 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-ink transition-colors hover:bg-primary-hover sm:w-auto"
               >
                 Compléter mon profil
                 <ArrowRight className="size-4" aria-hidden="true" />
-              </Button>
+              </Link>
             </div>
             <div
               className="mt-4 h-2 w-full overflow-hidden rounded-full bg-hairline"
@@ -931,363 +909,30 @@ export function DashboardContent({
           </section>
         ) : null}
 
-        <div className="mt-10">
-          <DashboardStats
-            quota={quota}
-            unlocksCount={unlocks.length}
-          />
-        </div>
-
-        {/* ------------------------- CARTES D'ACCUEIL -------------------------
-            Reproduction des blocs de la référence : parrainage, derniers
-            projets, partage du profil, classement. Toutes les valeurs
-            proviennent de données réelles chargées par la page serveur.
-            2 colonnes (et non 4) : avec des titres de carte à 16 px, quatre
-            colonnes au-delà de 1280 px forçaient les titres sur 2-3 lignes. */}
-        <div
-          className="mt-10 grid gap-4 sm:grid-cols-2"
-          aria-label="Raccourcis et activité"
-        >
-          <ReferralCard summary={referral} />
-          <RecentProjectsCard projects={recentProjects} />
-          <ShareProfileCard username={p.username || null} />
-          <RankCard
-            reputationScore={profile?.reputation_score ?? null}
-            reputationLevel={profile?.reputation_level ?? null}
-          />
-        </div>
-
-        <div className="mt-10 grid gap-6 lg:grid-cols-[240px_1fr]">
-          <aside className="lg:sticky lg:top-6 lg:self-start">
-            <nav
-              className="flex flex-col gap-3 rounded-2xl border border-hairline bg-card p-3"
-              aria-label="Sections du dashboard"
-              onKeyDown={(e) => {
-                const items = Array.from(
-                  (e.currentTarget as HTMLElement).querySelectorAll<HTMLElement>(
-                    "button, a"
-                  )
-                );
-                const idx = items.indexOf(document.activeElement as HTMLElement);
-                if (idx < 0) return;
-                if (e.key === "ArrowDown") {
-                  e.preventDefault();
-                  items[(idx + 1) % items.length]?.focus();
-                } else if (e.key === "ArrowUp") {
-                  e.preventDefault();
-                  items[(idx - 1 + items.length) % items.length]?.focus();
-                } else if (e.key === "Home") {
-                  e.preventDefault();
-                  items[0]?.focus();
-                } else if (e.key === "End") {
-                  e.preventDefault();
-                  items[items.length - 1]?.focus();
-                }
-              }}
-            >
-              <div>
-                <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                  Espace principal
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setTab("crm")}
-                  className={cn(
-                    "flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
-                    tab === "crm"
-                      ? "bg-primary-soft text-primary"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  )}
-                >
-                  <span className="flex items-center gap-2">
-                    <LayoutGrid className="size-4" aria-hidden="true" />
-                    Contacts débloqués
-                  </span>
-                  <span className="rounded-full bg-hairline px-2 py-0.5 text-xs text-muted-foreground">
-                    {unlocks.length}
-                  </span>
-                </button>
-                <Link
-                  href="/briefs"
-                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  <Briefcase className="size-4" aria-hidden="true" />
-                  Projets ouverts
-                </Link>
-                <Link
-                  href="/conversations"
-                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  <MessageCircle className="size-4" aria-hidden="true" />
-                  Messagerie
-                </Link>
-              </div>
-
-              <div>
-                <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                  Activité
-                </p>
-                <Link
-                  href="/conversations"
-                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  <MessageCircle className="size-4" aria-hidden="true" />
-                  Mes échanges
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => setTab("crm")}
-                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  <HistoryIcon className="size-4" aria-hidden="true" />
-                  Historique des déblocages
-                </button>
-                <Link
-                  href="/notifications"
-                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  <Bell className="size-4" aria-hidden="true" />
-                  Notifications
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => setTab("devis")}
-                  className={cn(
-                    "flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
-                    tab === "devis"
-                      ? "bg-primary-soft text-primary"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  )}
-                >
-                  <span className="flex items-center gap-2">
-                    <Send className="size-4" aria-hidden="true" />
-                    Devis & missions
-                  </span>
-                  <span className="rounded-full bg-hairline px-2 py-0.5 text-xs text-muted-foreground">
-                    {missions.length + devisEnAttente.length}
-                  </span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setTab("missions")}
-                  className={cn(
-                    "flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
-                    tab === "missions"
-                      ? "bg-primary-soft text-primary"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  )}
-                >
-                  <span className="flex items-center gap-2">
-                    <CheckCircle2 className="size-4" aria-hidden="true" />
-                    Missions réalisées
-                  </span>
-                  <span className="rounded-full bg-hairline px-2 py-0.5 text-xs text-muted-foreground">
-                    {myMissions.length}
-                  </span>
-                </button>
-              </div>
-
-              <div>
-                <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                  Mon espace
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setTab("profil")}
-                  className={cn(
-                    "flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
-                    tab === "profil"
-                      ? "bg-primary-soft text-primary"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  )}
-                >
-                  <User className="size-4" aria-hidden="true" />
-                  Mon profil & portfolio
-                </button>
-                {p.username ? (
-                  <Link
-                    href={`/dev/${p.username}`}
-                    className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                  >
-                    <ExternalLink className="size-4" aria-hidden="true" />
-                    Voir mon profil
-                  </Link>
-                ) : null}
-                <Link
-                  href="/verification"
-                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  <BadgeCheck className="size-4" aria-hidden="true" />
-                  Mes vérifications
-                </Link>
-                <Link
-                  href="/favoris"
-                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  <Star className="size-4" aria-hidden="true" />
-                  Mes favoris
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => setTab("avis")}
-                  className={cn(
-                    "flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
-                    tab === "avis"
-                      ? "bg-primary-soft text-primary"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  )}
-                >
-                  <span className="flex items-center gap-2">
-                    <Star className="size-4" aria-hidden="true" />
-                    Mes avis
-                  </span>
-                  {typeof myReviews?.total === "number" ? (
-                    <span className="rounded-full bg-hairline px-2 py-0.5 text-xs text-muted-foreground">
-                      {myReviews.total}
-                    </span>
-                  ) : null}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setTab("avis")}
-                  className={cn(
-                    "flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
-                    tab === "avis"
-                      ? "bg-primary-soft text-primary"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  )}
-                >
-                </button>
-              </div>
-
-              <div>
-                <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                  Analyses
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setTab("activite")}
-                  className={cn(
-                    "flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
-                    tab === "activite"
-                      ? "bg-primary-soft text-primary"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  )}
-                >
-                  <TrendingUp className="size-4" aria-hidden="true" />
-                  Performances
-                </button>
-              </div>
-
-              <div>
-                <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                  Configuration
-                </p>
-                <Link
-                  href="/parametres"
-                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  <Settings className="size-4" aria-hidden="true" />
-                  Mes infos de connexion
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => setTab("profil")}
-                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  <Phone className="size-4" aria-hidden="true" />
-                  Mes coordonnées
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setTab("activite")}
-                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  <Bell className="size-4" aria-hidden="true" />
-                  Mes alertes email
-                </button>
-              </div>
-
-              <div>
-                <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                  Finances
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setTab("pro")}
-                  className={cn(
-                    "flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
-                    tab === "pro"
-                      ? "bg-primary-soft text-primary"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  )}
-                >
-                  <Crown className="size-4" aria-hidden="true" />
-                  Mes Tokens / contacts
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setTab("pro")}
-                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  <Crown className="size-4" aria-hidden="true" />
-                  Abonnement PRO
-                </button>
-                <Link
-                  href="/abonnement"
-                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  <TrendingUp className="size-4" aria-hidden="true" />
-                  Promouvoir mon profil
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => setTab("activite")}
-                  className={cn(
-                    "flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/50",
-                    tab === "activite"
-                      ? "bg-primary-soft text-primary"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  )}
-                >
-                  <Receipt className="size-4" aria-hidden="true" />
-                  Mes factures & commandes
-                </button>
-                <Link
-                  href="/wallet"
-                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  <Wallet className="size-4" aria-hidden="true" />
-                  Balance de crédits
-                </Link>
-                <Link
-                  href="/wallet/retraits"
-                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  <CreditCard className="size-4" aria-hidden="true" />
-                  Retraits
-                </Link>
-              </div>
-
-              <div className="border-t border-hairline pt-2">
-                <Link
-                  href="/parametres"
-                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  <Settings className="size-4" aria-hidden="true" />
-                  Paramètres
-                </Link>
-                <Link
-                  href="/api/auth/signout"
-                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-[var(--error)] transition-colors hover:bg-[var(--error-soft)]"
-                >
-                  <LogOut className="size-4" aria-hidden="true" />
-                  Se déconnecter
-                </Link>
-              </div>
-            </nav>
-          </aside>
-          <div className="min-w-0">
+        {tab === "accueil" ? (
+          <section className="mt-8" aria-label="Projets déjà publiés">
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold tracking-tight">
+                Projets déjà publiés
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Consultez les projets déposés par les clients, ajoutez-les en favoris pour plus tard ou prenez-les en charge directement.
+              </p>
+            </div>
+            <BriefFilters
+              briefs={publishedBriefs}
+              total={publishedBriefsTotal}
+              user={{ id: userId }}
+              balance={balance}
+              unlocks={unlocksMap}
+              favorites={new Set(favoriteIds)}
+              initialCountry=""
+              initialRegion=""
+              welcomeContactFree={welcomeContactFree}
+              developerSkills={parseSkills(p.skills)}
+            />
+          </section>
+        ) : null}
 
         {tab === "crm" ? (
           <section className="mt-8" aria-label="CRM contacts débloqués">
@@ -1821,6 +1466,61 @@ export function DashboardContent({
                 </h3>
                 <div className="mt-5 flex flex-col gap-4">
                   <div className="flex flex-col gap-2">
+                    <Label htmlFor="dp-avatar">Photo de profil (avatar)</Label>
+                    <div className="flex flex-wrap items-center gap-4">
+                      {p.avatar_url.trim() ? (
+                        <Image
+                          src={p.avatar_url.trim()}
+                          alt={p.full_name || "Avatar"}
+                          width={64}
+                          height={64}
+                          unoptimized
+                          className="size-16 shrink-0 rounded-full border border-hairline object-cover"
+                        />
+                      ) : (
+                        <span
+                          className="flex size-16 shrink-0 items-center justify-center rounded-full bg-primary-soft text-lg font-bold text-primary"
+                          aria-hidden="true"
+                        >
+                          {(p.full_name.trim().charAt(0) || "D").toUpperCase()}
+                        </span>
+                      )}
+                      <div className="min-w-0 flex-1 space-y-2">
+                        <Input
+                          id="dp-avatar"
+                          type="url"
+                          value={p.avatar_url}
+                          onChange={(e) =>
+                            setP({ ...p, avatar_url: e.target.value })
+                          }
+                          placeholder="https://…/ma-photo.jpg"
+                          className="h-10 rounded-xl"
+                        />
+                        <label className="inline-flex h-9 w-fit cursor-pointer items-center gap-1.5 rounded-xl border border-hairline bg-surface px-3 text-xs font-medium text-muted-foreground transition-colors outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50">
+                          {uploadingAvatar ? (
+                            <Loader2
+                              className="size-3.5 animate-spin"
+                              aria-hidden="true"
+                            />
+                          ) : (
+                            <Upload className="size-3.5" aria-hidden="true" />
+                          )}
+                          Téléverser une photo (JPG/PNG/WebP · 2 Mo max.)
+                          <input
+                            type="file"
+                            accept="image/jpeg,image/png,image/webp"
+                            className="sr-only"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              e.target.value = "";
+                              if (file) void uploadAvatar(file);
+                            }}
+                          />
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2">
                     <Label htmlFor="dp-name">Nom</Label>
                     <Input
                       id="dp-name"
@@ -2034,17 +1734,39 @@ export function DashboardContent({
                     Enregistrer le profil
                   </Button>
                   <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-                    Le badge « Développeur vérifié » est attribué par
-                    l’équipe Devmarket, pas par l’utilisateur.
+                    Dès que vos champs obligatoires sont renseignés à 100 %, votre profil développeur est automatiquement activé.
                   </p>
                 </div>
+
+                <Link
+                  href="/parametres"
+                  className="group flex items-center justify-between gap-4 rounded-2xl border border-hairline bg-card p-6 transition-colors hover:border-primary/50"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary-soft text-primary">
+                      <Settings className="size-5" aria-hidden="true" />
+                    </span>
+                    <div>
+                      <p className="font-semibold group-hover:text-primary">
+                        Paramètres & sécurité
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Modifier le mot de passe, gérer le compte et se déconnecter
+                      </p>
+                    </div>
+                  </div>
+                  <ArrowRight
+                    className="size-4 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-primary"
+                    aria-hidden="true"
+                  />
+                </Link>
               </div>
             </form>
             </section>
           </>
         ) : null}
 
-        {tab === "activite" ? (
+        {tab === "activite" || tab === "profil" ? (
           <>
             <div className="mt-8">
               <PerformancePanel stats={stats} />
@@ -2205,7 +1927,7 @@ export function DashboardContent({
                       <div className="min-w-0">
                         <p className="font-medium">{order.package_name}</p>
                         <p className="mt-0.5 text-sm text-muted-foreground">
-                          {order.tokens} token{order.tokens > 1 ? "s" : ""} ·{" "}
+                          {order.tokens} contact{order.tokens > 1 ? "s" : ""} ·{" "}
                           {formatFCFA(order.price_fcfa)} · {formatDate(order.created_at)}
                         </p>
                       </div>
@@ -2351,7 +2073,7 @@ export function DashboardContent({
           </section>
         ) : null}
 
-        {tab === "avis" ? (
+        {tab === "avis" || tab === "profil" ? (
           <section className="mt-8" aria-label="Mes avis clients">
             <DevReviewsPanel initial={myReviews} />
           </section>
@@ -2413,7 +2135,5 @@ export function DashboardContent({
         </Dialog>
       </div>
     </div>
-  </div>
-</div>
   );
 }

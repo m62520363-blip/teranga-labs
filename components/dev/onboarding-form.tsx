@@ -11,7 +11,6 @@ import {
   Briefcase,
   Check,
   CheckCircle2,
-  FileText,
   Loader2,
   Mail,
   MapPin,
@@ -31,7 +30,6 @@ import {
 import {
   AVAILABILITY_OPTIONS,
   DEVELOPER_SERVICES,
-  DOCUMENT_KINDS,
   EXPERIENCE_LEVELS,
   LINK_KINDS,
   PROJECT_TYPES,
@@ -735,10 +733,6 @@ function ProfessionalStep({
     control,
     name: "projects",
   });
-  const { fields: documentFields, ...documentArray } = useFieldArray({
-    control,
-    name: "documents",
-  });
   const { fields: linkFields, ...linkArray } = useFieldArray({
     control,
     name: "links",
@@ -839,7 +833,13 @@ function ProfessionalStep({
       /* échec non bloquant de l'attribution de parrainage */
     }
 
-    toast.success("Inscription envoyée !");
+    try {
+      await fetch("/api/dev/activate", { method: "POST" });
+    } catch {
+      /* activation non bloquante */
+    }
+
+    toast.success("Profil développeur activé !");
     onDone();
   };
 
@@ -1327,83 +1327,6 @@ function ProfessionalStep({
         >
           <Plus className="size-4" aria-hidden="true" />
           Ajouter un projet
-        </button>
-      </section>
-
-      {/* Documents */}
-      <section className="rounded-2xl border border-hairline bg-card p-6 shadow-sm sm:p-8">
-        <div className="flex items-center gap-2">
-          <FileText className="size-5 text-primary" aria-hidden="true" />
-          <div>
-            <h2 className="text-lg font-semibold tracking-tight">Documents</h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              CV ou pièces justificatives (PDF, lien Drive…).
-            </p>
-          </div>
-        </div>
-
-        <div className="mt-5 flex flex-col gap-4">
-          {documentFields.map((field, i) => (
-            <div key={field.id} className="grid items-end gap-4 sm:grid-cols-[180px_1fr_1fr_auto]">
-              <Field label="Type" error={undefined}>
-                <Select
-                  value={(getValues(`documents.${i}.kind`) as string) ?? "other"}
-                  onValueChange={(v) =>
-                    v &&
-                    setValue(
-                      `documents.${i}.kind`,
-                      v as DeveloperApplicationFormValues["documents"][number]["kind"],
-                      { shouldValidate: true }
-                    )
-                  }
-                >
-                  <SelectTrigger className="h-10 w-full rounded-xl border-hairline bg-background/70 data-[size=default]:h-10">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent align="start">
-                    {DOCUMENT_KINDS.map((k) => (
-                      <SelectItem key={k.value} value={k.value}>
-                        {k.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </Field>
-              <Field label="Nom" error={undefined}>
-                <Input
-                  {...register(`documents.${i}.name`)}
-                  className="h-10 rounded-xl border-hairline bg-background/70"
-                  placeholder="CV Awa Diop"
-                />
-              </Field>
-              <Field label="Lien" error={errors.documents?.[i]?.url?.message}>
-                <Input
-                  type="url"
-                  {...register(`documents.${i}.url`)}
-                  className="h-10 rounded-xl border-hairline bg-background/70"
-                  placeholder="https://drive.google.com/…"
-                  aria-invalid={Boolean(errors.documents?.[i]?.url)}
-                />
-              </Field>
-              <button
-                type="button"
-                onClick={() => documentArray.remove(i)}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-hairline bg-surface text-muted-foreground transition-colors outline-none hover:text-[var(--error)] focus-visible:ring-2 focus-visible:ring-primary/50"
-                aria-label="Supprimer le document"
-              >
-                <Trash2 className="size-4" aria-hidden="true" />
-              </button>
-            </div>
-          ))}
-        </div>
-
-        <button
-          type="button"
-          onClick={() => documentArray.append({ kind: "cv", name: "", url: "" })}
-          className="mt-4 inline-flex h-10 items-center gap-2 rounded-xl border border-hairline bg-surface px-4 text-sm font-medium text-muted-foreground transition-colors outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
-        >
-          <Plus className="size-4" aria-hidden="true" />
-          Ajouter un document
         </button>
       </section>
 

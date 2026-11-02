@@ -1,29 +1,19 @@
 import type { ComponentType } from "react";
 import {
   Activity,
-  Banknote,
-  Bell,
-  Briefcase,
   Building2,
   ClipboardList,
   Coins,
-  Contact,
-  Crown,
-  FileText,
   Heart,
   Home,
   LayoutGrid,
-  Megaphone,
   MessageSquare,
   Plus,
-  Send,
   Settings,
-  ShieldCheck,
   Star,
   Trophy,
   UserRound,
   UsersRound,
-  Wallet,
 } from "lucide-react";
 
 export type NavIcon = ComponentType<{ className?: string }>;
@@ -72,9 +62,22 @@ export const APP_NAV_SECTIONS: AppNavSection[] = [
     links: [
       { href: "/dashboard", label: "Accueil", labelKey: "home", icon: Home, match: "exact" },
       { href: "/conversations", label: "Messages", labelKey: "messages", icon: MessageSquare },
-      { href: "/briefs", label: "Projets ouverts", labelKey: "openProjects", icon: FileText },
-      { href: "/missions", label: "Missions", labelKey: "missions", icon: ClipboardList },
       { href: "/agences", label: "Agences", labelKey: "agencies", icon: Building2 },
+    ],
+  },
+  {
+    title: "FINANCES",
+    titleKey: "finances",
+    links: [
+      { href: "/wallet", label: "Revenus & portefeuille", labelKey: "creditBalance", icon: Coins },
+    ],
+  },
+  {
+    title: "VISIBILITÉ",
+    titleKey: "visibility",
+    links: [
+      { href: "/classement", label: "Mon classement", labelKey: "ranking", icon: Trophy },
+      { href: "/favoris", label: "Mes favoris", labelKey: "favorites", icon: Heart },
     ],
   },
   {
@@ -84,25 +87,9 @@ export const APP_NAV_SECTIONS: AppNavSection[] = [
       {
         href: "/dashboard?tab=profil",
         search: "?tab=profil",
-        label: "Mon profil & portfolio",
+        label: "Mon profil",
         labelKey: "myProfile",
         icon: UserRound,
-      },
-      { href: "/verification", label: "Mes vérifications", labelKey: "verifications", icon: ShieldCheck },
-      { href: "/favoris", label: "Mes favoris", labelKey: "favorites", icon: Heart },
-      { href: "/classement", label: "Mon classement", labelKey: "ranking", icon: Trophy },
-    ],
-  },
-  {
-    title: "VISIBILITÉ",
-    titleKey: "visibility",
-    links: [
-      {
-        href: "/dashboard?tab=crm",
-        search: "?tab=crm",
-        label: "Contacts débloqués",
-        labelKey: "unlockedContacts",
-        icon: Contact,
       },
       {
         href: "/dashboard?tab=activite",
@@ -118,45 +105,7 @@ export const APP_NAV_SECTIONS: AppNavSection[] = [
         labelKey: "reviews",
         icon: Star,
       },
-      { href: "/abonnement", label: "Abonnement PRO", labelKey: "proSubscription", icon: Crown },
-    ],
-  },
-  {
-    title: "PARAMÈTRES",
-    titleKey: "settings",
-    links: [
-      { href: "/parametres", label: "Mon compte & mot de passe", labelKey: "accountSettings", icon: Settings },
-      { href: "/notifications", label: "Notifications & alertes", labelKey: "notifications", icon: Bell },
-      {
-        href: "/dashboard?tab=agence",
-        search: "?tab=agence",
-        label: "Mon agence",
-        labelKey: "myAgency",
-        icon: Building2,
-      },
-    ],
-  },
-  {
-    title: "FINANCES",
-    titleKey: "finances",
-    links: [
-      { href: "/wallet", label: "Revenus & portefeuille", labelKey: "creditBalance", icon: Coins },
-      { href: "/abonnement", label: "Mon abonnement", labelKey: "buyTokens", icon: Wallet },
-      { href: "/wallet/retraits", label: "Demander un retrait", labelKey: "withdraw", icon: Banknote },
-      {
-        href: "/dashboard?tab=devis",
-        search: "?tab=devis",
-        label: "Mes devis envoyés",
-        labelKey: "sentQuotes",
-        icon: Send,
-      },
-      {
-        href: "/dashboard?tab=missions",
-        search: "?tab=missions",
-        label: "Missions réalisées",
-        labelKey: "completedMissions",
-        icon: Briefcase,
-      },
+      { href: "/parametres", label: "Paramètres", labelKey: "accountSettings", icon: Settings },
     ],
   },
 ];
@@ -192,20 +141,19 @@ export const CLIENT_NAV_SECTIONS: AppNavSection[] = [
       { href: "/dev", label: "Catalogue", icon: UsersRound },
       { href: "/agences", label: "Agences", icon: Building2 },
       { href: "/missions", label: "Mes projets", icon: ClipboardList },
-      { href: "/client/briefs", label: "Mes publications", icon: Megaphone },
-      { href: "/favoris", label: "Mes favoris", icon: Heart },
+      { href: "/conversations", label: "Messages", icon: MessageSquare },
+      { href: "/client/profil", label: "Mon profil", icon: UserRound },
     ],
   },
-  {
-    title: "COMMUNICATION",
-    links: [{ href: "/conversations", label: "Messages", icon: MessageSquare }],
-  },
+];
+
+export const CLIENT_MOBILE_DRAWER_SECTIONS: AppNavSection[] = [
   {
     title: "MON ESPACE",
     links: [
       { href: "/client/profil", label: "Mon profil", icon: UserRound },
-      { href: "/wallet", label: "Mon wallet", icon: Coins },
-      { href: "/parametres", label: "Paramètres", icon: Settings },
+      { href: "/missions", label: "Mes projets", icon: ClipboardList },
+      { href: "/agences", label: "Agences", icon: Building2 },
     ],
   },
 ];

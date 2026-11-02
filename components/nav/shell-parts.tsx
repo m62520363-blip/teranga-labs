@@ -92,9 +92,19 @@ export function NavSections({
   );
 }
 
+export function maskEmail(email: string | null): string | null {
+  if (!email) return null;
+  const trimmed = email.trim();
+  const atIndex = trimmed.indexOf("@");
+  if (atIndex <= 0) return trimmed;
+  const firstChar = trimmed.charAt(0);
+  const domain = trimmed.slice(atIndex);
+  return `${firstChar}....${domain}`;
+}
+
 /**
- * Bloc profil en bas de sidebar / de tiroir : initiales, nom, e-mail,
- * zone complémentaire (solde, déconnexion…) via `extra`.
+ * Bloc profil en bas de sidebar / de tiroir : initiales, nom, e-mail masqué,
+ * zone complémentaire via `extra`.
  */
 export function ProfileBlock({
   href,
@@ -112,6 +122,7 @@ export function ProfileBlock({
   extra?: React.ReactNode;
 }) {
   const displayName = name?.trim() || label;
+  const maskedEmail = maskEmail(email);
   return (
     <div className="flex flex-col gap-2">
       <Link
@@ -126,9 +137,11 @@ export function ProfileBlock({
           <span className="block truncate text-sm font-semibold text-foreground">
             {displayName}
           </span>
-          <span className="block truncate text-xs text-muted-foreground">
-            {email ?? "Mon compte"}
-          </span>
+          {maskedEmail ? (
+            <span className="block truncate text-xs text-muted-foreground">
+              {maskedEmail}
+            </span>
+          ) : null}
         </span>
       </Link>
       {extra}

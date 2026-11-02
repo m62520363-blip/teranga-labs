@@ -303,15 +303,18 @@ export function SettingsContent({
   return (
     <div className="bg-surface py-6 md:py-10">
       <div className="container-tl">
-        <div>
-          <h1 className="text-3xl font-semibold leading-tight tracking-tight">
-            Paramètres
-          </h1>
-          <p className="mt-2 text-base text-muted-foreground">
-            {isClient
-              ? "Gère ton profil et la sécurité de ton compte."
-              : "Gérez votre compte, votre mot de passe et accédez à votre espace."}
-          </p>
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-semibold leading-tight tracking-tight">
+              Paramètres
+            </h1>
+            <p className="mt-2 text-base text-muted-foreground">
+              {isClient
+                ? "Gère ton profil, ton mot de passe et la sécurité de ton compte."
+                : "Gérez votre compte, votre mot de passe et votre déconnexion."}
+            </p>
+          </div>
+          <SignOutButton />
         </div>
 
         <div
@@ -418,6 +421,9 @@ export function SettingsContent({
                   value={createdAt ? formatDate(createdAt) : "—"}
                 />
               </dl>
+              <div className="mt-5 border-t border-hairline pt-4">
+                <SignOutButton />
+              </div>
             </section>
 
             <section

@@ -15,9 +15,8 @@ import {
 } from "lucide-react";
 import { ImageLogoMark } from "@/components/logo";
 import { NotificationBell } from "@/components/notification-bell";
-import { SignOutButton } from "@/components/sign-out-button";
-import { LanguageSwitcher } from "@/components/language-switcher";
 import {
+  CLIENT_MOBILE_DRAWER_SECTIONS,
   CLIENT_NAV_SECTIONS,
   isClientNavLinkActive,
   type AppNavLink,
@@ -114,6 +113,14 @@ export function ClientShell({
     />
   );
 
+  const mobileSections = (
+    <NavSections
+      sections={CLIENT_MOBILE_DRAWER_SECTIONS}
+      isLinkActive={isLinkActive}
+      onLinkClick={handleLinkClick}
+    />
+  );
+
   const profileBlock = (
     <ProfileBlock
       href="/client/profil"
@@ -121,12 +128,6 @@ export function ClientShell({
       email={user?.email ?? null}
       label="Mon espace"
       onLinkClick={handleLinkClick}
-      extra={
-        <>
-          <LanguageSwitcher />
-          <SignOutButton variant="menu" />
-        </>
-      }
     />
   );
 
@@ -235,7 +236,7 @@ export function ClientShell({
               aria-label="Menu mobile de l’espace client"
               className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-4"
             >
-              {sections}
+              {mobileSections}
             </nav>
 
             <div className="shrink-0 border-t border-border p-3">{profileBlock}</div>

@@ -167,19 +167,18 @@ export default async function WalletPage() {
                   </p>
                 </div>
               </div>
-              {earningsAvailable >= minWithdrawal ? (
+              <div className="mt-4 flex flex-wrap items-center gap-3">
                 <Link
                   href="/wallet/retraits"
-                  className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-ink transition-colors hover:bg-primary-hover"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-ink transition-colors hover:bg-primary-hover"
                 >
                   Demander un retrait
                   <ArrowDownLeft className="size-4" aria-hidden="true" />
                 </Link>
-              ) : (
-                <p className="mt-4 text-xs text-muted-foreground">
-                  Minimum de retrait : {minWithdrawal.toLocaleString("fr-FR")} FCFA
-                </p>
-              )}
+                <span className="text-xs text-muted-foreground">
+                  Minimum : {minWithdrawal.toLocaleString("fr-FR")} FCFA
+                </span>
+              </div>
             </div>
 
             {/* Abonnement développeur & quota mensuel */}
