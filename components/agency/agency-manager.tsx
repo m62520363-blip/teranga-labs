@@ -86,6 +86,10 @@ export default function AgencyManager() {
 
   const createAgency = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!hasPro) {
+      setError("Un abonnement PRO actif est requis pour créer une agence.");
+      return;
+    }
     setBusy(true);
     setError("");
     const { data, error: err } = await supabase.rpc("create_agency", {
@@ -97,13 +101,19 @@ export default function AgencyManager() {
       p_country: form.country.trim() || null,
       p_website: form.website.trim() || null,
     });
-    setBusy(false);
     if (err) {
+      setBusy(false);
       setError(friendlyRpcError(err));
       return;
     }
+    try {
+      await fetch("/api/agencies/activate", { method: "POST" });
+    } catch {
+      /* activation non bloquante */
+    }
+    setBusy(false);
     if (data) {
-      setNotice("Votre agence a été créée. Elle sera visible après validation.");
+      setNotice("Votre agence a été créée et publiée.");
       setAgency(null);
       await refresh();
     }

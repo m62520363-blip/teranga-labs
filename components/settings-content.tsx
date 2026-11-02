@@ -12,17 +12,13 @@ import {
   Mail,
   MessageCircle,
   Moon,
-  Plus,
-  Settings,
-  Share2,
   Store,
   Trash2,
-  User,
   UserRoundX,
 } from "lucide-react";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
+import { maskEmail } from "@/components/nav/shell-parts";
 import { SignOutButton } from "@/components/sign-out-button";
-import { ShareProfileButton } from "@/components/dev/share-profile-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -298,12 +294,10 @@ export function SettingsContent({
     router.refresh();
   };
 
-  const homeHref = isClient ? "/client" : "/dashboard";
-
   return (
     <div className="bg-surface py-6 md:py-10">
       <div className="container-tl">
-        <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="mx-auto flex max-w-2xl flex-wrap items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-semibold leading-tight tracking-tight">
               Paramètres
@@ -317,61 +311,8 @@ export function SettingsContent({
           <SignOutButton />
         </div>
 
-        <div
-          className={cn(
-            "mt-8 grid gap-6",
-            !isClient && "lg:grid-cols-2"
-          )}
-        >
-          {isClient ? null : (
-            <section
-              className="rounded-2xl border border-hairline bg-card p-6 sm:p-8"
-              aria-label="Mon espace"
-            >
-              <h2 className="flex items-center gap-2 text-base font-semibold tracking-tight">
-                <Settings className="size-4 text-primary" aria-hidden="true" />
-                Ma navigation
-              </h2>
-              <ul className="mt-5 flex flex-col gap-2">
-                <SideLink href={homeHref} label="Accueil de mon espace" />
-                <SideLink href="/conversations" label="Messages" />
-                {isClient ? (
-                  <SideLink href="/poster" label="Publier un projet" icon={<Plus className="size-4" aria-hidden="true" />} />
-                ) : null}
-                {isDev ? (
-                  <>
-                    <SideLink href="/briefs" label="Voir les projets" />
-                    <SideLink href="/dashboard?tab=profil" label="Compléter mon profil" icon={<User className="size-4" aria-hidden="true" />} />
-                    {devPublicUrl ? (
-                      <>
-                        <Link
-                          href={devPublicUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-foreground transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50"
-                        >
-                          <Share2 className="size-4 text-primary" aria-hidden="true" />
-                          Voir mon profil public
-                        </Link>
-                        <ShareProfileButton url={devPublicUrl} label="Partager mon profil" />
-                      </>
-                    ) : null}
-                  </>
-                ) : null}
-                <div className="my-2 h-px bg-hairline" />
-                <li>
-                  <SignOutButton />
-                </li>
-              </ul>
-            </section>
-          )}
-
-          <div
-            className={cn(
-              "flex flex-col gap-6",
-              isClient && "mx-auto w-full max-w-2xl"
-            )}
-          >
+        <div className="mx-auto mt-8 flex w-full max-w-2xl flex-col gap-6">
+          <div className="flex flex-col gap-6">
             <section
               className="rounded-2xl border border-hairline bg-card p-6 sm:p-8"
               aria-label="Informations du compte"
@@ -388,7 +329,7 @@ export function SettingsContent({
                 <Label htmlFor="account-email">Email</Label>
                 <Input
                   id="account-email"
-                  value={email}
+                  value={maskEmail(email) ?? email}
                   readOnly
                   aria-readonly
                   className="h-10 rounded-xl bg-muted text-muted-foreground"

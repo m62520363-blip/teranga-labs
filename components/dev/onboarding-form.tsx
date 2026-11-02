@@ -646,23 +646,29 @@ function ProfessionalStep({
       toast.error("Image trop lourde (2 Mo max).");
       return;
     }
-    const supabase = createClient();
-    const ext = file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : "jpg";
-    const path = `${userId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-    const { error } = await supabase.storage
-      .from("developer-assets")
-      .upload(path, file, { cacheControl: "3600", upsert: false });
-    if (error) {
-      const missingBucket = /bucket|not found|404|403/i.test(error.message ?? "");
-      toast.error(
-        missingBucket
-          ? "Téléversement indisponible (stockage à configurer) — renseignez une URL."
-          : "Téléversement échoué. Réessayez."
-      );
-      return;
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/profile/avatar", {
+        method: "POST",
+        body: fd,
+      });
+      const json = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        url?: string;
+        message?: string;
+      };
+      if (!res.ok || !json.url) {
+        toast.error(
+          json.message ??
+            "Téléversement indisponible — renseignez une URL."
+        );
+        return;
+      }
+      onUrl(json.url);
+    } catch {
+      toast.error("Téléversement indisponible — renseignez une URL.");
     }
-    const { data } = supabase.storage.from("developer-assets").getPublicUrl(path);
-    if (data?.publicUrl) onUrl(data.publicUrl);
   };
 
   const defaultProjects =
@@ -1416,7 +1422,7 @@ function ProfessionalStep({
             <Link href="/conditions-utilisation" className="font-medium text-primary underline-offset-4 hover:underline">
               conditions d’utilisation
             </Link>{" "}
-            de Devmarket. Mon dossier sera examiné par notre équipe avant activation.
+            de Devmarket. Mon profil développeur sera activé automatiquement.
           </span>
         </label>
         {errors.terms_accepted ? (
@@ -1462,19 +1468,16 @@ function SuccessPanel() {
         <span className="mx-auto inline-flex size-14 items-center justify-center rounded-full bg-emerald-500/15">
           <CheckCircle2 className="size-7 text-success" aria-hidden="true" />
         </span>
-        <h2 className="mt-5 text-xl font-bold tracking-tight">Inscription envoyée !</h2>
+        <h2 className="mt-5 text-xl font-bold tracking-tight">Votre profil développeur est actif !</h2>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          Notre équipe examine votre dossier. Vous recevrez une notification
-          dès qu’il sera <span className="font-medium text-foreground">approuvé</span>.
-          En attendant, votre compte est déjà actif pour parcourir la plateforme.
+          Votre profil est complet et{" "}
+          <span className="font-medium text-foreground">automatiquement activé</span>.
+          Vous pouvez dès maintenant consulter les projets publiés et prendre en charge des missions.
         </p>
         <div className="mt-6 flex flex-col gap-3">
-          <Link href="/briefs" className="btn btn-primary w-full">
-            Parcourir les briefs
+          <Link href="/dashboard" className="btn btn-primary w-full">
+            Accéder à mon espace développeur
             <ArrowRight className="size-4" aria-hidden="true" />
-          </Link>
-          <Link href="/dashboard" className="btn btn-secondary w-full">
-            Aller au dashboard
           </Link>
         </div>
       </div>

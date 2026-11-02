@@ -1,16 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ArrowRight, BadgeCheck, CheckCircle2, Clock3 } from "lucide-react";
-import { OnboardingForm, type OnboardingData } from "@/components/dev/onboarding-form";
+import { ArrowRight, BadgeCheck, CheckCircle2 } from "lucide-react";
+import {
+  OnboardingForm,
+  type OnboardingData,
+} from "@/components/dev/onboarding-form";
 import { RegisterFunnel } from "@/components/dev/register-funnel";
 import { getCurrentUser, createClient } from "@/lib/supabase/server";
-import { Scene3D } from "@/components/landing/scene-3d";
+import { createAdminClient, isServiceConfigured } from "@/lib/supabase/admin";
 
 export const metadata: Metadata = {
   title: "Inscription développeur",
   description:
-    "Rejoignez Devmarket en tant que développeur : créez votre compte, vérifiez votre email, complétez votre profil professionnel. Chaque dossier est examiné avant activation.",
+    "Rejoignez Devmarket en tant que développeur : créez votre compte, vérifiez votre email et complétez votre profil professionnel à 100 % pour être immédiatement actif.",
   robots: { index: false, follow: false },
 };
 
@@ -40,68 +43,25 @@ function AlreadyValidated() {
         <span className="mx-auto inline-flex size-14 items-center justify-center rounded-full bg-emerald-500/15">
           <BadgeCheck className="size-7 text-success" aria-hidden="true" />
         </span>
-        <h1 className="mt-5 text-xl font-bold tracking-tight">Votre dossier est validé</h1>
+        <h1 className="mt-5 text-xl font-bold tracking-tight">
+          Votre profil développeur est actif
+        </h1>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          Votre compte développeur est approuvé. Vous pouvez débloquer des briefs
-          et démarrer des discussions avec les clients.
+          Votre compte développeur est complet et actif. Vous pouvez consulter
+          les projets publiés et démarrer des discussions avec les clients.
         </p>
         <div className="mt-6 flex flex-col gap-3">
-          <Link href="/briefs" className="btn btn-primary w-full">
-            Voir les briefs
+          <Link href="/dashboard" className="btn btn-primary w-full">
+            Accéder à mon espace développeur
             <ArrowRight className="size-4" aria-hidden="true" />
           </Link>
-          <Link href="/dashboard" className="btn btn-secondary w-full">
-            Ouvrir le dashboard
+          <Link
+            href="/dashboard?tab=profil"
+            className="btn btn-secondary w-full"
+          >
+            Modifier mon profil
           </Link>
         </div>
-      </div>
-      <div className="mt-6 rounded-2xl border border-hairline bg-card p-6 sm:p-8">
-        <h2 className="text-lg font-semibold tracking-tight mb-4">
-          📋 Guide d&apos;inscription rapide
-        </h2>
-        <ol className="space-y-3 text-sm text-muted-foreground">
-          <li>
-            <span className="font-medium text-foreground">1. Créer votre compte</span>
-            <span className="ml-2 text-xs bg-primary/10 bg-opacity-50 rounded px-2 py-0.5">
-              ⚡ 1 min
-            </span>
-            • Inscription par email + rôle développeur
-          </li>
-          <li>
-            <span className="font-medium text-foreground">2. Compléter votre profil</span>
-            <span className="ml-2 text-xs bg-primary/10 bg-opacity-50 rounded px-2 py-0.5">
-              ⏱️ 5-10 min
-            </span>
-            • Photo de profil, bio, compétences, villes proposées
-          </li>
-          <li>
-            <span className="font-medium text-foreground">3. Validation équipe</span>
-            <span className="ml-2 text-xs bg-primary/10 bg-opacity-50 rounded px-2 py-0.5">
-              📅 24-48 h
-            </span>
-            • Revue manuelle — pas de spam pour les clients
-          </li>
-        </ol>
-      </div>
-    </div>
-  );
-}
-
-function VerificationInProgress() {
-  return (
-    <div className="container-tl mx-auto max-w-lg py-20">
-      <div className="rounded-2xl border border-hairline bg-card p-8 text-center shadow-sm">
-        <span className="mx-auto inline-flex size-14 items-center justify-center rounded-full bg-primary-soft">
-          <Clock3 className="size-7 text-warning" aria-hidden="true" />
-        </span>
-        <h1 className="mt-5 text-xl font-bold tracking-tight">Vérification en cours</h1>
-        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          Votre profil est en cours de vérification par Devmarket.
-          Une notification sera envoyée dès la fin de l’examen.
-        </p>
-        <Link href="/dashboard" className="btn btn-secondary mt-6 w-full">
-          Retour au dashboard
-        </Link>
       </div>
     </div>
   );
@@ -111,14 +71,17 @@ export default async function InscriptionDeveloppeurPage() {
   const user = await getCurrentUser();
 
   /* Visiteur non connecté : parcours guidé complet (compte → vérification
-     email → wizard profil), calqué sur la démonstration Montaaj. */
+     email → wizard profil). */
   if (!user) {
     return (
       <div className="bg-surface py-14">
         <div className="container-tl">
           <div className="mx-auto max-w-3xl text-center">
             <span className="chip gap-2 border-hairline bg-card">
-              <span className="size-1.5 rounded-full bg-primary" aria-hidden="true" />
+              <span
+                className="size-1.5 rounded-full bg-primary"
+                aria-hidden="true"
+              />
               INSCRIPTION DÉVELOPPEUR
             </span>
           </div>
@@ -138,37 +101,64 @@ export default async function InscriptionDeveloppeurPage() {
 
   const appRes = await supabase.rpc("get_my_developer_application");
   const data = (appRes.data ?? null) as OnboardingData | null;
-  const status = data?.status ?? null;
+  let status = data?.status ?? null;
+
+  // Activation immédiate si le dossier a été complété
+  if (
+    status &&
+    status !== "active" &&
+    status !== "verified" &&
+    status !== "suspended" &&
+    Boolean(data?.application)
+  ) {
+    if (isServiceConfigured()) {
+      const admin = createAdminClient();
+      if (admin) {
+        await admin
+          .from("developers")
+          .update({
+            status: "active",
+            rejection_reason: null,
+          })
+          .eq("id", user.id);
+      }
+    }
+    status = "active";
+  }
 
   return (
     <div className="bg-surface py-14">
       <div className="container-tl">
-        <header className="mx-auto grid max-w-4xl items-center gap-6 lg:grid-cols-[1fr_auto]">
-          <div>
-            <span className="chip gap-2 border-hairline bg-card">
-              <span className="size-1.5 rounded-full bg-primary" aria-hidden="true" />
-              INSCRIPTION DÉVELOPPEUR
-            </span>
-            <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
-              Rejoignez Devmarket
-            </h1>
-            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-              Deux étapes, quelques minutes. Votre dossier est examiné par notre équipe
-              <span className="font-medium text-foreground"> avant activation</span> —
-              garantie zéro spam pour les clients.
-            </p>
-          </div>
-          <Scene3D variant="team" className="hidden lg:block" />
+        <header className="mx-auto max-w-3xl">
+          <span className="chip gap-2 border-hairline bg-card">
+            <span
+              className="size-1.5 rounded-full bg-primary"
+              aria-hidden="true"
+            />
+            INSCRIPTION DÉVELOPPEUR
+          </span>
+          <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
+            Rejoignez Devmarket
+          </h1>
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+            Complétez votre profil professionnel à 100 % en quelques minutes :
+            votre compte développeur est{" "}
+            <span className="font-medium text-foreground">
+              activé automatiquement
+            </span>{" "}
+            dès validation du formulaire.
+          </p>
         </header>
 
         {status === "active" || status === "verified" ? (
           <AlreadyValidated />
-        ) : status === "verification_pending" ||
-          (status === "pending" && data?.application) ? (
-          <VerificationInProgress />
         ) : (
           <div className="mt-8">
-            <OnboardingForm initial={data} email={user.email ?? ""} userId={user.id} />
+            <OnboardingForm
+              initial={data}
+              email={user.email ?? ""}
+              userId={user.id}
+            />
           </div>
         )}
 
@@ -176,23 +166,32 @@ export default async function InscriptionDeveloppeurPage() {
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="flex items-start gap-3 rounded-2xl border border-hairline bg-card p-5">
               <span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary-soft">
-                <CheckCircle2 className="size-4 text-primary" aria-hidden="true" />
+                <CheckCircle2
+                  className="size-4 text-primary"
+                  aria-hidden="true"
+                />
               </span>
               <p className="text-sm leading-relaxed text-muted-foreground">
-                <span className="font-medium text-foreground">Approbation manuelle.</span>{" "}
-                Chaque dossier est lu par notre équipe avant d’activer le compte.
+                <span className="font-medium text-foreground">
+                  Activation immédiate à 100 %.
+                </span>{" "}
+                Dès que vos informations obligatoires sont complétées, vous êtes
+                automatiquement développeur sur la plateforme.
               </p>
             </div>
             <div className="flex items-start gap-3 rounded-2xl border border-hairline bg-card p-5">
               <span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary-soft">
-                <BadgeCheck className="size-4 text-primary" aria-hidden="true" />
+                <BadgeCheck
+                  className="size-4 text-primary"
+                  aria-hidden="true"
+                />
               </span>
               <p className="text-sm leading-relaxed text-muted-foreground">
                 <span className="font-medium text-foreground">
-                  Badge Vérifié — bientôt.
+                  Portfolio recommandé.
                 </span>{" "}
-                La vérification d’identité et les avis arrivent bientôt sur les
-                profils.
+                Le portfolio reste optionnel mais recommandé pour inspirer
+                confiance aux clients.
               </p>
             </div>
           </div>

@@ -461,28 +461,30 @@ export function DashboardContent({
       return;
     }
     setUploadingAvatar(true);
-    const supabase = createClient();
-    const ext =
-      file.type === "image/png"
-        ? "png"
-        : file.type === "image/webp"
-          ? "webp"
-          : "jpg";
-    const path = `${userId}/avatar-${Date.now()}.${ext}`;
-    const { error: uploadErr } = await supabase.storage
-      .from("developer-assets")
-      .upload(path, file, { cacheControl: "3600", upsert: true });
-    setUploadingAvatar(false);
-    if (uploadErr) {
-      toast.error("Téléversement indisponible — renseignez une URL de photo.");
-      return;
-    }
-    const { data } = supabase.storage
-      .from("developer-assets")
-      .getPublicUrl(path);
-    if (data?.publicUrl) {
-      setP((prev) => ({ ...prev, avatar_url: data.publicUrl }));
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/profile/avatar", {
+        method: "POST",
+        body: fd,
+      });
+      const json = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        url?: string;
+        message?: string;
+      };
+      if (!res.ok || !json.url) {
+        toast.error(
+          json.message ?? "Téléversement indisponible — renseignez une URL de photo."
+        );
+        return;
+      }
+      setP((prev) => ({ ...prev, avatar_url: json.url! }));
       toast.success("Photo prête — cliquez sur Enregistrer le profil.");
+    } catch {
+      toast.error("Téléversement indisponible — renseignez une URL de photo.");
+    } finally {
+      setUploadingAvatar(false);
     }
   };
 

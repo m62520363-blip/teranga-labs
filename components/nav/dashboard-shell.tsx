@@ -6,7 +6,6 @@ import { Link, usePathname } from "@/i18n/navigation";
 import { Menu, X } from "lucide-react";
 import { ImageLogoMark } from "@/components/logo";
 import { NotificationBell } from "@/components/notification-bell";
-import { TokenBalance } from "@/components/token-balance";
 import { SkipLink } from "@/components/skip-link";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import {
@@ -210,7 +209,6 @@ export function DashboardShell({
           </Link>
           <div className="flex shrink-0 items-center gap-1.5">
             {userId ? <NotificationBell userId={userId} /> : null}
-            <TokenBalance />
             <button
               type="button"
               onClick={() => setDrawerOpen(true)}

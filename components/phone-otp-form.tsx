@@ -64,23 +64,33 @@ export function PhoneOtpForm({ onBack }: { onBack: () => void }) {
 
     setBusy(true);
     setError(null);
-    const supabase = createClient();
-    const { error: otpError } = await supabase.auth.signInWithOtp({
-      phone: parsed.data.phone,
-      options: { shouldCreateUser: false },
-    });
-    setBusy(false);
-
-    if (otpError) {
-      setError(readableOtpError(otpError.message));
-      return;
+    try {
+      const res = await fetch("/api/auth/phone-otp/request", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: parsed.data.phone }),
+      });
+      const json = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        message?: string;
+      };
+      if (!res.ok) {
+        setError(
+          json.message ??
+            readableOtpError("Erreur lors de l'envoi du code.")
+        );
+        return;
+      }
+      setStep("code");
+      setResendIn(30);
+      setNotice(
+        `Code envoyé au ${maskPhone(parsed.data.phone)}. Il est valable 10 minutes.`
+      );
+    } catch {
+      setError("Erreur réseau. Réessayez.");
+    } finally {
+      setBusy(false);
     }
-
-    setStep("code");
-    setResendIn(30);
-    setNotice(
-      `Code envoyé au ${maskPhone(parsed.data.phone)}. Il est valable quelques minutes.`
-    );
   };
 
   const sendCode = (e: React.FormEvent) => {
@@ -100,24 +110,40 @@ export function PhoneOtpForm({ onBack }: { onBack: () => void }) {
 
     setBusy(true);
     setError(null);
-    const supabase = createClient();
-    const { error: verifyError } = await supabase.auth.verifyOtp({
-      phone,
-      token: clean,
-      type: "sms",
-    });
-    setBusy(false);
+    try {
+      const res = await fetch("/api/auth/phone-otp/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone, code: clean }),
+      });
+      const json = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        token_hash?: string;
+        message?: string;
+      };
+      if (!res.ok || !json.token_hash) {
+        setError(
+          json.message ?? "Code incorrect. Vérifiez les 6 chiffres et réessayez."
+        );
+        return;
+      }
 
-    if (verifyError) {
-      setError(
-        verifyError.message.toLowerCase().includes("expired")
-          ? "Code expiré. Demandez-en un nouveau."
-          : "Code incorrect. Vérifiez les 6 chiffres et réessayez."
-      );
-      return;
+      const supabase = createClient();
+      const { error: sessionErr } = await supabase.auth.verifyOtp({
+        token_hash: json.token_hash,
+        type: "magiclink",
+      });
+      if (sessionErr) {
+        setError("Session expirée. Demandez un nouveau code.");
+        return;
+      }
+
+      await routeByRole();
+    } catch {
+      setError("Erreur réseau. Réessayez.");
+    } finally {
+      setBusy(false);
     }
-
-    await routeByRole();
   };
 
   return (
