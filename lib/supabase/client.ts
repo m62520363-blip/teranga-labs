@@ -33,10 +33,15 @@ function serializeCookie(
       ? options.maxAge
       : AUTH_COOKIE_MAX_AGE_SECONDS;
   if (maxAge > 0) parts.push(`max-age=${maxAge}`);
-  parts.push(
-    `samesite=${typeof options?.sameSite === "string" ? options.sameSite : "lax"}`
-  );
-  if (options?.secure) parts.push("secure");
+  const sameSite =
+    typeof options?.sameSite === "string" ? options.sameSite : "lax";
+  parts.push(`samesite=${sameSite}`);
+  // Sécurise le cookie sur HTTPS (côté navigateur).
+  const secure =
+    options?.secure === true ||
+    (typeof window !== "undefined" &&
+      window.location.protocol === "https:");
+  if (secure) parts.push("secure");
   return parts.join("; ");
 }
 

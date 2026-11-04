@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { BalanceProvider } from "@/components/balance-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { CookieConsent } from "@/components/cookie-consent";
 
 /**
  * Le site n'a qu'un seul thème (sombre). L'ancien `ThemeProvider` de
@@ -21,6 +22,7 @@ export function Providers({
   return (
     <BalanceProvider isAuthed={isAuthed}>
       {children}
+      <CookieConsent />
       <Toaster position="bottom-right" richColors closeButton />
     </BalanceProvider>
   );
