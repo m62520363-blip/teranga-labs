@@ -6,11 +6,9 @@ import { hasLocale } from "next-intl";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import "./globals.css";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/footer";
-import { SiteShell } from "@/components/site-shell";
-import { Providers } from "@/components/providers";
-import { getCurrentRole, getCurrentUser } from "@/lib/supabase/server";
+import { Suspense } from "react";
+import { AuthStreamShell, AuthStreamShellFallback } from "@/components/auth-stream-shell";
+
 import { absoluteUrl, buildAlternates } from "@/lib/utils";
 import { routing } from "@/i18n/routing";
 
@@ -175,8 +173,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: ReactNode;
 }>) {
-  const [user, role] = await Promise.all([getCurrentUser(), getCurrentRole()]);
-
   // Locale fournie par le middleware next-intl (en-tête `x-next-intl-locale`).
   // `getLocale()` est garanti valide par le fallback de i18n/request.ts.
   const rawLocale = await getLocale();
@@ -202,30 +198,9 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <Providers isAuthed={Boolean(user)}>
-            <SiteShell
-              navbar={
-                <Navbar
-                  user={user ? { name: user.user_metadata?.full_name ?? null } : null}
-                  role={role}
-                  userId={user?.id ?? null}
-                />
-              }
-              footer={<Footer />}
-              role={role}
-              user={
-                user
-                  ? {
-                      name: user.user_metadata?.full_name ?? null,
-                      email: user.email ?? null,
-                    }
-                  : null
-              }
-              userId={user?.id ?? null}
-            >
-              {children}
-            </SiteShell>
-          </Providers>
+          <Suspense fallback={<AuthStreamShellFallback>{children}</AuthStreamShellFallback>}>
+            <AuthStreamShell>{children}</AuthStreamShell>
+          </Suspense>
         </NextIntlClientProvider>
       </body>
     </html>
