@@ -889,7 +889,7 @@
     }
   },
   "RootMeta": {
-    "default": "Devmarket — Le marketplace des projets web de l'Afrique",
+    "default": "Devmarket : marketplace des projets web en Afrique",
     "description": "Devmarket met en relation les entreprises d'Afrique et des développeurs web : le client publie son projet gratuitement, les développeurs vérifiés envoient leurs devis, et le contact se fait ensuite en direct. Aucune commission.",
     "keywords": [
       "développeur",

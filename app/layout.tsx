@@ -159,6 +159,10 @@ function buildJsonLd(locale: string, metaT: Awaited<ReturnType<typeof getTransla
     url: absoluteUrl("/").origin,
     inLanguage: locale,
     publisher: { "@type": "Organization", name: "Devmarket" },
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: ["h1", "h2", ".lead", "main p"],
+    },
     // Pas de SearchAction : la recherche des briefs est faite côté client
     // et n'est pas adressable par une URL (?q=), donc la déclarer ici
     // serait une promesse que le site ne tient pas.
