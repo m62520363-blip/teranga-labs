@@ -18,7 +18,7 @@ export function findCountryBySlug(slug: string): Country | null {
   return COUNTRIES.find((c) => slugifyPlace(c.nameFr) === slug) ?? null;
 }
 
-/** Toutes les paires { slug, country } du périmètre (§2 : 9 pays). */
+/** Toutes les paires { slug, country } du périmètre (Afrique : 54 pays). */
 export function allCountrySlugs(): { slug: string; country: Country }[] {
   return COUNTRIES.map((country) => ({
     slug: slugifyPlace(country.nameFr),

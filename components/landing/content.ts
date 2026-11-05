@@ -2,19 +2,19 @@ import { TOKEN_LABEL_PRICED, TOKEN_RULE } from "@/lib/formatting";
 
 /* --------------------------------------------------------------------------- */
 /*  Données éditables de la landing page à Devmarket.                        */
-/*  Positionnement : marketplace des projets web de l'Afrique de l'Ouest francophone. */
+/*  Positionnement : marketplace des projets web de l'Afrique. */
 /* --------------------------------------------------------------------------- */
 
 export const BRAND = "Devmarket";
 export const LEGAL_PUBLISHER = "Walty Group-SUARL";
 
 export const META = {
-  title: "Le marketplace des projets web de l'Afrique de l'Ouest francophone | Devmarket",
+  title: "Le marketplace des projets web de l'Afrique | Devmarket",
   description:
-    "Devmarket, le marketplace des projets web de l'Afrique de l'Ouest francophone. Le client publie son brief pour 1 Token, le développeur débloque le contact avec 1 Token et tout se règle en direct. Aucune commission.",
+    "Devmarket, le marketplace des projets web de l'Afrique. Le client publie son brief pour 1 Token, le développeur débloque le contact avec 1 Token et tout se règle en direct. Aucune commission.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://teranga-labs.vercel.app",
   keywords:
-    "marketplace Afrique de l'Ouest francophone, développeurs Sénégal, développeurs Côte d'Ivoire, freelance Dakar, Abidjan, Bamako, brief web, trouver des clients web, acheter des tokens, classement développeurs, site e-commerce Dakar, Devmarket",
+    "marketplace Afrique, développeurs Sénégal, développeurs Côte d'Ivoire, freelance Dakar, Abidjan, Bamako, brief web, trouver des clients web, acheter des tokens, classement développeurs, site e-commerce Dakar, Devmarket",
 };
 
 export const HERO = {
@@ -90,7 +90,7 @@ export const PRICING = {
 export const FAQS_LANDING = [
   {
     q: "Qu'est-ce que Devmarket ?",
-    a: "Devmarket est le marketplace des projets web de l'Afrique de l'Ouest francophone : tu publies le brief de ton site pour 1 Token, et le développeur intéressé débloque ton contact avec 1 Token. Ensuite, vous traitez directement — aucune commission.",
+    a: "Devmarket est le marketplace des projets web de l'Afrique : tu publies le brief de ton site pour 1 Token, et le développeur intéressé débloque ton contact avec 1 Token. Ensuite, vous traitez directement — aucune commission.",
   },
   {
     q: "Combien coûte un Token ?",
@@ -138,7 +138,7 @@ export const ROLE_CARDS = {
 };
 
 export const FAQS = [
-  { q: "Qu'est-ce que Devmarket ?", a: "Devmarket est le marketplace des projets web de l'Afrique de l'Ouest francophone : les clients publient le brief de leur site web pour 1 Token, et les développeurs sérieux viennent vers eux." },
+  { q: "Qu'est-ce que Devmarket ?", a: "Devmarket est le marketplace des projets web de l'Afrique : les clients publient le brief de leur site web pour 1 Token, et les développeurs sérieux viennent vers eux." },
   { q: "Comment fonctionne le modèle ?", a: "Le client poste son brief en 2 minutes : type de site, budget et région. Le brief apparaît dans /briefs. Le développeur qui s'intéresse paie 1 Token pour ouvrir une discussion privée avec le client, puis l'échange se fait en direct sur la plateforme." },
   { q: "Combien coûte un Token ?", a: `${TOKEN_LABEL_PRICED}. L'inscription est gratuite : vous commandez vos Tokens, puis vous publiez votre brief ou débloquez un contact.` },
   { q: "Comment je paie mes Tokens ?", a: "Le paiement se fait en ligne depuis votre wallet : rechargez-le, puis dépensez vos Tokens partout sur le site. Dès la confirmation du paiement, vos Tokens sont crédités automatiquement sur votre compte." },

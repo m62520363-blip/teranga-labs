@@ -260,6 +260,8 @@ const OCEANIA: WorldCountry[] = [
 /* ---------------------------------------------------------------------- */
 
 /** 206 entrées, triées par nom français (affichage insensible à l'ordre). */
+export const AFRICA_COUNTRIES: WorldCountry[] = AFRICA;
+
 export const WORLD_COUNTRIES: WorldCountry[] = [...AFRICA, ...ASIA, ...EUROPE, ...AMERICAS, ...OCEANIA].sort(
   (a, b) => a.nameFr.localeCompare(b.nameFr, "fr")
 );

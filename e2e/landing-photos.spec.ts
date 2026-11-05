@@ -52,7 +52,7 @@ test.describe("landing : photos et nettoyage Tokens", () => {
   test("le hero affiche le bandeau de preuve sociale", async ({ page }) => {
     await page.goto("/", { waitUntil: "domcontentloaded", timeout: 90_000 });
     await page.waitForTimeout(4000);
-    await expect(page.getByText("Des développeurs vérifiés dans 9 pays")).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText("Des développeurs vérifiés dans 54 pays")).toBeVisible({ timeout: 15_000 });
   });
 });
 

@@ -29,7 +29,7 @@ import { getFlagUrl } from "@/lib/countries";
 import {
   getWorldCountry,
   getWorldRegions,
-  WORLD_COUNTRIES,
+  AFRICA_COUNTRIES,
   WORLD_COUNTRY_ITEMS,
 } from "@/lib/world-countries";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
@@ -613,7 +613,7 @@ function SignupForm({ initialRole }: { initialRole: AuthRole }) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent align="start" className="max-h-72">
-                {WORLD_COUNTRIES.map((country) => (
+                {AFRICA_COUNTRIES.map((country) => (
                   <SelectItem key={country.iso2} value={country.iso2}>
                     <FlagImg code={country.iso2} />
                     {country.nameFr}

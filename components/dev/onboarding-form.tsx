@@ -37,7 +37,7 @@ import {
 import {
   findWorldCountryByName,
   getWorldRegions,
-  WORLD_COUNTRIES,
+  AFRICA_COUNTRIES,
 } from "@/lib/world-countries";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { Input } from "@/components/ui/input";
@@ -126,7 +126,7 @@ const SPECIALTY_SUGGESTIONS = [
    (périmètre ou référentiel monde), sinon champ libre — inscription ouverte
    au monde entier, sans exception. */
 const COUNTRY_NAME_ITEMS: Record<string, string> = Object.fromEntries(
-  WORLD_COUNTRIES.map((c) => [c.nameFr, c.nameFr])
+  AFRICA_COUNTRIES.map((c) => [c.nameFr, c.nameFr])
 );
 
 export function OnboardingForm({
@@ -503,7 +503,7 @@ function IdentityStep({
                 <SelectValue placeholder="Choisir un pays" />
               </SelectTrigger>
               <SelectContent align="start" className="max-h-80">
-                {WORLD_COUNTRIES.map((c) => (
+                {AFRICA_COUNTRIES.map((c) => (
                   <SelectItem key={c.iso2} value={c.nameFr}>
                     {c.nameFr}
                   </SelectItem>
