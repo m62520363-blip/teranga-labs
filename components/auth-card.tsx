@@ -435,7 +435,7 @@ function SignupForm({ initialRole }: { initialRole: AuthRole }) {
             email: "",
             password: "",
             confirm_password: "",
-            city: "Dakar",
+            city: "",
             whatsapp: "",
             accept_terms: false,
           }
