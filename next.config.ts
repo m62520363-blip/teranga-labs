@@ -18,6 +18,9 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  experimental: {
+    optimizePackageImports: ["lucide-react", "@base-ui/react", "zod", "react-hook-form"],
+  },
   images: {
     // AVIF en priorité (meilleure compression), WebP en repli.
     formats: ["image/avif", "image/webp"],

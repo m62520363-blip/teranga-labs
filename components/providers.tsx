@@ -1,9 +1,16 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BalanceProvider } from "@/components/balance-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { CookieConsent } from "@/components/cookie-consent";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: { staleTime: 60_000, refetchOnWindowFocus: false },
+  },
+});
 
 /**
  * Le site n'a qu'un seul thème (sombre). L'ancien `ThemeProvider` de
@@ -20,10 +27,12 @@ export function Providers({
   children: ReactNode;
 }) {
   return (
-    <BalanceProvider isAuthed={isAuthed}>
-      {children}
-      <CookieConsent />
-      <Toaster position="bottom-right" richColors closeButton />
-    </BalanceProvider>
+    <QueryClientProvider client={queryClient}>
+      <BalanceProvider isAuthed={isAuthed}>
+        {children}
+        <CookieConsent />
+        <Toaster position="bottom-right" richColors closeButton />
+      </BalanceProvider>
+    </QueryClientProvider>
   );
 }
