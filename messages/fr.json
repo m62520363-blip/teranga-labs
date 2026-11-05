@@ -1,11 +1,11 @@
 {
   "Meta": {
-    "title": "Le marketplace des projets web d'Afrique de l'Ouest | Devmarket",
+    "title": "Le marketplace des projets web d'Afrique | Devmarket",
     "description": "Publiez votre projet web gratuitement. Recevez des devis de développeurs vérifiés, comparez et choisissez. 0 % commission, paiement direct.",
-    "keywords": "marketplace Afrique de l'Ouest francophone, développeurs Sénégal, développeurs Côte d'Ivoire, freelance Dakar, Abidjan, Bamako, projet web, trouver des clients web, abonnement développeur, classement développeurs, site e-commerce Dakar, Devmarket",
+    "keywords": "marketplace Afrique, développeurs Sénégal, développeurs Côte d'Ivoire, freelance Dakar, Abidjan, Bamako, projet web, trouver des clients web, abonnement développeur, classement développeurs, site e-commerce Dakar, Devmarket",
     "ogTitle": "Devmarket — Publiez votre projet, recevez des devis",
-    "ogDescription": "Publication gratuite, devis gratuits, 0 % commission. Trouvez le développeur qu'il vous faut en Afrique de l'Ouest francophone.",
-    "ogAlt": "Devmarket — Le marketplace des projets web de l'Afrique de l'Ouest francophone."
+    "ogDescription": "Publication gratuite, devis gratuits, 0 % commission. Trouvez le développeur qu'il vous faut en Afrique.",
+    "ogAlt": "Devmarket — Le marketplace des projets web de l'Afrique."
   },
   "DevStats": {
     "title": "Performance du profil",
@@ -68,7 +68,7 @@
   },
   "Footer": {
     "slogan": "Find Developers. Build Your Vision",
-    "tagline": "Le marketplace des projets web de l'Afrique de l'Ouest francophone. Publication gratuite, paiement direct, sans commission.",
+    "tagline": "Le marketplace des projets web de l'Afrique. Publication gratuite, paiement direct, sans commission.",
     "newsletter": {
       "title": "Restez informé",
       "description": "Nouveautés, guides et offres — un e-mail de temps en temps, jamais de spam.",
@@ -122,7 +122,7 @@
     },
     "copyright": "Tous droits réservés.",
     "publishedBy": "Édité par",
-    "description": "Devmarket met en relation les clients d'Afrique de l'Ouest francophone avec des développeurs et prestataires digitaux vérifiés. Publiez un projet gratuitement, comparez les propositions et travaillez directement avec le talent choisi.",
+    "description": "Devmarket met en relation les clients d'Afrique avec des développeurs et prestataires digitaux vérifiés. Publiez un projet gratuitement, comparez les propositions et travaillez directement avec le talent choisi.",
     "location": "Dakar, Sénégal."
   },
   "Landing": {
@@ -130,7 +130,7 @@
       "badge": "Publication gratuite · 0 % commission",
       "titleBefore": "La plateforme des",
       "titleHighlight": "projets web",
-      "titleAfter": "de l'Afrique de l'Ouest",
+      "titleAfter": "de l'Afrique",
       "subtitle": "Publiez votre projet gratuitement, recevez des devis de développeurs vérifiés et choisissez le bon talent. Vous payez directement, sans commission.",
       "socialProof": "Des développeurs vérifiés dans 54 pays",
       "searchPlaceholder": "Rechercher un développeur, une compétence…",
@@ -243,7 +243,7 @@
     },
     "flags": {
       "label": "Pays desservis",
-      "lead": "Disponible dans 9 pays d'Afrique de l'Ouest francophone, et dans le monde entier.",
+      "lead": "Disponible dans les 54 pays d'Afrique.",
       "sn": "Sénégal",
       "ci": "Côte d'Ivoire",
       "ml": "Mali",
@@ -889,11 +889,11 @@
     }
   },
   "RootMeta": {
-    "default": "Devmarket — Le marketplace des projets web de l'Afrique de l'Ouest francophone",
-    "description": "Devmarket met en relation les entreprises d'Afrique de l'Ouest francophone et des développeurs web : le client publie son projet gratuitement, les développeurs vérifiés envoient leurs devis, et le contact se fait ensuite en direct. Aucune commission.",
+    "default": "Devmarket — Le marketplace des projets web de l'Afrique",
+    "description": "Devmarket met en relation les entreprises d'Afrique et des développeurs web : le client publie son projet gratuitement, les développeurs vérifiés envoient leurs devis, et le contact se fait ensuite en direct. Aucune commission.",
     "keywords": [
       "développeur",
-      "Afrique de l'Ouest francophone",
+      "Afrique",
       "Sénégal",
       "Côte d'Ivoire",
       "Mali",
@@ -911,9 +911,9 @@
     ],
     "ogTitle": "Devmarket — Des clients qui veulent un site",
     "ogDescription": "Le client publie son besoin gratuitement. Le développeur débloque les contacts avec son abonnement. Zéro commission.",
-    "ogAlt": "Devmarket — Le marketplace des projets web de l'Afrique de l'Ouest francophone.",
-    "twitterDescription": "Marketplace des projets web de l'Afrique de l'Ouest francophone : projets, abonnements développeurs, zéro commission.",
-    "orgDescription": "Marketplace qui met en relation les entreprises d'Afrique de l'Ouest francophone et des développeurs web, sur un modèle inversé où les clients publient leurs besoins.",
+    "ogAlt": "Devmarket — Le marketplace des projets web de l'Afrique.",
+    "twitterDescription": "Marketplace des projets web de l'Afrique : projets, abonnements développeurs, zéro commission.",
+    "orgDescription": "Marketplace qui met en relation les entreprises d'Afrique et des développeurs web, sur un modèle inversé où les clients publient leurs besoins.",
     "countries": [
       "Sénégal",
       "Côte d'Ivoire",
@@ -952,7 +952,7 @@
       "faqs": [
         {
           "q": "Qu'est-ce que Devmarket ?",
-          "a": "Devmarket est le marketplace des projets web de l'Afrique de l'Ouest francophone : les clients publient gratuitement leur projet de site web, les développeurs vérifiés envoient leurs devis, et vous choisissez celui qui vous convient."
+          "a": "Devmarket est le marketplace des projets web de l'Afrique : les clients publient gratuitement leur projet de site web, les développeurs vérifiés envoient leurs devis, et vous choisissez celui qui vous convient."
         },
         {
           "q": "Comment fonctionne le modèle ?",
@@ -992,10 +992,10 @@
     },
     "about": {
       "metaTitle": "À propos",
-      "metaDesc": "Devmarket est le marketplace des projets web d'Afrique de l'Ouest : les clients publient leur projet gratuitement, les développeurs répondent avec leur abonnement.",
+      "metaDesc": "Devmarket est le marketplace des projets web d'Afrique : les clients publient leur projet gratuitement, les développeurs répondent avec leur abonnement.",
       "h1": "À propos de Devmarket",
       "leadBold": "On ne vend pas des sites. On connecte les clients qui en veulent aux développeurs qui les construisent.",
-      "leadRest": "Devmarket est le marketplace des projets web d'Afrique de l'Ouest : une boutique à Thiès, un resto à Dakar, une école à Abidjan publient leur projet gratuitement, et les développeurs vérifiés envoient leurs devis.",
+      "leadRest": "Devmarket est le marketplace des projets web d'Afrique : une boutique à Thiès, un resto à Dakar, une école à Abidjan publient leur projet gratuitement, et les développeurs vérifiés envoient leurs devis.",
       "values": [
         {
           "title": "Le client gagne du temps",
@@ -1143,7 +1143,7 @@
     "legal": {
       "mentions": {
         "metaTitle": "Mentions légales",
-        "metaDesc": "Mentions légales de Devmarket, le marketplace inversé d'Afrique de l'Ouest.",
+        "metaDesc": "Mentions légales de Devmarket, le marketplace inversé d'Afrique.",
         "title": "Mentions légales",
         "lead": "Informations relatives à l’éditeur du service Devmarket.",
         "updated": "Dernière mise à jour : 24 septembre 2026",
