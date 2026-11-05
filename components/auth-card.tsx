@@ -746,9 +746,8 @@ function SignupForm({ initialRole }: { initialRole: AuthRole }) {
         </Field>
 
         <Field
-          label={role === "client" ? "WhatsApp (optionnel)" : "WhatsApp"}
+          label="WhatsApp (optionnel)"
           htmlFor="signup-whatsapp"
-          required={role === "developer"}
           error={errors.whatsapp?.message}
         >
           <PhoneInput

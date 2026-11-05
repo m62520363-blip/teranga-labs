@@ -282,7 +282,9 @@ export const signupSchema = z.object({
     .regex(
       /^\+?[0-9\s\-().]{9,20}$/,
       "Numéro WhatsApp invalide. Choisissez votre pays puis saisissez votre numéro."
-    ),
+    )
+    .optional()
+    .default(""),
   skills: z
     .string()
     .max(200, "200 caractères max.")
