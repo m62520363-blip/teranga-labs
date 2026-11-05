@@ -89,8 +89,8 @@ describe("otpVerifySchema", () => {
 });
 
 describe("périmètre pays (C1)", () => {
-  it("couvre les 9 pays de la zone de diffusion dont la Guinée-Bissau", () => {
-    expect(COUNTRIES).toHaveLength(9);
+  it("couvre les 54 pays d'Afrique dont la Guinée-Bissau", () => {
+    expect(COUNTRIES).toHaveLength(54);
     expect(SCOPE_COUNTRY_CODES).toContain("GW");
     expect(SCOPE_COUNTRY_CODES).toContain("GN");
   });

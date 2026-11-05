@@ -5,7 +5,7 @@ import {
   findRegionBySlug,
   slugifyRegion,
 } from "@/lib/region-slugs";
-import { ALL_REGION_NAMES } from "@/lib/countries";
+import { ALL_REGION_NAMES, COUNTRIES } from "@/lib/countries";
 
 describe("slugifyRegion", () => {
   it("supprime les accents", () => {
@@ -48,10 +48,10 @@ describe("findRegionBySlug", () => {
 });
 
 describe("allRegionSlugs", () => {
-  it("couvre toutes les regions du perimetre (9 pays)", () => {
+  it("couvre toutes les regions du perimetre (Afrique)", () => {
     // « Savanes » (CI + TG) est deduplique par slug : 93 regions -> 92 slugs.
     expect(allRegionSlugs()).toHaveLength(ALL_REGION_NAMES.length);
-    expect(allRegionSlugs().length).toBe(92);
+    expect(allRegionSlugs().length).toBe(167);
   });
 
   it("produit des slugs uniques, donc pas de collision d URL", () => {
@@ -74,6 +74,6 @@ describe("allRegionSlugs", () => {
 
   it("couvre chaque pays du perimetre", () => {
     const codes = new Set(allRegionSlugs().map((r) => r.countryCode));
-    expect(codes).toEqual(new Set(["SN", "CI", "ML", "BF", "NE", "GN", "GW", "BJ", "TG"]));
+    expect(codes).toEqual(new Set(COUNTRIES.map((x) => x.code)));
   });
 });

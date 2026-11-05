@@ -8,8 +8,8 @@ import {
 } from "@/lib/geography";
 
 describe("allCountrySlugs", () => {
-  it("couvre les 9 pays du périmètre (§2)", () => {
-    expect(allCountrySlugs()).toHaveLength(9);
+  it("couvre les 54 pays d'Afrique (§2)", () => {
+    expect(allCountrySlugs()).toHaveLength(54);
   });
 
   it("produit des slugs uniques, donc pas de collision d URL", () => {

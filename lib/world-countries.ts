@@ -76,6 +76,8 @@ const AFRICA: WorldCountry[] = [
   { iso2: "UG", nameFr: "Ouganda", dial: "+256", currency: "UGX" },
   { iso2: "ZM", nameFr: "Zambie", dial: "+260", currency: "ZMW" },
   { iso2: "ZW", nameFr: "Zimbabwe", dial: "+263", currency: "ZWL" },
+  { iso2: "ST", nameFr: "São Tomé-et-Príncipe", dial: "+239", currency: "STN" },
+  { iso2: "SO", nameFr: "Somalie", dial: "+252", currency: "SOS" },
 ];
 
 /* ---------------------------------------------------------------------- */
