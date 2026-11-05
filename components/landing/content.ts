@@ -37,7 +37,7 @@ export const HOW_IT_WORKS = {
     {
       num: "01",
       title: "Trouve le bon développeur",
-      text: "Filtre par pays, compétence et note. Chaque profil affiche un portfolio de projets réels livrés en Afrique de l'Ouest.",
+      text: "Filtre par pays, compétence et note. Chaque profil affiche un portfolio de projets réels livrés en Afrique.",
       icon: "search",
     },
     {
