@@ -7,6 +7,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import "./globals.css";
 import { Suspense } from "react";
+import { Analytics } from "@vercel/analytics/react";
 import { AuthStreamShell, AuthStreamShellFallback } from "@/components/auth-stream-shell";
 
 import { absoluteUrl, buildAlternates } from "@/lib/utils";
@@ -202,6 +203,7 @@ export default async function RootLayout({
             <AuthStreamShell>{children}</AuthStreamShell>
           </Suspense>
         </NextIntlClientProvider>
+        <Analytics />
       </body>
     </html>
   );
