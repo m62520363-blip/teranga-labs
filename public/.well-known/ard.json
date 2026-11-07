@@ -1,0 +1,101 @@
+{
+  "specVersion": "0.91",
+  "host": {
+    "displayName": "Devmarket",
+    "identifier": "devvmarket.vercel.app",
+    "documentationUrl": "https://devvmarket.vercel.app/llms.txt",
+    "logoUrl": "https://devvmarket.vercel.app/icon.png"
+  },
+  "entries": [
+    {
+      "identifier": "urn:air:devvmarket.vercel.app:web:home",
+      "displayName": "Devmarket Home",
+      "description": "Marketplace connecting clients and verified web developers across Africa. Post projects, receive quotes, choose a developer.",
+      "type": "text/html",
+      "url": "https://devvmarket.vercel.app/",
+      "representativeQueries": [
+        "Find a web developer in Africa",
+        "Post a web project for free",
+        "Hire a freelance developer"
+      ],
+      "capabilities": ["search", "browse", "post-project"]
+    },
+    {
+      "identifier": "urn:air:devvmarket.vercel.app:web:developers",
+      "displayName": "Developer Directory",
+      "description": "Browse verified developers by specialty, city, technology and rating. Filter and contact directly.",
+      "type": "text/html",
+      "url": "https://devvmarket.vercel.app/dev",
+      "representativeQueries": [
+        "Find a React developer in Dakar",
+        "Hire a full-stack developer",
+        "Browse verified developers in Africa"
+      ],
+      "capabilities": ["search", "filter", "contact"]
+    },
+    {
+      "identifier": "urn:air:devvmarket.vercel.app:web:briefs",
+      "displayName": "Project Briefs",
+      "description": "Browse open web project briefs posted by clients. Developers can submit proposals.",
+      "type": "text/html",
+      "url": "https://devvmarket.vercel.app/briefs",
+      "representativeQueries": [
+        "Find web projects to work on",
+        "Browse freelance missions in Africa",
+        "Submit a proposal for a project"
+      ],
+      "capabilities": ["search", "filter", "propose"]
+    },
+    {
+      "identifier": "urn:air:devvmarket.vercel.app:web:agencies",
+      "displayName": "Agencies",
+      "description": "Web development agencies directory. Create and join agencies with Pro subscription.",
+      "type": "text/html",
+      "url": "https://devvmarket.vercel.app/agences",
+      "representativeQueries": [
+        "Find a web agency in Africa",
+        "Create a development agency",
+        "Join an agency"
+      ],
+      "capabilities": ["search", "create", "join"]
+    },
+    {
+      "identifier": "urn:air:devvmarket.vercel.app:web:leaderboard",
+      "displayName": "Developer Rankings",
+      "description": "Monthly developer leaderboard ranked by missions completed and reviews. Top developers earn bonus contacts.",
+      "type": "text/html",
+      "url": "https://devvmarket.vercel.app/classement",
+      "representativeQueries": [
+        "Top developers in Africa",
+        "Developer rankings this month",
+        "Best rated developers"
+      ],
+      "capabilities": ["browse", "rank"]
+    },
+    {
+      "identifier": "urn:air:devvmarket.vercel.app:web:faq",
+      "displayName": "FAQ",
+      "description": "Frequently asked questions about Devmarket for clients and developers.",
+      "type": "text/html",
+      "url": "https://devvmarket.vercel.app/faq",
+      "representativeQueries": [
+        "How does Devmarket work?",
+        "Is posting a project free?",
+        "How do developer subscriptions work?"
+      ],
+      "capabilities": ["search", "browse"]
+    },
+    {
+      "identifier": "urn:air:devvmarket.vercel.app:web:llms",
+      "displayName": "LLMs.txt",
+      "description": "Machine-readable summary of the Devmarket platform for AI agents.",
+      "type": "text/plain",
+      "url": "https://devvmarket.vercel.app/llms.txt",
+      "representativeQueries": [
+        "What is Devmarket?",
+        "Devmarket platform summary"
+      ],
+      "capabilities": ["read"]
+    }
+  ]
+}

@@ -198,6 +198,7 @@ export default async function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
+        <link rel="ard" href={absoluteUrl("/.well-known/ard.json").toString()} />
         <NextIntlClientProvider locale={locale} messages={messages}>
           <Suspense fallback={<AuthStreamShellFallback>{children}</AuthStreamShellFallback>}>
             <AuthStreamShell>{children}</AuthStreamShell>

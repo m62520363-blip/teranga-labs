@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /auth/
+Disallow: /client
+Disallow: /conversations
+Disallow: /dashboard
+Disallow: /login
+Disallow: /notifications
+Disallow: /parametres
+Disallow: /signup
+
+Sitemap: https://devvmarket.vercel.app/sitemap.xml
+Agentmap: https://devvmarket.vercel.app/.well-known/ard.json

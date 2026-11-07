@@ -107,6 +107,11 @@ export async function middleware(request: NextRequest) {
       "Cache-Control",
       "public, s-maxage=60, stale-while-revalidate=300"
     );
+    // Agentic Resource Discovery (ARD) — discovery via Link header.
+    response.headers.set(
+      "Link",
+      '<https://devvmarket.vercel.app/.well-known/ard.json>; rel="ard"'
+    );
   }
 
   if (shouldLocalize) {
