@@ -8,7 +8,7 @@ values
   ('Boutique Kaloum Style', '+224620000001', 'Conakry', 'e_commerce', 130000, 'Boutique de prêt-à-porter à Conakry. Catalogue en ligne, commandes et livraisons.', 'ouvert', false, true, now() - interval '19 days'),
   ('École Les Savanes', '+22790000001', 'Niamey', 'vitrine', 150000, 'École primaire et collège à Niamey. Site institutionnel, inscription en ligne.', 'ouvert', false, true, now() - interval '19 days'),
   ('Boutique Petcha', '+24590000001', 'Bissau', 'e_commerce', 100000, 'Boutique de vêtements traditionnels à Bissau. Catalogue et commandes WhatsApp.', 'ouvert', false, true, now() - interval '19 days'),
-  ('Ébénisterie Sotuba', '+22370000001', 'Bamako', 'landing', 90000, 'Atelier d\'ébénisterie à Bamako. Landing page avec réalisations et devis WhatsApp.', 'ouvert', false, true, now() - interval '40 days'),
+  ('Ébénisterie Sotuba', '+22370000001', 'Bamako', 'landing', 90000, 'Atelier d''ébénisterie à Bamako. Landing page avec réalisations et devis WhatsApp.', 'ouvert', false, true, now() - interval '40 days'),
   ('Quincaillerie Ouaga Centre', '+22670000001', 'Ouagadougou', 'vitrine', 70000, 'Quincaillerie à Ouagadougou. Catalogue produits et formulaire de devis.', 'ouvert', false, true, now() - interval '40 days'),
   ('Ivorian Fashion', '+22507000001', 'Abidjan', 'e_commerce', 180000, 'Marque de prêt-à-porter à Abidjan. Boutique en ligne, tailles, livraison.', 'ouvert', false, true, now() - interval '40 days'),
   ('Resto Les Almadies', '+22177000001', 'Dakar', 'vitrine', 80000, 'Restaurant aux Almadies. Site vitrine, menu, photos, contact mobile.', 'ouvert', false, true, now() - interval '40 days'),
