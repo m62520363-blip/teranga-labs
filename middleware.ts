@@ -63,7 +63,7 @@ const PUBLIC_FIRST_SEGMENTS = new Set([
   "", "a-propos", "faq", "cookies", "mentions-legales", "conditions-utilisation",
   "politique-de-confidentialite", "plan-du-site", "contact", "support", "pays",
   "ville", "dev", "briefs", "brief", "classement", "agences", "login", "signup",
-  "orbit", "tokens", "abonnement", "verification", "poster",
+  "orbit", "tokens", "abonnement",
 ]);
 
 function isPublicPath(pathname: string): boolean {
