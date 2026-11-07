@@ -150,6 +150,7 @@ export function Hero({ developerAvatars = [] }: { developerAvatars?: DeveloperAv
             />
             <button
               type="submit"
+              aria-label={t("searchCta")}
               className="btn-shine inline-flex h-11 shrink-0 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-ink transition-[filter] outline-none hover:brightness-110 active:brightness-95 focus-visible:ring-2 focus-visible:ring-[#0b132b]/40 sm:px-6"
             >
               <span className="hidden sm:inline">{t("searchCta")}</span>

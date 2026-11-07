@@ -81,6 +81,7 @@ export function NewsletterForm() {
         <button
           type="submit"
           disabled={status === "loading" || status === "success"}
+          aria-label={t("cta")}
           className="btn-shine inline-flex h-11 shrink-0 items-center gap-1.5 rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground transition-[filter] outline-none hover:brightness-110 active:brightness-95 focus-visible:ring-2 focus-visible:ring-primary/50 disabled:cursor-not-allowed disabled:opacity-70"
         >
           {status === "loading" ? (

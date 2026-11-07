@@ -227,6 +227,7 @@ export function HeroLaptop() {
             width={1280}
             height={800}
             priority
+            sizes="(max-width: 768px) 100vw, 1280px"
             className="absolute inset-0 h-full w-full rounded-lg bg-black object-cover object-left-top"
           />
         </div>
