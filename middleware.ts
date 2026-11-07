@@ -101,6 +101,14 @@ export async function middleware(request: NextRequest) {
 
   applySecurityHeaders(response);
 
+  // Cache HTTP sur les pages publiques (TTFB).
+  if (publicRoute && request.method === "GET") {
+    response.headers.set(
+      "Cache-Control",
+      "public, s-maxage=60, stale-while-revalidate=300"
+    );
+  }
+
   if (shouldLocalize) {
     response.headers.set("x-pathname", pathname);
   }
