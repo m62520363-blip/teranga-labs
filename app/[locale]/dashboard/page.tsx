@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import {
-  DashboardContent,
-  type OrderItem,
-  type UnlockHistoryItem,
-} from "@/components/dashboard-content";
+import { DashboardContent, type OrderItem, type UnlockHistoryItem } from "@/components/dashboard-content";
 import type { DeveloperStats } from "@/components/dev/performance-panel";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient, isServiceConfigured } from "@/lib/supabase/admin";

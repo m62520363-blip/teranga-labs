@@ -70,6 +70,9 @@ export default async function DirectoryPageRoute({
           <h1 className="text-3xl font-semibold leading-tight tracking-tight">
             Trouve ton développeur
           </h1>
+          <p className="mt-2 text-muted-foreground">
+            Parcourez l&apos;annuaire des développeurs vérifiés, filtrez par spécialité, ville et technologies.
+          </p>
         </div>
 
         <DirectoryPage
