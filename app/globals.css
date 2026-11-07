@@ -867,8 +867,8 @@ body {
 }
 .hero-underline path {
   stroke-dasharray: 280;
-  stroke-dashoffset: 280;
-  animation: hero-underline-draw 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.75s forwards;
+  stroke-dashoffset: 0;
+  /* Animation supprimée : stroke-dashoffset n'est pas composé (Lighthouse). */
 }
 
 @media (prefers-reduced-motion: reduce) {
