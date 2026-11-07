@@ -3,29 +3,33 @@
 > Devmarket is a marketplace connecting clients and verified web developers across Africa. Clients post their web project briefs for free; developers subscribe to unlock contacts. No commission on projects.
 
 ## About
+
 - Name: Devmarket
-- URL: https://devvmarket.vercel.app
+- URL: [https://devvmarket.vercel.app](https://devvmarket.vercel.app)
 - Language: French (default), English
 - Region: Africa (54 countries)
-- Contact: contact@devmarket.com
+- Contact: [contact@devmarket.com](mailto:contact@devmarket.com)
 
 ## Key pages
-- Home: https://devvmarket.vercel.app/
-- Find a developer: https://devvmarket.vercel.app/dev
-- Post a project: https://devvmarket.vercel.app/poster
-- Briefs: https://devvmarket.vercel.app/briefs
-- Agencies: https://devvmarket.vercel.app/agences
-- Rankings: https://devvmarket.vercel.app/classement
-- Pricing: https://devvmarket.vercel.app/abonnement
-- FAQ: https://devvmarket.vercel.app/faq
-- About: https://devvmarket.vercel.app/a-propos
+
+- [Home](https://devvmarket.vercel.app/)
+- [Find a developer](https://devvmarket.vercel.app/dev)
+- [Post a project](https://devvmarket.vercel.app/poster)
+- [Briefs](https://devvmarket.vercel.app/briefs)
+- [Agencies](https://devvmarket.vercel.app/agences)
+- [Rankings](https://devvmarket.vercel.app/classement)
+- [Pricing](https://devvmarket.vercel.app/abonnement)
+- [FAQ](https://devvmarket.vercel.app/faq)
+- [About](https://devvmarket.vercel.app/a-propos)
 
 ## For developers
+
 - Free registration, automatic profile activation at 100%.
 - Subscription plans: free, Pro, Pro Max, Agency.
 - Monthly contact quotas with bonus contacts from rankings.
 
 ## For clients
+
 - Free project posting.
 - Optional boost for visibility (7/14/30 days).
 - Direct contact with developers, no commission.
