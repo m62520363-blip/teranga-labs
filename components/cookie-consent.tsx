@@ -31,10 +31,13 @@ function writeConsent(value: "all" | "essential") {
 }
 
 export function CookieConsent() {
-  const [visible, setVisible] = useState(false);
+  // Rendu initial visible (SSR) pour améliorer le LCP : le bandeau est
+  // peint dans le HTML initial, puis masqué côté client si le consentement
+  // existe déjà. Évite le délai d'hydratation de 4 s.
+  const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    if (!readConsent()) setVisible(true);
+    if (readConsent()) setVisible(false);
   }, []);
 
   if (!visible) return null;
