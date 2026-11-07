@@ -53,23 +53,35 @@ export async function POST(request: Request) {
   const eventType =
     typeof payload.event === "string"
       ? payload.event
-      : (request.headers.get("x-pulse-event") ?? "");
+      : (request.headers.get("x-pulse-event") ?? request.headers.get("flutterwave-event") ?? "");
 
-  if (eventType !== "successful.sale") {
+  const successEvent = provider.id === "flutterwave" ? "charge.completed" : "successful.sale";
+  if (eventType !== successEvent) {
     // failed / abandoned / license.* / tests : acquittés sans effet.
     return NextResponse.json({ ok: true, ignored: eventType || "unknown" });
   }
 
-  const sale = (payload.sale ?? null) as {
-    id?: string;
-    custom_metadata?: Record<string, string> | null;
-  } | null;
-  if (!sale?.id) {
+  // Extraction du sale selon le prestataire.
+  let saleId: string | null = null;
+  let saleMetadata: Record<string, string> | null = null;
+  if (provider.id === "flutterwave") {
+    const data = payload.data as { id?: number; meta?: Record<string, string> | null } | null;
+    saleId = data?.id ? String(data.id) : null;
+    saleMetadata = data?.meta ?? null;
+  } else {
+    const sale = (payload.sale ?? null) as {
+      id?: string;
+      custom_metadata?: Record<string, string> | null;
+    } | null;
+    saleId = sale?.id ?? null;
+    saleMetadata = sale?.custom_metadata ?? null;
+  }
+  if (!saleId) {
     return NextResponse.json({ error: "missing_sale" }, { status: 400 });
   }
 
   const { reference, kind } = provider.parseReference({
-    metadata: sale.custom_metadata ?? null,
+    metadata: saleMetadata,
   });
   if (!reference) {
     return NextResponse.json({ error: "missing_reference" }, { status: 400 });
@@ -80,12 +92,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "service_unavailable" }, { status: 503 });
   }
 
-  const deliveryId = request.headers.get("x-pulse-delivery-id") ?? null;
+  const deliveryId = request.headers.get("x-pulse-delivery-id") ?? request.headers.get("flutterwave-delivery-id") ?? null;
 
   // Source de vérité : l'API prestataire, jamais le corps du webhook seul.
   let confirmed;
   try {
-    confirmed = await provider.verifySale(sale.id);
+    confirmed = await provider.verifySale(saleId);
   } catch (err) {
     if (isPaymentApiError(err)) {
       log.error({

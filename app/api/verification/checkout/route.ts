@@ -180,6 +180,7 @@ export async function POST(request: Request) {
   try {
     const checkout = await provider.createCheckout({
       productSlug: getVerificationProductSlug(),
+      amount: price,
       email,
       fullName: dev.full_name ?? null,
       phone,

@@ -137,6 +137,7 @@ export async function POST(request: Request) {
     const slug = getTokenProductSlug(`boost-brief-${days}j`);
     const checkout = await provider.createCheckout({
       productSlug: slug,
+      amount: invoice.amount_fcfa,
       email,
       fullName: briefRow?.client_name ?? null,
       phone,

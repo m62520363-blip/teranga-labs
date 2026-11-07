@@ -141,6 +141,7 @@ export async function POST(request: Request) {
     const slug = getTokenProductSlug(`${planId}-${billingCycle}`);
     const checkout = await provider.createCheckout({
       productSlug: slug,
+      amount: invoice.amount_fcfa,
       email,
       fullName: profile?.full_name ?? null,
       phone,

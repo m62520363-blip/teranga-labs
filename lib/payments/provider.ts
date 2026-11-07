@@ -1,4 +1,6 @@
 import { chariowProvider } from "@/lib/payments/chariow-provider";
+import { flutterwaveProvider } from "@/lib/payments/flutterwave-provider";
+import { isFlutterwaveConfigured } from "@/lib/payments/flutterwave-config";
 
 /**
  * Contrat commun aux prestataires de paiement (H2 de la refonte).
@@ -18,7 +20,7 @@ import { chariowProvider } from "@/lib/payments/chariow-provider";
  *      BRUT (jamais de re-sérialisation avant comparaison).
  */
 
-export type PaymentProviderId = "chariow";
+export type PaymentProviderId = "chariow" | "flutterwave";
 
 export type PaymentAmount = {
   value: number;
@@ -27,6 +29,8 @@ export type PaymentAmount = {
 
 export type CheckoutParams = {
   productSlug: string;
+  /** Montant en FCFA (requis pour Flutterwave, ignoré par Chariow). */
+  amount?: number;
   /** Variante de prix du prestataire (montants exacts : missions…). */
   priceVariantId?: string | null;
   email: string;
@@ -95,5 +99,7 @@ export function isPaymentApiError(err: unknown): err is PaymentApiError {
  * d'environnement), les routes restent inchangées.
  */
 export function getPaymentProvider(): PaymentProvider {
+  // Flutterwave est préféré s'il est configuré (couverture pan-africaine).
+  if (isFlutterwaveConfigured()) return flutterwaveProvider;
   return chariowProvider;
 }

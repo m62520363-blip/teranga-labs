@@ -185,6 +185,7 @@ export async function POST(request: Request) {
   try {
     const checkout = await provider.createCheckout({
       productSlug: productId,
+      amount: mission.agreed_price_fcfa,
       priceVariantId,
       email,
       fullName: profile?.full_name ?? null,

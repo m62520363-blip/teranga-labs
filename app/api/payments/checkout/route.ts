@@ -190,6 +190,7 @@ export async function POST(request: Request) {
   try {
     const checkout = await provider.createCheckout({
       productSlug: getTokenProductSlug(pkg.id),
+      amount: pkg.price_fcfa,
       email,
       fullName: profile?.full_name ?? null,
       phone,
