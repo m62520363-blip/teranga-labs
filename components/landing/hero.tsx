@@ -95,7 +95,7 @@ export function Hero({ developerAvatars = [] }: { developerAvatars?: DeveloperAv
           </div>
 
           <h1
-            className="animate-rise mt-6 text-balance font-headings text-4xl font-extrabold leading-[1.06] tracking-tight text-white sm:text-5xl lg:text-[3.9rem]"
+            className="mt-6 text-balance font-headings text-4xl font-extrabold leading-[1.06] tracking-tight text-white sm:text-5xl lg:text-[3.9rem]"
             style={{ "--rise-delay": "180ms" } as React.CSSProperties}
           >
             {t("titleBefore")}{" "}
