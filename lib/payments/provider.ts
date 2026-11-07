@@ -1,6 +1,4 @@
 import { chariowProvider } from "@/lib/payments/chariow-provider";
-import { flutterwaveProvider } from "@/lib/payments/flutterwave-provider";
-import { isFlutterwaveConfigured } from "@/lib/payments/flutterwave-config";
 
 /**
  * Contrat commun aux prestataires de paiement (H2 de la refonte).
@@ -99,7 +97,5 @@ export function isPaymentApiError(err: unknown): err is PaymentApiError {
  * d'environnement), les routes restent inchangées.
  */
 export function getPaymentProvider(): PaymentProvider {
-  // Flutterwave est préféré s'il est configuré (couverture pan-africaine).
-  if (isFlutterwaveConfigured()) return flutterwaveProvider;
   return chariowProvider;
 }
