@@ -46,6 +46,9 @@ const SUBSCRIPTION_PRODUCT_IDS: Record<string, string> = {
   "pro_max-annual": "prd_6rk1aavk",
   "agency-monthly": "prd_y4rqrz15",
   "agency-annual": "prd_1whqdoui",
+  "boost-brief-7j": "prd_7cm1fru8",
+  "boost-brief-14j": "prd_crlc7fsd",
+  "boost-brief-30j": "prd_ypqkyvyh",
 };
 
 /** Slug/ID produit Chariow d'un pack (= id du pack en base, ou mapping Chariow). */
