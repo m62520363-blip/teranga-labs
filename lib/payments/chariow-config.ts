@@ -40,12 +40,12 @@ export function isPulseConfigured(): boolean {
 
 /** Mapping des formules d'abonnement vers les identifiants produit Chariow. */
 const SUBSCRIPTION_PRODUCT_IDS: Record<string, string> = {
-  "pro-monthly": "prd_1x16yy63",
-  "pro-annual": "prd_mykonw5r",
-  "pro_max-monthly": "prd_q2qkomqa",
-  "pro_max-annual": "prd_gr6tlm1t",
-  "agency-monthly": "prd_tyxrq7js",
-  "agency-annual": "prd_o1c5cobz",
+  "pro-monthly": "prd_jn4g8ufi",
+  "pro-annual": "prd_ldu3yr3m",
+  "pro_max-monthly": "prd_5b4g2vvq",
+  "pro_max-annual": "prd_6rk1aavk",
+  "agency-monthly": "prd_y4rqrz15",
+  "agency-annual": "prd_1whqdoui",
 };
 
 /** Slug/ID produit Chariow d'un pack (= id du pack en base, ou mapping Chariow). */
