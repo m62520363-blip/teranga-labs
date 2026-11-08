@@ -116,10 +116,15 @@ async function sendGreenApi(
   if (!res.ok) {
     let detail = "";
     try {
-      const json = await res.json();
-      detail = json?.message ?? JSON.stringify(json);
+      const text = await res.text();
+      try {
+        const json = JSON.parse(text);
+        detail = json?.message ?? JSON.stringify(json);
+      } catch {
+        detail = text;
+      }
     } catch {
-      detail = await res.text().catch(() => "");
+      detail = "";
     }
     throw new Error(`Green-API a refusé l'envoi (HTTP ${res.status}): ${detail}`);
   }
@@ -150,10 +155,15 @@ async function sendTwilio(
   if (!res.ok) {
     let detail = "";
     try {
-      const json = await res.json();
-      detail = json?.message ?? json?.detail ?? JSON.stringify(json);
+      const text = await res.text();
+      try {
+        const json = JSON.parse(text);
+        detail = json?.message ?? json?.detail ?? JSON.stringify(json);
+      } catch {
+        detail = text;
+      }
     } catch {
-      detail = await res.text().catch(() => "");
+      detail = "";
     }
     throw new Error(`Twilio a refusé l'envoi (HTTP ${res.status}): ${detail}`);
   }
@@ -185,10 +195,15 @@ async function sendResend(
   if (!res.ok) {
     let detail = "";
     try {
-      const json = await res.json();
-      detail = json?.message ?? json?.name ?? JSON.stringify(json);
+      const text = await res.text();
+      try {
+        const json = JSON.parse(text);
+        detail = json?.message ?? json?.name ?? JSON.stringify(json);
+      } catch {
+        detail = text;
+      }
     } catch {
-      detail = await res.text().catch(() => "");
+      detail = "";
     }
     throw new Error(`Resend a refusé l'envoi (HTTP ${res.status}): ${detail}`);
   }
