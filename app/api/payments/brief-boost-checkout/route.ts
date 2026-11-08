@@ -170,15 +170,14 @@ export async function POST(request: Request) {
       provider: provider.id,
     });
   } catch (err) {
-    if (isPaymentApiError(err)) {
-      log.error({
-        action: "brief_boost.checkout.provider_error",
-        provider: provider.id,
-        payment_id: invoice.payment_id,
-        status: err.status,
-        message: err.message,
-      });
-    }
+    log.error({
+      action: "brief_boost.checkout.provider_error",
+      provider: provider.id,
+      payment_id: invoice.payment_id,
+      status: isPaymentApiError(err) ? err.status : 0,
+      message: err instanceof Error ? err.message : String(err),
+      slug: slug,
+    });
     return NextResponse.json({
       mode: "invoice_pending",
       paymentId: invoice.payment_id,
