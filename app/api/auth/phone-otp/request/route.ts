@@ -12,15 +12,13 @@ function digitsOnly(value: string): string {
 }
 
 function phonesMatch(a: string | null | undefined, b: string): boolean {
-  if (!a) return false;
+  if (!a || !b) return false;
   const da = digitsOnly(a);
   const db = digitsOnly(b);
   if (!da || !db) return false;
-  if (da === db) return true;
-  if (da.length >= 9 && db.length >= 9 && da.slice(-9) === db.slice(-9)) {
-    return true;
-  }
-  return false;
+  // Comparaison stricte : pas de comparaison partielle (les 9 derniers
+  // chiffres) qui confondrait des numéros de pays différents.
+  return da === db;
 }
 
 /**
@@ -73,18 +71,27 @@ export async function POST(request: Request) {
   let matchedEmail: string | null = null;
 
   try {
-    const { data: listData } = await admin.auth.admin.listUsers({
-      perPage: 1000,
-    });
-    const users = listData?.users ?? [];
-    for (const u of users) {
-      const metaPhone = String(
-        (u.user_metadata as Record<string, unknown> | undefined)?.whatsapp ?? ""
-      );
-      if (phonesMatch(u.phone, phone) || phonesMatch(metaPhone, phone)) {
-        matchedUserId = u.id;
-        matchedEmail = u.email ?? null;
-        break;
+    // Recherche ciblée par téléphone (évite listUsers(perPage:1000)).
+    const { data: foundUserData } = await admin.rpc("find_user_by_phone" as never, { p_phone: `+${digitsOnly(phone)}` } as never);
+    const foundUser = foundUserData as { id?: string; email?: string } | { id?: string; email?: string }[] | null;
+    const u = (Array.isArray(foundUser) ? foundUser[0] : foundUser) as { id?: string; email?: string } | null;
+    if (u) {
+      matchedUserId = u.id ?? null;
+      matchedEmail = u.email ?? null;
+    }
+
+    // Fallback : recherche dans les métadonnées (whatsapp).
+    if (!matchedUserId) {
+      const { data: listData } = await admin.auth.admin.listUsers({ perPage: 1000 });
+      for (const uu of (listData?.users ?? [])) {
+        const metaPhone = String(
+          (uu.user_metadata as Record<string, unknown> | undefined)?.whatsapp ?? ""
+        );
+        if (phonesMatch(metaPhone, phone)) {
+          matchedUserId = uu.id;
+          matchedEmail = uu.email ?? null;
+          break;
+        }
       }
     }
 
@@ -98,8 +105,8 @@ export async function POST(request: Request) {
       );
       if (foundDev) {
         matchedUserId = foundDev.id;
-        const foundAuth = users.find((u) => u.id === foundDev.id);
-        matchedEmail = foundAuth?.email ?? null;
+        const { data: authUser } = await admin.auth.admin.getUserById(foundDev.id);
+        matchedEmail = authUser?.user?.email ?? null;
       }
     }
   } catch (err) {

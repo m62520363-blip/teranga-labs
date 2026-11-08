@@ -121,7 +121,7 @@ export default async function DeveloperProfilePage({
 
   const name = profile.full_name ?? "Développeur Devmarket";
   const roundAverage = Math.round(profile.review_average);
-  const shareUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/dev/${profile.username ?? username}`;
+  const shareUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? "https://devvmarket.vercel.app"}/dev/${profile.username ?? username}`;
   const availability = availabilityInfo(profile.availability);
   const rate =
     profile.rate_min_fcfa != null && profile.rate_max_fcfa != null

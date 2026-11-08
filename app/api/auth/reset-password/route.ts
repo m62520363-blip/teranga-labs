@@ -3,6 +3,7 @@ import { z } from "zod";
 import { isServiceConfigured } from "@/lib/supabase/admin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { log } from "@/lib/log";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -50,6 +51,13 @@ export async function POST(request: Request) {
 
   const { email, code, password } = parsed.data;
   const target = email.trim().toLowerCase();
+  const rl = rateLimit(`reset-password:${clientIp(request)}:${target}`, 5);
+  if (!rl.ok) {
+    return NextResponse.json(
+      { code: "RATE_LIMITED", message: "Trop de demandes. Réessayez dans un instant." },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSeconds) } }
+    );
+  }
 
   const admin = createAdminClient();
   if (!admin) {
@@ -60,12 +68,12 @@ export async function POST(request: Request) {
   }
 
   // Vérification du code OTP.
-  const { data: verifyData, error: verifyError } = await admin.rpc("verify_otp", {
+  const { data: verifyData, error: verifyError } = await admin.rpc("verify_otp_server" as never, {
     p_channel: "email",
     p_target: target,
     p_code: code,
     p_purpose: "password_reset",
-  });
+  } as never);
 
   if (verifyError) {
     log.error({ action: "auth.reset.verify_otp", message: verifyError.message });
@@ -90,8 +98,8 @@ export async function POST(request: Request) {
   // Recherche de l'utilisateur par email.
   let userId: string | null = null;
   try {
-    const { data } = await admin.auth.admin.listUsers({ perPage: 1000 });
-    const found = data?.users?.find((u) => u.email?.toLowerCase() === target);
+    const { data: foundData } = await admin.rpc("find_user_by_email" as never, { p_email: target } as never);
+    const found = (Array.isArray(foundData) ? foundData[0] : foundData) as { id?: string } | null;
     userId = found?.id ?? null;
   } catch {
     userId = null;

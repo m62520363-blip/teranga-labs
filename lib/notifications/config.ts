@@ -19,7 +19,7 @@ export type NotificationsConfig = {
 export function getNotificationsConfig(): NotificationsConfig {
   const provider = process.env.WHATSAPP_PROVIDER?.toLowerCase();
   return {
-    origin: process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ?? "http://localhost:3000",
+    origin: process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ?? "https://devvmarket.vercel.app",
     webhookUrl: process.env.NOTIFICATION_WEBHOOK_URL ?? "",
     whatsappProvider:
       provider === "greenapi"

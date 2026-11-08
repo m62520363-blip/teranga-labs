@@ -15,15 +15,14 @@ function digitsOnly(value: string): string {
 }
 
 function phonesMatch(a: string | null | undefined, b: string): boolean {
-  if (!a) return false;
+  if (!a || !b) return false;
   const da = digitsOnly(a);
   const db = digitsOnly(b);
   if (!da || !db) return false;
-  if (da === db) return true;
-  if (da.length >= 9 && db.length >= 9 && da.slice(-9) === db.slice(-9)) {
-    return true;
-  }
-  return false;
+  // Comparaison stricte sur le numéro complet normalisé : pas de
+  // comparaison partielle (les 9 derniers chiffres) qui confondrait
+  // des numéros de pays différents.
+  return da === db;
 }
 
 /**
@@ -71,12 +70,12 @@ export async function POST(request: Request) {
     );
   }
 
-  const { data: verifyData, error: verifyErr } = await admin.rpc("verify_otp", {
+  const { data: verifyData, error: verifyErr } = await admin.rpc("verify_otp_server" as never, {
     p_channel: "sms",
     p_target: targetKey,
     p_code: parsed.data.code,
     p_purpose: "phone_login",
-  });
+  } as never);
 
   if (verifyErr) {
     return NextResponse.json(
@@ -101,17 +100,22 @@ export async function POST(request: Request) {
 
   // Retrouve l'email de l'utilisateur pour émettre un lien de session
   let matchedEmail: string | null = null;
-  const { data: listData } = await admin.auth.admin.listUsers({
-    perPage: 1000,
-  });
-  const users = listData?.users ?? [];
-  for (const u of users) {
-    const metaPhone = String(
-      (u.user_metadata as Record<string, unknown> | undefined)?.whatsapp ?? ""
-    );
-    if (phonesMatch(u.phone, phone) || phonesMatch(metaPhone, phone)) {
-      matchedEmail = u.email ?? null;
-      break;
+  const foundUserData = await admin.rpc("find_user_by_phone" as never, { p_phone: targetKey } as never);
+  const foundUser = (foundUserData as { data?: unknown }).data;
+  const u = (Array.isArray(foundUser) ? foundUser[0] : foundUser) as { id?: string; email?: string } | null;
+  if (u) matchedEmail = u?.email ?? null;
+
+  // Fallback : recherche dans les métadonnées (whatsapp).
+  if (!matchedEmail) {
+    const { data: listData } = await admin.auth.admin.listUsers({ perPage: 1000 });
+    for (const uu of (listData?.users ?? [])) {
+      const metaPhone = String(
+        (uu.user_metadata as Record<string, unknown> | undefined)?.whatsapp ?? ""
+      );
+      if (phonesMatch(metaPhone, phone)) {
+        matchedEmail = uu.email ?? null;
+        break;
+      }
     }
   }
 
@@ -122,8 +126,8 @@ export async function POST(request: Request) {
       .not("whatsapp", "is", null);
     const foundDev = (devs ?? []).find((d) => phonesMatch(d.whatsapp, phone));
     if (foundDev) {
-      const foundAuth = users.find((u) => u.id === foundDev.id);
-      matchedEmail = foundAuth?.email ?? null;
+      const { data: authUser } = await admin.auth.admin.getUserById(foundDev.id);
+      matchedEmail = authUser?.user?.email ?? null;
     }
   }
 

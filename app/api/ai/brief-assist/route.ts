@@ -53,6 +53,12 @@ export async function POST(request: Request) {
       { status: 400 }
     );
   }
+  if (description.length > 2000) {
+    return NextResponse.json(
+      { code: "BAD_REQUEST", message: "Description trop longue (2000 caractères max)." },
+      { status: 400 }
+    );
+  }
 
   const rawMode = typeof body.mode === "string" ? (body.mode as AssistMode) : "improve";
   const mode: AssistMode = VALID_MODES.has(rawMode) ? rawMode : "improve";

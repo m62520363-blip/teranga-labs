@@ -44,7 +44,7 @@ describe("briefSchema", () => {
   it("rejette un type de projet inconnu", () => {
     const result = briefSchema.safeParse({
       ...validBrief,
-      project_type: "mobile",
+      project_type: "inconnu",
     });
     expect(result.success).toBe(false);
   });

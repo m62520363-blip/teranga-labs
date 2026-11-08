@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { apiRequireUser } from "@/lib/auth/guards";
 import { createAdminClient, isServiceConfigured } from "@/lib/supabase/admin";
+import { rateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -18,6 +19,13 @@ export async function POST(request: Request) {
   const guard = await apiRequireUser();
   if (guard.response) return guard.response;
   const user = guard.user!;
+  const rl = rateLimit(`profile-avatar:${user.id}`, 10);
+  if (!rl.ok) {
+    return NextResponse.json(
+      { code: "RATE_LIMITED", message: "Trop de demandes. Réessayez dans un instant." },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSeconds) } }
+    );
+  }
 
   if (!isServiceConfigured()) {
     return NextResponse.json(

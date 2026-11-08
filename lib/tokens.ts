@@ -4,6 +4,15 @@ export const PROJECT_TYPES = [
   "landing page",
   "app web",
   "refonte",
+  "design",
+  "marketing",
+  "seo",
+  "ia",
+  "mobile",
+  "saas",
+  "api",
+  "automatisation",
+  "autre",
 ] as const;
 
 export const PROJECT_TYPE_LABELS: Record<string, string> = {
@@ -12,6 +21,15 @@ export const PROJECT_TYPE_LABELS: Record<string, string> = {
   "landing page": "Landing page",
   "app web": "App web",
   refonte: "Refonte",
+  design: "Design",
+  marketing: "Marketing",
+  seo: "SEO",
+  ia: "IA",
+  mobile: "Application mobile",
+  saas: "SaaS",
+  api: "API",
+  automatisation: "Automatisation",
+  autre: "Autre",
 };
 
 /**

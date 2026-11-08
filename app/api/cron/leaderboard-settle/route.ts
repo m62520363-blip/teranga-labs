@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { timingSafeEqual } from "node:crypto";
 import { createAdminClient, isServiceConfigured } from "@/lib/supabase/admin";
+import { log } from "@/lib/log";
 
 export const dynamic = "force-dynamic";
 
@@ -55,7 +56,7 @@ export async function GET(request: Request) {
 
   if (error) {
     // Message Postgres en interne uniquement (pas de fuite au client).
-    console.error("Leaderboard settle error:", error);
+    log.error({ action: "cron.leaderboard_settle", message: error.message });
     return NextResponse.json({ error: "SETTLE_FAILED" }, { status: 500 });
   }
 

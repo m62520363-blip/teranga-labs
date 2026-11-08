@@ -49,8 +49,8 @@ describe("waLink", () => {
 });
 
 describe("constants", () => {
-  it("a 5 types de projet avec leurs libellés", () => {
-    expect(PROJECT_TYPES).toHaveLength(5);
+  it("a 14 types de projet avec leurs libellés", () => {
+    expect(PROJECT_TYPES).toHaveLength(14);
     expect(PROJECT_TYPES).toContain("refonte");
     for (const type of PROJECT_TYPES) {
       expect(PROJECT_TYPE_LABELS[type]).toBeTruthy();

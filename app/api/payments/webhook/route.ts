@@ -253,6 +253,9 @@ export async function POST(request: Request) {
     if (error || !mission) {
       return NextResponse.json({ error: "mission_not_found" }, { status: 404 });
     }
+    if (mission.status === "payment_confirmed" || mission.status === "completed") {
+      return NextResponse.json({ ok: true, confirmed: false, alreadyPaid: true });
+    }
     if (!provider.amountMatches(confirmed, mission.agreed_price_fcfa)) {
       return NextResponse.json({ error: "amount_mismatch" }, { status: 400 });
     }
