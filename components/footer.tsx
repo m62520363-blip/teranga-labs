@@ -1,6 +1,6 @@
 ﻿import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { BRAND, LEGAL_PUBLISHER } from "@/components/landing/content";
+import { BRAND } from "@/components/landing/content";
 import { ImageLogoMark } from "@/components/logo";
 import { NewsletterForm } from "@/components/newsletter-form";
 import { SocialLinks } from "@/components/social-links";
@@ -144,7 +144,7 @@ export function Footer() {
             </ul>
           </div>
           <p className="mt-4 text-xs text-muted-foreground">
-            {t("publishedBy")} {LEGAL_PUBLISHER}. {t("location")}
+            {t("location")}
           </p>
         </div>
       </div>
