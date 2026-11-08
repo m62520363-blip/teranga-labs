@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { createAdminClient, isServiceConfigured } from "@/lib/supabase/admin";
 
 export const runtime = "nodejs";
@@ -61,6 +62,14 @@ export async function POST(request: Request) {
 
   const phone = parsed.data.phone.trim();
   const targetKey = `+${digitsOnly(phone)}`;
+
+  const rl = rateLimit(`phone-otp-verify:${clientIp(request)}:${parsed.data.phone}`, 10);
+  if (!rl.ok) {
+    return NextResponse.json(
+      { code: "RATE_LIMITED", message: "Trop de demandes. Réessayez dans un instant." },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSeconds) } }
+    );
+  }
 
   const admin = createAdminClient();
   if (!admin) {

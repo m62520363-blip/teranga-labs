@@ -3,6 +3,7 @@ import { createAdminClient, isServiceConfigured } from "@/lib/supabase/admin";
 import { phoneOtpSchema } from "@/lib/validations";
 import { deliverMessage } from "@/lib/notifications/providers";
 import { log } from "@/lib/log";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -58,6 +59,14 @@ export async function POST(request: Request) {
 
   const phone = parsed.data.phone.trim();
   const targetKey = `+${digitsOnly(phone)}`;
+
+  const rl = rateLimit(`phone-otp-request:${clientIp(request)}:${phone}`, 5);
+  if (!rl.ok) {
+    return NextResponse.json(
+      { code: "RATE_LIMITED", message: "Trop de demandes. Réessayez dans un instant." },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSeconds) } }
+    );
+  }
 
   const admin = createAdminClient();
   if (!admin) {
