@@ -114,7 +114,14 @@ async function sendGreenApi(
     signal: AbortSignal.timeout(10000),
   });
   if (!res.ok) {
-    throw new Error(`Green-API a refusé l'envoi (HTTP ${res.status}).`);
+    let detail = "";
+    try {
+      const json = await res.json();
+      detail = json?.message ?? JSON.stringify(json);
+    } catch {
+      detail = await res.text().catch(() => "");
+    }
+    throw new Error(`Green-API a refusé l'envoi (HTTP ${res.status}): ${detail}`);
   }
 }
 
@@ -141,7 +148,14 @@ async function sendTwilio(
     signal: AbortSignal.timeout(10000),
   });
   if (!res.ok) {
-    throw new Error(`Twilio a refusé l'envoi (HTTP ${res.status}).`);
+    let detail = "";
+    try {
+      const json = await res.json();
+      detail = json?.message ?? json?.detail ?? JSON.stringify(json);
+    } catch {
+      detail = await res.text().catch(() => "");
+    }
+    throw new Error(`Twilio a refusé l'envoi (HTTP ${res.status}): ${detail}`);
   }
 }
 
@@ -169,6 +183,13 @@ async function sendResend(
     signal: AbortSignal.timeout(10000),
   });
   if (!res.ok) {
-    throw new Error(`Resend a refusé l'envoi (HTTP ${res.status}).`);
+    let detail = "";
+    try {
+      const json = await res.json();
+      detail = json?.message ?? json?.name ?? JSON.stringify(json);
+    } catch {
+      detail = await res.text().catch(() => "");
+    }
+    throw new Error(`Resend a refusé l'envoi (HTTP ${res.status}): ${detail}`);
   }
 }
