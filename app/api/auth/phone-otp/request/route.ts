@@ -136,12 +136,12 @@ export async function POST(request: Request) {
     );
   }
 
-  const { data: otpData, error: otpErr } = await admin.rpc("request_otp", {
+  const { data: otpData, error: otpErr } = await admin.rpc("request_otp_server" as never, {
     p_channel: "sms",
     p_target: targetKey,
     p_purpose: "phone_login",
     p_user_id: matchedUserId,
-  });
+  } as never);
 
   if (otpErr) {
     const lots = otpErr.code === "TLOTS";
