@@ -49,10 +49,10 @@ export async function GET(request: Request) {
     year -= 1;
   }
 
-  const { data, error } = await supabase.rpc("leaderboard_settle_month", {
+  const { data, error } = await supabase.rpc("leaderboard_settle_month_server" as never, {
     p_year: year,
     p_month: month,
-  });
+  } as never);
 
   if (error) {
     // Message Postgres en interne uniquement (pas de fuite au client).
