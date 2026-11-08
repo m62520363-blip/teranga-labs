@@ -16,6 +16,7 @@ import {
   Zap,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { TypingIndicator } from "@/components/chat/typing-indicator";
 import { formatFCFA, formatDateTime, formatRelativeTime } from "@/lib/formatting";
 import { missionErrorMessage } from "@/lib/mission-labels";
 import { AudioMessage, formatDuration } from "@/components/chat/audio-message";
@@ -108,6 +109,7 @@ export function MessageThread({
     online: boolean;
     lastSeenAt: string | null;
   } | null>(null);
+  const [typingUsers, setTypingUsers] = React.useState<string[]>([]);
   const [editingId, setEditingId] = React.useState<string | null>(null);
   const [editDraft, setEditDraft] = React.useState("");
   const [savingEdit, setSavingEdit] = React.useState(false);
@@ -248,7 +250,9 @@ export function MessageThread({
 
   React.useEffect(() => {
     const supabase = createClient();
-    const channel = supabase.channel(`room:${conversationId}-${channelKey}`);
+    const channel = supabase.channel(`room:${conversationId}-${channelKey}`, {
+      config: { presence: { key: userId } },
+    });
     try {
       channel
         .on(
@@ -279,7 +283,22 @@ export function MessageThread({
             setMessages((prev) => prev.map((m) => (m.id === row.id ? row : m)));
           }
         )
-        .subscribe();
+        .on("presence", { event: "sync" }, () => {
+          const state = channel.presenceState();
+          const typing: string[] = [];
+          for (const [key, presences] of Object.entries(state)) {
+            if (key === userId) continue;
+            for (const p of presences as { typing?: boolean }[]) {
+              if (p.typing) typing.push(otherName);
+            }
+          }
+          setTypingUsers(typing);
+        })
+        .subscribe(async (status) => {
+          if (status === "SUBSCRIBED") {
+            await channel.track({ typing: false, name: "" });
+          }
+        });
     } catch {
       // Realtime indisponible : les messages restent accessibles via le fetch initial.
     }
@@ -287,7 +306,7 @@ export function MessageThread({
     return () => {
       void supabase.removeChannel(channel);
     };
-  }, [conversationId, channelKey]);
+  }, [conversationId, channelKey, userId]);
 
   const sendMessage = async () => {
     const content = draft.trim();
@@ -871,6 +890,8 @@ export function MessageThread({
           );
         })}
 
+        <TypingIndicator names={typingUsers} />
+
         {awardedOffer ? (
           <div className="rounded-2xl border border-success/30 bg-success-soft p-4 text-sm text-success">
             <p className="font-semibold">Projet attribué</p>
@@ -989,7 +1010,15 @@ export function MessageThread({
                 <Textarea
                   rows={1}
                   value={draft}
-                  onChange={(e) => setDraft(e.target.value)}
+                  onChange={(e) => {
+                    setDraft(e.target.value);
+                    // Broadcast typing status via presence.
+                    const supabase = createClient();
+                    const ch = supabase.channel(`room:${conversationId}-${channelKey}`, {
+                      config: { presence: { key: userId } },
+                    });
+                    void ch.track({ typing: e.target.value.length > 0 });
+                  }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" && !e.shiftKey) {
                       e.preventDefault();
