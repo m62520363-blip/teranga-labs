@@ -9,6 +9,7 @@ import "./globals.css";
 import { Suspense } from "react";
 import { Analytics } from "@vercel/analytics/react";
 import { AuthStreamShell, AuthStreamShellFallback } from "@/components/auth-stream-shell";
+import { PWARegister } from "@/components/pwa-register";
 
 import { absoluteUrl, buildAlternates } from "@/lib/utils";
 import { routing } from "@/i18n/routing";
@@ -205,6 +206,7 @@ export default async function RootLayout({
           </Suspense>
         </NextIntlClientProvider>
         <Analytics />
+        <PWARegister />
       </body>
     </html>
   );
