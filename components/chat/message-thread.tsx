@@ -306,7 +306,7 @@ export function MessageThread({
     return () => {
       void supabase.removeChannel(channel);
     };
-  }, [conversationId, channelKey, userId]);
+  }, [conversationId, channelKey, userId, otherName]);
 
   const sendMessage = async () => {
     const content = draft.trim();
