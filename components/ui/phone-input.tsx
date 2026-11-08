@@ -4,7 +4,7 @@ import * as React from "react";
 import {
   parseWorldDial,
   WORLD_DEFAULT_DIAL,
-  WORLD_PHONE_COUNTRIES,
+  AFRICA_PHONE_COUNTRIES,
 } from "@/lib/world-countries";
 import { Flag } from "@/components/ui/Flag";
 import { Input } from "@/components/ui/input";
@@ -62,12 +62,14 @@ export function PhoneInput({
   const fieldClass = fieldClassName ?? className;
   const { dial, national } = React.useMemo(() => parsePhone(value), [value]);
   const country =
-    WORLD_PHONE_COUNTRIES.find((c) => c.dial === dial) ??
-    WORLD_PHONE_COUNTRIES.find((c) => c.dial === WORLD_DEFAULT_DIAL)!;
+    AFRICA_PHONE_COUNTRIES.find((c) => c.dial === dial) ??
+    AFRICA_PHONE_COUNTRIES.find((c) => c.dial === WORLD_DEFAULT_DIAL)!;
 
   const emit = (nextDial: string, nextNational: string) => {
     const digits = nextNational.replace(/\D/g, "");
-    onChange(digits ? `${nextDial}${digits}` : "");
+    // Conserver l'indicatif même sans numéro national, sinon le sélecteur
+    // revient à l'indicatif par défaut (Sénégal) quand on change de pays.
+    onChange(digits ? `${nextDial}${digits}` : nextDial);
   };
 
   return (
@@ -86,7 +88,7 @@ export function PhoneInput({
           <span className="tabular-nums">{dial}</span>
         </SelectTrigger>
         <SelectContent align="start" className="max-h-80">
-          {WORLD_PHONE_COUNTRIES.map((c) => (
+          {AFRICA_PHONE_COUNTRIES.map((c) => (
             <SelectItem key={c.dial} value={c.dial}>
               <span className="flex items-center gap-2">
                 <Flag countryCode={c.iso2} size={16} />

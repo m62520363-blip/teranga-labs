@@ -319,6 +319,18 @@ export const WORLD_PHONE_COUNTRIES: WorldCountry[] = (() => {
   return out;
 })();
 
+/** Indicatifs téléphoniques — AFRIQUE uniquement (54 pays), dédupliqués par dial. */
+export const AFRICA_PHONE_COUNTRIES: WorldCountry[] = (() => {
+  const seen = new Set<string>();
+  const out: WorldCountry[] = [];
+  for (const c of AFRICA_COUNTRIES) {
+    if (seen.has(c.dial)) continue;
+    seen.add(c.dial);
+    out.push(c);
+  }
+  return out.sort((a, b) => a.nameFr.localeCompare(b.nameFr, "fr"));
+})();
+
 /** Dials triés par longueur décroissante (parse « plus long d'abord »). */
 const DIALS_BY_LENGTH: string[] = [...new Set(WORLD_COUNTRIES.map((c) => c.dial))].sort(
   (a, b) => b.length - a.length
