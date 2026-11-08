@@ -186,6 +186,7 @@ export async function POST(request: Request) {
       amountFcfa: invoice.amount_fcfa,
       days: invoice.days,
       message: `Demande de mise en avant ${invoice.invoice_number} (${invoice.amount_fcfa.toLocaleString("fr-FR")} FCFA pour ${invoice.days} jours) enregistrée.`,
+      _debug: err instanceof Error ? err.message : String(err),
     });
   }
 }
