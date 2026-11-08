@@ -360,18 +360,22 @@ export function LatestProjectsClient({
                   </span>
                   {st ? (
                     <>
-                      <span className="inline-flex items-center gap-1">
-                        <MessageSquare className="size-3.5" aria-hidden="true" />
-                        {isEn
-                          ? `${st.offers} offer${st.offers === 1 ? "" : "s"}`
-                          : `${st.offers} offre${st.offers > 1 ? "s" : ""}`}
-                      </span>
-                      <span className="inline-flex items-center gap-1">
-                        <Eye className="size-3.5" aria-hidden="true" />
-                        {isEn
-                          ? `${st.views} view${st.views === 1 ? "" : "s"}`
-                          : `${st.views} vue${st.views > 1 ? "s" : ""}`}
-                      </span>
+                      {st.offers > 0 ? (
+                        <span className="inline-flex items-center gap-1">
+                          <MessageSquare className="size-3.5" aria-hidden="true" />
+                          {isEn
+                            ? `${st.offers} offer${st.offers === 1 ? "" : "s"}`
+                            : `${st.offers} offre${st.offers > 1 ? "s" : ""}`}
+                        </span>
+                      ) : null}
+                      {st.views > 0 ? (
+                        <span className="inline-flex items-center gap-1">
+                          <Eye className="size-3.5" aria-hidden="true" />
+                          {isEn
+                            ? `${st.views} view${st.views === 1 ? "" : "s"}`
+                            : `${st.views} vue${st.views > 1 ? "s" : ""}`}
+                        </span>
+                      ) : null}
                     </>
                   ) : null}
                   <Link

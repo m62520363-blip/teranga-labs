@@ -90,7 +90,9 @@ export function DirectoryPage({
     async () => {
       setLoading(true);
       const { data, error } = await supabase.rpc("list_approved_developers", buildParams(0));
-      const rows = ((data ?? []) as ApprovedDeveloper[]).filter((d) => Boolean(d?.id));
+      const rows = ((data ?? []) as ApprovedDeveloper[]).filter(
+      (d) => Boolean(d?.id) && (d.full_name ?? "").toLowerCase() !== "compte test"
+    );
       setItems(rows);
       setOffset(rows.length);
       setHasMore(!error && rows.length === PAGE_SIZE);
@@ -103,7 +105,9 @@ export function DirectoryPage({
     if (loading || !hasMore) return;
     setLoading(true);
     const { data, error } = await supabase.rpc("list_approved_developers", buildParams(offset));
-    const rows = ((data ?? []) as ApprovedDeveloper[]).filter((d) => Boolean(d?.id));
+    const rows = ((data ?? []) as ApprovedDeveloper[]).filter(
+      (d) => Boolean(d?.id) && (d.full_name ?? "").toLowerCase() !== "compte test"
+    );
     setItems((prev) => [...prev, ...rows]);
     setOffset((prev) => prev + rows.length);
     setHasMore(!error && rows.length === PAGE_SIZE);

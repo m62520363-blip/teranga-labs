@@ -9,10 +9,10 @@ export const BRAND = "Devmarket";
 export const LEGAL_PUBLISHER = "Walty Group-SUARL";
 
 export const META = {
-  title: "Le marketplace des projets web de l'Afrique | Devmarket",
+  title: "Le marketplace des projets web de l'Afrique",
   description:
-    "Devmarket, le marketplace des projets web de l'Afrique. Le client publie son brief pour 1 Token, le développeur débloque le contact avec 1 Token et tout se règle en direct. Aucune commission.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://teranga-labs.vercel.app",
+    "Devmarket, le marketplace des projets web de l'Afrique. Le client publie son brief gratuitement, le développeur débloque le contact et tout se règle en direct. Aucune commission.",
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://devvmarket.vercel.app",
   keywords:
     "marketplace Afrique, développeurs Sénégal, développeurs Côte d'Ivoire, freelance Dakar, Abidjan, Bamako, brief web, trouver des clients web, acheter des tokens, classement développeurs, site e-commerce Dakar, Devmarket",
 };
