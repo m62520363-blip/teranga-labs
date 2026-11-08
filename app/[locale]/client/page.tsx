@@ -22,6 +22,8 @@ import {
   type ClientProjectItem,
 } from "@/components/client-projects";
 import { cn } from "cn";
+import { OnboardingModal } from "@/components/onboarding/onboarding-modal";
+import { CLIENT_ONBOARDING_STEPS } from "@/components/onboarding/client-steps";
 
 export const metadata: Metadata = {
   title: "Mon espace client",
@@ -512,10 +514,17 @@ export default async function ClientPage() {
           </>
         )}
       </div>
+      <OnboardingModal
+        storageKey="onboarding-client-v1"
+        steps={CLIENT_ONBOARDING_STEPS}
+        welcomeTitle="Bienvenue dans votre espace client !"
+        welcomeSubtitle="Voici comment fonctionne Devmarket pour vous."
+      />
     </div>
   );
 }
 
+// Onboarding modal is added via a separate client component wrapper
 function StatCard({
   icon,
   value,

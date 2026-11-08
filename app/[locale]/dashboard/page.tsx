@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { DashboardContent, type OrderItem, type UnlockHistoryItem } from "@/components/dashboard-content";
+import { OnboardingModal } from "@/components/onboarding/onboarding-modal";
+import { DEVELOPER_ONBOARDING_STEPS } from "@/components/onboarding/developer-steps";
 import type { DeveloperStats } from "@/components/dev/performance-panel";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient, isServiceConfigured } from "@/lib/supabase/admin";
@@ -264,7 +266,8 @@ export default async function DashboardPage({
     welcomeRow?.gift_consumed === false;
 
   return (
-    <DashboardContent
+    <>
+      <DashboardContent
       userId={user.id}
       profile={profile}
       quota={quota}
@@ -290,5 +293,12 @@ export default async function DashboardPage({
       welcomeContactFree={welcomeContactFree}
       initialTab={(tab ?? "") as never}
     />
+      <OnboardingModal
+        storageKey="onboarding-developer-v1"
+        steps={DEVELOPER_ONBOARDING_STEPS}
+        welcomeTitle="Bienvenue dans votre espace développeur !"
+        welcomeSubtitle="Voici comment fonctionne Devmarket pour vous."
+      />
+    </>
   );
 }
