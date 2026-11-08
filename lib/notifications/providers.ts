@@ -139,8 +139,8 @@ async function sendTwilio(
 ): Promise<void> {
   const url = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
   const form = new URLSearchParams();
-  form.set("From", `whatsapp:${normalizeWhatsApp(from)}`);
-  form.set("To", `whatsapp:${normalizeWhatsApp(to)}`);
+  form.set("From", `whatsapp:+${normalizeWhatsApp(from)}`);
+  form.set("To", `whatsapp:+${normalizeWhatsApp(to)}`);
   form.set("Body", message);
 
   const res = await fetch(url, {
