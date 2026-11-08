@@ -110,11 +110,18 @@ export async function POST(request: Request) {
     });
   }
 
-  const { data: briefRow } = await supabase
-    .from("requests")
-    .select("client_name, client_whatsapp")
-    .eq("id", requestId)
-    .maybeSingle();
+  const adminClient = createAdminClient();
+  const { data: briefRow } = adminClient
+    ? await adminClient
+        .from("requests")
+        .select("client_name, client_whatsapp")
+        .eq("id", requestId)
+        .maybeSingle()
+    : await supabase
+        .from("requests")
+        .select("client_name, client_whatsapp")
+        .eq("id", requestId)
+        .maybeSingle();
 
   const email = user?.email?.trim() || "client@devmarket.sn";
   const phone = briefRow?.client_whatsapp?.trim() ?? user?.phone?.trim() ?? "";
@@ -131,8 +138,6 @@ export async function POST(request: Request) {
   }
 
   const origin = process.env.NEXT_PUBLIC_APP_URL ?? new URL(request.url).origin;
-  const admin = createAdminClient();
-
   const slug = getTokenProductSlug(`boost-brief-${days}j`);
   try {
     const checkout = await provider.createCheckout({
@@ -154,8 +159,8 @@ export async function POST(request: Request) {
         request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null,
     });
 
-    if (admin && checkout.saleId) {
-      await admin
+    if (adminClient && checkout.saleId) {
+      await adminClient
         .from("brief_boost_payments")
         .update({ provider: provider.id, provider_sale_id: checkout.saleId })
         .eq("id", invoice.payment_id);
