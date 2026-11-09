@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Check, Circle, Clock, Lock, Star } from "lucide-react";
+import { Check, Circle, Lock, Star } from "lucide-react";
 import { cn } from "cn";
 
 const STEPS = [
