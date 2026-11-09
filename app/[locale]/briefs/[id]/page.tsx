@@ -25,6 +25,7 @@ import {
 } from "@/lib/formatting";
 import { PROJECT_TYPE_LABELS } from "@/lib/tokens";
 import { cn } from "cn";
+import { ShareButton } from "@/components/share-button";
 
 export const dynamic = "force-dynamic";
 
@@ -189,6 +190,13 @@ export default async function BriefDetailPage({
             <h1 className="mt-5 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
               {brief.client_name}
             </h1>
+            <div className="mt-3">
+              <ShareButton
+                url={`/briefs/${brief.id}`}
+                title={`${brief.client_name} — ${brief.project_type}`}
+                text={`Découvrez ce projet sur Devmarket : ${brief.client_name}`}
+              />
+            </div>
 
             <p className="mt-3 text-2xl font-semibold tracking-tight">
               {formatFCFA(brief.budget)}
