@@ -38,10 +38,24 @@ export default async function AdminDashboardPage() {
 
   const cards = [
     {
+      title: "Analytics",
+      description: "Statistiques et revenus",
+      href: "/admin/analytics",
+      icon: TrendingUp,
+      color: "text-primary",
+    },
+    {
       title: "Abonnements",
       description: "Gérer les formules, tarifs et abonnés",
       href: "/admin/abonnements",
       icon: CreditCard,
+      color: "text-primary",
+    },
+    {
+      title: "Utilisateurs",
+      description: "Liste et gestion des comptes",
+      href: "/admin/utilisateurs",
+      icon: Users,
       color: "text-primary",
     },
     {
