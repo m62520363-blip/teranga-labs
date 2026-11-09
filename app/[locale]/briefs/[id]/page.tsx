@@ -124,6 +124,11 @@ export default async function BriefDetailPage({
     }
   }
 
+  // Vérifier si l'utilisateur est un développeur
+  const isDeveloper = user && supabase
+    ? (await supabase.rpc("get_my_role")).data === "developer"
+    : false;
+
   if (!brief) notFound();
 
   const demo = Boolean(brief.demo);
@@ -255,21 +260,27 @@ export default async function BriefDetailPage({
                       demo
                     />
                   </div>
-                  <UnlockDialog
-                    brief={{
-                      id: brief.id,
-                      client_name: brief.client_name,
-                      project_type: brief.project_type,
-                      client_city: brief.client_city,
-                      budget: brief.budget,
-                      description: brief.description,
-                      demo: true,
-                      created_at: brief.created_at,
-                    }}
-                    user={user ? { id: user.id } : null}
-                    balance={balance}
-                    conversationId={conversationId}
-                  />
+                  {isDeveloper ? (
+                    <UnlockDialog
+                      brief={{
+                        id: brief.id,
+                        client_name: brief.client_name,
+                        project_type: brief.project_type,
+                        client_city: brief.client_city,
+                        budget: brief.budget,
+                        description: brief.description,
+                        demo: true,
+                        created_at: brief.created_at,
+                      }}
+                      user={user ? { id: user.id } : null}
+                      balance={balance}
+                      conversationId={conversationId}
+                    />
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      Seuls les développeurs peuvent envoyer une proposition.
+                    </p>
+                  )}
                 </div>
               ) : (
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -288,22 +299,28 @@ export default async function BriefDetailPage({
                     city={brief.client_city}
                     budget={brief.budget}
                   />
-                  <UnlockDialog
-                    brief={{
-                      id: brief.id,
-                      client_name: brief.client_name,
-                      project_type: brief.project_type,
-                      client_city: brief.client_city,
-                      budget: brief.budget,
-                      description: brief.description,
-                      demo: false,
-                      created_at: brief.created_at,
-                    }}
-                    user={user ? { id: user.id } : null}
-                    balance={balance}
-                    conversationId={conversationId}
-                    welcomeFree={welcomeContactFree}
-                  />
+                  {isDeveloper ? (
+                    <UnlockDialog
+                      brief={{
+                        id: brief.id,
+                        client_name: brief.client_name,
+                        project_type: brief.project_type,
+                        client_city: brief.client_city,
+                        budget: brief.budget,
+                        description: brief.description,
+                        demo: false,
+                        created_at: brief.created_at,
+                      }}
+                      user={user ? { id: user.id } : null}
+                      balance={balance}
+                      conversationId={conversationId}
+                      welcomeFree={welcomeContactFree}
+                    />
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      Seuls les développeurs peuvent envoyer une proposition.
+                    </p>
+                  )}
                 </div>
               )}
             </div>
