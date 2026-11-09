@@ -98,7 +98,7 @@ export function Navbar({
     }
     if (role === "admin") {
       appLinks.push({
-        href: process.env.NEXT_PUBLIC_ADMIN_URL || "http://localhost:3001",
+        href: "https://teranga-labs-admin.vercel.app",
         label: t("admin"),
         adminOnly: true,
       });
