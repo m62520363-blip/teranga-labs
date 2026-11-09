@@ -356,7 +356,7 @@ export function parseWorldDial(value: string): { dial: string; national: string 
   if (!digits) return { dial: WORLD_DEFAULT_DIAL, national: "" };
   for (const dial of DIALS_BY_LENGTH) {
     const code = dial.slice(1);
-    if (digits.startsWith(code) && digits.length > code.length) {
+    if (digits.startsWith(code) && digits.length >= code.length) {
       return { dial, national: digits.slice(code.length) };
     }
   }
