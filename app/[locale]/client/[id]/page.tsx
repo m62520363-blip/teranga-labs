@@ -14,7 +14,7 @@ export async function generateMetadata({
 }: {
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const { id } = await params;
+  await params;
   return {
     title: `Profil client · Devmarket`,
     robots: { index: false, follow: false },

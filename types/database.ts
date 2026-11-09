@@ -271,6 +271,7 @@ export interface Database {
           username: string | null;
           bio: string | null;
           avatar_url: string | null;
+          cover_url?: string | null;
           portfolio_links: PortfolioLink[];
           is_verified: boolean;
           experience_years: number;
@@ -2023,6 +2024,7 @@ export type PublicDeveloperProfile = {
   full_name: string | null;
   bio: string | null;
   avatar_url: string | null;
+  cover_url?: string | null;
   city: string | null;
   country: string | null;
   whatsapp: string | null;
@@ -2145,6 +2147,7 @@ export type ApprovedDeveloper = {
   professional_title: string | null;
   main_specialty: string | null;
   avatar_url: string | null;
+  cover_url?: string | null;
   city: string | null;
   country: string | null;
   bio: string | null;

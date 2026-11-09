@@ -159,7 +159,19 @@ export default async function DeveloperProfilePage({
       <div className="bg-background py-14 md:py-20">
       <div className="container-tl">
         <ProfileViewTracker developerId={profile.id} />
-        <div className="rounded-3xl border border-hairline bg-gradient-to-b from-card via-surface to-surface-secondary p-6 md:p-10">
+        {profile.cover_url ? (
+        <div className="mb-6 overflow-hidden rounded-3xl border border-hairline">
+          <Image
+            src={profile.cover_url}
+            alt=""
+            width={1200}
+            height={300}
+            unoptimized
+            className="h-40 w-full object-cover md:h-56"
+          />
+        </div>
+      ) : null}
+      <div className="rounded-3xl border border-hairline bg-gradient-to-b from-card via-surface to-surface-secondary p-6 md:p-10">
           <header className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div className="flex items-start gap-5">
               <div className="relative shrink-0">
