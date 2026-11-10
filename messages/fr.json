@@ -1,11 +1,11 @@
 {
   "Meta": {
-    "title": "Le marketplace des projets web d'Afrique | Devmarket",
-    "description": "Publiez votre projet web gratuitement. Recevez des devis de développeurs vérifiés, comparez et choisissez. 0 % commission, paiement direct.",
-    "keywords": "marketplace Afrique, développeurs Sénégal, développeurs Côte d'Ivoire, freelance Dakar, Abidjan, Bamako, projet web, trouver des clients web, abonnement développeur, classement développeurs, site e-commerce Dakar, Devmarket",
-    "ogTitle": "Devmarket — Publiez votre projet, recevez des devis",
-    "ogDescription": "Publication gratuite, devis gratuits, 0 % commission. Trouvez le développeur qu'il vous faut en Afrique.",
-    "ogAlt": "Devmarket — Le marketplace des projets web de l'Afrique."
+    "title": "DevMarket | La marketplace des projets web d'Afrique",
+    "description": "Vous avez une idée, un projet web ou un problème numérique à résoudre ? Trouvez des développeurs qualifiés pour créer votre site, concevoir votre application, développer votre boutique en ligne ou réparer vos outils numériques. Développeurs, trouvez des clients, valorisez vos compétences et transformez votre savoir-faire en opportunités.",
+    "keywords": "marketplace développeurs Afrique, trouver un développeur web, développeur freelance, développeur web Sénégal, création de site web, développement application web, création boutique en ligne, services numériques Afrique, trouver des clients développeur, plateforme freelance informatique, développeurs et projets web",
+    "ogTitle": "DevMarket | La marketplace des projets web d'Afrique",
+    "ogDescription": "Vous avez une idée, un projet web ou un problème numérique à résoudre ? Trouvez des développeurs qualifiés pour créer votre site, concevoir votre application, développer votre boutique en ligne ou réparer vos outils numériques. Développeurs, trouvez des clients, valorisez vos compétences et transformez votre savoir-faire en opportunités.",
+    "ogAlt": "DevMarket | La marketplace des projets web d'Afrique"
   },
   "DevStats": {
     "title": "Performance du profil",
@@ -889,8 +889,8 @@
     }
   },
   "RootMeta": {
-    "default": "Devmarket : marketplace des projets web en Afrique",
-    "description": "Devmarket met en relation les entreprises d'Afrique et des développeurs web : le client publie son projet gratuitement, les développeurs vérifiés envoient leurs devis, et le contact se fait ensuite en direct. Aucune commission.",
+    "default": "DevMarket | La marketplace des projets web d'Afrique",
+    "description": "DevMarket met en relation les clients d'Afrique avec des développeurs web : le client publie son besoin gratuitement, le développeur débloque les contacts et propose son devis. Sans commission.",
     "keywords": [
       "développeur",
       "Afrique",
@@ -909,9 +909,9 @@
       "marketplace",
       "freelance"
     ],
-    "ogTitle": "Devmarket — Des clients qui veulent un site",
-    "ogDescription": "Le client publie son besoin gratuitement. Le développeur débloque les contacts avec son abonnement. Zéro commission.",
-    "ogAlt": "Devmarket — Le marketplace des projets web de l'Afrique.",
+    "ogTitle": "DevMarket | La marketplace des projets web d'Afrique",
+    "ogDescription": "Vous avez une idée, un projet web ou un problème numérique à résoudre ? Trouvez des développeurs qualifiés pour créer votre site, concevoir votre application, développer votre boutique en ligne ou réparer vos outils numériques.",
+    "ogAlt": "DevMarket | La marketplace des projets web d'Afrique",
     "twitterDescription": "Marketplace des projets web de l'Afrique : projets, abonnements développeurs, zéro commission.",
     "orgDescription": "Marketplace qui met en relation les entreprises d'Afrique et des développeurs web, sur un modèle inversé où les clients publient leurs besoins.",
     "countries": [

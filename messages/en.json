@@ -1,11 +1,11 @@
 {
   "Meta": {
-    "title": "The marketplace for web projects in West Africa | Devmarket",
-    "description": "Post your web project for free. Receive quotes from verified developers, compare and choose. 0% commission, direct payment.",
-    "keywords": "francophone West Africa marketplace, Senegal developers, Ivory Coast developers, Dakar freelance, Abidjan, Bamako, web project, find web clients, developer subscription, developer rankings, Dakar e-commerce site, Devmarket",
-    "ogTitle": "Devmarket — Post your project, receive quotes",
-    "ogDescription": "Free posting, free quotes, 0% commission. Find the developer you need in French-speaking West Africa.",
-    "ogAlt": "Devmarket — West Africa's francophone web projects marketplace."
+    "title": "DevMarket | The web projects marketplace of Africa",
+    "description": "Have an idea, a web project or a digital problem to solve? Find qualified developers to create your website, design your application, build your online store or fix your digital tools. Developers, find clients, showcase your skills and turn your expertise into opportunities.",
+    "keywords": "developer marketplace Africa, find a web developer, freelance developer, web developer Senegal, website creation, web application development, online store creation, digital services Africa, find clients developer, IT freelance platform, developers and web projects",
+    "ogTitle": "DevMarket | The web projects marketplace of Africa",
+    "ogDescription": "Have an idea, a web project or a digital problem to solve? Find qualified developers to create your website, design your application, build your online store or fix your digital tools.",
+    "ogAlt": "DevMarket | The web projects marketplace of Africa"
   },
   "DevStats": {
     "title": "Profile performance",
@@ -889,8 +889,8 @@
     }
   },
   "RootMeta": {
-    "default": "Devmarket: web projects marketplace in Africa",
-    "description": "Devmarket connects businesses in francophone West Africa with web developers: clients post their project for free, verified developers send quotes, and everything is settled directly. No commission.",
+    "default": "DevMarket | The web projects marketplace of Africa",
+    "description": "DevMarket connects clients in Africa with web developers: the client publishes their need for free, the developer unlocks contacts and proposes their quote. No commission.",
     "keywords": [
       "developer",
       "francophone West Africa",
@@ -909,9 +909,9 @@
       "marketplace",
       "freelance"
     ],
-    "ogTitle": "Devmarket — Clients looking for a website",
-    "ogDescription": "The client posts their need for free. The developer unlocks contacts with their subscription. Zero commission.",
-    "ogAlt": "Devmarket — West Africa's francophone web projects marketplace.",
+    "ogTitle": "DevMarket | The web projects marketplace of Africa",
+    "ogDescription": "Have an idea, a web project or a digital problem to solve? Find qualified developers to create your website, design your application, build your online store or fix your digital tools.",
+    "ogAlt": "DevMarket | The web projects marketplace of Africa",
     "twitterDescription": "West Africa's francophone web projects marketplace: projects, developer subscriptions, zero commission.",
     "orgDescription": "Marketplace connecting businesses in francophone West Africa with web developers, on an inverted model where clients post their needs.",
     "countries": [
