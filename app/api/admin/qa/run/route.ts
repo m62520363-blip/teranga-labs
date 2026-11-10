@@ -2,23 +2,13 @@ import { NextResponse } from "next/server";
 import { exec } from "node:child_process";
 import { promisify } from "node:util";
 import { requireRole } from "@/lib/auth/guards";
-import { writeFileSync, readFileSync, existsSync } from "node:fs";
-import { join } from "node:path";
+import { createClient } from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
 
 const execAsync = promisify(exec);
-const RESULTS_FILE = join(process.cwd(), ".qa-results.json");
-
-interface TestResult {
-  name: string;
-  status: "pass" | "fail";
-  score: number;
-  duration: number;
-  details: string;
-}
 
 interface QAResults {
   timestamp: string;
@@ -45,7 +35,19 @@ export async function POST() {
 
     // Parse vitest output
     const results = parseVitestOutput(stdout + "\n" + stderr);
-    writeFileSync(RESULTS_FILE, JSON.stringify(results, null, 2));
+
+    // Save to database
+    const supabase = await createClient();
+    if (supabase) {
+      await supabase.rpc("save_qa_results" as never, {
+        p_total_tests: results.totalTests,
+        p_passed_tests: results.passedTests,
+        p_failed_tests: results.failedTests,
+        p_avg_score: results.avgScore,
+        p_test_files: results.testFiles,
+        p_summary: results.summary,
+      } as never);
+    }
 
     return NextResponse.json(results);
   } catch (err) {
@@ -64,12 +66,21 @@ export async function GET() {
     return NextResponse.json({ code: "FORBIDDEN", message: "Accès refusé." }, { status: 403 });
   }
 
-  if (existsSync(RESULTS_FILE)) {
-    try {
-      const data = readFileSync(RESULTS_FILE, "utf-8");
-      return NextResponse.json(JSON.parse(data));
-    } catch {
-      // ignore
+  const supabase = await createClient();
+  if (supabase) {
+    const { data } = await supabase.rpc("get_qa_results" as never, { p_limit: 1 } as never) as { data: unknown };
+    const qaData = data as Record<string, unknown>[] | null;
+    if (Array.isArray(qaData) && qaData.length > 0) {
+      const latest = qaData[0] as Record<string, unknown>;
+      return NextResponse.json({
+        timestamp: latest.run_at,
+        totalTests: latest.total_tests,
+        passedTests: latest.passed_tests,
+        failedTests: latest.failed_tests,
+        avgScore: latest.avg_score,
+        testFiles: latest.test_files ?? [],
+        summary: latest.summary ?? "",
+      });
     }
   }
 
