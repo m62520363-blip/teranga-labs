@@ -93,6 +93,13 @@ export default async function AdminDashboardPage() {
       icon: Settings,
       color: "text-muted-foreground",
     },
+    {
+      title: "QA & Audit",
+      description: "Tableau de bord qualité et tests",
+      href: "/admin/qa",
+      icon: ShieldCheck,
+      color: "text-primary",
+    },
   ];
 
   return (
