@@ -13,6 +13,7 @@ import { PWARegister } from "@/components/pwa-register";
 import { BackToTop } from "@/components/ui/back-to-top";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
 import { UTMTracker } from "@/components/utm-tracker";
+import { PostHogProvider } from "@/components/analytics/posthog-provider";
 
 import { absoluteUrl, buildAlternates } from "@/lib/utils";
 import { routing } from "@/i18n/routing";
@@ -209,10 +210,12 @@ export default async function RootLayout({
           </Suspense>
         </NextIntlClientProvider>
         <Analytics />
-        <PWARegister />
-        <BackToTop />
-        <ScrollProgress />
-        <UTMTracker />
+        <PostHogProvider>
+          <PWARegister />
+          <BackToTop />
+          <ScrollProgress />
+          <UTMTracker />
+        </PostHogProvider>
       </body>
     </html>
   );
