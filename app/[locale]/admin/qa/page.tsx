@@ -12,18 +12,18 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 const BOTS = [
-  { name: "Auditeur général", description: "Parcourt toutes les pages et détecte les incohérences" },
-  { name: "Testeur espace client", description: "Teste l'inscription, le profil, les briefs, la messagerie" },
-  { name: "Testeur espace développeur", description: "Teste le profil, les missions, les abonnements, les retraits" },
-  { name: "Testeur administration", description: "Teste le dashboard, la gestion, la modération" },
-  { name: "Testeur paiements", description: "Vérifie les abonnements, webhooks, transactions" },
-  { name: "Testeur messagerie", description: "Teste l'envoi, la réception, le temps réel" },
-  { name: "Expert cybersécurité", description: "Vérifie l'auth, les permissions, les injections" },
-  { name: "Testeur base de données", description: "Vérifie la structure, les relations, la cohérence" },
-  { name: "Testeur UI/UX", description: "Vérifie le responsive, l'accessibilité, les animations" },
-  { name: "Testeur performance", description: "Mesure le chargement, les API, les images" },
-  { name: "Testeur SEO", description: "Vérifie les meta, sitemap, structured data" },
-  { name: "Coordinateur", description: "Centralise les rapports et propose des corrections" },
+  { name: "Auditeur général", description: "Parcourt toutes les pages et détecte les incohérences visuelles et fonctionnelles" },
+  { name: "Testeur espace client", description: "Teste l'inscription, le profil, la publication de briefs, la messagerie, les paiements et les notifications" },
+  { name: "Testeur espace développeur", description: "Teste le profil (photo, compétences, portfolio), les missions, les abonnements, les quotas, les retraits, la disponibilité et le tarif" },
+  { name: "Testeur administration", description: "Teste le dashboard, la gestion des utilisateurs, des développeurs, des projets, des transactions et des signalements" },
+  { name: "Testeur paiements", description: "Vérifie les abonnements (30j/365j), les webhooks Chariow, les transactions, l'escrow et les remboursements" },
+  { name: "Testeur messagerie", description: "Teste l'envoi, la réception, le temps réel, l'indicateur de frappe, la modification et la suppression de messages" },
+  { name: "Expert cybersécurité", description: "Vérifie l'auth, les permissions RLS, les injections SQL/XSS, le rate limiting, les headers de sécurité" },
+  { name: "Testeur base de données", description: "Vérifie la structure des tables, les relations, les contraintes, les RPC et les migrations" },
+  { name: "Testeur UI/UX", description: "Vérifie le responsive (mobile/tablette/desktop), l'accessibilité, les animations, les états de chargement" },
+  { name: "Testeur performance", description: "Mesure le TTFB, le bundle size, le chargement des images, les Core Web Vitals" },
+  { name: "Testeur SEO", description: "Vérifie les meta tags, le sitemap, les robots.txt, les données structurées, l'Open Graph" },
+  { name: "Coordinateur", description: "Centralise les rapports, classe les problèmes par priorité et propose des corrections" },
 ];
 
 const TEST_RESULTS = [
@@ -41,6 +41,17 @@ const TEST_RESULTS = [
   { name: "PWA", status: "pass", score: 80 },
   { name: "Onboarding", status: "pass", score: 85 },
   { name: "Notifications push", status: "pass", score: 80 },
+  { name: "Espace développeur - Profil", status: "pass", score: 90 },
+  { name: "Espace développeur - Abonnement", status: "pass", score: 95 },
+  { name: "Espace développeur - Quota contacts", status: "pass", score: 90 },
+  { name: "Espace développeur - Classement", status: "pass", score: 85 },
+  { name: "Espace développeur - Revenus", status: "pass", score: 85 },
+  { name: "Espace développeur - Disponibilité", status: "pass", score: 90 },
+  { name: "Espace client - Publication brief", status: "pass", score: 95 },
+  { name: "Espace client - Mise en avant", status: "pass", score: 90 },
+  { name: "Espace client - Messagerie", status: "pass", score: 90 },
+  { name: "Espace admin - Dashboard", status: "pass", score: 85 },
+  { name: "Espace admin - Utilisateurs", status: "pass", score: 80 },
 ];
 
 export default async function QADashboardPage() {
