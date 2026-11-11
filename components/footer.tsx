@@ -143,9 +143,7 @@ export function Footer() {
               </li>
             </ul>
           </div>
-          <p className="mt-4 text-xs text-muted-foreground">
-            {t("location")}
-          </p>
+
         </div>
       </div>
     </footer>
