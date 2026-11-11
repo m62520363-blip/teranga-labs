@@ -4,14 +4,8 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { getCurrentRole, getCurrentUser } from "@/lib/supabase/server";
 import { Hero } from "@/components/landing/hero";
 import { LatestProjects } from "@/components/landing/latest-projects";
-
-import { CustomOffers } from "@/components/landing/custom-offers";
 import { HowItWorks } from "@/components/landing/how-it-works";
 import { Categories } from "@/components/landing/categories";
-import { Benefits } from "@/components/landing/benefits";
-import { Platform } from "@/components/landing/platform";
-import { WhyFreelance } from "@/components/landing/why-freelance";
-import { BigCta } from "@/components/landing/big-cta";
 import { SocialProof } from "@/components/landing/social-proof";
 import { Faq } from "@/components/landing/faq";
 import { RoleCards } from "@/components/landing/role-cards";
@@ -118,16 +112,11 @@ export default async function HomePage() {
       <div className="bg-background">
         <Hero developerAvatars={developerAvatars} />
         <LatestProjects />
-        <CustomOffers />
         <HowItWorks />
         <Categories />
-        <Benefits />
-        <Platform />
-        <WhyFreelance />
-        <BigCta />
         <SocialProof />
-        <Faq />
         <RoleCards />
+        <Faq />
       </div>
     </>
   );
