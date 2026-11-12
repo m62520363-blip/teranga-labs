@@ -12,6 +12,7 @@ import {
   Plus,
   UsersRound,
   X,
+  Bell,
 } from "lucide-react";
 import { ImageLogoMark } from "@/components/logo";
 import { NotificationBell } from "@/components/notification-bell";
@@ -42,6 +43,7 @@ type DockItem = {
  */
 const DOCK_ITEMS: DockItem[] = [
   { href: "/client", label: "Accueil", icon: LayoutGrid, exact: true },
+  { href: "/client/notifications", label: "Notifications", icon: Bell },
   { href: "/missions", label: "Projets", icon: ClipboardList },
   { href: "/conversations", label: "Messages", icon: MessageSquare },
   { href: "/dev", label: "Catalogue", icon: UsersRound },
@@ -146,9 +148,8 @@ export function ClientShell({
           >
             <ImageLogoMark priority className="h-16 w-auto" alt="" />
           </Link>
-          {userId ? <NotificationBell userId={userId} /> : null}
         </div>
-
+        
         <nav
           aria-label="Menu de l’espace client"
           className="min-h-0 flex-1 overflow-y-auto px-3 py-4"
