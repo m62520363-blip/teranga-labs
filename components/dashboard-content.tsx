@@ -49,14 +49,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PhoneInput } from "@/components/ui/phone-input";
-import { RegionSelectContent } from "@/components/ui/region-select";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { EmptyState } from "@/components/empty-state";
 import {
   Dialog,
@@ -71,7 +65,6 @@ import { parseSkills } from "@/lib/validations";
 import { reputationLevelLabel } from "@/lib/dev-labels";
 import { formatFCFA, formatDate } from "@/lib/formatting";
 import { waLink } from "@/lib/tokens";
-import { ALL_REGION_ITEMS } from "@/lib/countries";
 import type { ConversationListItem } from "@/lib/conversations";
 import type {
   TransactionRow,
@@ -421,10 +414,9 @@ export function DashboardContent({
       { label: "Nom complet", done: Boolean(p.full_name.trim()) },
       { label: "Bio présentée", done: Boolean(p.bio.trim()) },
       { label: "Identifiant public", done: Boolean(p.username.trim()) },
-      { label: "Ville / Région", done: Boolean(p.city.trim()) },
       { label: "Compétences", done: Boolean(p.skills.trim()) },
     ];
-  }, [p.full_name, p.bio, p.username, p.city, p.skills]);
+  }, [p.full_name, p.bio, p.username, p.skills]);
   const profileScore = React.useMemo(() => {
     if (profileChecksMemo.length === 0) return 0;
     return Math.round(
@@ -1623,22 +1615,6 @@ export function DashboardContent({
                       Lettres, chiffres et tirets uniquement. Votre profil sera
                       visible sur votre identifiant.
                     </p>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor="dp-city">Région</Label>
-                    <Select
-                      value={p.city ?? ""}
-                      onValueChange={(v) => setP({ ...p, city: v ?? "" })}
-                      items={ALL_REGION_ITEMS}
-                    >
-                      <SelectTrigger
-                        id="dp-city"
-                        className="h-10 w-full rounded-xl"
-                      >
-                        <SelectValue placeholder="Sélectionnez votre région" />
-                      </SelectTrigger>
-                      <RegionSelectContent />
-                    </Select>
                   </div>
                   <div className="flex flex-col gap-2">
                     <Label htmlFor="dp-experience">Années d’expérience</Label>

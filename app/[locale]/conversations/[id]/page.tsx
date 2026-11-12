@@ -66,8 +66,19 @@ export default async function ConversationThreadPage({
                 />
               ) : null}
               <h1 className="text-2xl font-semibold leading-tight tracking-tight">
-                {thread.otherName}
-                {thread.otherUsername ? ` · @${thread.otherUsername}` : ""}
+                {thread.otherUsername ? (
+                  <Link
+                    href={`/dev/${encodeURIComponent(thread.otherUsername)}`}
+                    className="transition-colors hover:text-primary"
+                  >
+                    {thread.otherName}
+                  </Link>
+                ) : (
+                  thread.otherName
+                )}
+                {thread.otherUsername ? (
+                  <span className="text-muted-foreground">{` · @${thread.otherUsername}`}</span>
+                ) : null}
               </h1>
             </div>
             <p className="mt-1.5 text-sm text-muted-foreground">{thread.subtitle}</p>
