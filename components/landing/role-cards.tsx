@@ -76,7 +76,7 @@ export function RoleCards() {
                     className={cn(
                       "pointer-events-none absolute inset-0",
                       card.highlighted
-                        ? "bg-gradient-to-t from-[#0b132b]/60 via-transparent to-transparent"
+                        ? "bg-gradient-to-t from-[#080e20]/60 via-transparent to-transparent"
                         : "bg-gradient-to-t from-card/70 via-transparent to-transparent"
                     )}
                   />

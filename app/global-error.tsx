@@ -17,7 +17,7 @@ export default function GlobalError({
     <html lang="fr">
       <body
         style={{
-          background: "#0b132b",
+          background: "#080e20",
           color: "#f1f5ff",
           fontFamily: "ui-sans-serif, system-ui, sans-serif",
           display: "flex",

@@ -125,7 +125,7 @@ export function HowItWorks() {
               />
               <div
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0b132b]/70 via-transparent to-transparent"
+                className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#080e20]/70 via-transparent to-transparent"
               />
             </div>
             <div className="relative flex items-center gap-3">

@@ -45,7 +45,7 @@
 :root {
   --radius: 1rem;
   /* Prompt Blue #0B132B : fond unique du site (palette Devmarket). */
-  --background: #0b132b;
+  --background: #080e20;
   --foreground: #f1f5ff;
   /* texte porté par un aplat AI Green : navy sur #39FF88 ≈ 15:1 (AAA). */
   --ink: #0b132b;

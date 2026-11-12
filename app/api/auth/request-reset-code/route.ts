@@ -127,8 +127,8 @@ function buildResetEmailHtml(code: string, origin: string): string {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Devmarket · Code de réinitialisation</title>
 </head>
-<body style="margin:0;padding:0;background:#0b132b;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0b132b;padding:32px 16px;">
+<body style="margin:0;padding:0;background:#080e20;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#080e20;padding:32px 16px;">
     <tr>
       <td align="center">
         <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="background:#111a36;border:1px solid rgba(57,255,136,0.2);border-radius:16px;overflow:hidden;">
@@ -150,7 +150,7 @@ function buildResetEmailHtml(code: string, origin: string): string {
           </tr>
           <tr>
             <td align="center" style="padding:0 32px 24px;">
-              <div style="display:inline-block;background:#0b132b;border:2px solid #39ff88;border-radius:12px;padding:16px 32px;">
+              <div style="display:inline-block;background:#080e20;border:2px solid #39ff88;border-radius:12px;padding:16px 32px;">
                 <p style="margin:0;font-size:32px;font-weight:700;letter-spacing:0.3em;color:#39ff88;font-family:monospace;">${code}</p>
               </div>
               <p style="margin:12px 0 0;font-size:12px;color:rgba(255,255,255,0.5);text-align:center;">
