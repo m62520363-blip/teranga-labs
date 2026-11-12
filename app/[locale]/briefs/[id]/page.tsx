@@ -5,7 +5,6 @@ import {
   ArrowLeft,
   BadgeCheck,
   Lock,
-  MapPin,
   Sparkles,
   Timer,
   UserRound,

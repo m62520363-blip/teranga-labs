@@ -35,7 +35,7 @@ export type BriefPayload = {
   id: string;
   client_name: string;
   project_type: string;
-  client_city: string;
+  client_city?: string;
   budget: number;
   description: string;
   demo?: boolean;
@@ -184,7 +184,7 @@ export function UnlockDialog({
             <div className="rounded-xl border border-hairline bg-muted p-4">
               <p className="text-sm font-medium">{brief.client_name}</p>
               <p className="mt-0.5 text-sm text-muted-foreground">
-                {brief.client_city} · {formatFCFA(brief.budget)} ·{" "}
+                {formatFCFA(brief.budget)} ·{" "}
                 {brief.project_type}
               </p>
               {welcomeFree ? (

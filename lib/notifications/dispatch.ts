@@ -96,6 +96,7 @@ async function dispatchJob(admin: AdminClient, job: NotificationJob): Promise<vo
   // ville OU les compétences correspondent au brief.
   const payload = job.payload as DeveloperMatchPayload;
   const { data } = await admin.rpc("list_developers_for_brief", {
+    p_city: "",
     p_keywords: keywordsForType(payload.project_type),
   });
   const matches = (Array.isArray(data) ? data : []) as {

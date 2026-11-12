@@ -1,31 +1,8 @@
 import { z } from "zod";
 import { PROJECT_TYPES } from "@/lib/tokens";
-import { isKnownRegion } from "@/lib/countries";
+// isKnownRegion removed - no more region validation
 
-/**
- * Champ « région » multi-pays : on stocke le NOM d'une région du référentiel
- * (`lib/countries.ts`, 9 pays). Le pays est dérivé côté app par `lib/geography.ts`.
- */
-const regionField = (message = "Choisissez une région.") =>
-  z
-    .string()
-    .trim()
-    .refine((v) => isKnownRegion(v), { message });
-
-/**
- * Ville/région d'inscription (client) et d'onboarding développeur :
- * le référentiel monde (~206 pays) propose des régions curées pour les
- * pays majeurs, mais un « champ libre » pour tous les autres — aucune
- * exception à l'inscription. On valide la longueur, pas l'appartenance
- * au périmètre (le brief, lui, garde `regionField` strict).
- */
-const cityField = (message = "Indiquez votre ville ou région.") =>
-  z
-    .string()
-    .trim()
-    .min(2, message)
-    .max(60, "60 caractères max.");
-
+// regionField and cityField removed - no more region/city validation
 export const usernameSchema = z
   .string()
   .trim()

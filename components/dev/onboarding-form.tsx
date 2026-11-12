@@ -36,7 +36,7 @@ import {
 } from "@/lib/tokens";
 import {
   findWorldCountryByName,
-  getWorldRegions,
+
   AFRICA_COUNTRIES,
 } from "@/lib/world-countries";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
@@ -282,18 +282,12 @@ function IdentityStep({
     formState: { errors, isSubmitting },
   } = form;
 
-  /* Pays choisi → ISO2 → régions (périmètre lu dans lib/countries). */
+  /* Pays choisi → ISO2 (conservé pour d'autres usages). */
   const countryName = (watch("country") as string) ?? "";
   const worldIso2 = findWorldCountryByName(countryName)?.iso2 ?? null;
-  const worldRegions = getWorldRegions(worldIso2);
-  const cityValue = (watch("city") as string) ?? "";
   /* Ville legacy hors liste (profil déjà rempli hors curé) → champ libre,
      pour ne jamais afficher un Select vide qui masquerait la valeur. */
-  const showCitySelect =
-    worldRegions.length > 0 && (cityValue === "" || worldRegions.includes(cityValue));
-  const cityItems: Record<string, string> = Object.fromEntries(
-    worldRegions.map((n) => [n, n])
-  );
+  // showCitySelect and cityItems removed - no more region/city selection
 
   const onSubmit = async (values: DeveloperIdentityFormValues) => {
     if (!isSupabaseConfigured()) {

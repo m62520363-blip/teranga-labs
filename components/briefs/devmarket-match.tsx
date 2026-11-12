@@ -35,7 +35,7 @@ export function DevmarketMatch({
   budget,
 }: {
   projectType: string;
-  city: string;
+  city?: string | null;
   budget: number;
 }) {
   const [rows, setRows] = React.useState<MatchRow[]>([]);
@@ -47,7 +47,7 @@ export function DevmarketMatch({
       if (!supabase) return;
       const { data } = await supabase.rpc("teranga_match", {
         p_project_type: projectType,
-        p_city: city,
+        p_city: city ?? "",
         p_budget: budget,
         p_limit: 6,
       });

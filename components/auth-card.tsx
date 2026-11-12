@@ -28,7 +28,6 @@ import {
 import { getFlagUrl } from "@/lib/countries";
 import {
   getWorldCountry,
-  getWorldRegions,
   AFRICA_COUNTRIES,
   WORLD_COUNTRY_ITEMS,
 } from "@/lib/world-countries";

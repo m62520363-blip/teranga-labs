@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import type { AssistMode, BriefAssistResult } from "@/lib/ai/brief-assistant";
 import { briefSchema, type BriefFormValues } from "@/lib/validations";
-import { ALL_REGION_ITEMS } from "@/lib/countries";
+// ALL_REGION_ITEMS removed - no more region/city selection
 import { useBalance } from "@/components/balance-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
