@@ -1043,7 +1043,7 @@ export function PosterForm({ initialType }: { initialType?: string } = {}) {
         open={confirmOpen}
         onOpenChange={(open) => (open ? setConfirmOpen(true) : onCancel())}
       >
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Confirmer la publication</DialogTitle>
             <DialogDescription>
@@ -1090,7 +1090,7 @@ export function PosterForm({ initialType }: { initialType?: string } = {}) {
             )}
           </p>
 
-          <DialogFooter>
+          <DialogFooter className="sticky bottom-0 bg-card pt-4">
             <Button
               type="button"
               variant="outline"
