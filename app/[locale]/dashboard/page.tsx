@@ -80,7 +80,7 @@ export default async function DashboardPage({
     supabase
       .from("developers")
       .select(
-        "id, full_name, whatsapp, skills, city, notifications_enabled, status, created_at, username, bio, avatar_url, portfolio_links, is_verified, experience_years, rating_avg, reviews_count, completed_projects_count, reputation_score, reputation_level, penalty, monthly_goal"
+        "id, full_name, whatsapp, skills, city, notifications_enabled, status, created_at, username, bio, avatar_url, cover_url, portfolio_links, is_verified, experience_years, rating_avg, reviews_count, completed_projects_count, reputation_score, reputation_level, penalty, monthly_goal"
       )
       .eq("id", user.id)
       .maybeSingle(),

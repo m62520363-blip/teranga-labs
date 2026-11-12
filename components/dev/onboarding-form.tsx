@@ -45,6 +45,7 @@ import { Label } from "@/components/ui/label";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Textarea } from "@/components/ui/textarea";
 import { SkillsSelector } from "@/components/dev/skills-selector";
+import { SPECIALTIES } from "@/lib/skills-catalog";
 import {
   Select,
   SelectContent,
@@ -111,17 +112,8 @@ export type OnboardingData = {
   } | null;
 };
 
-const SPECIALTY_SUGGESTIONS = [
-  "Développeur web",
-  "Full-stack",
-  "Développeur mobile",
-  "Intégrateur web",
-  "Designer UI/UX",
-  "E-commerce / Shopify / WooCommerce",
-  "WordPress",
-  "Chef de projet digital",
-  "Rédacteur web & SEO",
-];
+/* Spécialité principale : valeurs issues du catalogue (pas de saisie libre). */
+const MAIN_SPECIALTY_OPTIONS: string[] = SPECIALTIES.map((s) => s.label);
 
 /* Pays : value = nom français (c'est ce que stocke `developers.country`
    et ce que groupe le classement pays). Région : liste curée du pays choisi
@@ -580,7 +572,6 @@ function ProfessionalStep({
   onDone: () => void;
 }) {
   const [formError, setFormError] = React.useState<string | null>(null);
-  const [skillInput, setSkillInput] = React.useState("");
   const [specialties, setSpecialties] = React.useState<string[]>(initial?.specialties ?? []);
 
   const uploadImage = async (file: File, onUrl: (url: string) => void) => {
@@ -692,34 +683,20 @@ function ProfessionalStep({
 
   const skills = watch("skills");
   const services = watch("services");
+  /* La valeur courante (anciens profils) reste affichée s'elle n'est plus
+     au catalogue, sans pour autant réintroduire de saisie libre. */
+  const specialtyOptions = React.useMemo(() => {
+    const current = (initial?.main_specialty ?? "").trim();
+    return current && !MAIN_SPECIALTY_OPTIONS.includes(current)
+      ? [current, ...MAIN_SPECIALTY_OPTIONS]
+      : MAIN_SPECIALTY_OPTIONS;
+  }, [initial?.main_specialty]);
 
   const toggleService = (label: string) => {
     const next = services.includes(label)
       ? services.filter((s) => s !== label)
       : [...services, label];
     setValue("services", next, { shouldValidate: true });
-  };
-
-  const addSkill = () => {
-    const raw = skillInput.trim();
-    if (!raw) return;
-    const parts = raw
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean)
-      .filter((s) => !skills.includes(s))
-      .slice(0, 24);
-    if (parts.length === 0) return;
-    setValue("skills", [...skills, ...parts], { shouldValidate: true });
-    setSkillInput("");
-  };
-
-  const removeSkill = (skill: string) => {
-    setValue(
-      "skills",
-      skills.filter((s) => s !== skill),
-      { shouldValidate: true }
-    );
   };
 
   const onSubmit = async (values: DeveloperApplicationFormValues) => {
@@ -828,19 +805,26 @@ function ProfessionalStep({
 
           <div className="sm:col-span-2">
             <Field label="Spécialité principale" error={errors.main_specialty?.message} htmlFor="oi-specialty">
-              <Input
-                id="oi-specialty"
-                list="oi-specialty-suggestions"
-                {...register("main_specialty")}
-                className="h-11 rounded-xl border-hairline bg-background/70"
-                placeholder="Développeur web"
-                aria-invalid={Boolean(errors.main_specialty)}
-              />
-              <datalist id="oi-specialty-suggestions">
-                {SPECIALTY_SUGGESTIONS.map((s) => (
-                  <option key={s} value={s} />
-                ))}
-              </datalist>
+              <Select
+                value={(watch("main_specialty") as string) ?? ""}
+                onValueChange={(v) =>
+                  v && setValue("main_specialty", v, { shouldValidate: true })
+                }
+              >
+                <SelectTrigger
+                  id="oi-specialty"
+                  className="h-11 w-full rounded-xl border-hairline bg-background/70 data-[size=default]:h-11"
+                >
+                  <SelectValue placeholder="Choisissez votre spécialité principale" />
+                </SelectTrigger>
+                <SelectContent align="start">
+                  {specialtyOptions.map((label) => (
+                    <SelectItem key={label} value={label}>
+                      {label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </Field>
           </div>
 

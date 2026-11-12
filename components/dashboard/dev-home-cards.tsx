@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { cn } from "cn";
 import { formatFCFA } from "@/lib/formatting";
+import { reputationLevelLabel } from "@/lib/dev-labels";
 
 export type ReferralSummary = {
   code: string | null;
@@ -371,11 +372,7 @@ export function RankCard({
             {t("rank.level")}
           </p>
           <p className="mt-1 text-lg font-semibold leading-none">
-            {reputationLevel ? (
-              <span className="capitalize">{reputationLevel}</span>
-            ) : (
-              "—"
-            )}
+            {reputationLevelLabel(reputationLevel) ?? "—"}
           </p>
         </div>
       </div>

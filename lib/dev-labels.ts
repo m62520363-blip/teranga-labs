@@ -25,6 +25,30 @@ export function experienceLabel(value: string | null | undefined) {
   return EXPERIENCE_LEVEL_LABELS[value] ?? value;
 }
 
+/** Filtre « Classement » : seuil de points minimum (missions × 50 + réputation). */
+export const RANKING_FILTER_OPTIONS = [
+  { value: "0", label: "Tous les classements" },
+  { value: "50", label: "50 points et plus" },
+  { value: "100", label: "100 points et plus" },
+  { value: "250", label: "250 points et plus" },
+  { value: "500", label: "500 points et plus" },
+];
+
+/** Niveaux de réputation → libellés lisibles. */
+export const REPUTATION_LEVEL_LABELS: Record<string, string> = {
+  debutant: "Débutant",
+  intermediaire: "Intermédiaire",
+  avance: "Avancé",
+  expert: "Expert",
+};
+
+export function reputationLevelLabel(value: string | null | undefined): string | null {
+  if (!value) return null;
+  // Valeur inconnue (donnée obsolète ou fantôme) : on n'affiche rien
+  // plutôt que du texte non maîtrisé.
+  return REPUTATION_LEVEL_LABELS[value.trim().toLowerCase()] ?? null;
+}
+
 export const SORT_OPTIONS = [
   { value: "relevance", label: "Meilleurs résultats" },
   { value: "experience", label: "Expérience décroissante" },

@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, MessageCircle, Search } from "lucide-react";
 import type { ConversationListItem } from "@/lib/conversations";
 import { formatFCFA, formatRelativeTime } from "@/lib/formatting";
@@ -79,17 +80,28 @@ export function ConversationsList({
                     : "border-hairline bg-card"
                 )}
               >
-                <div
-                  className={cn(
-                    "flex size-11 shrink-0 items-center justify-center rounded-xl",
-                    c.unreadCount > 0
-                      ? "bg-primary text-ink"
-                      : "bg-hairline text-foreground"
-                  )}
-                  aria-hidden="true"
-                >
-                  <MessageCircle className="size-5" />
-                </div>
+                {c.otherAvatar ? (
+                  <Image
+                    src={c.otherAvatar}
+                    alt=""
+                    width={44}
+                    height={44}
+                    unoptimized
+                    className="size-11 shrink-0 rounded-xl border border-hairline object-cover"
+                  />
+                ) : (
+                  <div
+                    className={cn(
+                      "flex size-11 shrink-0 items-center justify-center rounded-xl",
+                      c.unreadCount > 0
+                        ? "bg-primary text-ink"
+                        : "bg-hairline text-foreground"
+                    )}
+                    aria-hidden="true"
+                  >
+                    <MessageCircle className="size-5" />
+                  </div>
+                )}
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-baseline justify-between gap-1">
                     <p className="truncate text-sm font-semibold">{c.otherName}</p>

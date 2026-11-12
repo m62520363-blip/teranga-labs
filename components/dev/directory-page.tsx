@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/select";
 import { DirectoryCard } from "@/components/dev/directory-card";
 import { EmptyState } from "@/components/empty-state";
-import { SORT_OPTIONS, TECH_TAGS } from "@/lib/dev-labels";
+import { RANKING_FILTER_OPTIONS, SORT_OPTIONS, TECH_TAGS } from "@/lib/dev-labels";
 import { cn } from "cn";
 
 const PAGE_SIZE = 12;
@@ -35,14 +35,18 @@ const MIN_EXPERIENCES = [
 
 export function DirectoryPage({
   initial,
-  initialCity,
+  initialCountry,
+  initialSkill,
+  initialRanking,
   initialQuery,
   filters,
   role,
   authed,
 }: {
   initial: ApprovedDeveloper[];
-  initialCity?: string;
+  initialCountry?: string;
+  initialSkill?: string;
+  initialRanking?: string;
   initialQuery?: string;
   filters: DirectoryFilters;
   role: string | null;
@@ -51,7 +55,9 @@ export function DirectoryPage({
   const [items, setItems] = React.useState<ApprovedDeveloper[]>(initial);
   const [query, setQuery] = React.useState(initialQuery ?? "");
   const [specialty, setSpecialty] = React.useState("");
-  const [city, setCity] = React.useState(initialCity ?? "");
+  const [country, setCountry] = React.useState(initialCountry ?? "");
+  const [skill, setSkill] = React.useState(initialSkill ?? "");
+  const [minPoints, setMinPoints] = React.useState(initialRanking ?? "0");
   const [availability, setAvailability] = React.useState("");
   const [projectType, setProjectType] = React.useState("");
   const [minRating, setMinRating] = React.useState("0");
@@ -68,22 +74,29 @@ export function DirectoryPage({
   const supabase = React.useMemo(() => createClient(), []);
 
   const buildParams = React.useCallback(
-    (offsetValue: number) => ({
-      p_query: query.trim() || undefined,
-      p_specialty: specialty || undefined,
-      p_technologies: techs.length > 0 ? techs : undefined,
-      p_services: undefined,
-      p_city: undefined,
-      p_min_experience: minExperience !== "0" ? Number(minExperience) : undefined,
-      p_availability: availability || undefined,
-      p_min_rating: minRating !== "0" ? Number(minRating) : undefined,
-      p_verified_only: verifiedOnly || undefined,
-      p_project_type: projectType || undefined,
-      p_sort: sort,
-      p_limit: PAGE_SIZE,
-      p_offset: offsetValue,
-    }),
-    [query, specialty, city, availability, projectType, minRating, minExperience, techs, verifiedOnly, sort]
+    (offsetValue: number) => {
+      const techFilter =
+        skill || techs.length > 0
+          ? [...(skill ? [skill] : []), ...techs]
+          : undefined;
+      return {
+        p_query: query.trim() || undefined,
+        p_specialty: specialty || undefined,
+        p_technologies: techFilter,
+        p_services: undefined,
+        p_country: country || undefined,
+        p_min_points: minPoints !== "0" ? Number(minPoints) : undefined,
+        p_min_experience: minExperience !== "0" ? Number(minExperience) : undefined,
+        p_availability: availability || undefined,
+        p_min_rating: minRating !== "0" ? Number(minRating) : undefined,
+        p_verified_only: verifiedOnly || undefined,
+        p_project_type: projectType || undefined,
+        p_sort: sort,
+        p_limit: PAGE_SIZE,
+        p_offset: offsetValue,
+      };
+    },
+    [query, specialty, country, skill, minPoints, availability, projectType, minRating, minExperience, techs, verifiedOnly, sort]
   );
 
   const refresh = React.useCallback(
@@ -122,7 +135,9 @@ export function DirectoryPage({
   const anyFilter =
     Boolean(query.trim()) ||
     Boolean(specialty) ||
-    Boolean(city) ||
+    Boolean(country) ||
+    Boolean(skill) ||
+    minPoints !== "0" ||
     Boolean(availability) ||
     Boolean(projectType) ||
     minRating !== "0" ||
@@ -130,10 +145,25 @@ export function DirectoryPage({
     techs.length > 0 ||
     verifiedOnly;
 
+  const activeCount =
+    (query.trim() ? 1 : 0) +
+    (specialty ? 1 : 0) +
+    (country ? 1 : 0) +
+    (skill ? 1 : 0) +
+    (minPoints !== "0" ? 1 : 0) +
+    (availability ? 1 : 0) +
+    (projectType ? 1 : 0) +
+    (minRating !== "0" ? 1 : 0) +
+    (minExperience !== "0" ? 1 : 0) +
+    techs.length +
+    (verifiedOnly ? 1 : 0);
+
   const reset = () => {
     setQuery("");
     setSpecialty("");
-    setCity("");
+    setCountry("");
+    setSkill("");
+    setMinPoints("0");
     setAvailability("");
     setProjectType("");
     setMinRating("0");
@@ -214,7 +244,7 @@ export function DirectoryPage({
             Filtres
             {anyFilter ? (
               <span className="flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-ink">
-                {techs.length + (specialty ? 1 : 0) + (city ? 1 : 0) + (availability ? 1 : 0) + (projectType ? 1 : 0) + (minRating !== "0" ? 1 : 0) + (minExperience !== "0" ? 1 : 0) + (verifiedOnly ? 1 : 0)}
+                {activeCount}
               </span>
             ) : null}
           </button>
@@ -230,11 +260,28 @@ export function DirectoryPage({
               placeholder="Toutes les spécialités"
             />
             <FilterSelect
-              label="Ville"
-              value={city}
-              onChange={setCity}
-              options={filters.cities}
-              placeholder="Toutes les villes"
+              label="Pays"
+              value={country}
+              onChange={setCountry}
+              options={filters.countries}
+              placeholder="Tous les pays"
+            />
+            <FilterSelect
+              label="Compétence"
+              value={skill}
+              onChange={setSkill}
+              options={filters.skills}
+              placeholder="Toutes les compétences"
+            />
+            <FilterSelect
+              label="Classement"
+              value={minPoints}
+              onChange={setMinPoints}
+              options={RANKING_FILTER_OPTIONS.map((r) => r.value)}
+              optionsLabels={Object.fromEntries(
+                RANKING_FILTER_OPTIONS.map((r) => [r.value, r.label])
+              )}
+              placeholder="Tous les classements"
             />
             <FilterSelect
               label="Disponibilité"

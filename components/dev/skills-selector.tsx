@@ -3,13 +3,15 @@
 import * as React from "react";
 import { Check, ChevronDown, Search, X } from "lucide-react";
 import { cn } from "cn";
-import { SKILL_CATEGORIES, ALL_SKILLS, SPECIALTIES } from "@/lib/skills-catalog";
+import { SKILL_CATEGORIES, SPECIALTIES } from "@/lib/skills-catalog";
 
 type SkillsSelectorProps = {
   selectedSkills: string[];
   selectedSpecialties: string[];
   onSkillsChange: (skills: string[]) => void;
   onSpecialtiesChange: (specialties: string[]) => void;
+  /** Masque le bloc spécialités (ex. : inscription, où seules les compétences sont demandées). */
+  showSpecialties?: boolean;
 };
 
 export function SkillsSelector({
@@ -17,6 +19,7 @@ export function SkillsSelector({
   selectedSpecialties,
   onSkillsChange,
   onSpecialtiesChange,
+  showSpecialties = true,
 }: SkillsSelectorProps) {
   const [skillSearch, setSkillSearch] = React.useState("");
   const [openSkills, setOpenSkills] = React.useState(false);
@@ -135,6 +138,7 @@ export function SkillsSelector({
       </div>
 
       {/* Spécialités */}
+      {showSpecialties ? (
       <div>
         <div className="flex items-center justify-between">
           <label className="text-sm font-medium text-foreground">
@@ -210,6 +214,7 @@ export function SkillsSelector({
           </div>
         ) : null}
       </div>
+      ) : null}
     </div>
   );
 }

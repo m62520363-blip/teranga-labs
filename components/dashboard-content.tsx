@@ -68,6 +68,7 @@ import {
 } from "@/components/ui/dialog";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { parseSkills } from "@/lib/validations";
+import { reputationLevelLabel } from "@/lib/dev-labels";
 import { formatFCFA, formatDate } from "@/lib/formatting";
 import { waLink } from "@/lib/tokens";
 import { ALL_REGION_ITEMS } from "@/lib/countries";
@@ -85,6 +86,7 @@ import type {
 import { cn } from "cn";
 import dynamic from "next/dynamic";
 import { ShareProfileButton } from "@/components/dev/share-profile-button";
+import { SkillsSelector } from "@/components/dev/skills-selector";
 import type { TlMissionOption } from "@/components/dev/missions-manager";
 import type { DeveloperStats } from "@/components/dev/performance-panel";
 
@@ -352,11 +354,13 @@ export function DashboardContent({
     username: profile?.username ?? "",
     bio: profile?.bio ?? "",
     avatar_url: profile?.avatar_url ?? "",
+    cover_url: profile?.cover_url ?? "",
     experience_years: profile?.experience_years ?? 1,
     notifications_enabled: profile?.notifications_enabled ?? true,
     monthly_goal: profile?.monthly_goal ?? 0,
   });
   const [uploadingAvatar, setUploadingAvatar] = React.useState(false);
+  const [uploadingCover, setUploadingCover] = React.useState(false);
   const [portfolio, setPortfolio] = React.useState<PortfolioLink[]>(
     profile?.portfolio_links ?? []
   );
@@ -485,6 +489,43 @@ export function DashboardContent({
       toast.error("Téléversement indisponible — renseignez une URL de photo.");
     } finally {
       setUploadingAvatar(false);
+    }
+  };
+
+  /* Photo de couverture : téléversement + enregistrement immédiat
+     via /api/profile/cover (service_role, colonne cover_url). */
+  const uploadCover = async (file: File) => {
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      toast.error("Format accepté : JPG, PNG ou WebP.");
+      return;
+    }
+    if (file.size > 3 * 1024 * 1024) {
+      toast.error("Image trop lourde (3 Mo max).");
+      return;
+    }
+    setUploadingCover(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/profile/cover", {
+        method: "POST",
+        body: fd,
+      });
+      const json = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        url?: string;
+        message?: string;
+      };
+      if (!res.ok || !json.url) {
+        toast.error(json.message ?? "Téléversement indisponible.");
+        return;
+      }
+      setP((prev) => ({ ...prev, cover_url: json.url! }));
+      toast.success("Photo de couverture mise à jour.");
+    } catch {
+      toast.error("Téléversement indisponible.");
+    } finally {
+      setUploadingCover(false);
     }
   };
 
@@ -786,7 +827,7 @@ export function DashboardContent({
               Classement
             </p>
             <p className="mt-1 font-headings text-lg font-bold text-primary">
-              {profile?.reputation_level ?? "—"}
+              {reputationLevelLabel(profile?.reputation_level) ?? "—"}
             </p>
             <p className="text-xs text-muted-foreground">
               {profile?.reputation_score != null
@@ -1523,6 +1564,41 @@ export function DashboardContent({
                     </div>
                   </div>
                   <div className="flex flex-col gap-2">
+                    <Label htmlFor="dp-cover">Photo de couverture</Label>
+                    {p.cover_url.trim() ? (
+                      <Image
+                        src={p.cover_url.trim()}
+                        alt=""
+                        width={480}
+                        height={112}
+                        unoptimized
+                        className="h-28 w-full rounded-xl border border-hairline object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-28 w-full items-center justify-center rounded-xl border border-dashed border-hairline bg-muted/40 px-4 text-center text-xs text-muted-foreground">
+                        Aucune couverture — ajoutez une bannière visible sur votre profil public.
+                      </div>
+                    )}
+                    <label className="inline-flex h-9 w-fit cursor-pointer items-center gap-1.5 rounded-xl border border-hairline bg-surface px-3 text-xs font-medium text-muted-foreground transition-colors outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50">
+                      {uploadingCover ? (
+                        <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
+                      ) : (
+                        <Upload className="size-3.5" aria-hidden="true" />
+                      )}
+                      Téléverser une couverture (JPG/PNG/WebP · 3 Mo max.)
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        className="sr-only"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          e.target.value = "";
+                          if (file) void uploadCover(file);
+                        }}
+                      />
+                    </label>
+                  </div>
+                  <div className="flex flex-col gap-2">
                     <Label htmlFor="dp-name">Nom</Label>
                     <Input
                       id="dp-name"
@@ -1598,13 +1674,23 @@ export function DashboardContent({
                     />
                   </div>
                   <div className="flex flex-col gap-2">
-                    <Label htmlFor="dp-skills">Compétences (tags du profil)</Label>
-                    <Textarea
-                      id="dp-skills"
-                      value={p.skills}
-                      onChange={(e) => setP({ ...p, skills: e.target.value })}
-                      className="min-h-20 rounded-xl"
-                      placeholder="Next.js, WordPress, WooCommerce, Mobile…"
+                    <Label>Compétences</Label>
+                    <p className="text-xs text-muted-foreground">
+                      Cochez uniquement les technologies du catalogue — pas de saisie libre.
+                    </p>
+                    <SkillsSelector
+                      selectedSkills={
+                        p.skills
+                          .split(",")
+                          .map((s) => s.trim())
+                          .filter(Boolean)
+                      }
+                      selectedSpecialties={[]}
+                      onSkillsChange={(arr) =>
+                        setP({ ...p, skills: arr.join(", ") })
+                      }
+                      onSpecialtiesChange={() => undefined}
+                      showSpecialties={false}
                     />
                   </div>
                   <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-hairline p-4">
@@ -1792,7 +1878,7 @@ export function DashboardContent({
                   <p className="text-sm font-medium">
                     sur 100 ·{" "}
                     <span className="text-success">
-                      {profile?.reputation_level ?? "Nouveau"}
+                      {reputationLevelLabel(profile?.reputation_level) ?? "Nouveau"}
                     </span>
                   </p>
                   {profile && profile.penalty > 0 ? (

@@ -138,7 +138,7 @@ export default async function CountryPage({
               variant="outline"
               className="h-10 rounded-xl"
               render={
-                <Link href={`/dev?city=${encodeURIComponent(country.nameFr)}`}>
+                <Link href={`/dev?country=${encodeURIComponent(country.nameFr)}`}>
                   Développeurs en {country.nameFr}
                 </Link>
               }

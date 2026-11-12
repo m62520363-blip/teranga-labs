@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Phone } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
@@ -53,10 +54,22 @@ export default async function ConversationThreadPage({
               <ArrowLeft className="size-4" aria-hidden="true" />
               Toutes les discussions
             </Link>
-            <h1 className="mt-3 text-2xl font-semibold leading-tight tracking-tight">
-              {thread.otherName}
-              {thread.otherUsername ? ` · @${thread.otherUsername}` : ""}
-            </h1>
+            <div className="mt-3 flex items-center gap-3">
+              {thread.otherAvatar ? (
+                <Image
+                  src={thread.otherAvatar}
+                  alt=""
+                  width={44}
+                  height={44}
+                  unoptimized
+                  className="size-11 shrink-0 rounded-full border border-hairline object-cover"
+                />
+              ) : null}
+              <h1 className="text-2xl font-semibold leading-tight tracking-tight">
+                {thread.otherName}
+                {thread.otherUsername ? ` · @${thread.otherUsername}` : ""}
+              </h1>
+            </div>
             <p className="mt-1.5 text-sm text-muted-foreground">{thread.subtitle}</p>
           </div>
 
@@ -73,6 +86,7 @@ export default async function ConversationThreadPage({
           userId={user.id}
           isClient={thread.isClient}
           otherName={thread.otherName}
+          otherAvatar={thread.otherAvatar}
           conversationStatus={conversation.status as "active" | "awarded" | "archived"}
           requestStatus={request?.status ?? ""}
           initialMessages={thread.messages as unknown as ThreadMessage[]}

@@ -264,7 +264,7 @@ export const signupSchema = z.object({
     .default(""),
   skills: z
     .string()
-    .max(200, "200 caractères max.")
+    .max(600, "600 caractères max.")
     .optional(),
 });
 

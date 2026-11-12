@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 import {
   Check,
@@ -336,9 +337,20 @@ export default async function ClientPage() {
                     href={`/conversations/${c.id}`}
                     className="flex items-center gap-4 p-4 outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50 sm:px-5"
                   >
-                    <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary font-display text-sm font-bold text-ink">
-                      {c.otherName.charAt(0).toUpperCase()}
-                    </span>
+                    {c.otherAvatar ? (
+                      <Image
+                        src={c.otherAvatar}
+                        alt=""
+                        width={40}
+                        height={40}
+                        unoptimized
+                        className="size-10 shrink-0 rounded-full border border-hairline object-cover"
+                      />
+                    ) : (
+                      <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary font-display text-sm font-bold text-ink">
+                        {c.otherName.charAt(0).toUpperCase()}
+                      </span>
+                    )}
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-semibold">
                         {c.otherName}
@@ -453,23 +465,34 @@ export default async function ClientPage() {
                           : "border-hairline bg-card"
                     )}
                   >
-                    <div
-                      className={cn(
-                        "flex size-11 shrink-0 items-center justify-center rounded-xl",
-                        c.unreadCount > 0
-                          ? "bg-primary text-ink"
-                          : c.status === "awarded"
-                            ? "bg-success text-ink"
-                            : "bg-hairline text-foreground"
-                      )}
-                      aria-hidden="true"
-                    >
-                      {c.status === "awarded" ? (
-                        <Check className="size-5" />
-                      ) : (
-                        <MessageCircle className="size-5" />
-                      )}
-                    </div>
+                    {c.otherAvatar ? (
+                      <Image
+                        src={c.otherAvatar}
+                        alt=""
+                        width={44}
+                        height={44}
+                        unoptimized
+                        className="size-11 shrink-0 rounded-xl border border-hairline object-cover"
+                      />
+                    ) : (
+                      <div
+                        className={cn(
+                          "flex size-11 shrink-0 items-center justify-center rounded-xl",
+                          c.unreadCount > 0
+                            ? "bg-primary text-ink"
+                            : c.status === "awarded"
+                              ? "bg-success text-ink"
+                              : "bg-hairline text-foreground"
+                        )}
+                        aria-hidden="true"
+                      >
+                        {c.status === "awarded" ? (
+                          <Check className="size-5" />
+                        ) : (
+                          <MessageCircle className="size-5" />
+                        )}
+                      </div>
+                    )}
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-baseline justify-between gap-1">
                         <p className="truncate text-sm font-semibold">

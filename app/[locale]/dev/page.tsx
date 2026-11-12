@@ -8,27 +8,38 @@ import type { ApprovedDeveloper, DirectoryFilters } from "@/types/database";
 export const metadata: Metadata = {
   title: "Trouver un développeur",
   description:
-    "Parcourez l’annuaire des développeurs vérifiés de Devmarket, filtrez par spécialité, ville et technologies, puis contactez-les directement.",
+    "Parcourez l’annuaire des développeurs vérifiés de Devmarket, filtrez par pays, spécialité, compétences et classement, puis contactez-les directement.",
 };
 
 export const dynamic = "force-dynamic";
 
 const PAGE_SIZE = 12;
 
+function readParam(value: unknown, max = 60): string {
+  return typeof value === "string" && value.trim()
+    ? value.trim().slice(0, max)
+    : "";
+}
+
 export default async function DirectoryPageRoute({
   searchParams,
 }: {
-  searchParams: Promise<{ city?: string; q?: string }>;
+  searchParams: Promise<{
+    country?: string;
+    city?: string;
+    q?: string;
+    skill?: string;
+    ranking?: string;
+  }>;
 }) {
   const sp = await searchParams;
-  // Deep-link géographique : ?city=Dakar ou ?city=Sénégal (exact, borné).
-  const cityParam =
-    typeof sp.city === "string" && sp.city.trim()
-      ? sp.city.trim().slice(0, 60)
-      : "";
+  // Deep-link géographique : /dev?country=Sénégal (exact, borné).
+  // `city` reste accepté pour les anciens liens (?city=Sénégal = pays).
+  const countryParam = readParam(sp.country) || readParam(sp.city);
   // Recherche depuis le hero / les catégories de la landing : /dev?q=…
-  const queryParam =
-    typeof sp.q === "string" && sp.q.trim() ? sp.q.trim().slice(0, 80) : "";
+  const queryParam = readParam(sp.q, 80);
+  const skillParam = readParam(sp.skill, 60);
+  const rankingParam = readParam(sp.ranking, 10);
 
   const supabase = await createClient();
   if (!supabase) {
@@ -53,7 +64,10 @@ export default async function DirectoryPageRoute({
   const [listRes, filtersRes] = await Promise.all([
     supabase.rpc("list_approved_developers", {
       p_query: queryParam || undefined,
-      p_city: cityParam || undefined,
+      p_country: countryParam || undefined,
+      p_technologies: skillParam ? [skillParam] : undefined,
+      p_min_points:
+        rankingParam && rankingParam !== "0" ? Number(rankingParam) : undefined,
       p_limit: PAGE_SIZE,
       p_offset: 0,
     }),
@@ -71,17 +85,22 @@ export default async function DirectoryPageRoute({
             Trouve ton développeur
           </h1>
           <p className="mt-2 text-muted-foreground">
-            Parcourez l&apos;annuaire des développeurs vérifiés, filtrez par spécialité, ville et technologies.
+            Parcourez l&apos;annuaire des développeurs vérifiés, filtrez par pays,
+            spécialité, compétences et classement.
           </p>
         </div>
 
         <DirectoryPage
           initial={developers}
-          initialCity={cityParam}
+          initialCountry={countryParam}
+          initialSkill={skillParam}
+          initialRanking={rankingParam || "0"}
           initialQuery={queryParam}
           filters={{
             specialties: filters.specialties ?? [],
-            cities: filters.cities ?? [],
+            countries: filters.countries ?? [],
+            cities: [],
+            skills: filters.skills ?? [],
             services: filters.services ?? [],
             project_types: filters.project_types ?? [],
           }}

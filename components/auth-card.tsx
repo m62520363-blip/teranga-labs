@@ -33,6 +33,7 @@ import {
 } from "@/lib/world-countries";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { PhoneOtpForm } from "@/components/phone-otp-form";
+import { SkillsSelector } from "@/components/dev/skills-selector";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PhoneInput } from "@/components/ui/phone-input";
@@ -725,16 +726,31 @@ function SignupForm({ initialRole }: { initialRole: AuthRole }) {
 
         {role === "developer" && (
           <Field
-            label="Compétences (séparées par des virgules)"
+            label="Compétences"
             htmlFor="signup-skills"
+            hint={
+              <span className="text-xs text-muted-foreground">
+                Cochez uniquement les technologies du catalogue — pas de saisie libre.
+              </span>
+            }
             error={errors.skills?.message}
           >
-            <Input
-              id="signup-skills"
-              {...register("skills")}
-              className={inputClass}
-              aria-invalid={Boolean(errors.skills)}
-            />
+            <div id="signup-skills">
+              <SkillsSelector
+                selectedSkills={
+                  (watch("skills") ?? "")
+                    .split(",")
+                    .map((s) => s.trim())
+                    .filter(Boolean)
+                }
+                selectedSpecialties={[]}
+                onSkillsChange={(arr) =>
+                  setValue("skills", arr.join(", "), { shouldValidate: true })
+                }
+                onSpecialtiesChange={() => undefined}
+                showSpecialties={false}
+              />
+            </div>
           </Field>
         )}
 

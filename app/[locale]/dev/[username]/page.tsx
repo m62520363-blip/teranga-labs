@@ -75,7 +75,10 @@ export async function generateMetadata({
   params: Promise<{ username: string }>;
 }): Promise<Metadata> {
   const { username } = await params;
-  const profile = await getProfile(username);
+  // Même rôle que la page : un propriétaire ne doit jamais voir
+  // « introuvable » sur son propre profil (metadata ≠ 404 fantôme).
+  const role = await getCurrentRole();
+  const profile = await getProfile(username, role);
   if (!profile) return { title: "Développeur introuvable · Devmarket" };
   return {
     title: `${profile.full_name ?? "Développeur"}${profile.city ? ` · ${profile.city}` : ""} · Devmarket`,

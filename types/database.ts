@@ -286,6 +286,7 @@ export interface Database {
           status: DeveloperStatus;
           rejection_reason?: string | null;
           created_at: string;
+          updated_at?: string;
         };
         Insert: {
           id: string;
@@ -303,6 +304,7 @@ export interface Database {
           username?: string | null;
           bio?: string | null;
           avatar_url?: string | null;
+          cover_url?: string | null;
           portfolio_links?: PortfolioLink[];
           is_verified?: boolean;
           is_public?: boolean;
@@ -317,6 +319,7 @@ export interface Database {
           status?: DeveloperStatus;
           rejection_reason?: string | null;
           created_at?: string;
+          updated_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["developers"]["Insert"]>;
         Relationships: [];
@@ -1377,6 +1380,8 @@ export interface Database {
           p_sort?: string;
           p_limit?: number;
           p_offset?: number;
+          p_country?: string;
+          p_min_points?: number;
         };
         Returns: Json;
       };
@@ -2221,7 +2226,9 @@ export type TokenHistoryItem = {
 
 export type DirectoryFilters = {
   specialties: string[];
+  countries: string[];
   cities: string[];
+  skills: string[];
   services: string[];
   project_types: string[];
 };

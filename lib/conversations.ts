@@ -15,6 +15,7 @@ export type ConversationListItem = {
   };
   otherName: string;
   otherUsername: string | null;
+  otherAvatar: string | null;
   subtitle: string;
   lastMessage: {
     content: string;
@@ -149,6 +150,7 @@ export async function getConversations(
 
       let otherName = "Client";
       let otherUsername: string | null = null;
+      let otherAvatar: string | null = null;
       let subtitle = "Projet";
       if (isDev && req) {
         otherName = req.client_name ?? "Client";
@@ -159,6 +161,7 @@ export async function getConversations(
         if (peer) {
           otherName = peer.name || "Client";
           otherUsername = peer.username ?? null;
+          otherAvatar = peer.avatar ?? null;
           subtitle = peer.subtitle || "Contact direct";
         } else {
           subtitle = "Contact direct";
@@ -166,6 +169,7 @@ export async function getConversations(
       } else if (isClient && c.developer_id) {
         const entry = names.get(c.developer_id);
         const peer = peerCache.get(c.developer_id) ?? null;
+        otherAvatar = entry?.avatar ?? peer?.avatar ?? null;
         if (entry) {
           otherName = entry.name;
           otherUsername = entry.username;
@@ -208,6 +212,7 @@ export async function getConversations(
         },
         otherName,
         otherUsername,
+        otherAvatar,
         subtitle,
         lastMessage: threadMsgs.length > 0 ? threadMsgs[threadMsgs.length - 1] : null,
         unreadCount,
@@ -244,6 +249,7 @@ async function fetchDevName(
 type PeerDisplay = {
   name: string;
   username: string | null;
+  avatar: string | null;
   subtitle: string;
 };
 
@@ -257,6 +263,7 @@ async function fetchPeerDisplay(
   const peer = (data ?? null) as {
     full_name?: string | null;
     username?: string | null;
+    avatar_url?: string | null;
     professional_title?: string | null;
     main_specialty?: string | null;
     company_name?: string | null;
@@ -268,6 +275,7 @@ async function fetchPeerDisplay(
   return {
     name: identity ?? "Interlocuteur",
     username: peer.username ?? null,
+    avatar: peer.avatar_url ?? null,
     subtitle: peer.city ? `${specialty} · ${peer.city}` : specialty,
   };
 }

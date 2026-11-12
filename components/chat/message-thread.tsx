@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import {
@@ -68,6 +69,7 @@ type Props = {
   userId: string;
   isClient: boolean;
   otherName: string;
+  otherAvatar?: string | null;
   conversationStatus: "active" | "awarded" | "archived";
   requestStatus: string;
   initialMessages: ThreadMessage[];
@@ -81,6 +83,7 @@ export function MessageThread({
   userId,
   isClient,
   otherName,
+  otherAvatar = null,
   conversationStatus,
   requestStatus,
   initialMessages,
@@ -697,11 +700,23 @@ export function MessageThread({
   return (
     <div className="flex h-full min-h-[60vh] flex-col overflow-hidden rounded-2xl border border-hairline bg-card">
       <div className="flex items-center justify-between gap-3 border-b border-hairline px-5 py-4">
-        <div className="min-w-0">
-          <p className="truncate font-semibold tracking-tight">{otherName}</p>
-          <p className="mt-0.5 text-xs text-muted-foreground">
-            {locked ? "Discussion clôturée" : "Discussion en direct"}
-          </p>
+        <div className="flex min-w-0 items-center gap-3">
+          {otherAvatar ? (
+            <Image
+              src={otherAvatar}
+              alt=""
+              width={36}
+              height={36}
+              unoptimized
+              className="size-9 shrink-0 rounded-full border border-hairline object-cover"
+            />
+          ) : null}
+          <div className="min-w-0">
+            <p className="truncate font-semibold tracking-tight">{otherName}</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              {locked ? "Discussion clôturée" : "Discussion en direct"}
+            </p>
+          </div>
         </div>
         {locked ? (
           <span className="badge badge-warning">Projet attribué</span>

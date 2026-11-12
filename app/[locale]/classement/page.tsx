@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Award, Crown, Trophy, UserRound } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { reputationLevelLabel } from "@/lib/dev-labels";
 import { Section, SectionHeader } from "@/components/landing/section";
 import { Reveal } from "@/components/reveal";
 import { cn } from "cn";
@@ -24,6 +25,7 @@ type LeaderboardDeveloper = {
   avatar_url: string | null;
   completed_projects: number;
   points: number;
+  reputation_level?: string | null;
 };
 
 const HEADERS = [
@@ -53,6 +55,7 @@ function ordinalLabel(rank: number): string {
 
 function DeveloperCell({ row }: { row: LeaderboardDeveloper }) {
   const name = row.full_name ?? row.username ?? "Développeur";
+  const level = reputationLevelLabel(row.reputation_level);
   return (
     <div className="flex items-center gap-3">
       {row.avatar_url ? (
@@ -80,11 +83,18 @@ function DeveloperCell({ row }: { row: LeaderboardDeveloper }) {
         ) : (
           <span className="block truncate text-sm font-medium">{name}</span>
         )}
-        {row.city ? (
-          <span className="block truncate text-xs text-muted-foreground">
-            {row.city}
-          </span>
-        ) : null}
+        <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+          {row.city ? (
+            <span className="truncate text-xs text-muted-foreground">
+              {row.city}
+            </span>
+          ) : null}
+          {level ? (
+            <span className="rounded-full border border-primary/25 bg-primary-soft px-2 py-px text-[11px] font-semibold text-primary">
+              {level}
+            </span>
+          ) : null}
+        </span>
       </div>
     </div>
   );
@@ -146,6 +156,7 @@ export default async function ClassementPage() {
         avatar_url?: string | null;
         completed_projects?: number;
         points?: number;
+        reputation_level?: string | null;
       }>;
     } | null;
 
@@ -157,23 +168,11 @@ export default async function ClassementPage() {
       avatar_url: string | null;
       completed_projects: number;
       points: number;
+      reputation_level: string | null;
     }> = [];
 
-    for (const r of payload?.regional ?? []) {
-      if (!r.developer_id || seen.has(r.developer_id)) continue;
-      seen.add(r.developer_id);
-      const completed = r.completed_projects ?? 0;
-      rawDevs.push({
-        developer_id: r.developer_id,
-        username: r.username ?? null,
-        full_name: r.full_name ?? null,
-        city: r.city ?? null,
-        avatar_url: r.avatar_url ?? null,
-        completed_projects: completed,
-        points: r.points ?? completed * POINTS_PER_PROJECT,
-      });
-    }
-
+    // 1. L'annuaire complet d'abord : chaque développeur public actif y est,
+    //    avec ses missions terminées (cumul) et sa réputation réelle.
     const approvedList = Array.isArray(devsRes.data)
       ? (devsRes.data as Array<{
           id?: string;
@@ -183,6 +182,7 @@ export default async function ClassementPage() {
           avatar_url?: string | null;
           completed_projects_count?: number | null;
           reputation_score?: number | null;
+          reputation_level?: string | null;
         }>)
       : [];
 
@@ -199,6 +199,25 @@ export default async function ClassementPage() {
         completed_projects: completed,
         points:
           completed * POINTS_PER_PROJECT + (d.reputation_score ?? 0),
+        reputation_level: d.reputation_level ?? null,
+      });
+    }
+
+    // 2. Puis les éventuels développeurs présents dans le classement RPC
+    //    mais absents de l'annuaire (aucun filtre is_public côté RPC).
+    for (const r of payload?.regional ?? []) {
+      if (!r.developer_id || seen.has(r.developer_id)) continue;
+      seen.add(r.developer_id);
+      const completed = r.completed_projects ?? 0;
+      rawDevs.push({
+        developer_id: r.developer_id,
+        username: r.username ?? null,
+        full_name: r.full_name ?? null,
+        city: r.city ?? null,
+        avatar_url: r.avatar_url ?? null,
+        completed_projects: completed,
+        points: r.points ?? completed * POINTS_PER_PROJECT,
+        reputation_level: r.reputation_level ?? null,
       });
     }
 
