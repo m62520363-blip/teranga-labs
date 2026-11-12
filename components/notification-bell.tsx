@@ -234,9 +234,9 @@ export function NotificationBell({ userId }: { userId: string }) {
                         <span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary-soft">
                           <Icon className="size-4 text-primary" aria-hidden="true" />
                         </span>
-                        <span className="min-w-0 flex-1">
+                        <span className="min-w-0 flex-1 overflow-visible">
                           <span className="flex items-center justify-between gap-2">
-                            <span className="truncate text-sm font-medium">
+                            <span className="break-words text-sm font-medium whitespace-normal">
                               {item.title}
                             </span>
                             {!item.read ? (
@@ -247,7 +247,7 @@ export function NotificationBell({ userId }: { userId: string }) {
                             ) : null}
                           </span>
                           {item.body ? (
-                            <span className="mt-0.5 line-clamp-2 block text-xs leading-relaxed text-muted-foreground">
+                            <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground break-words whitespace-normal">
                               {item.body}
                             </span>
                           ) : null}
