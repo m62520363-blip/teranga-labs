@@ -44,6 +44,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Textarea } from "@/components/ui/textarea";
+import { SkillsSelector } from "@/components/dev/skills-selector";
 import {
   Select,
   SelectContent,
@@ -65,6 +66,7 @@ export type OnboardingData = {
   avatar_url?: string | null;
   bio?: string | null;
   skills?: string[] | null;
+  specialties?: string[] | null;
   languages?: string[] | null;
   experience_years?: number | null;
   status?: string | null;
@@ -579,6 +581,7 @@ function ProfessionalStep({
 }) {
   const [formError, setFormError] = React.useState<string | null>(null);
   const [skillInput, setSkillInput] = React.useState("");
+  const [specialties, setSpecialties] = React.useState<string[]>(initial?.specialties ?? []);
 
   const uploadImage = async (file: File, onUrl: (url: string) => void) => {
     if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
@@ -740,6 +743,7 @@ function ProfessionalStep({
       terms_accepted: true,
       services: values.services,
       skills: values.skills,
+      specialties: specialties,
       projects: values.projects
         .filter((p) => p.name.trim())
         .map((p) => ({
@@ -1031,58 +1035,21 @@ function ProfessionalStep({
       <section className="rounded-2xl border border-hairline bg-card p-6 shadow-sm sm:p-8">
         <h2 className="text-lg font-semibold tracking-tight">Compétences techniques</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Technologies et outils maîtrisés, séparés par des virgules.
+          Sélectionnez vos technologies et outils maîtrisés.
         </p>
-        <div className="mt-4 flex flex-col gap-3">
-          <div className="flex gap-2">
-            <Input
-              value={skillInput}
-              onChange={(e) => setSkillInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === ",") {
-                  e.preventDefault();
-                  addSkill();
-                }
-              }}
-              className="h-11 flex-1 rounded-xl border-hairline bg-background/70"
-              placeholder="Next.js, React, PostgreSQL, Figma…"
-              aria-label="Ajouter une compétence"
-            />
-            <button
-              type="button"
-              onClick={addSkill}
-              className="inline-flex h-11 shrink-0 items-center gap-1.5 rounded-xl border border-hairline bg-surface px-4 text-sm font-medium text-muted-foreground transition-colors outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
-            >
-              <Plus className="size-4" aria-hidden="true" />
-              Ajouter
-            </button>
-          </div>
-          {skills.length > 0 ? (
-            <div className="flex flex-wrap gap-2">
-              {skills.map((skill) => (
-                <span
-                  key={skill}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-primary-soft px-3 py-1.5 text-sm text-primary-light"
-                >
-                  {skill}
-                  <button
-                    type="button"
-                    onClick={() => removeSkill(skill)}
-                    className="text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/50"
-                    aria-label={`Retirer ${skill}`}
-                  >
-                    <X className="size-3.5" aria-hidden="true" />
-                  </button>
-                </span>
-              ))}
-            </div>
-          ) : null}
-          {errors.skills ? (
-            <p role="alert" className="text-xs text-destructive">
-              {errors.skills.message}
-            </p>
-          ) : null}
+        <div className="mt-4">
+          <SkillsSelector
+            selectedSkills={skills}
+            selectedSpecialties={specialties}
+            onSkillsChange={(s) => setValue("skills", s, { shouldValidate: true })}
+            onSpecialtiesChange={(s) => setSpecialties(s)}
+          />
         </div>
+        {errors.skills ? (
+          <p role="alert" className="text-xs text-destructive">
+            {errors.skills.message}
+          </p>
+        ) : null}
       </section>
 
       {/* Portfolio */}

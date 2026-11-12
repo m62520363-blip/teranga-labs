@@ -34,7 +34,7 @@ export async function POST() {
 
   const { data: dev } = await admin
     .from("developers")
-    .select("id, full_name, bio, username, city, skills, status")
+    .select("id, full_name, bio, username, skills, status")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -45,14 +45,12 @@ export async function POST() {
   const hasName = Boolean(dev.full_name?.trim());
   const hasBio = Boolean(dev.bio?.trim());
   const hasUsername = Boolean(dev.username?.trim());
-  const hasCity = Boolean(dev.city?.trim());
   const hasSkills = Array.isArray(dev.skills) && dev.skills.length > 0;
 
   if (
     hasName &&
     hasBio &&
     hasUsername &&
-    hasCity &&
     hasSkills &&
     dev.status !== "suspended" &&
     dev.status !== "verified"
