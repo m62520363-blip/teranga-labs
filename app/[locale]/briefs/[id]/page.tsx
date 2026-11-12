@@ -32,6 +32,7 @@ type BriefDetail = {
   id: string;
   client_name: string;
   // client_city removed
+  client_id: string | null;
   project_type: string;
   budget: number;
   description: string;
@@ -88,7 +89,7 @@ export default async function BriefDetailPage({
     const { data } = await supabase
       .from("requests")
       .select(
-        "id, client_name, project_type, budget, description, status, hidden, budget_verified, demo, created_at, features, deadline"
+        "id, client_name, client_id, project_type, budget, description, status, hidden, budget_verified, demo, created_at, features, deadline"
       )
       .eq("id", id)
       .eq("status", "ouvert")
@@ -124,13 +125,17 @@ export default async function BriefDetailPage({
   }
 
   // Vérifier si l'utilisateur est un développeur
+  const demo = Boolean(brief?.demo);
   const isDeveloper = user && supabase
     ? (await supabase.rpc("get_my_role")).data === "developer"
     : false;
+  // Un client ne peut pas proposer sur son propre brief
+  const isOwner = user ? user.id === brief?.client_id : false;
+  const canPropose = isDeveloper && !isOwner && !demo;
 
   if (!brief) notFound();
 
-  const demo = Boolean(brief.demo);
+  // demo already declared above
 
   return (
     <>
@@ -255,7 +260,7 @@ export default async function BriefDetailPage({
                       demo
                     />
                   </div>
-                  {isDeveloper ? (
+                  {canPropose ? (
                     <UnlockDialog
                       brief={{
                         id: brief.id,
@@ -292,7 +297,7 @@ export default async function BriefDetailPage({
                     clientName={brief.client_name}
                     budget={brief.budget}
                   />
-                  {isDeveloper ? (
+                  {canPropose ? (
                     <UnlockDialog
                       brief={{
                         id: brief.id,
