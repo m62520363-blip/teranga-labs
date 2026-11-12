@@ -274,6 +274,7 @@ export interface Database {
           cover_url?: string | null;
           portfolio_links: PortfolioLink[];
           is_verified: boolean;
+          is_public?: boolean;
           experience_years: number;
           rating_avg: number;
           completed_projects_count: number;
@@ -304,6 +305,7 @@ export interface Database {
           avatar_url?: string | null;
           portfolio_links?: PortfolioLink[];
           is_verified?: boolean;
+          is_public?: boolean;
           experience_years?: number;
           rating_avg?: number;
           completed_projects_count?: number;

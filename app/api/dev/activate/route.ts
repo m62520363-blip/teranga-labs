@@ -60,6 +60,9 @@ export async function POST() {
       .update({
         status: "active",
         rejection_reason: null,
+        // Profil public dès l'activation : sans ça, la colonne (défaut false)
+        // rendait le profil invisible dans l'annuaire et en /dev/[username] (404).
+        is_public: true,
       })
       .eq("id", user.id);
 
