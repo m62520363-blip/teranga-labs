@@ -73,7 +73,7 @@ export function DirectoryPage({
       p_specialty: specialty || undefined,
       p_technologies: techs.length > 0 ? techs : undefined,
       p_services: undefined,
-      p_city: city || undefined,
+      p_city: undefined,
       p_min_experience: minExperience !== "0" ? Number(minExperience) : undefined,
       p_availability: availability || undefined,
       p_min_rating: minRating !== "0" ? Number(minRating) : undefined,
@@ -91,7 +91,7 @@ export function DirectoryPage({
       setLoading(true);
       const { data, error } = await supabase.rpc("list_approved_developers", buildParams(0));
       const rows = ((data ?? []) as ApprovedDeveloper[]).filter(
-      (d) => Boolean(d?.id) && (d.full_name ?? "").toLowerCase() !== "compte test"
+      (d) => Boolean(d?.id)
     );
       setItems(rows);
       setOffset(rows.length);
@@ -106,7 +106,7 @@ export function DirectoryPage({
     setLoading(true);
     const { data, error } = await supabase.rpc("list_approved_developers", buildParams(offset));
     const rows = ((data ?? []) as ApprovedDeveloper[]).filter(
-      (d) => Boolean(d?.id) && (d.full_name ?? "").toLowerCase() !== "compte test"
+      (d) => Boolean(d?.id)
     );
     setItems((prev) => [...prev, ...rows]);
     setOffset((prev) => prev + rows.length);
