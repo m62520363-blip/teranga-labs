@@ -231,7 +231,7 @@ export default async function ClassementPage() {
           <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-hairline bg-card px-5 py-4">
             <p className="inline-flex items-center gap-2 text-sm text-muted-foreground">
               <Crown className="size-4 text-warning" aria-hidden="true" />
-              Le <strong className="text-foreground">1er</strong> du classement mondial reçoit le plus de récompenses, suivi du <strong className="text-foreground">2e</strong> et du <strong className="text-foreground">3e</strong>.
+              Classement mondial de tous les développeurs.
             </p>
             <Link
               href="/dashboard?tab=profil"
