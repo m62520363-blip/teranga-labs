@@ -63,6 +63,11 @@ export function BriefManager({
   const [promoting, setPromoting] = React.useState(false);
   const [promoteDays, setPromoteDays] = React.useState(7);
   const [promoteMsg, setPromoteMsg] = React.useState("");
+  const [editing, setEditing] = React.useState(false);
+  const [editName, setEditName] = React.useState(brief.client_name);
+  const [editBudget, setEditBudget] = React.useState(String(brief.budget));
+  const [editDesc, setEditDesc] = React.useState(brief.description);
+  const [deleting, setDeleting] = React.useState(false);
 
   const changeStatus = async (status: string) => {
     setBusy(true);
@@ -115,6 +120,57 @@ export function BriefManager({
       toast.error("Erreur réseau. Réessayez dans un instant.");
     } finally {
       setPromoting(false);
+    }
+  };
+
+  const saveEdit = async () => {
+    setBusy(true);
+    try {
+      const res = await fetch("/api/briefs/update", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          managementKey,
+          client_name: editName,
+          budget: parseInt(editBudget, 10),
+          description: editDesc,
+        }),
+      });
+      const payload = (await res.json()) as { ok?: boolean; message?: string };
+      if (!res.ok) {
+        toast.error(payload.message || "Impossible de modifier le projet.");
+        return;
+      }
+      setBrief({ ...brief, client_name: editName, budget: parseInt(editBudget, 10), description: editDesc });
+      setEditing(false);
+      toast.success("Projet mis à jour.");
+    } catch {
+      toast.error("Erreur réseau.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const deleteBrief = async () => {
+    if (!confirm("Êtes-vous sûr de vouloir supprimer ce projet ? Cette action est irréversible.")) return;
+    setDeleting(true);
+    try {
+      const res = await fetch("/api/briefs/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ managementKey }),
+      });
+      const payload = (await res.json()) as { ok?: boolean; message?: string };
+      if (!res.ok) {
+        toast.error(payload.message || "Impossible de supprimer le projet.");
+        return;
+      }
+      toast.success("Projet supprimé.");
+      window.location.href = "/client/briefs";
+    } catch {
+      toast.error("Erreur réseau.");
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -208,6 +264,72 @@ export function BriefManager({
                 {promoteMsg}
               </p>
             ) : null}
+          </div>
+        ) : null}
+
+        {/* Boutons modifier/supprimer */}
+        {brief.status === "ouvert" && brief.unlocks_count === 0 ? (
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-lg gap-1.5"
+              onClick={() => setEditing(!editing)}
+              disabled={busy}
+            >
+              {editing ? "Annuler" : "Modifier le projet"}
+            </Button>
+            <Button
+              variant="destructive"
+              size="sm"
+              className="rounded-lg gap-1.5"
+              onClick={() => void deleteBrief()}
+              disabled={deleting || busy}
+            >
+              {deleting ? <Loader2 className="size-3.5 animate-spin" aria-hidden="true" /> : null}
+              Supprimer
+            </Button>
+          </div>
+        ) : null}
+
+        {editing ? (
+          <div className="mt-4 space-y-3 rounded-xl border border-hairline bg-muted p-4">
+            <div>
+              <label className="text-xs font-medium text-foreground">Nom du client</label>
+              <input
+                type="text"
+                value={editName}
+                onChange={(e) => setEditName(e.target.value)}
+                className="mt-1 w-full rounded-lg border border-hairline bg-surface px-3 py-2 text-sm"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-medium text-foreground">Budget (FCFA)</label>
+              <input
+                type="number"
+                value={editBudget}
+                onChange={(e) => setEditBudget(e.target.value)}
+                className="mt-1 w-full rounded-lg border border-hairline bg-surface px-3 py-2 text-sm"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-medium text-foreground">Description</label>
+              <textarea
+                value={editDesc}
+                onChange={(e) => setEditDesc(e.target.value)}
+                rows={3}
+                className="mt-1 w-full rounded-lg border border-hairline bg-surface px-3 py-2 text-sm"
+              />
+            </div>
+            <Button
+              size="sm"
+              className="rounded-lg gap-1.5"
+              onClick={() => void saveEdit()}
+              disabled={busy}
+            >
+              {busy ? <Loader2 className="size-3.5 animate-spin" aria-hidden="true" /> : null}
+              Enregistrer
+            </Button>
           </div>
         ) : null}
 
