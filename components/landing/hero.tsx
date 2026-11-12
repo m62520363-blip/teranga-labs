@@ -3,9 +3,8 @@
 import * as React from "react";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
-import { ArrowRight, Briefcase, Plus, Search, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowRight, Briefcase, Plus, Search, ShieldCheck, Sparkles, Zap, Globe, Users } from "lucide-react";
 import Image from "next/image";
-import { HeroLaptop } from "@/components/landing/hero-laptop";
 
 type DeveloperAvatar = {
   id: string;
@@ -18,6 +17,9 @@ export function Hero({ developerAvatars = [] }: { developerAvatars?: DeveloperAv
   const t = useTranslations("Landing.hero");
   const router = useRouter();
   const [query, setQuery] = React.useState("");
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => setMounted(true), []);
 
   const chips = t.raw("chips") as { label: string; query: string }[];
 
@@ -28,42 +30,45 @@ export function Hero({ developerAvatars = [] }: { developerAvatars?: DeveloperAv
   };
 
   return (
-    <section className="relative isolate overflow-hidden pb-20 pt-28 sm:pb-24 sm:pt-32 lg:pb-28 lg:pt-40">
-      {/* Fond : dégradé navy + halo vert, dans l'esprit du grand bleu Codeur. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-20 bg-[radial-gradient(120%_90%_at_50%_-10%,#16265c_0%,#0d1734_45%,#0b132b_70%,#080e20_100%)]"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-1/2 bg-[radial-gradient(60%_60%_at_50%_100%,rgba(57,255,136,0.10),transparent)]"
-      />
-
-      {/* Cercles concentriques : profondeur et superposition. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-[-26rem] -z-10 aspect-square w-[min(92rem,190vw)] -translate-x-1/2"
-      >
-        <span className="hero-ring absolute inset-0 rounded-full border border-white/[0.07]" />
-        <span className="hero-ring absolute inset-[9%] rounded-full border border-white/[0.08]" />
-        <span className="hero-ring absolute inset-[19%] rounded-full border border-white/[0.09]" />
-        <span className="hero-ring absolute inset-[30%] rounded-full border border-primary/[0.12]" />
-        <span className="absolute inset-[40%] rounded-full bg-[radial-gradient(closest-side,rgba(57,255,136,0.16),transparent_72%)]" />
+    <section className="relative isolate overflow-hidden">
+      {/* Background layers */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-30">
+        <div className="absolute inset-0 bg-[#080e20]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(57,255,136,0.15),transparent)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_80%_60%,rgba(59,130,246,0.08),transparent)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_50%_30%_at_20%_80%,rgba(168,85,247,0.06),transparent)]" />
       </div>
 
-      <div className="container-tl relative">
-        <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
-          {/* Avatars réels des développeurs approuvés (comme Codeur.com) + preuve factuelle. */}
-          {developerAvatars.length > 0 ? (
+      {/* Animated grid */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-20 opacity-[0.03]"
+        style={{
+          backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+          backgroundSize: "60px 60px",
+        }}
+      />
+
+      {/* Floating orbs */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-primary/10 blur-3xl" />
+        <div className="absolute top-1/3 -left-20 h-60 w-60 rounded-full bg-blue-500/10 blur-3xl" />
+        <div className="absolute bottom-20 right-1/4 h-40 w-40 rounded-full bg-purple-500/8 blur-3xl" />
+      </div>
+
+      <div className="container-tl relative pt-24 pb-16 sm:pt-32 sm:pb-20 lg:pt-40 lg:pb-28">
+        {/* Top badge */}
+        {developerAvatars.length > 0 && (
+          <div className="mb-8 flex justify-center">
             <Link
               href="/dev"
-              className="animate-rise group mb-4 inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/[0.06] px-3 py-1.5 text-xs font-medium text-white/90 backdrop-blur transition-colors hover:border-primary/40 hover:bg-white/[0.1]"
+              className="group inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-medium text-white/80 backdrop-blur transition-all hover:border-primary/40 hover:bg-white/10"
             >
-              <span className="flex -space-x-2" aria-hidden="true">
-                {developerAvatars.map((dev) => (
+              <span className="flex -space-x-2">
+                {developerAvatars.slice(0, 5).map((dev) => (
                   <span
                     key={dev.id}
-                    className="relative inline-block size-7 overflow-hidden rounded-full ring-2 ring-[#0b132b] sm:size-8"
+                    className="relative inline-block size-7 overflow-hidden rounded-full ring-2 ring-[#080e20] sm:size-8"
                   >
                     <Image
                       src={dev.avatar_url}
@@ -81,132 +86,90 @@ export function Hero({ developerAvatars = [] }: { developerAvatars?: DeveloperAv
                 <ArrowRight className="size-3.5 opacity-60 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
               </span>
             </Link>
-          ) : (
-            <span className="animate-rise inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1.5 text-xs font-medium text-white/90 backdrop-blur">
-              <span className="size-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(57,255,136,0.8)]" aria-hidden="true" />
-              {t("socialProof")}
-            </span>
-          )}
-          <div className="animate-rise flex flex-wrap items-center justify-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/25 bg-primary/[0.08] px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
-              <Sparkles className="size-3.5" aria-hidden="true" />
-              {t("badge")}
-            </span>
           </div>
+        )}
 
-          <h1
-            className="mt-6 text-balance font-headings text-4xl font-extrabold leading-[1.06] tracking-tight text-white sm:text-5xl lg:text-[3.9rem]"
-            style={{ "--rise-delay": "180ms" } as React.CSSProperties}
-          >
-            {t("titleBefore")}{" "}
-            <span className="relative inline-block whitespace-nowrap text-primary">
-              {t("titleHighlight")}
-              <svg
-                aria-hidden="true"
-                viewBox="0 0 260 18"
-                preserveAspectRatio="none"
-                className="hero-underline absolute -bottom-2 left-0 h-3 w-full overflow-visible"
-              >
-                <path
-                  d="M4 12C58 4 142 3 256 10"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </span>{" "}
-            {t("titleAfter")}
+        {/* Main headline */}
+        <div className="mx-auto max-w-5xl text-center">
+          <h1 className="text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl lg:text-7xl">
+            <span className="block text-white">Trouvez le développeur</span>
+            <span className="block bg-gradient-to-r from-primary via-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+              qui construira votre vision
+            </span>
           </h1>
 
-          <p
-            className="animate-rise mt-7 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg"
-            style={{ "--rise-delay": "260ms" } as React.CSSProperties}
-          >
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-white/60 sm:text-lg lg:text-xl">
             {t("subtitle")}
           </p>
 
-          {/* Barre de recherche : blanche comme la référence, bouton vert. */}
-          <form
-            onSubmit={submit}
-            role="search"
-            aria-label={t("searchLabel")}
-            className="animate-rise mt-9 flex w-full max-w-2xl items-center gap-2 rounded-2xl border border-white/15 bg-white p-2 shadow-[0_24px_70px_-24px_rgba(0,0,0,0.85)] transition-shadow duration-300 focus-within:shadow-[0_28px_80px_-20px_rgba(57,255,136,0.35)]"
-            style={{ "--rise-delay": "330ms" } as React.CSSProperties}
-          >
-            <Search className="ml-2 size-5 shrink-0 text-[#0b132b]/45" aria-hidden="true" />
-            <label htmlFor="hero-search" className="sr-only">
-              {t("searchPlaceholder")}
-            </label>
-            <input
-              id="hero-search"
-              type="search"
-              name="q"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder={t("searchPlaceholder")}
-              autoComplete="off"
-              className="h-11 min-w-0 flex-1 bg-transparent text-sm text-[#0b132b] outline-none placeholder:text-[#0b132b]/45 sm:text-base"
-            />
+          {/* Search bar */}
+          <form onSubmit={submit} className="mx-auto mt-10 flex max-w-2xl items-center gap-2">
+            <div className="relative flex-1">
+              <Search className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-white/40" aria-hidden="true" />
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={t("searchPlaceholder")}
+                className="h-14 w-full rounded-2xl border border-white/10 bg-white/5 pl-12 pr-4 text-base text-white placeholder:text-white/40 backdrop-blur transition-colors focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
+              />
+            </div>
             <button
               type="submit"
-              aria-label={t("searchCta")}
-              className="btn-shine inline-flex h-11 shrink-0 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-ink transition-[filter] outline-none hover:brightness-110 active:brightness-95 focus-visible:ring-2 focus-visible:ring-[#0b132b]/40 sm:px-6"
+              className="inline-flex h-14 items-center gap-2 rounded-2xl bg-primary px-6 text-sm font-semibold text-[#080e20] transition-all hover:brightness-110 active:brightness-95"
             >
-              <span className="hidden sm:inline">{t("searchCta")}</span>
-              <ArrowRight className="size-4" aria-hidden="true" />
+              <Search className="size-4" aria-hidden="true" />
+              <span className="hidden sm:inline">Rechercher</span>
             </button>
           </form>
 
-          {/* Raccourcis de catégories sous le champ. */}
-          <div
-            className="animate-rise mt-5 flex max-w-3xl flex-wrap items-center justify-center gap-2"
-            style={{ "--rise-delay": "400ms" } as React.CSSProperties}
-          >
-            <span className="text-xs font-medium text-white/60">{t("searchLabel")}</span>
+          {/* Quick chips */}
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
             {chips.map((chip) => (
-              <Link
+              <button
                 key={chip.label}
-                href={`/dev?q=${encodeURIComponent(chip.query)}`}
-                className="inline-flex h-8 items-center rounded-full border border-white/15 bg-white/[0.04] px-3.5 text-xs font-medium text-white/75 transition-colors outline-none hover:border-primary/50 hover:bg-primary/10 hover:text-white focus-visible:ring-2 focus-visible:ring-primary/60"
+                type="button"
+                onClick={() => router.push(`/dev?q=${encodeURIComponent(chip.query)}`)}
+                className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-medium text-white/70 transition-all hover:border-primary/40 hover:bg-white/10 hover:text-white"
               >
                 {chip.label}
-              </Link>
+              </button>
             ))}
           </div>
 
-          {/* Deux CTA clairement différenciés : Client (/poster) vs Développeur (/briefs). */}
-          <div
-            className="animate-rise mt-8 flex w-full max-w-xl flex-col items-stretch justify-center gap-3 sm:w-auto sm:max-w-none sm:flex-row sm:items-center"
-            style={{ "--rise-delay": "470ms" } as React.CSSProperties}
-          >
+          {/* CTA buttons */}
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
             <Link
               href="/poster"
-              className="btn-shine inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-ink transition-[filter] outline-none hover:brightness-110 active:brightness-95 focus-visible:ring-2 focus-visible:ring-primary/60"
+              className="group inline-flex h-12 items-center gap-2 rounded-2xl bg-primary px-6 text-sm font-semibold text-[#080e20] transition-all hover:brightness-110 hover:shadow-[0_0_30px_rgba(57,255,136,0.3)]"
             >
-              <Plus className="size-4 shrink-0" aria-hidden="true" />
-              {t("ctaPrimary")}
-              <ArrowRight className="size-4 shrink-0" aria-hidden="true" />
+              <Plus className="size-4" aria-hidden="true" />
+              Publier un projet
+              <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
             </Link>
             <Link
-              href="/briefs"
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-primary/35 bg-primary-soft px-6 py-3 text-sm font-semibold text-primary transition-colors outline-none hover:border-primary/60 hover:bg-primary/15 focus-visible:ring-2 focus-visible:ring-primary/60"
+              href="/dev"
+              className="inline-flex h-12 items-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 text-sm font-medium text-white transition-all hover:border-white/30 hover:bg-white/10"
             >
-              <Briefcase className="size-4 shrink-0" aria-hidden="true" />
-              {t("ctaSecondary")}
+              <Users className="size-4" aria-hidden="true" />
+              Trouver un développeur
             </Link>
           </div>
+        </div>
 
-          <p
-            className="animate-rise mt-5 inline-flex items-center gap-2 text-xs text-white/70"
-            style={{ "--rise-delay": "540ms" } as React.CSSProperties}
-          >
-            <ShieldCheck className="size-3.5 text-primary" aria-hidden="true" />
-            {t("ctaNote")}
-          </p>
-
-          {/* Aperçu produit 3D en perspective présentant l'écran réel /briefs. */}
-          <HeroLaptop />
+        {/* Stats bar */}
+        <div className="mx-auto mt-16 grid max-w-4xl grid-cols-2 gap-4 sm:grid-cols-4">
+          {[
+            { value: "54", label: "Pays couverts" },
+            { value: "100+", label: "Développeurs" },
+            { value: "0%", label: "Commission" },
+            { value: "24h", label: "Temps de réponse" },
+          ].map((stat) => (
+            <div key={stat.label} className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center backdrop-blur">
+              <p className="text-2xl font-bold text-primary sm:text-3xl">{stat.value}</p>
+              <p className="mt-1 text-xs text-white/50">{stat.label}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
