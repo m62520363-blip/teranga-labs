@@ -268,8 +268,13 @@ export function BriefManager({
         ) : null}
 
         {/* Boutons modifier/supprimer */}
-        {brief.status === "ouvert" && brief.unlocks_count === 0 ? (
+        {brief.status === "ouvert" ? (
           <div className="mt-4 flex flex-wrap gap-2">
+            {brief.unlocks_count > 0 ? (
+              <p className="w-full text-xs text-muted-foreground">
+                ⚠️ Des développeurs ont déjà débloqué ce projet. La modification est limitée.
+              </p>
+            ) : null}
             <Button
               variant="outline"
               size="sm"
@@ -284,7 +289,7 @@ export function BriefManager({
               size="sm"
               className="rounded-lg gap-1.5"
               onClick={() => void deleteBrief()}
-              disabled={deleting || busy}
+              disabled={deleting || busy || brief.unlocks_count > 0}
             >
               {deleting ? <Loader2 className="size-3.5 animate-spin" aria-hidden="true" /> : null}
               Supprimer

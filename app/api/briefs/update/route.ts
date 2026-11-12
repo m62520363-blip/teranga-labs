@@ -35,8 +35,8 @@ export async function POST(request: Request) {
   const { data, error } = await supabase.rpc("update_brief_content" as never, {
     p_management_key: managementKey,
     p_client_name: typeof body.client_name === "string" ? body.client_name : null,
-    p_client_whatsapp: null,
-    p_project_type: null,
+    p_client_whatsapp: typeof body.client_whatsapp === "string" ? body.client_whatsapp : null,
+    p_project_type: typeof body.project_type === "string" ? body.project_type : null,
     p_budget: typeof body.budget === "number" ? body.budget : null,
     p_description: typeof body.description === "string" ? body.description : null,
   } as never);
