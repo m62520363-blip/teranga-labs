@@ -15,6 +15,7 @@ import { formatFCFA, formatDate, formatDateTime } from "@/lib/formatting";
 import { MISSION_STATUS_LABELS } from "@/lib/mission-labels";
 import type { MissionStatus } from "@/types/database";
 import { StatusBadge } from "@/components/missions/status-badge";
+import { DeveloperReviewForm } from "@/components/missions/developer-review-form";
 import { MissionPayButton } from "@/components/missions/mission-pay-button";
 import type { MissionPayload } from "@/components/missions/types";
 import { cn } from "cn";
@@ -172,10 +173,7 @@ export function MissionDetail({
                   {mission.request?.budget ? formatFCFA(mission.request.budget) : "—"}
                 </dd>
               </div>
-              <div>
-                <dt className="text-xs text-muted-foreground">Ville du client</dt>
-                <dd className="mt-0.5 font-medium">{mission.request?.client_city || "—"}</dd>
-              </div>
+
               <div>
                 <dt className="text-xs text-muted-foreground">Livraison prévue</dt>
                 <dd className="mt-0.5 font-medium">
@@ -185,6 +183,12 @@ export function MissionDetail({
                 </dd>
               </div>
             </dl>
+
+            {role === "developer" && mission.status === "completed" ? (
+              <div className="mt-6">
+                <DeveloperReviewForm requestId={mission.request_id} />
+              </div>
+            ) : null}
 
             <p className="mt-6 text-[11px] uppercase tracking-wide text-muted-foreground">
               Historique
