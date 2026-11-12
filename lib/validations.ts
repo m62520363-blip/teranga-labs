@@ -71,7 +71,7 @@ export const developerIdentitySchema = z.object({
     .trim()
     .min(2, "Pays requis.")
     .max(60, "Pays trop long."),
-  city: cityField(),
+  city: z.string().trim().max(60, "60 caractères max.").optional().default(""),
   languages: z
     .array(z.string().trim().min(2, "Langue trop courte.").max(40, "40 caractères max."))
     .max(10, "10 langues maximum.")
@@ -232,7 +232,7 @@ export const briefSchema = z.object({
       /^\+?[0-9\s\-().]{9,20}$/,
       "Numéro WhatsApp invalide. Choisissez votre pays puis saisissez votre numéro."
     ),
-  client_city: regionField(),
+  client_city: z.string().trim().max(60, "60 caractères max.").optional().default(""),
   project_type: z.enum(PROJECT_TYPES, {
     message: "Choisissez un type de projet.",
   }),
@@ -310,7 +310,7 @@ export const clientSignupSchema = z.object({
     .max(72, "Mot de passe trop long.")
     .regex(/[A-Za-z]/, "Au moins une lettre.")
     .regex(/\d/, "Au moins un chiffre."),
-  city: cityField(),
+  city: z.string().trim().max(60, "60 caractères max.").optional().default(""),
   whatsapp: z
     .string()
     .regex(

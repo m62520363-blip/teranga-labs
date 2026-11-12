@@ -460,12 +460,7 @@ function SignupForm({ initialRole }: { initialRole: AuthRole }) {
 
   /* Pays d'abord, région ensuite (UI seule : `city` garde le nom de région). */
   const [countryCode, setCountryCode] = React.useState<string>(DEFAULT_COUNTRY);
-  const worldRegions = React.useMemo(() => getWorldRegions(countryCode), [countryCode]);
-  const regionItems = React.useMemo(() => {
-    const items: Record<string, string> = {};
-    for (const name of worldRegions) items[name] = name;
-    return items;
-  }, [worldRegions]);
+  // worldRegions and regionItems removed - no more region/city selection
 
   const onSubmit = async (values: AuthInput) => {
     if (!isSupabaseConfigured()) {
@@ -624,43 +619,7 @@ function SignupForm({ initialRole }: { initialRole: AuthRole }) {
           </Field>
         )}
 
-        {role === "client" &&
-          (worldRegions.length > 0 ? (
-            <Field label="Région" htmlFor="signup-city" required error={errors.city?.message}>
-              <Select
-                value={(watch("city") as string) ?? ""}
-                onValueChange={(v) =>
-                  v &&
-                  setValue("city", v as ClientSignupFormValues["city"], {
-                    shouldValidate: true,
-                  })
-                }
-                items={regionItems}
-              >
-                <SelectTrigger id="signup-city" className={selectTriggerClass}>
-                  <SelectValue placeholder="Choisir une région" />
-                </SelectTrigger>
-                <SelectContent align="start" className="max-h-72">
-                  {worldRegions.map((name) => (
-                    <SelectItem key={name} value={name}>
-                      {name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </Field>
-          ) : (
-            <Field label="Ville / région" htmlFor="signup-city" required error={errors.city?.message}>
-              <Input
-                id="signup-city"
-                autoComplete="address-level2"
-                placeholder="Ex. Austin, Montréal, Nairobi…"
-                className={inputClass}
-                {...register("city")}
-                aria-invalid={Boolean(errors.city)}
-              />
-            </Field>
-          ))}
+        {/* Région/Ville supprimées — plus de géolocalisation */}
 
         <Field label="Email" htmlFor="signup-email" required error={errors.email?.message}>
           <Input

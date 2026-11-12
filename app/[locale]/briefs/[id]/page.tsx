@@ -32,7 +32,7 @@ export const dynamic = "force-dynamic";
 type BriefDetail = {
   id: string;
   client_name: string;
-  client_city: string;
+  // client_city removed
   project_type: string;
   budget: number;
   description: string;
@@ -54,7 +54,7 @@ export async function generateMetadata({
 
   const { data } = await supabase
     .from("requests")
-    .select("client_name, project_type, budget, client_city")
+    .select("client_name, project_type, budget")
     .eq("id", id)
     .eq("status", "ouvert")
     .eq("hidden", false)
@@ -64,7 +64,7 @@ export async function generateMetadata({
 
   return {
     title: `${data.client_name} — Projet développeur`,
-    description: `${PROJECT_TYPE_LABELS[data.project_type] ?? data.project_type} · ${data.client_city} · Budget ${formatFCFA(data.budget)}. Débloquez le contact pour proposer votre service.`,
+    description: `${PROJECT_TYPE_LABELS[data.project_type] ?? data.project_type} · Budget ${formatFCFA(data.budget)}. Débloquez le contact pour proposer votre service.`,
   };
 }
 
@@ -89,7 +89,7 @@ export default async function BriefDetailPage({
     const { data } = await supabase
       .from("requests")
       .select(
-        "id, client_name, client_city, project_type, budget, description, status, hidden, budget_verified, demo, created_at, features, deadline"
+        "id, client_name, project_type, budget, description, status, hidden, budget_verified, demo, created_at, features, deadline"
       )
       .eq("id", id)
       .eq("status", "ouvert")
@@ -144,7 +144,7 @@ export default async function BriefDetailPage({
               "@type": "Service",
               name: PROJECT_TYPE_LABELS[brief.project_type] ?? brief.project_type,
               description: brief.description?.slice(0, 200) ?? "",
-              areaServed: brief.client_city,
+              areaServed: "Afrique",
               offers: {
                 "@type": "Offer",
                 price: brief.budget,
@@ -174,10 +174,7 @@ export default async function BriefDetailPage({
               <span className="inline-flex h-6 items-center rounded-full bg-muted px-3 text-xs font-semibold uppercase tracking-wide text-foreground">
                 {PROJECT_TYPE_LABELS[brief.project_type] ?? brief.project_type}
               </span>
-              <span className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground">
-                <MapPin className="size-4" aria-hidden="true" />
-                {brief.client_city}
-              </span>
+
               {brief.budget_verified ? (
                 <span className="inline-flex h-6 items-center gap-1.5 rounded-full border border-success/25 bg-card px-3 text-xs font-semibold text-success">
                   <BadgeCheck className="size-3.5" aria-hidden="true" />
@@ -255,7 +252,6 @@ export default async function BriefDetailPage({
                     </p>
                     <DeveloperPreview
                       clientName={brief.client_name}
-                      city={brief.client_city}
                       budget={brief.budget}
                       demo
                     />
@@ -266,7 +262,6 @@ export default async function BriefDetailPage({
                         id: brief.id,
                         client_name: brief.client_name,
                         project_type: brief.project_type,
-                        client_city: brief.client_city,
                         budget: brief.budget,
                         description: brief.description,
                         demo: true,
@@ -296,7 +291,6 @@ export default async function BriefDetailPage({
                   </div>
                   <DeveloperPreview
                     clientName={brief.client_name}
-                    city={brief.client_city}
                     budget={brief.budget}
                   />
                   {isDeveloper ? (
@@ -305,7 +299,6 @@ export default async function BriefDetailPage({
                         id: brief.id,
                         client_name: brief.client_name,
                         project_type: brief.project_type,
-                        client_city: brief.client_city,
                         budget: brief.budget,
                         description: brief.description,
                         demo: false,
@@ -327,7 +320,6 @@ export default async function BriefDetailPage({
 
             <DevmarketMatch
               projectType={brief.project_type}
-              city={brief.client_city}
               budget={brief.budget}
             />
           </div>
@@ -348,12 +340,10 @@ export default async function BriefDetailPage({
  */
 function DeveloperPreview({
   clientName,
-  city,
   budget,
   demo = false,
 }: {
   clientName: string;
-  city: string;
   budget: number;
   demo?: boolean;
 }) {
@@ -361,7 +351,6 @@ function DeveloperPreview({
 
   const facts = [
     { icon: UserRound, label: "Prénom", value: prenom },
-    { icon: MapPin, label: "Région", value: city },
     { icon: Wallet, label: "Budget", value: formatFCFA(budget) },
     { icon: Timer, label: "Réponse", value: "sous 48 h" },
   ];

@@ -29,7 +29,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PhoneInput } from "@/components/ui/phone-input";
-import { RegionSelectContent } from "@/components/ui/region-select";
+// RegionSelectContent removed - no longer needed
 import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
@@ -46,7 +46,7 @@ import {
 } from "@/components/ui/select";
 import { cn } from "cn";
 
-const cityItems: Record<string, string> = ALL_REGION_ITEMS;
+// cityItems removed - no longer needed
 
 const TYPE_OPTIONS: {
   value: string;
@@ -154,7 +154,7 @@ export function PosterForm({ initialType }: { initialType?: string } = {}) {
     defaultValues: {
       client_name: "",
       client_whatsapp: "",
-      client_city: "Dakar",
+      client_city: "",
       project_type: (initialType ?? "vitrine") as BriefFormValues["project_type"],
       budget: undefined,
       description: "",
@@ -889,27 +889,6 @@ export function PosterForm({ initialType }: { initialType?: string } = {}) {
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2">
-        <FieldGroup label="Région" htmlFor="client_city">
-          <Select
-            value={watch("client_city")}
-            onValueChange={(v) =>
-              v &&
-              setValue("client_city", v as BriefFormValues["client_city"], {
-                shouldValidate: true,
-              })
-            }
-            items={cityItems}
-          >
-            <SelectTrigger className="h-10 w-full rounded-xl" aria-label="Région">
-              <SelectValue />
-            </SelectTrigger>
-            <RegionSelectContent />
-          </Select>
-          {errors.client_city ? (
-            <FieldError>{errors.client_city.message}</FieldError>
-          ) : null}
-        </FieldGroup>
-
         <FieldGroup
           label="Deadline souhaitée"
           htmlFor="deadline"
@@ -1080,7 +1059,7 @@ export function PosterForm({ initialType }: { initialType?: string } = {}) {
                 label="Budget"
                 value={`${pending.budget?.toLocaleString("fr-FR")} FCFA`}
               />
-              <ReviewRow label="Région" value={pending.client_city} />
+  
               <ReviewRow
                 label="Deadline"
                 value={pending.deadline || "Non précisée"}

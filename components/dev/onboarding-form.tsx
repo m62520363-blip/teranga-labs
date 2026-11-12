@@ -268,7 +268,7 @@ function IdentityStep({
       whatsapp: initial?.whatsapp ?? "",
       address: initial?.address ?? "",
       country: initial?.country ?? "Sénégal",
-      city: (initial?.city as DeveloperIdentityFormValues["city"]) ?? "Dakar",
+      city: "",
       languages: initial?.languages ?? [],
     },
   });
@@ -513,55 +513,7 @@ function IdentityStep({
           </div>
         </Field>
 
-        {showCitySelect ? (
-          <Field label="Région" error={errors.city?.message} htmlFor="oi-city">
-            <div className="relative">
-              <MapPin
-                className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
-                aria-hidden="true"
-              />
-              <Select
-                value={cityValue}
-                onValueChange={(v) =>
-                  v && setValue("city", v as DeveloperIdentityFormValues["city"], { shouldValidate: true })
-                }
-                items={cityItems}
-              >
-                <SelectTrigger
-                  id="oi-city"
-                  className="h-11 w-full rounded-xl border-hairline bg-background/70 pl-10 data-[size=default]:h-11"
-                >
-                  <SelectValue placeholder="Choisir une région" />
-                </SelectTrigger>
-                <SelectContent align="start" className="max-h-72">
-                  {worldRegions.map((name) => (
-                    <SelectItem key={name} value={name}>
-                      {name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </Field>
-        ) : (
-          <Field label="Ville / région" error={errors.city?.message} htmlFor="oi-city">
-            <div className="relative">
-              <MapPin
-                className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
-                aria-hidden="true"
-              />
-              <Input
-                id="oi-city"
-                autoComplete="address-level2"
-                placeholder="Ex. Austin, Montréal, Nairobi…"
-                {...register("city")}
-                className="h-11 rounded-xl border-hairline bg-background/70 pl-10"
-                aria-invalid={Boolean(errors.city)}
-              />
-            </div>
-          </Field>
-        )}
-
+        {/* Région/Ville supprimées — plus de géolocalisation */}
         <Field label="Adresse" error={errors.address?.message} htmlFor="oi-address">
           <div className="relative">
             <MapPin

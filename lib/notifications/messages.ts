@@ -16,15 +16,14 @@ export function keywordsForType(projectType: string): string[] {
 
 export type BriefSummary = {
   client_name: string;
-  client_city: string;
   project_type: string;
   budget: number;
 };
 
-/** Résumé linéaire : « Landing page · Dakar · 250 000 FCFA ». */
+/** Résumé linéaire : « Landing page · 250 000 FCFA ». */
 export function summarizeBrief(brief: BriefSummary): string {
   const type = PROJECT_TYPE_LABELS[brief.project_type] ?? brief.project_type;
-  return `${type} · ${brief.client_city} · ${formatFCFA(brief.budget)}`;
+  return `${type} · ${formatFCFA(brief.budget)}`;
 }
 
 export type ClientConfirmationPayload = BriefSummary & {

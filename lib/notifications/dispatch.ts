@@ -26,7 +26,7 @@ type JsonRecord = {
   client_name: string;
   client_whatsapp?: string;
   management_key?: string;
-  client_city: string;
+  // client_city removed
   project_type: string;
   budget: number;
 };
@@ -96,7 +96,6 @@ async function dispatchJob(admin: AdminClient, job: NotificationJob): Promise<vo
   // ville OU les compétences correspondent au brief.
   const payload = job.payload as DeveloperMatchPayload;
   const { data } = await admin.rpc("list_developers_for_brief", {
-    p_city: payload.client_city,
     p_keywords: keywordsForType(payload.project_type),
   });
   const matches = (Array.isArray(data) ? data : []) as {
