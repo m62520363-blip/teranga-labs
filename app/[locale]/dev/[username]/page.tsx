@@ -379,7 +379,7 @@ export default async function DeveloperProfilePage({
           {profile.skills && profile.skills.length > 0 ? (
             <section className="mt-8 border-t border-hairline pt-8" aria-label="Compétences">
               <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-                Spécialités
+                Compétences
               </h2>
               <div className="mt-3 flex flex-wrap gap-2">
                 {profile.skills.map((skill) => (
@@ -388,6 +388,24 @@ export default async function DeveloperProfilePage({
                     className="rounded-full border border-primary/25 bg-primary-soft px-3 py-1 text-sm text-primary-light"
                   >
                     {skill}
+                  </span>
+                ))}
+              </div>
+            </section>
+          ) : null}
+
+          {profile.specialties && profile.specialties.length > 0 ? (
+            <section className="mt-8 border-t border-hairline pt-8" aria-label="Spécialités">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                Spécialités
+              </h2>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {profile.specialties.map((spec) => (
+                  <span
+                    key={spec}
+                    className="rounded-full border border-primary/25 bg-primary-soft px-3 py-1 text-sm text-primary-light"
+                  >
+                    {spec}
                   </span>
                 ))}
               </div>

@@ -2037,6 +2037,7 @@ export type PublicDeveloperProfile = {
   rate_min_fcfa: number | null;
   rate_max_fcfa: number | null;
   skills: string[] | null;
+  specialties?: string[] | null;
   languages?: string[] | null;
   experience_years: number;
   is_verified: boolean;
