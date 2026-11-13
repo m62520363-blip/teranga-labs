@@ -1,6 +1,14 @@
 -- 0082_developer_profile_enhancements.sql
 -- Ajout des champs disponibilité, tarif journalier et statistiques de profil.
 
+-- 0. updated_at sur developers : requis par
+--    update_developer_availability ci-dessous, mais aussi par
+--    update_developer_cover (0083) et toggle_developer_public
+--    (0089), dont le corps référençait cette colonne absente et
+--    échouait à l'exécution (42703). Idempotent.
+alter table public.developers
+  add column if not exists updated_at timestamptz not null default now();
+
 -- 1. Nouveaux champs sur developers
 alter table public.developers
   add column if not exists available boolean not null default true,

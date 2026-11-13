@@ -391,7 +391,9 @@ update public.developers
  where city is not null
    and (lower(city) like '%texte%' or lower(city) like '%text client%');
 
-update public.developers
+-- La colonne professional_title appartient à developer_profiles
+-- (et non à developers : correction du bug 42703).
+update public.developer_profiles
    set professional_title = null
  where professional_title is not null
    and lower(professional_title) like '%texte%';
@@ -401,8 +403,10 @@ update public.developers
  where bio is not null
    and (lower(bio) like '%texte client%' or lower(bio) like '%texte de démo%');
 
+-- reputation_level est NOT NULL (0022) : on remet la valeur par
+-- défaut au lieu de null (sinon violation 23502 et rollback).
 update public.developers
-   set reputation_level = null
+   set reputation_level = 'Nouveau'
  where reputation_level is not null
    and (lower(reputation_level) like '%texte%' or lower(reputation_level) like '%test%');
 

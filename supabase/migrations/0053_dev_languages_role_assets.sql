@@ -12,8 +12,11 @@
 --    proprietaire ({uid}/...), lecture publique.
 -- 4) get_my_developer_application  : retourne languages + role.
 -- 5) submit_developer_application  : persiste role projets.
--- 6) get_public_developer_profile : expose languages (affichage
---    profil public).
+--
+-- NOTE : get_public_developer_profile n'est PAS redéfinie ici :
+-- la version de 0058 (déjà en prod) est plus récente (filtre
+-- is_public) et expose déjà languages. Voir la note en fin de
+-- fichier.
 --
 -- Toutes les ecritures sont ADDITIVES et idempotentes
 -- (if not exists / on conflict do nothing / create or replace) :
@@ -192,48 +195,48 @@ begin
 
   select * into v_dev from public.developers where id = v_user;
   if v_dev.id is null then
-    raise exception 'Profil dÃ©veloppeur requis.' using errcode = 'TLNOD';
+    raise exception 'Profil développeur requis.' using errcode = 'TLNOD';
   end if;
 
   if v_dev.status in ('active', 'verified', 'suspended', 'verification_pending') then
-    raise exception 'Votre compte est dÃ©jÃ  actif, vÃ©rifiÃ© ou en cours de vÃ©rification : aucune nouvelle inscription n''est nÃ©cessaire.' using errcode = 'TLRJC';
+    raise exception 'Votre compte est déjà actif, vérifié ou en cours de vérification : aucune nouvelle inscription n''est nécessaire.' using errcode = 'TLRJC';
   end if;
 
   -- Validations.
   if v_title is null or length(v_title) > 120 then
-    raise exception 'Le titre professionnel est requis (120 caractÃ¨res max).' using errcode = 'TLBAD';
+    raise exception 'Le titre professionnel est requis (120 caractères max).' using errcode = 'TLBAD';
   end if;
   if v_specialty is null or length(v_specialty) > 120 then
-    raise exception 'La spÃ©cialitÃ© principale est requise.' using errcode = 'TLBAD';
+    raise exception 'La spécialité principale est requise.' using errcode = 'TLBAD';
   end if;
   if v_bio is not null and length(v_bio) > 2000 then
-    raise exception 'PrÃ©sentation trop longue (2000 caractÃ¨res max).' using errcode = 'TLBAD';
+    raise exception 'Présentation trop longue (2000 caractères max).' using errcode = 'TLBAD';
   end if;
   if v_experience_level not in ('debutant', 'intermediaire', 'avance', 'expert') then
-    raise exception 'Niveau d''expÃ©rience invalide.' using errcode = 'TLBAD';
+    raise exception 'Niveau d''expérience invalide.' using errcode = 'TLBAD';
   end if;
   if v_experience_years is null or v_experience_years < 0 or v_experience_years > 100 then
-    raise exception 'AnnÃ©es d''expÃ©rience invalides.' using errcode = 'TLBAD';
+    raise exception 'Années d''expérience invalides.' using errcode = 'TLBAD';
   end if;
   if v_projects_estimate is null or v_projects_estimate < 0 then
-    raise exception 'Nombre de projets rÃ©alisÃ©s invalide.' using errcode = 'TLBAD';
+    raise exception 'Nombre de projets réalisés invalide.' using errcode = 'TLBAD';
   end if;
   if v_availability not in ('available_now', 'available_soon', 'on_mission') then
-    raise exception 'DisponibilitÃ© invalide.' using errcode = 'TLBAD';
+    raise exception 'Disponibilité invalide.' using errcode = 'TLBAD';
   end if;
   if v_rate_min is null or v_rate_min < 0 or v_rate_max is null or v_rate_max < v_rate_min then
-    raise exception 'Tarification invalide (minimum Â± maximum en FCFA).' using errcode = 'TLBAD';
+    raise exception 'Tarification invalide (minimum ± maximum en FCFA).' using errcode = 'TLBAD';
   end if;
   if not v_terms then
     raise exception 'Vous devez accepter les conditions d''utilisation et certifier l''exactitude des informations.' using errcode = 'TLBAD';
   end if;
   if jsonb_typeof(p_payload -> 'services') is distinct from 'array'
      or jsonb_array_length(p_payload -> 'services') = 0 then
-    raise exception 'SÃ©lectionnez au moins un service proposÃ©.' using errcode = 'TLBAD';
+    raise exception 'Sélectionnez au moins un service proposé.' using errcode = 'TLBAD';
   end if;
   if jsonb_typeof(p_payload -> 'skills') is distinct from 'array'
      or jsonb_array_length(p_payload -> 'skills') = 0 then
-    raise exception 'SÃ©lectionnez au moins une compÃ©tence technique.' using errcode = 'TLBAD';
+    raise exception 'Sélectionnez au moins une compétence technique.' using errcode = 'TLBAD';
   end if;
 
   -- Une seule inscription en attente.
@@ -242,7 +245,7 @@ begin
    where developer_id = v_user and status = 'pending';
 
   if v_applications > 0 then
-    raise exception 'Votre inscription est dÃ©jÃ  en cours d''examen.' using errcode = 'TLDUP';
+    raise exception 'Votre inscription est déjà en cours d''examen.' using errcode = 'TLDUP';
   end if;
 
   -- Profil professionnel (upsert 1:1).
@@ -267,10 +270,10 @@ begin
       submitted_at = now(),
       updated_at = now();
 
-  -- Fiche dÃ©veloppeur (bio, avatar, compÃ©tences, expÃ©rience).
+  -- Fiche développeur (bio, avatar, compétences, expérience).
   -- La soumission (re)met le dossier en 'pending' devant l'admin :
-  -- c'est le seul moment oÃ¹ la colonne gÃ©rÃ©e est modifiÃ©e par le
-  -- dÃ©veloppeur, et uniquement vers 'pending' (protection en 13).
+  -- c'est le seul moment où la colonne gérée est modifiée par le
+  -- développeur, et uniquement vers 'pending' (protection en 13).
   update public.developers
      set bio = coalesce(v_bio, bio),
          avatar_url = coalesce(v_avatar, avatar_url),
@@ -338,174 +341,12 @@ end;
 $$;
 
 -- ------------------------------------------------------------
--- 5) RPC - profil public (derniere definition : 0029 + langues)
+-- 5) get_public_developer_profile : SUPPRIMEE de cette migration.
+--    La migration 0058_public_profile.sql (deja appliquee en prod)
+--    en fournit la version la plus recente - avec le filtre
+--    is_public + p_viewer_role - et expose deja languages.
+--    Exécuter 0053 après 0058 ne doit donc PAS écraser cette
+--    fonction (sinon les profils privés redeviendraient publics).
+--    Une fois la colonne languages créée, 0058 retrouve son
+--    fonctionnement sans erreur 42703.
 -- ------------------------------------------------------------
-create or replace function public.get_public_developer_profile(
-  p_identifier text,
-  p_viewer_role text default null
-)
-returns jsonb
-language plpgsql
-security definer
-set search_path = public
-stable
-as $$
-declare
-  v_identifier text := nullif(btrim(p_identifier), '');
-  v_viewer text := lower(nullif(btrim(coalesce(p_viewer_role, '')), ''));
-  v_dev public.developers%rowtype;
-  v_prof public.developer_profiles%rowtype;
-  v_response_minutes numeric;
-  v_response_rate numeric;
-begin
-  if v_identifier is null then
-    raise exception 'Profil introuvable.' using errcode = 'TLNOK';
-  end if;
-
-  if v_identifier ~ '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$' then
-    select * into v_dev
-      from public.developers
-     where id = v_identifier::uuid
-       and status in ('active', 'verified');
-  else
-    select * into v_dev
-      from public.developers
-     where username = lower(v_identifier)
-       and status in ('active', 'verified');
-  end if;
-
-  if v_dev.id is null then
-    raise exception 'Profil introuvable.' using errcode = 'TLNOK';
-  end if;
-
-  select * into v_prof from public.developer_profiles where developer_id = v_dev.id;
-
-  select round(coalesce(avg(gap_minutes), 0))::numeric
-    into v_response_minutes
-    from (
-      select
-        c.id,
-        c.created_at,
-        (
-          select extract(epoch from min(m.created_at) - c.created_at) / 60
-            from public.messages m
-           where m.conversation_id = c.id
-             and m.sender_id = v_dev.id
-             and m.created_at > c.created_at
-        ) as gap_minutes
-        from public.messages c
-        join public.unlocks u on u.id = c.conversation_id
-       where c.conversation_id in (
-               select id from public.unlocks where developer_id = v_dev.id
-             )
-         and c.sender_id <> v_dev.id
-    ) gaps
-   where gaps.gap_minutes is not null;
-
-  select round(
-           count(distinct case when dev_replied then u.id end)::numeric
-           / nullif(count(distinct case when client_wrote then u.id end), 0)::numeric
-           * 100
-         )::numeric
-    into v_response_rate
-    from (
-      select
-        u.id,
-        bool_or(m.sender_id = u.developer_id) as dev_replied,
-        bool_or(m.sender_id <> u.developer_id) as client_wrote
-        from public.unlocks u
-        join public.messages m on m.conversation_id = u.id
-       where u.developer_id = v_dev.id
-       group by u.id
-    ) u;
-
-  return jsonb_build_object(
-    'id', v_dev.id,
-    'username', v_dev.username,
-    'full_name', v_dev.full_name,
-    'bio', v_dev.bio,
-    'avatar_url', v_dev.avatar_url,
-    'city', v_dev.city,
-    'country', v_dev.country,
-    'whatsapp', public.mask_phone(coalesce(v_dev.phone, v_dev.whatsapp)),
-    'phone_masked', public.mask_phone(coalesce(v_dev.phone, v_dev.whatsapp)),
-    'email_masked', (
-      select public.mask_email(au.email) from auth.users au where au.id = v_dev.id
-    ),
-    'professional_title', v_prof.professional_title,
-    'main_specialty', v_prof.main_specialty,
-    'experience_level', v_prof.experience_level,
-    'availability', v_prof.availability,
-    'rate_min_fcfa', v_prof.rate_min_fcfa,
-    'rate_max_fcfa', v_prof.rate_max_fcfa,
-    'skills', coalesce(to_jsonb(v_dev.skills), '[]'::jsonb),
-    'languages', coalesce(to_jsonb(v_dev.languages), '[]'::jsonb),
-    'experience_years', v_dev.experience_years,
-    'is_verified', v_dev.is_verified,
-    'created_at', v_dev.created_at,
-    'avg_response_minutes', v_response_minutes,
-    'response_rate', v_response_rate,
-    'portfolio_links', coalesce(v_dev.portfolio_links, '[]'::jsonb),
-    'projects_count', (
-      select count(*)::integer from public.unlocks u
-       where u.developer_id = v_dev.id
-    ),
-    'completed_projects_count', v_dev.completed_projects_count,
-    'review_count', v_dev.reviews_count,
-    'review_average', round(coalesce(v_dev.rating_avg, 0), 1)::numeric,
-    'reputation_score', v_dev.reputation_score,
-    'reputation_level', v_dev.reputation_level,
-    'penalty', v_dev.penalty,
-    'projects', coalesce((
-      select jsonb_agg(jsonb_build_object(
-        'id', pr.id,
-        'name', pr.name,
-        'description', pr.description,
-        'project_type', pr.project_type,
-        'technologies', coalesce(to_jsonb(pr.technologies), '[]'::jsonb),
-        'url', case when pr.client_authorization = 'confidential' then null else pr.url end,
-        'screenshots', case
-          when pr.client_authorization = 'confidential' then '[]'::jsonb
-          else coalesce(to_jsonb(pr.screenshots), '[]'::jsonb) end,
-        'role', pr.role,
-        'key_features', coalesce(to_jsonb(pr.key_features), '[]'::jsonb),
-        'client_name', case
-          when pr.client_authorization = 'confidential' then 'Client confidentiel'
-          else pr.client_name end,
-        'client_authorization', pr.client_authorization,
-        'completion_date', pr.completion_date,
-        'duration', pr.duration,
-        'demo_url', pr.demo_url,
-        'demo_video_url', pr.demo_video_url,
-        'via_teranga_labs', pr.via_teranga_labs,
-        'mission_ref', pr.mission_ref,
-        'is_verified', pr.status = 'verified'
-      ) order by pr.completion_date desc nulls last, pr.created_at desc)
-      from public.developer_projects pr
-     where pr.developer_id = v_dev.id
-       and pr.status = 'verified'
-       and coalesce(pr.is_hidden, false) = false
-       and (
-            pr.client_authorization = 'public'
-         or (pr.client_authorization = 'clients_only' and v_viewer = 'client')
-         or pr.client_authorization = 'confidential'
-       )
-    ), '[]'::jsonb),
-    'reviews', coalesce((
-      select jsonb_agg(
-        jsonb_build_object(
-          'id', r.id,
-          'rating', r.rating,
-          'comment', r.comment,
-          'request_name', req.client_name,
-          'created_at', r.created_at
-        )
-        order by r.created_at desc
-      )
-      from public.reviews r
-      left join public.requests req on req.id = r.request_id
-      where r.developer_id = v_dev.id
-    ), '[]'::jsonb)
-  );
-end;
-$$;
